@@ -35,8 +35,11 @@ const storage: StorageEngine = multer.diskStorage({
  *      cb(new Error(...)) - if an error occurs
  */
 const filter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-    console.log(file);
-    cb(null, true);
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
 }
 
 
