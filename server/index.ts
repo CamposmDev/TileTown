@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
-import { connect } from './db';
+import { db } from './db';
 import Test from './schemas/test';
 
 const app: Express = express();
@@ -15,7 +15,9 @@ app.get("/", (req: Request, res: Response) => {
 
 
 app.listen(port, () => {
-    connect();
+    // We'll need to pass in args here to connect to the database.
+    db.connect();
+
     Test.create({"message": "Hello world!"});
     console.log(`Server started on port ${port}...`);
 });

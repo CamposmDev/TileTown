@@ -1,12 +1,6 @@
-import mongoose from 'mongoose';
+import MongooseDBM from "./mongoose/MongooseDBM";
+import TileTownDBM from "./interface/TileTownDBM";
 
-const url: string = "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority"
+const db: TileTownDBM = MongooseDBM.instance();
 
-async function connect() {
-    mongoose.connect(url);
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "MongoDB Connection error"));
-    console.log("MongoDB connected");
-}
-
-export { connect };
+export { db };
