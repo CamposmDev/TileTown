@@ -16,7 +16,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.listen(port, () => {
     // We'll need to pass in args here to connect to the database.
-    db.connect();
+    db.connect("mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority");
 
     Test.create({"message": "Hello world!"});
     console.log(`Server started on port ${port}...`);
