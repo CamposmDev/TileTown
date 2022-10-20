@@ -1,25 +1,15 @@
-import express, { Express, Request, Response } from 'express';
-import path from 'path';
-import { connect } from './db';
-import Test from './schemas/test';
+import app from './app';
+import { db } from './database/index'
+import dotenv from "dotenv";
 
-const app: Express = express();
+
+dotenv.config();
+
 const port: string = process.env.PORT || '3000';
-
-app.use(express.static(path.join(__dirname, '/public')));
-
-
-app.get("/", (req: Request, res: Response) => {
-    res.status(200).send({message: "Hello there!"});
-});
-
+const mongo: string = process.env.MONGO_URI || 'mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority'
 
 app.listen(port, () => {
-    connect();
-    Test.create({"message": "Hello world!"});
+    // We'll need to pass in args here to connect to the database.
+    db.connect(mongo);
     console.log(`Server started on port ${port}...`);
 });
-
-
-
-export default app;
