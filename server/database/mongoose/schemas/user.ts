@@ -23,4 +23,4 @@ const UserSchema = new Schema({
     imageURL: { type: String, required: true }
 })
 
-module.exports = mongoose.model('User', UserSchema)
+export { UserSchema }
