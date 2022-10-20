@@ -1,4 +1,4 @@
-import { Contest } from "../../types";
+import { Contest } from "../../../types";
 
 /**
  * An interface defining a set of methods to work with TileTown contests in an arbitrary DBMS.

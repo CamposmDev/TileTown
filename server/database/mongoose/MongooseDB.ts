@@ -1,11 +1,11 @@
 import mongoose, { ConnectOptions } from "mongoose";
-import { Community, User } from "../../types";
-import TilemapDBM from "../interface/TilemapDBM";
+import TilemapDBM from "../interface/managers/TilemapDBM";
+import TilesetDBM from "../interface/managers/TilesetDBM";
 import TileTownDB from "../interface/TileTownDB";
-import MongooseCommunityDBM from "./MongooseCommunityDBM";
-import MongooseContestDBM from "./MongooseContestDBM";
-import MongooseForumDBM from "./MongooseForumDBM";
-import MongooseUserDBM from "./MongooseUserDBM";
+import MongooseCommunityDBM from "./managers/MongooseCommunityDBM";
+import MongooseContestDBM from "./managers/MongooseContestDBM";
+import MongooseForumDBM from "./managers/MongooseForumDBM";
+import MongooseUserDBM from "./managers/MongooseUserDBM";
 
 /**
  * A database manager that works with TileTown data in MongoDB using Mongoose.
@@ -37,9 +37,6 @@ export default class MongooseDB implements TileTownDB {
         this._contests = new MongooseContestDBM();
         this._connected = false;
     }
-    get tilemaps(): TilemapDBM {
-        throw new Error("Method not implemented.");
-    }
 
     public static instance(): MongooseDB {
         if (this._instance === null) {
@@ -69,5 +66,10 @@ export default class MongooseDB implements TileTownDB {
     get forums(): MongooseForumDBM { return this._forums; }
     get contests(): MongooseContestDBM { return this._contests; }
     get communities(): MongooseCommunityDBM { return this._communities; }
-    
+    get tilesets(): TilesetDBM {
+        throw new Error("Method not implemented.");
+    }
+    get tilemaps(): TilemapDBM {
+        throw new Error("Method not implemented.");
+    }
 }

@@ -1,5 +1,5 @@
-import { ForumPost } from "../../types";
-import ForumDBM from "../interface/ForumDBM";
+import { ForumPost } from "../../../types";
+import ForumDBM from "../../interface/managers/ForumDBM";
 
 export default class MongooseForumDBM implements ForumDBM {
     getForumPost(forumPostId: string): ForumPost | null {

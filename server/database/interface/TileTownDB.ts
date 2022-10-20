@@ -1,8 +1,9 @@
-import CommunityDBM from "./CommunityDBM";
-import ContestDBM from "./ContestDBM";
-import ForumDBM from "./ForumDBM";
-import TilemapDBM from "./TilemapDBM";
-import UserDBM from "./UserDBM";
+import CommunityDBM from "./managers/CommunityDBM";
+import ContestDBM from "./managers/ContestDBM";
+import ForumDBM from "./managers/ForumDBM";
+import TilemapDBM from "./managers/TilemapDBM";
+import TilesetDBM from "./managers/TilesetDBM";
+import UserDBM from "./managers/UserDBM";
 
 /**
  * An interface defining a database manager for the TileTown application.
@@ -44,5 +45,6 @@ export default interface TileTownDB {
     /**
      * @return the tilesets database manager associated with the TileTown
      */
+    get tilesets(): TilesetDBM;
     
 }

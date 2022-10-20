@@ -1,5 +1,5 @@
-import { User } from "../../types";
-import UserDBM from "../interface/UserDBM";
+import { User } from "../../../types";
+import UserDBM from "../../interface/managers/UserDBM";
 
 export default class MongooseUserDBM implements UserDBM {
 
