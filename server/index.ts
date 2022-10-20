@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
-import { db } from './db';
-import Test from './schemas/test';
+import { db } from './database';
 
 const app: Express = express();
 const port: string = process.env.PORT || '3000';
