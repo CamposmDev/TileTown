@@ -14,4 +14,4 @@ const CommunitySchema = new Schema({
     visibility: {type: String, require: true}
 
 })
-module.exports = mongoose.model('Community', CommunitySchema)
+export {CommunitySchema}
