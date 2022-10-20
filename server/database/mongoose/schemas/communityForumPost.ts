@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 const Schema = mongoose.Schema
-const ObjectId = Schema.Types.Object
+const ObjectId = Schema.Types.ObjectId
 
 /**
  * @author Tuyen Vo
@@ -17,4 +17,4 @@ const CommunityForumPostSchema = new Schema({
     isPublished: { type: Boolean, require: true}
 
 })
-export {CommunityForumPostSchema}
+export = mongoose.model('CommunityForumPostSchema', CommunityForumPostSchema)

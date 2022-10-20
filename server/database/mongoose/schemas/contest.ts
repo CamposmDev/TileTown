@@ -1,18 +1,18 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 const Schema = mongoose.Schema
-const ObjectId = Schema.Types.Object
+const ObjectId = Schema.Types.ObjectId
 
 /**
  * @author Tuyen Vo
  */
 
 const ContestSchema = new Schema({
-    owner: { type: [ObjectId], require: true},
+    owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
     description: { type: String, require: true},
     startDate: { type: Date, require: true},
     endDate: { type: Date, require: true},
     winner: { type: ObjectId, require: true},
-    isPunlished: { type: Boolean, require: true}
+    isPublished: { type: Boolean, require: true}
 })
-export {ContestSchema}
+export = mongoose.model('ContestSchema', ContestSchema)
