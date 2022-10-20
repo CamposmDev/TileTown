@@ -1,12 +1,40 @@
+import mongoose from "mongoose";
+import { db } from "../..";
 import { User } from "../../../types";
 import UserDBM from "../../interface/managers/UserDBM";
+import { ObjectId } from "mongoose";
+import UserSchema from '../../mongoose/schemas/user'
 
 export default class MongooseUserDBM implements UserDBM {
 
     getUserById(userId: string): User | null {
-        throw new Error("Method not implemented.");
+        UserSchema.findById({_id: userId}, (err: Error, x: any) => {
+            if (err) {
+                return null
+            } else {
+                const user: User = {
+                    id: x._id, 
+                    username: x.username,
+                    email: x.email,
+                    firstName: x.firstName,
+                    lastName: x.lastName,
+                    password: x.passwordHash,
+                    profilePicture: x.imageURL,
+                    favoriteTileMaps: x.favoriteTileMaps,
+                    favoriteTileSets: x.favoriteTileSets,
+                    friends: x.friends,
+                    isVerified: x.isVerified,
+                    verifyKey: x.verifyKey,
+                    joinedCommunities: x.joinedCommunities,
+                    joinedContests: x.joinedContests,
+                }
+                return user
+            }
+        })
+        return null
     }
     createUser(user: Partial<User>): User | null {
+
         throw new Error("Method not implemented.");
     }
     verifyUser(key: string): boolean {
