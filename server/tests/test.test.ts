@@ -8,7 +8,7 @@ describe('Basic Test', () => {
     test("/ GET", async () => {
         let res = await request(app).get('/api');;
         expect(res.statusCode).toBe(200);
-        expect(res.body.message).toBe("Hello here!");
+        expect(res.body.message).toBe("Hello there!");
     });
 
     server.close();
