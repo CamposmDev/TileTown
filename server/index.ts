@@ -1,8 +1,8 @@
-import app from './app';
+import app from './express/app';
 import { db } from './database/index'
 import dotenv from "dotenv";
 
-
+// Set up enviorment configuration
 dotenv.config();
 
 const port: string = process.env.PORT || '3000';
