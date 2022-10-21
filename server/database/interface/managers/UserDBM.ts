@@ -18,7 +18,7 @@ export default interface UserDBM {
      * @param userId the id of the user to get
      * @return a user object with all information about the user or null
      */
-    getUserById(userId: string): User | null;
+    getUserById(userId: string): Promise<User | null>;
 
     /**
      * Creates a new user in the DBMS from the a partial User object. 
@@ -34,7 +34,7 @@ export default interface UserDBM {
      * @param user a partial User object
      * @return if successful, a new User object with the data associated with the newly created user in the DBMS; null otherwise
      */
-    createUser(user: Partial<User>): User | null;
+    createUser(user: Partial<User>): Promise<User | null>;
 
     /**
      * Verifies a user account in the DBMS with the given verification key. 
@@ -50,7 +50,7 @@ export default interface UserDBM {
      * @param key the verification key
      * @return true if a users account was verified successfully; false otherwise.
      */
-    verifyUser(key: string): boolean;
+    verifyUser(key: string): Promise<boolean>;
 
     /**
      * Updates the password of the user with the given user id in the DBMS to the given password
@@ -68,7 +68,7 @@ export default interface UserDBM {
      * @param password the user's updated hashed password
      * @return the user's new hashed password if the user's password was updated successfully; null otherwise
      */
-    updatePassword(userId: string, password: string): string | null;
+    updatePassword(userId: string, password: string): Promise<string | null>;
 
     /**
      * Updates the email address of the user with the given user id in a DBMS to the given email address.
@@ -86,7 +86,7 @@ export default interface UserDBM {
      * @param email the email address to update the user's email address to
      * @return if successful, the user's updated email address in the DBMS; null otherwise
      */
-    updateEmail(userId: string, email: string): string | null;
+    updateEmail(userId: string, email: string): Promise<string | null>;
 
     /**
      * Updates the username of the user with the given user id in a DBMS to the given username. 
@@ -104,7 +104,7 @@ export default interface UserDBM {
      * @param username the user's new username 
      * @return if successful, the user's updated username in the DBMS; null otherwise.
      */
-    updateUsername(userId: string, username: string): string | null;
+    updateUsername(userId: string, username: string): Promise<string | null>;
 
     /**
      * Adds a user with the given friend id as a friend of of a user with the given user id in a DBMS.
@@ -122,7 +122,7 @@ export default interface UserDBM {
      * @param friendId the id of the friend the user wants to add as a friend in the DBMS
      * @return if successful, the id of the user's new friend in the DBMS; null otherwise
      */
-    addFriend(userId: string, friendId: string): string | null;
+    addFriend(userId: string, friendId: string): Promise<string | null>;
 
     /**
      * Adds a user with the given user id to the community with the given community id in the DBMS.
@@ -140,7 +140,7 @@ export default interface UserDBM {
      * @param communityId the id of the community in the DBMS
      * @return if successful, the id of the community the user was added to in the DBMS; null otherwise.
      */
-    joinCommunity(userId: string, communityId: string): string | null;
+    joinCommunity(userId: string, communityId: string): Promise<string | null>;
 
     /**
      * Adds a user with the given user id to the contest with the given contest id in the DBMS.
@@ -158,7 +158,7 @@ export default interface UserDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, the id of the contest the user was added to in the DBMS; null otherwise.
      */
-    joinContest(userId: string, contestId: string): string | null;
+    joinContest(userId: string, contestId: string): Promise<string | null>;
 
     /**
      * Adds a tilemap with the given tilemap id the favorited tilemaps of the user with the given user id in the DBMS. 
@@ -176,7 +176,7 @@ export default interface UserDBM {
      * @param tilemapId the id of the tilemap in the DBMS
      * @return if successful, the id of the tilemap added to the user's favorited tilemaps; null otherwise.
      */
-    favoriteTilemap(userId: string, tilemapId: string): string | null;
+    favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
 
     /**
      * Adds a tileset with the given id to the favorited tilesets of the user with the given user id in a DBMS. 
@@ -193,6 +193,6 @@ export default interface UserDBM {
      * @param tilesetId the id of the tileset in the DBMS
      * @return if successful, the id of the tileset added to the user's favorited tilesets; null otherwise.
      */
-    favoriteTileset(userId: string, tilesetId: string): string | null;
+    favoriteTileset(userId: string, tilesetId: string): Promise<string | null>;
 
 }

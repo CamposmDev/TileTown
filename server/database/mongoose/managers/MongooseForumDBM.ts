@@ -2,26 +2,27 @@ import { ForumPost } from "../../../types";
 import ForumDBM from "../../interface/managers/ForumDBM";
 
 export default class MongooseForumDBM implements ForumDBM {
-    getForumPost(forumPostId: string): ForumPost | null {
+
+    async getForumPost(forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    createForumPost(forumPost: Partial<ForumPost>): ForumPost | null {
+    async createForumPost(forumPost: Partial<ForumPost>): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    updateForumPost(forumPostId: string, forumPost: Partial<ForumPost>): ForumPost | null {
+    async updateForumPost(forumPostId: string, forumPost: Partial<ForumPost>): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    deleteForumPost(forumPostId: string): string | null {
+    async deleteForumPost(forumPostId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    toggleLike(userId: string, forumPostId: string): ForumPost | null {
+    async toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    toggleDislike(userId: string, forumPostId: string): ForumPost | null {
+    async toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    addView(userId: string, forumPostId: string): ForumPost | null {
+    async addView(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
     }
-    
+
 }

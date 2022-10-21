@@ -1,36 +1,29 @@
-import { User } from "../../../types";
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
+import { User } from "../../../types";
 
 export default class MongooseUserDBM implements UserDBM {
 
-    getUserById(userId: string): User | null {
-        UserSchema.findById({_id: userId}, (err: Error, x: any) => {
-            if (err) {
-                return null
-            } else {
-                const user: User = {
-                    id: x._id, 
-                    username: x.username,
-                    email: x.email,
-                    firstName: x.firstName,
-                    lastName: x.lastName,
-                    password: x.passwordHash,
-                    profilePicture: x.imageURL,
-                    favoriteTileMaps: x.favoriteTileMaps,
-                    favoriteTileSets: x.favoriteTileSets,
-                    friends: x.friends,
-                    isVerified: x.isVerified,
-                    verifyKey: x.verifyKey,
-                    joinedCommunities: x.joinedCommunities,
-                    joinedContests: x.joinedContests,
-                }
-                return user
-            }
-        })
-        return null
+    async getUserById(userId: string): Promise<User | null> {
+        let user = await UserSchema.findById({_id: userId});
+        return user === null ? null : {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            imageURL: user.imageURL,
+            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
+            friends: user.friends.map((id) => id.toString()),
+            isVerified: user.isVerified,
+            verifyKey: user.verifyKey,
+            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
+            joinedContests: user.joinedContests.map((id) => id.toString())
+        }
     }
-    createUser(userpy: Partial<User>): User | null {
+    async createUser(userpy: Partial<User>): Promise<User | null> {
         /**
          * Check if the user's credentials not empty.
          * If any field is empty, then return null.
@@ -75,53 +68,53 @@ export default class MongooseUserDBM implements UserDBM {
             joinedContests: [],
             joinedCommunities: [],
             friends: [],
-            imageURL: null
-        })
-        user.save().then(() => {
-            return {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                password: user.passwordHash,
-                profilePicture: user.imageURL,
-                favoriteTileMaps: user.favoriteTileMaps,
-                favoriteTileSets: user.favoriteTileSets,
-                friends: user.friends,
-                isVerified: user.isVerified,
-                verifyKey: user.verifyKey,
-                joinedCommunities: user.joinedCommunities,
-                joinedContests: user.joinedContests
-            }
-        })
-        return null
+            imageURL: " "
+        });
+
+        let res = await user.save();
+        return res !== null ? {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            imageURL: user.imageURL,
+            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
+            friends: user.friends.map((id) => id.toString()),
+            isVerified: user.isVerified,
+            verifyKey: user.verifyKey,
+            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
+            joinedContests: user.joinedContests.map((id) => id.toString())
+        } : null;
     }
-    verifyUser(key: string): boolean {
+ 
+    async verifyUser(key: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    updatePassword(userId: string, password: string): string | null {
+    async updatePassword(userId: string, password: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    updateEmail(userId: string, email: string): string | null {
+    async updateEmail(userId: string, email: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    updateUsername(userId: string, username: string): string | null {
+    async updateUsername(userId: string, username: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    addFriend(userId: string, friendId: string): string | null {
+    async addFriend(userId: string, friendId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    joinCommunity(userId: string, communityId: string): string | null {
+    async joinCommunity(userId: string, communityId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    joinContest(userId: string, contestId: string): string | null {
+    async joinContest(userId: string, contestId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    favoriteTilemap(userId: string, tilemapId: string): string | null {
+    async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    favoriteTileset(userId: string, tilesetId: string): string | null {
+    async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
     
