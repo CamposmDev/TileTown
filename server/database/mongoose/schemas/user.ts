@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import User from "../types/UserSchemaType";
+import UserSchemaType from "../types/UserSchemaType";
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
@@ -13,7 +13,7 @@ const ObjectId = Schema.Types.ObjectId
  * @param isVerified is a flag that will tell us whether the user is verified or not
  * 
  */
-const UserSchema = new Schema<User>({
+const UserSchema = new Schema<UserSchemaType>({
     firstName: { type: String, required: true},
     lastName: { type: String, required: true },
     email: { type: String, required: true },
