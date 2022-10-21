@@ -22,7 +22,7 @@ export default interface User {
     password: string
 
     /** A string URL to the user's profile picture */
-    profilePicture: string
+    imageURL: string
 
     /** A list of tilemap ids in the DBMS the user has favorited */
     favoriteTileMaps: string[],
