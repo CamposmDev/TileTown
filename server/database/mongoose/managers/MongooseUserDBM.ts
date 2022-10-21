@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
-import { db } from "../..";
 import { User } from "../../../types";
 import UserDBM from "../../interface/managers/UserDBM";
-import { ObjectId } from "mongoose";
 import UserSchema from '../../mongoose/schemas/user'
 
 export default class MongooseUserDBM implements UserDBM {
@@ -33,9 +30,72 @@ export default class MongooseUserDBM implements UserDBM {
         })
         return null
     }
-    createUser(user: Partial<User>): User | null {
+    createUser(userpy: Partial<User>): User | null {
+        /**
+         * Check if the user's credentials not empty.
+         * If any field is empty, then return null.
+         */
+        if (!userpy.firstName || !userpy.lastName) return null
+        if (!userpy.username || !userpy.password) return null
+        if (!userpy.email) return null
 
-        throw new Error("Method not implemented.");
+        let username = userpy.username
+        /**
+         * Check if the username is valid and is unique.
+         */
+        UserSchema.findOne({username: username}, (err: Error, x: any) => {
+            if (err || !x) return null
+        })
+
+        let password = userpy.password
+        /**
+         * Check if the password is valid and then encrypt it
+         */
+        const LENGTH = 12
+        if (password.length <= LENGTH) return null
+
+        /**
+         * Check if the user's email is valid and is not being used by other user accounts
+         */
+        let email = userpy.email
+        UserSchema.findOne({emai: email}, (err: Error, x: any) => {
+            if (err || !x) return null
+        })
+
+        const user = new UserSchema({
+            firstName: userpy.firstName,
+            lastName: userpy.lastName,
+            email: email,
+            username: username,
+            password: password,
+            verifyKey: 'something',
+            isVerified: false,
+            favoriteTileMaps: [],
+            favoriteTileSets: [],
+            joinedContests: [],
+            joinedCommunities: [],
+            friends: [],
+            imageURL: null
+        })
+        user.save().then(() => {
+            return {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                password: user.passwordHash,
+                profilePicture: user.imageURL,
+                favoriteTileMaps: user.favoriteTileMaps,
+                favoriteTileSets: user.favoriteTileSets,
+                friends: user.friends,
+                isVerified: user.isVerified,
+                verifyKey: user.verifyKey,
+                joinedCommunities: user.joinedCommunities,
+                joinedContests: user.joinedContests
+            }
+        })
+        return null
     }
     verifyUser(key: string): boolean {
         throw new Error("Method not implemented.");
