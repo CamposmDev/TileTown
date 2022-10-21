@@ -18,7 +18,7 @@ export default interface ContestDBM {
      * 
      * @param contestId 
      */
-    getContest(contestId: string): Contest | null;
+    getContest(contestId: string): Promise<Contest | null>;
 
     /**
      * Creates a new contest in the DBMS based on the given partial Contest object.
@@ -35,7 +35,7 @@ export default interface ContestDBM {
      * @param contest the partial Contest object
      * @return if successful, a new Contest object with the data associated with the new contest in the DBMS; null otherwise.
      */
-    createContest(contest: Partial<Contest>): Contest | null;
+    createContest(contest: Partial<Contest>): Promise<Contest | null>;
 
     /**
      * Updates the contest with the given contest id in the DBMS according the given partial Contest object.
@@ -54,7 +54,7 @@ export default interface ContestDBM {
      * @param contest the partial Contest object
      * @return if successful, a new Contest object with the updated data associated with the contest in the DBMS; null otherwise.
      */
-    updateContest(contestId: string, contest: Partial<Contest>): Contest | null;
+    updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null>;
 
     /**
      * Updates the members of the contest with the given contest id in the DBMS.
@@ -72,7 +72,7 @@ export default interface ContestDBM {
      * @param members an array of the members user ids in the DBMS
      * @return if successful, the updated members for the contest; null otherwise
      */
-    updateMembers(contestId: string, members: string[]): string[] | null;
+    updateMembers(contestId: string, members: string[]): Promise<string[] | null>;
 
     /**
      * Updates the role of the user with the given user id in the contest with the given contest id.
@@ -91,7 +91,7 @@ export default interface ContestDBM {
      * @param role the new role of the user in the contest
      * @return if successful, the updated role of the user in the given contest; null otherwise
      */
-    updateModerator(contestId: string, userId: string, role: string): string | null;
+    updateModerator(contestId: string, userId: string, role: string): Promise<string | null>;
 
     /**
      * Deletes the contest with the given contest id in the DBMS.
@@ -104,5 +104,5 @@ export default interface ContestDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, the id of the deleted contest; null otherwise.
      */
-    deleteContest(contestId: string): string | null;
+    deleteContest(contestId: string): Promise<string | null>;
 }

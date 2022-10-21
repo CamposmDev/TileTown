@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import UserSchemaType from "../types/UserSchemaType";
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
@@ -12,12 +13,12 @@ const ObjectId = Schema.Types.ObjectId
  * @param isVerified is a flag that will tell us whether the user is verified or not
  * 
  */
-const UserSchema = new Schema({
+const UserSchema = new Schema<UserSchemaType>({
     firstName: { type: String, required: true},
     lastName: { type: String, required: true },
     email: { type: String, required: true },
     username: { type: String, required: true },
-    passwordHash: { type: String, required: true },
+    password: { type: String, required: true },
     verifyKey: { type: String, required: true },
     isVerified: { type: Boolean, required: true },
     favoriteTileMaps: { type: [ObjectId], required: true },

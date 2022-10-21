@@ -1,10 +1,10 @@
+import { ObjectId } from 'mongoose';
+
 /**
- * A type that defines a User object on our server.
+ * A type for the Mongoose User Schema
  * @author Peter Walsh
  */
-export default interface User {
-    /** The id of the user in the DBMS as a string */
-    id: string,
+ export default interface UserSchemaType {
 
     /** The user's username */
     username: string
@@ -25,13 +25,13 @@ export default interface User {
     imageURL: string
 
     /** A list of tilemap ids in the DBMS the user has favorited */
-    favoriteTileMaps: string[],
+    favoriteTileMaps: ObjectId[],
 
     /** A list of tileset ids in the DBMS the user has favorited */
-    favoriteTileSets: string[],
+    favoriteTileSets: ObjectId[],
 
     /** A list of user ids in the DBMS the user has added as friends */
-    friends: string[],
+    friends: ObjectId[],
 
     /** A flag indicating whether or not the user has verified their account */
     isVerified: boolean,
@@ -40,9 +40,9 @@ export default interface User {
     verifyKey: string,
 
     /** A list of community ids in the DBMS the user has joined */
-    joinedCommunities: string[],
+    joinedCommunities: ObjectId[],
 
     /** A list of contest ids in the DBMS the user has joined */
-    joinedContests: string[],
+    joinedContests: ObjectId[],
 
 }
