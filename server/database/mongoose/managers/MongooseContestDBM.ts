@@ -2,6 +2,8 @@ import { trusted } from "mongoose";
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
 import ContestSchema from '../../mongoose/schemas/contest'
+import UserSchema from '../../mongoose/schemas/user'
+import ModeratorSchema from '../../mongoose/schemas/moderators'
 
 /**
  * @author Tuyen Vo
@@ -61,11 +63,19 @@ export default class MongooseContestDBM implements ContestDBM {
         }
         return null
     }
-    async updateMembers(contestId: string, members: string[]): Promise<string[] | null> {
-        throw new Error("Method not implemented.");
-    }
+    
     async updateModerator(contestId: string, userId: string, role: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let con = await ContestSchema.findById(contestId)
+        let user = await UserSchema.findById(userId)
+        if (user !== null && con !== null) {
+            let mod = await ModeratorSchema.findOne({groupId: con._id, userId: user._id})
+            if (mod !== null) {
+                mod.role = role
+                await mod.save()
+                return role
+            }
+        }
+        return null
     }
     async deleteContest(contestId: string): Promise<string | null> {
         throw new Error("Method not implemented.");

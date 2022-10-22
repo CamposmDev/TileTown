@@ -89,6 +89,5 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             return true
         }
         return false
-
     }
 }
