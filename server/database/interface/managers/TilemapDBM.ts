@@ -25,7 +25,7 @@ export default interface TilemapDBM {
    * @param tilemapId the id of the tilemap to get
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  getTilemapById(tilemapId: string): Promise<Tilemap | null>;
+  getTilemapById(tilemapId: string): Promise<Tilemap | string>;
 
   /**
    * Gets the partial data associated with Tilemaps that a specific user either owns or can edit.
@@ -45,7 +45,7 @@ export default interface TilemapDBM {
     userId: string,
     search: string,
     sortBy: string
-  ): Promise<[Partial<Tilemap>] | null>;
+  ): Promise<[Partial<Tilemap>] | string>;
 
   /**
    * Creates a new Tilemap in the DBMS from the Partial Tilemap
@@ -55,10 +55,14 @@ export default interface TilemapDBM {
    * If the method is successful, the method returns a new Tilemap object with all of the information associated
    * with the user in the DBMS. If the tilemap could not be created it returns a null
    *
+   * @param userId Id of user that's creating the tilemap
    * @param tilemap partial of Tilemap being created
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  createTilemap(tilemap: Partial<Tilemap>): Promise<Tilemap | null>;
+  createTilemap(
+    userId: string,
+    tilemap: Partial<Tilemap>
+  ): Promise<Tilemap | string>;
 
   /**
    * Updates Tilemap in the DBMS from the Partial Tilemap
@@ -75,7 +79,7 @@ export default interface TilemapDBM {
   updateTilemapById(
     tilemapId: string,
     tilemap: Partial<Tilemap>
-  ): Promise<Tilemap | null>;
+  ): Promise<Tilemap | string>;
 
   /**
    * Deletes a Tilemap in the DBMS from it's id
@@ -88,7 +92,7 @@ export default interface TilemapDBM {
    * @param tilemapId id of tilemap to be deleted
    * @return a message notifying if tilemap was deleted
    */
-  deleteTilemapById(tilemapId: string): Promise<string | null>;
+  deleteTilemapById(tilemapId: string): Promise<string | string>;
 
   // /**
   //  * Adds a new layer to a specific tilemap
@@ -102,7 +106,7 @@ export default interface TilemapDBM {
   //  * @param layer partial of layer being added
   //  * @return updated array of Layers
   //  */
-  // addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | null>;
+  // addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | string>;
 
   // /**
   //  * Updates a specific layer to a specific tilemap
@@ -121,7 +125,7 @@ export default interface TilemapDBM {
   //   tilemapId: string,
   //   layer: Partial<Layer>,
   //   index: number
-  // ): Promise<[Layer] | null>;
+  // ): Promise<[Layer] | string>;
 
   // /**
   //  * Deletes a specific layer to a specific tilemap
@@ -135,7 +139,7 @@ export default interface TilemapDBM {
   //  * @param index index of layer in layer array to be deleted
   //  * @return updated array of Layers
   //  */
-  // removeLayer(tilemapId: string, index: number): Promise<[Layer] | null>;
+  // removeLayer(tilemapId: string, index: number): Promise<[Layer] | string>;
 
   // /**
   //  * Swaps two layers in a specific tilemap
@@ -154,7 +158,7 @@ export default interface TilemapDBM {
   //   tilemapId: string,
   //   firstIndex: number,
   //   secondIndex: number
-  // ): Promise<[Layer] | null>;
+  // ): Promise<[Layer] | string>;
 
   // /**
   //  * Adds a new collaborator to a specific tilemap
@@ -171,7 +175,7 @@ export default interface TilemapDBM {
   // addCollaborator(
   //   tilemapId: string,
   //   collaboratorId: string
-  // ): Promise<{ collaboratorIds: [string]; collaboratorNames: [string] } | null>;
+  // ): Promise<{ collaboratorIds: [string]; collaboratorNames: [string] } | string>;
 
   // /**
   //  * Removes a collaborator to a specific tilemap
@@ -188,7 +192,7 @@ export default interface TilemapDBM {
   // removeCollaborator(
   //   tilemapId: string,
   //   collaboratorsId: string
-  // ): Promise<{ collaboratorIds: [string]; collaboratorNames: [string] } | null>;
+  // ): Promise<{ collaboratorIds: [string]; collaboratorNames: [string] } | string>;
 
   // /**
   //  * Updates Collaborator settings to a specific tilemap
@@ -205,7 +209,7 @@ export default interface TilemapDBM {
   // updateCollaboratorSettings(
   //   tilemapId: string,
   //   collaboratorSettings: CollaboratorSettings
-  // ): Promise<CollaboratorSettings | null>;
+  // ): Promise<CollaboratorSettings | string>;
 
   // /**
   //  * Updates Collaborator index to a specific tilemap, -1 means anyone can edit it
@@ -222,7 +226,7 @@ export default interface TilemapDBM {
   // updateCollaboratorIndex(
   //   tilemapId: string,
   //   collaboratorIndex: number
-  // ): Promise<number | null>;
+  // ): Promise<number | string>;
 
   // /**
   //  * Adds a new property to a specific tilemap
@@ -239,7 +243,7 @@ export default interface TilemapDBM {
   // addProperty(
   //   tilemapId: string,
   //   property: Property
-  // ): Promise<[Property] | null>;
+  // ): Promise<[Property] | string>;
 
   // /**
   //  * Removes a property from a specific tilemap
@@ -253,7 +257,7 @@ export default interface TilemapDBM {
   //  * @param property that is being added
   //  * @return object containing array of properties
   //  */
-  // removeProperty(tilemapId: string, index: number): Promise<[Property] | null>;
+  // removeProperty(tilemapId: string, index: number): Promise<[Property] | string>;
 
   // /**
   //  * Updates property to a specific tilemap
@@ -272,7 +276,7 @@ export default interface TilemapDBM {
   //   tilemapId: string,
   //   property: Property,
   //   index: number
-  // ): Promise<[Property] | null>;
+  // ): Promise<[Property] | string>;
 
   // /**
   //  * Adds a new tileset to a specific tilemap
@@ -286,7 +290,7 @@ export default interface TilemapDBM {
   //  * @param tilesetId id of tileset being added
   //  * @return updated array of tileset ids
   //  */
-  // addTileset(tilemapId: string, tilesetId: string): Promise<[string] | null>;
+  // addTileset(tilemapId: string, tilesetId: string): Promise<[string] | string>;
 
   // /**
   //  * Adds a new tileset to a specific tilemap
@@ -300,30 +304,30 @@ export default interface TilemapDBM {
   //  * @param index index of tileset being removed
   //  * @return updated array of tileset ids
   //  */
-  // removeTileset(tilemapId: string, index: number): Promise<[string] | null>;
+  // removeTileset(tilemapId: string, index: number): Promise<[string] | string>;
 
   addTilemapComment(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
+  ): Promise<TilemapSocialStatistics | string>;
 
   toggleLike(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
+  ): Promise<TilemapSocialStatistics | string>;
 
   toggleDislike(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
+  ): Promise<TilemapSocialStatistics | string>;
 
   addView(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
+  ): Promise<TilemapSocialStatistics | string>;
 
   updateTilemapPermissions(
     socialId: string,
     permissions: SocialStatisticsPermissions
-  ): Promise<TilemapSocialStatistics | null>;
+  ): Promise<TilemapSocialStatistics | string>;
 }

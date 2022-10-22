@@ -8,18 +8,20 @@ import {
   SortBy,
 } from "../../../types";
 import TilemapSchema from "../../mongoose/schemas/tilemap";
+import UserSchema from "../../mongoose/schemas/user";
 import { TilemapDBM } from "../../interface";
 import TilemapSchemaType from "../types/TileMapSchemaType";
 import { EditMode, RenderOrder } from "../../../types/Tilemap";
+import UserSchemaType from "../types/UserSchemaType";
 
 export default class MongooseTilemapDBM implements TilemapDBM {
-  async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
+  async getTilemapById(tilemapId: string): Promise<Tilemap | string> {
     await TilemapSchema.findById(
       tilemapId,
-      function (err: any, tilemap: TilemapSchemaType) {
+      function (err: Error, tilemap: TilemapSchemaType) {
         if (err) {
           console.log(err.message);
-          return null;
+          return err.message;
         }
         return {
           id: tilemap._id.toString(),
@@ -49,14 +51,14 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         };
       }
     );
-    return null;
+    return "unable to get tilemap";
   }
   //TODO Move sortBy to regex so it's done on database
   async getTilemapPartials(
     userId: string,
     search: string,
     sortBy: SortBy
-  ): Promise<[Partial<Tilemap>] | null> {
+  ): Promise<[Partial<Tilemap>] | string> {
     await TilemapSchema.find(
       {
         collaboratorSettings: [userId],
@@ -66,7 +68,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       function (err: any, tilemapPartials: [Partial<TilemapSchemaType>]) {
         if (err) {
           console.log(err.message);
-          return null;
+          return err.message;
         }
         let partials: Partial<Tilemap>[] = new Array();
         for (let partial of tilemapPartials) {
@@ -81,6 +83,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
           partials.push(newPartial);
         }
         //TODO Figure out a better workaround this type checking
+        //Possibly move to controller or database query
         switch (sortBy) {
           case SortBy.Newest: {
             partials.sort(function (a, b) {
@@ -110,38 +113,106 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         return partials;
       }
     );
-    return null;
+    return "Unable to get Tilemaps";
   }
-  async createTilemap(tilemap: Partial<Tilemap>): Promise<Tilemap | null> {
-    throw new Error("Method not implemented.");
+  async createTilemap(
+    userId: string,
+    tilemap: Partial<Tilemap>
+  ): Promise<Tilemap | string> {
+    TilemapSchema.findOne(
+      { name: tilemap.name },
+      function (err: Error, tilemap: TilemapSchemaType) {
+        if (tilemap)
+          return `tilemap with the name ${tilemap.name} already exists`;
+      }
+    );
+
+    let user = new UserSchema();
+    UserSchema.findOne({ _id: userId }, (err: Error, user: UserSchemaType) => {
+      if (err) return err.message;
+      user = user;
+    });
+
+    const newTilemap = new TilemapSchema({
+      backgroundColor: "#FFFFFF",
+      collaborators: [],
+      collaboratorNames: [],
+      collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
+      collaboratorIndex: -1,
+      image: "",
+      height: tilemap.height === null ? 12 : tilemap.height,
+      width: tilemap.width === null ? 12 : tilemap.width,
+      layers: [],
+      tileHeight: tilemap.tileHeight === null ? -1 : tilemap.tileHeight,
+      tileWidth: tilemap.tileWidth === null ? -1 : tilemap.tileWidth,
+      nextLayerId: 0,
+      nextObjectId: 0,
+      orientation: "orthogonal",
+      name: tilemap.name,
+      owner: user._id,
+      tilesets: [],
+      properties: [],
+      renderOrder: "right-down",
+      isPublished: false,
+    });
+
+    newTilemap.save().catch((err: Error) => {
+      return err.message;
+    });
+
+    return {
+      id: newTilemap._id.toString(),
+      createDate: new Date(newTilemap.createdAt),
+      lastSaveDate: new Date(newTilemap.updatedAt),
+      backgroundColor: "#FFFFFF",
+      collaborators: [],
+      collaboratorNames: [],
+      collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
+      collaboratorIndex: -1,
+      image: "",
+      height: newTilemap.height,
+      width: newTilemap.width,
+      layers: [],
+      tileHeight: newTilemap.tileHeight,
+      tileWidth: newTilemap.tileWidth,
+      nextLayerId: 0,
+      nextObjectId: 0,
+      orientation: "orthogonal",
+      name: newTilemap.name,
+      owner: user._id,
+      tilesets: [],
+      properties: [],
+      renderOrder: "right-down",
+      isPublished: false,
+    };
   }
   async updateTilemapById(
     tilemapId: string,
     tilemap: Partial<Tilemap>
-  ): Promise<Tilemap | null> {
+  ): Promise<Tilemap | string> {
     throw new Error("Method not implemented.");
   }
-  async deleteTilemapById(tilemapId: string): Promise<string | null> {
+  async deleteTilemapById(tilemapId: string): Promise<string | string> {
     throw new Error("Method not implemented.");
   }
-  //   addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | null> {
+  //   addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   updateLayer(
   //     tilemapId: string,
   //     layer: Partial<Layer>,
   //     index: number
-  //   ): Promise<[Layer] | null> {
+  //   ): Promise<[Layer] | string> {
   //     throw new Error("Method not implemented.");
   //   }
-  //   removeLayer(tilemapId: string, index: number): Promise<[Layer] | null> {
+  //   removeLayer(tilemapId: string, index: number): Promise<[Layer] | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   moveLayers(
   //     tilemapId: string,
   //     firstIndex: number,
   //     secondIndex: number
-  //   ): Promise<[Layer] | null> {
+  //   ): Promise<[Layer] | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   addCollaborator(
@@ -150,7 +221,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   //   ): Promise<{
   //     collaboratorIds: [string];
   //     collaboratorNames: [string];
-  //   } | null> {
+  //   } | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   removeCollaborator(
@@ -159,71 +230,71 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   //   ): Promise<{
   //     collaboratorIds: [string];
   //     collaboratorNames: [string];
-  //   } | null> {
+  //   } | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   updateCollaboratorSettings(
   //     tilemapId: string,
   //     collaboratorSettings: CollaboratorSettings
-  //   ): Promise<CollaboratorSettings | null> {
+  //   ): Promise<CollaboratorSettings | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   updateCollaboratorIndex(
   //     tilemapId: string,
   //     collaboratorIndex: number
-  //   ): Promise<number | null> {
+  //   ): Promise<number | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   addProperty(
   //     tilemapId: string,
   //     property: Property
-  //   ): Promise<[Property] | null> {
+  //   ): Promise<[Property] | string> {
   //     throw new Error("Method not implemented.");
   //   }
-  //   removeProperty(tilemapId: string, index: number): Promise<[Property] | null> {
+  //   removeProperty(tilemapId: string, index: number): Promise<[Property] | string> {
   //     throw new Error("Method not implemented.");
   //   }
   //   updateProperty(
   //     tilemapId: string,
   //     property: Property,
   //     index: number
-  //   ): Promise<[Property] | null> {
+  //   ): Promise<[Property] | string> {
   //     throw new Error("Method not implemented.");
   //   }
-  //   addTileset(tilemapId: string, tilesetId: string): Promise<[string] | null> {
+  //   addTileset(tilemapId: string, tilesetId: string): Promise<[string] | string> {
   //     throw new Error("Method not implemented.");
   //   }
-  //   removeTileset(tilemapId: string, index: number): Promise<[string] | null> {
+  //   removeTileset(tilemapId: string, index: number): Promise<[string] | string> {
   //     throw new Error("Method not implemented.");
   //   }
   addTilemapComment(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  ): Promise<TilemapSocialStatistics | string> {
     throw new Error("Method not implemented.");
   }
   toggleLike(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  ): Promise<TilemapSocialStatistics | string> {
     throw new Error("Method not implemented.");
   }
   toggleDislike(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  ): Promise<TilemapSocialStatistics | string> {
     throw new Error("Method not implemented.");
   }
   addView(
     userId: string,
     socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  ): Promise<TilemapSocialStatistics | string> {
     throw new Error("Method not implemented.");
   }
   updateTilemapPermissions(
     socialId: string,
     permissions: SocialStatisticsPermissions
-  ): Promise<TilemapSocialStatistics | null> {
+  ): Promise<TilemapSocialStatistics | string> {
     throw new Error("Method not implemented.");
   }
 }
