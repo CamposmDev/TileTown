@@ -14,9 +14,6 @@ const ForumPostSchema = new Schema({
     likes: { type: [ObjectId], require: true},
     dislikes: { type: [ObjectId], require: true},
     isPublished: { type: Boolean, require: true}
-
-
-
-
 })
+
 export = mongoose.model('ForumPostSchema', ForumPostSchema)
