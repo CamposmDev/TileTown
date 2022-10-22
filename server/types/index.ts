@@ -9,6 +9,7 @@ import Tilemap, { CollaboratorSettings } from "./Tilemap";
 import TilemapSocialStatistics from "./TilemapSocialStatistics";
 import TilesetSocialStatistics from "./TilesetSocialStatistics";
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
+import { SortBy } from "./Enums";
 
 export {
   Community,
@@ -23,4 +24,5 @@ export {
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
   CollaboratorSettings,
+  SortBy,
 };
