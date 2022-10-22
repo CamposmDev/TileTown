@@ -1,6 +1,7 @@
 import { ForumPost } from "../../../types";
 import ForumDBM from "../../interface/managers/ForumDBM";
 import ForumPostSchema from '../../mongoose/schemas/forumPost'
+import UserSchema from '../../mongoose/schemas/user'
 
 export default class MongooseForumDBM implements ForumDBM {
 
@@ -76,7 +77,32 @@ export default class MongooseForumDBM implements ForumDBM {
         return null
     }
     async toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        if ((user !== null) && (forumPost !== null)) {
+            let id = user._id.toString()
+            let likesArr = forumPost.likes
+            let dislikesArr = forumPost.dislikes
+            if (!dislikesArr.includes(id)) {
+                if (likesArr.includes(id)) {
+                    let i = likesArr.indexOf(id)
+                    likesArr.splice(i, 1)
+                } else {
+                    likesArr.push(id)
+                }
+                return {
+                    id: forumPost._id.toString(),
+                    author: forumPost.author,
+                    title: forumPost.title,
+                    body: forumPost.body,
+                    tags: forumPost.tags,
+                    likes: forumPost.likes,
+                    dislikes: forumPost.dislikes,
+                    isPublished: forumPost.isPublished
+                }
+            }
+        }
+        return null
     }
     async toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
