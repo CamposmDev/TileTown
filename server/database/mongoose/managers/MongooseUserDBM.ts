@@ -144,7 +144,12 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async updateUsername(userId: string, username: string): Promise<string | null> {
-        
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.username = username
+            return username
+        }
+        return null
     }
 
     async addFriend(userId: string, friendId: string): Promise<string | null> {
