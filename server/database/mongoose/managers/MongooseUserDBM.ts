@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
 import CommunitySchema from '../../mongoose/schemas/community'
+import ContestSchema from '../../mongoose/schemas/contest'
 import { User } from "../../../types";
 import { hash, compare } from "bcrypt";
 import UserSchemaType from '../types/UserSchemaType';
@@ -176,13 +177,23 @@ export default class MongooseUserDBM implements UserDBM {
                 comm.memberCounter = comm.memberCounter + 1
                 user.save()
                 comm.save()
+                return communityId
             }
         }
         return null
     }
 
     async joinContest(userId: string, contestId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let contest: any = await ContestSchema.findById(contestId)
+        if ((user !== null) && (contest !== null)) {
+            user.joinedContests.push(contest._id)
+            user.save()
+            contest.particpates.push(user._id)
+            contest.save()
+            return contestId
+        }
+        return null
     }
 
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
