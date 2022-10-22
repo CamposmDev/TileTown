@@ -44,10 +44,23 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         if(!(await validCommunityName(communityName))) return null
         return null
     }
-    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
-        throw new Error("Method not implemented.");
-
+   async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
+        let com: any = await CommunitySchema.findById(communityId)
+        if (com !== null) {
+            com.community = community
+            com.save()
+            return {
+                id: com._id.toString(),
+                owner: com.owner.toString(),
+                name: com.name,
+                description: com.description,
+                memberCount: com.memberCounter,
+                visibility: com.visibility
+            }
+        }
+        return null
     }
+
 
     async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
