@@ -44,8 +44,28 @@ export default class MongooseForumDBM implements ForumDBM {
         } : null
     }
 
-    async updateForumPost(forumPostId: string, forumPost: Partial<ForumPost>): Promise<ForumPost | null> {
-        throw new Error("Method not implemented.");
+    async updateForumPost(forumPostId: string, payload: Partial<ForumPost>): Promise<ForumPost | null> {
+        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        if (forumPost !== null) {
+            if (payload.title) forumPost.title = payload.title
+            if (payload.body) forumPost.body = payload.body
+            if (payload.tags) forumPost.tags = payload.tags
+            if (payload.likes) forumPost.likes= payload.likes
+            if (payload.dislikes) forumPost.dislikes = payload.dislikes
+            if (payload.isPublished) forumPost.isPublished = payload.isPublished
+            await forumPost.save()
+            return {
+                id: forumPost._id.toString(),
+                author: forumPost.author,
+                title: forumPost.title,
+                body: forumPost.body,
+                tags: forumPost.tags,
+                likes: forumPost.likes,
+                dislikes: forumPost.dislikes,
+                isPublished: forumPost.isPublished
+            }
+        }
+        return null
     }
     async deleteForumPost(forumPostId: string): Promise<string | null> {
         throw new Error("Method not implemented.");

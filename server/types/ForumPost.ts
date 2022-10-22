@@ -17,7 +17,7 @@ export default interface ForumPost {
     body: string
 
     /** An array of tags (keywords) associated with the ForumPost */
-    tags: string
+    tags: string[]
 
     /** An array of User ids in the DBMS who have liked the ForumPost */
     likes: string[]
