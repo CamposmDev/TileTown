@@ -6,21 +6,6 @@ const sendEmail = async (email: string, subject: string, text: string) => {
   console.log(account);
 
   try {
-    // const transporter = nodemailer.createTransport({
-    //   host: "carlos47@ethereal.email",
-    //   port: 587,
-    //   auth: {
-    //     user: "carlos47@ethereal.email",
-    //     pass: "ZCvXyu1uUAxuvmFS1D",
-    //   },
-    //   logger: true,
-    //   transactionLog: true, // include SMTP traffic in the logs
-    //   allowInternalNetworkInterfaces: false,
-    //   tls: {
-    //     rejectUnauthorized: false,
-    //   },
-    // });
-
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
