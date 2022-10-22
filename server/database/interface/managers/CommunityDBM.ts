@@ -102,18 +102,36 @@ export default interface CommunityDBM {
     communityId: string
   ): Promise<string | null>;
 
-  /**
-   * Deletes the community with the given community id from the DBMS.
-   *
-   * @remarks
-   *
-   * If a community with the given id exists in the DBMS, the method will delete the community with the given community id in
-   * the DBMS and, if nothing goes wrong, return the id of the deleted community.
-   *
-   * If a community with the given id does not exist in the DBMS or any other error occurs, the method will return null.
-   *
-   * @param communityId the id of the community in the DBMS
-   * @return if successful, the id of the deleted community; null otherwise
-   */
-  deleteCommunity(communityId: string): Promise<string | null>;
+    /**
+     * Removes a user with the given user id from the community with the given community id.
+     * 
+     * @remarks
+     * 
+     * If a user with the given user id exists in the DBMS and a community with the given community id exists in the DBMS, the
+     * method removes the user with the given user id from the community with the given community id in the DBMS. If nothing
+     * goes wrong, the method returns the id of the community the user was removed from in the DBMS.
+     * 
+     * If a user with the given user id does not exist in the DBMS or a community with the given community id does not exist in
+     * the DBMS, or any other error occurs, the method returns null.
+     * 
+     * @param userId the id of the user in the DBMS.
+     * @param communityId the id of the community in the DBMS.
+     * @return if successful, the id of the community in the DBMS the user was removed from; null otherwise
+     */
+    removeCommunityMember(userId: string, communityId: string): Promise<boolean>;
+
+    /**
+     * Deletes the community with the given community id from the DBMS.
+     * 
+     * @remarks
+     * 
+     * If a community with the given id exists in the DBMS, the method will delete the community with the given community id in
+     * the DBMS and, if nothing goes wrong, return the id of the deleted community.
+     * 
+     * If a community with the given id does not exist in the DBMS or any other error occurs, the method will return null. 
+     * 
+     * @param communityId the id of the community in the DBMS
+     * @return if successful, the id of the deleted community; null otherwise
+     */
+    deleteCommunity(communityId: string): Promise<boolean>;
 }
