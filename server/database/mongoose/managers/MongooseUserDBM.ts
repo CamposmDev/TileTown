@@ -3,6 +3,7 @@ import UserSchema from '../../mongoose/schemas/user'
 import CommunitySchema from '../../mongoose/schemas/community'
 import ContestSchema from '../../mongoose/schemas/contest'
 import TilemapSchema from '../../mongoose/schemas/tilemap'
+import TilesetSchema from '../../mongoose/schemas/tileset'
 import { User } from "../../../types";
 import { hash, compare } from "bcrypt";
 
@@ -207,7 +208,13 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let tileset = await UserSchema.findById(tilesetId)
+        if ((user !== null) && (tileset != null)) {
+            user.favoriteTileSets.push(tileset._id)
+            user.save()
+            return tileset._id.toString()
+        }
     }
     
 }
