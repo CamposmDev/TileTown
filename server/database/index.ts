@@ -1,6 +1,6 @@
-import MongooseDB from "./mongoose/MongooseDB";
-import TileTownDB from "./interface/TileTownDB";
+import { MongooseDB } from "./mongoose";
+import { TileTownDB } from "./interface";
 
-const db: TileTownDB = MongooseDB.instance();
+const db: TileTownDB = new MongooseDB();
 
 export { db };
