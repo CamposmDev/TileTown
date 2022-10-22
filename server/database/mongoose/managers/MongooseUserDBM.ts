@@ -1,11 +1,10 @@
-import mongoose from 'mongoose'
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
 import CommunitySchema from '../../mongoose/schemas/community'
 import ContestSchema from '../../mongoose/schemas/contest'
+import TilemapSchema from '../../mongoose/schemas/tilemap'
 import { User } from "../../../types";
 import { hash, compare } from "bcrypt";
-import UserSchemaType from '../types/UserSchemaType';
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -197,7 +196,14 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let tilemap = await TilemapSchema.findById(tilemapId)
+        if ((user !== null) && (tilemap !== null)) {
+            user.favoriteTileMaps.push(tilemap._id)
+            user.save()
+            return tilemap._id.toString()
+        }
+        return null
     }
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
