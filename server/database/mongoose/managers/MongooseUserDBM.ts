@@ -1,8 +1,11 @@
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
+import CommunitySchema from '../../mongoose/schemas/community'
+import ContestSchema from '../../mongoose/schemas/contest'
+import TilemapSchema from '../../mongoose/schemas/tilemap'
+import TilesetSchema from '../../mongoose/schemas/tileset'
 import { User } from "../../../types";
-
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -38,15 +41,13 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Check if the username is valid and is unique.
          */
-        const validUsername = async (username: string): Promise<Boolean> => {
+        const validUsername = async (username: string): Promise<boolean> => {
             const existingUser = await UserSchema.findOne({username: username})
             return existingUser ? false : true
         }
 
         let username = userpy.username
-        await validUsername(username).then(isValid => {
-            if (!isValid) return null
-        })
+        if (!(await validUsername(username))) return null
 
         let password = userpy.password
         /**
@@ -60,15 +61,13 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Check if the user's email is valid and is not being used by other user accounts
          */
-        const validEmail = async (email: string): Promise<Boolean> => {
+        const validEmail = async (email: string): Promise<boolean> => {
             let existingUser = await UserSchema.findOne({email: email})
             return existingUser ? false : true
         }
 
         let email = userpy.email
-        await validEmail(email).then(isValid => {
-            if (!isValid) return null
-        })
+        if (!(await validEmail(email))) return null
 
         const user = new UserSchema({
             firstName: userpy.firstName,
@@ -106,31 +105,191 @@ export default class MongooseUserDBM implements UserDBM {
     }
  
     async verifyUser(key: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        /**
+         * Acquire user by their verify key and update isVerified to true
+         */
+        return await UserSchema.findOne({verifyKey: key}).then(x => {
+            if (x) {
+                x.isVerified = true
+                x.save()
+                return (x.isVerified = true)
+            } else {
+                return false
+            }
+        })
     }
-    async updatePassword(userId: string, password: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+
+    async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let currentPassword = user.password
+            let isOwner: boolean = await compare(oldPassword, currentPassword)
+            if (isOwner) {
+                const ROUNDS = 10
+                let passwordHash = await hash(newPassword, ROUNDS)
+                user.password = passwordHash.toString()
+                user.save()
+                return passwordHash
+            }
+        }
+        return null
     }
+
     async updateEmail(userId: string, email: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.email = email
+            // TODO Send verfication email
+            user.isVerified = false
+            user.save()
+            return email
+        }
+        return null
     }
+
     async updateUsername(userId: string, username: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.username = username
+            return username
+        }
+        return null
     }
+
     async addFriend(userId: string, friendId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let friend: any = await UserSchema.findById(friendId)
+            if (friend !== null) {
+                user.friends.push(friend._id)
+                user.save()
+            }
+        }
+        return null
     }
+
     async joinCommunity(userId: string, communityId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let comm: any = await CommunitySchema.findById(communityId)
+            if (comm !== null) {
+                user.joinedCommunities.push(comm._id)
+                comm.memberCounter = comm.memberCounter + 1
+                user.save()
+                comm.save()
+                return communityId
+            }
+        }
+        return null
     }
+
     async joinContest(userId: string, contestId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let contest: any = await ContestSchema.findById(contestId)
+        if ((user !== null) && (contest !== null)) {
+            user.joinedContests.push(contest._id)
+            user.save()
+            contest.particpates.push(user._id)
+            contest.save()
+            return contestId
+        }
+        return null
     }
+
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let tilemap = await TilemapSchema.findById(tilemapId)
+        if ((user !== null) && (tilemap !== null)) {
+            user.favoriteTileMaps.push(tilemap._id)
+            user.save()
+            return tilemap._id.toString()
+        }
+        return null
     }
+
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let user: any = await UserSchema.findById(userId)
+        let tileset = await TilesetSchema.findById(tilesetId)
+        if ((user !== null) && (tileset != null)) {
+            user.favoriteTileSets.push(tileset._id)
+            user.save()
+            return tileset._id.toString()
+        }
+        return null
     }
     
+    async deleteUser(userId: string): Promise<boolean> {
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.delete()
+            return true
+        }
+        return false
+    }
+    
+    async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let comm = await CommunitySchema.findById(communityId)
+        if ((user !== null) && (comm !== null)) {
+            let i = user.joinedCommunities.indexOf(comm._id, 0)
+            if (i > -1) {
+                user.joinedCommunities.splice(i, 1)
+                user.save()
+            }
+            let memberCount = comm.memberCounter
+            if (memberCount) {
+                comm.memberCounter = memberCount - 1
+                comm.save()
+            }
+            return true
+        }
+        return false
+    }
+
+    async leaveContest(userId: string, contestId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let contest = await ContestSchema.findById(contestId)
+        if ((user !== null) && (contest !== null)) {
+            let i = user.joinedContests.indexOf(contest._id, 0)
+            if (i > -1) {
+                user.joinedContests.splice(i, 1)
+                user.save()
+            }
+            let j = contest.particpates.indexOf(user._id, 0)
+            if (j > -1) {
+                contest.particpates.splice(j, 1)
+                contest.save()
+            }
+            return true
+        }
+        return false
+    }
+
+    async unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let tilemap = await TilemapSchema.findById(tilemapId)
+        if ((user !== null) && (tilemap !== null)) {
+            let i = user.favoriteTileMaps.indexOf(tilemap._id, 0)
+            if (i > -1) {
+                user.favoriteTileMaps.splice(i, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
+    }
+
+    async unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let tileset = await TilesetSchema.findById(tilesetId)
+        if ((user !== null) && (tileset !== null)) {
+            let i = user.favoriteTileSets.indexOf(tileset._id, 0)
+            if (i > -1) {
+                user.favoriteTileSets.splice(i, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
+    }
 }
