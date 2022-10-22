@@ -1,7 +1,8 @@
+import { hash } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
 import { User } from "../../../types";
-import { hash } from "bcrypt";
+
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -54,7 +55,7 @@ export default class MongooseUserDBM implements UserDBM {
         const ROUNDS = 10
         const LENGTH = 12
         if (password.length <= LENGTH) return null
-        let passwordHash = hash(password, ROUNDS)
+        let passwordHash = await hash(password, ROUNDS)
 
         /**
          * Check if the user's email is valid and is not being used by other user accounts
