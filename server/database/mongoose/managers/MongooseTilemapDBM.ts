@@ -5,17 +5,18 @@ import {
   SocialStatisticsPermissions,
   Layer,
   Property,
+  Color
 } from "../../../types";
 import TilemapSchema from "../../mongoose/schemas/tilemap";
 import { TilemapDBM } from "../../interface";
-import TilemapSchemaType from "../types/TileMapSchemaType";
+import TilemapSchemaType from "../types/TilemapSchemaType";
 import { EditMode, RenderOrder } from "../../../types/Tilemap";
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
     await TilemapSchema.findById(
       tilemapId,
-      function (err: any, tilemap: TilemapSchemaType) {
+      (err: any, tilemap: TilemapSchemaType) => {
         if (err) return null;
         return {
           id: tilemap._id.toString(),

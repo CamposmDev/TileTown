@@ -1,3 +1,4 @@
+import mongoose, { ObjectId } from 'mongoose';
 import { hash, compare } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
@@ -11,6 +12,10 @@ import { User } from "../../../types";
 export default class MongooseUserDBM implements UserDBM {
 
     async getUserById(userId: string): Promise<User | null> {
+
+        // Checks if string is a valid object id
+        if (!mongoose.Types.ObjectId.isValid(userId)) return null;
+
         let user = await UserSchema.findById({_id: userId});
         return user !== null ? {
             id: user._id.toString(),
@@ -137,15 +142,14 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Acquire user by their verify key and update isVerified to true
          */
-        return await UserSchema.findOne({verifyKey: key}).then(x => {
-            if (x) {
-                x.isVerified = true
-                x.save()
-                return (x.isVerified = true)
-            } else {
-                return false
-            }
-        })
+        let x = await UserSchema.findOne({verifyKey: key});
+        if (x) {
+            x.isVerified = true
+            await x.save();
+            return (x.isVerified = true)
+        } else {
+            return false
+        }
     }
 
     async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
@@ -157,7 +161,7 @@ export default class MongooseUserDBM implements UserDBM {
                 const ROUNDS = 10
                 let passwordHash = await hash(newPassword, ROUNDS)
                 user.password = passwordHash.toString()
-                user.save()
+                await user.save()
                 return passwordHash
             }
         }
@@ -248,6 +252,7 @@ export default class MongooseUserDBM implements UserDBM {
     }
     
     async deleteUser(userId: string): Promise<boolean> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) return false;
         let user = await UserSchema.findById(userId)
         if (user !== null) {
             user.delete()

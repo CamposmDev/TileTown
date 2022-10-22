@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import TilemapSchemaType from "../types/TileMapSchemaType";
+import TilemapSchemaType from "../types/TilemapSchemaType";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 const PropertySchema = require("./properties").schema;
@@ -37,4 +37,4 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   isPublished: { type: Boolean, required: true },
 });
 
-export = mongoose.model("Tileset", TilemapSchema);
+export = mongoose.model("Tilemap", TilemapSchema);

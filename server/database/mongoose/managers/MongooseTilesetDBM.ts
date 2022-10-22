@@ -27,7 +27,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async addView(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
     }
-    async updateTilemapPermissions(socialId: string, permissions: SocialStatisticsPermissions): Promise<TilesetSocialStatistics | null> {
+    async updateTilesetPermissions(socialId: string, permissions: SocialStatisticsPermissions): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
     }
 
