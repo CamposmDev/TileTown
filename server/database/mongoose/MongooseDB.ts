@@ -1,11 +1,13 @@
 import mongoose, { ConnectOptions } from "mongoose";
-import TilemapDBM from "../interface/managers/TilemapDBM";
-import TilesetDBM from "../interface/managers/TilesetDBM";
-import TileTownDB from "../interface/TileTownDB";
-import MongooseCommunityDBM from "./managers/MongooseCommunityDBM";
-import MongooseContestDBM from "./managers/MongooseContestDBM";
-import MongooseForumDBM from "./managers/MongooseForumDBM";
-import MongooseUserDBM from "./managers/MongooseUserDBM";
+import { TileTownDB } from "../interface";
+import { 
+    MongooseCommunityDBM, 
+    MongooseContestDBM, 
+    MongooseForumDBM, 
+    MongooseUserDBM,
+    MongooseTilemapDBM,
+    MongooseTilesetDBM
+} from "./managers";
 
 /**
  * A database manager that works with TileTown data in MongoDB using Mongoose.
@@ -18,9 +20,6 @@ import MongooseUserDBM from "./managers/MongooseUserDBM";
  */
 export default class MongooseDB implements TileTownDB {
 
-    /** The instance of the MongooseDBM */
-    protected static _instance: MongooseDB | null = null;
-
     /** A flag indicating whether a connection has been made to the database or not */
     protected _connected: boolean;
 
@@ -29,20 +28,17 @@ export default class MongooseDB implements TileTownDB {
     protected _forums: MongooseForumDBM;
     protected _communities: MongooseCommunityDBM;
     protected _contests: MongooseContestDBM;
+    protected _tilemaps: MongooseTilemapDBM;
+    protected _tilesets: MongooseTilesetDBM;
 
-    private constructor() {
+    public constructor() {
         this._users = new MongooseUserDBM();
         this._forums = new MongooseForumDBM();
         this._communities = new MongooseCommunityDBM();
         this._contests = new MongooseContestDBM();
+        this._tilemaps = new MongooseTilemapDBM();
+        this._tilesets = new MongooseTilesetDBM();
         this._connected = false;
-    }
-
-    public static instance(): MongooseDB {
-        if (this._instance === null) {
-            this._instance = new MongooseDB();
-        }
-        return this._instance;
     }
 
     /**
@@ -66,10 +62,6 @@ export default class MongooseDB implements TileTownDB {
     get forums(): MongooseForumDBM { return this._forums; }
     get contests(): MongooseContestDBM { return this._contests; }
     get communities(): MongooseCommunityDBM { return this._communities; }
-    get tilesets(): TilesetDBM {
-        throw new Error("Method not implemented.");
-    }
-    get tilemaps(): TilemapDBM {
-        throw new Error("Method not implemented.");
-    }
+    get tilesets(): MongooseTilesetDBM { return this._tilesets; }
+    get tilemaps(): MongooseTilemapDBM { return this._tilemaps; }
 }

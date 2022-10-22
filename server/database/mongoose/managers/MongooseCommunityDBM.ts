@@ -1,24 +1,24 @@
 import { Community } from "../../../types";
-import CommunityDBM from "../../interface/managers/CommunityDBM";
+import { CommunityDBM } from "../../interface";
 
 export default class MongooseCommunityDBM implements CommunityDBM {
 
-    getCommunityById(communityId: string): Community | null {
+    async getCommunityById(communityId: string): Promise<Community | null> {
         throw new Error("Method not implemented.");
     }
-    createCommunity(community: Partial<Community>): Community | null {
+    async createCommunity(community: Partial<Community>): Promise<Community | null> {
         throw new Error("Method not implemented.");
     }
-    updateCommunity(communityId: string, community: Partial<Community>): Community | null {
+    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
         throw new Error("Method not implemented.");
     }
-    addCommunityMember(userId: string, communityId: string): string | null {
+    async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    removeCommunityMember(userId: string, communityId: string): string | null {
+    async removeCommunityMember(userId: string, communityId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    deleteCommunity(communityId: string): string | null {
+    async deleteCommunity(communityId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
     

@@ -1,24 +1,24 @@
 import { Contest } from "../../../types";
-import ContestDBM from "../../interface/managers/ContestDBM";
+import { ContestDBM } from "../../interface";
 
 export default class MongooseContestDBM implements ContestDBM {
 
-    getContest(contestId: string): Contest | null {
+    async getContest(contestId: string): Promise<Contest | null> {
         throw new Error("Method not implemented.");
     }
-    createContest(contest: Partial<Contest>): Contest | null {
+    async createContest(contest: Partial<Contest>): Promise<Contest | null> {
         throw new Error("Method not implemented.");
     }
-    updateContest(contestId: string, contest: Partial<Contest>): Contest | null {
+    async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
         throw new Error("Method not implemented.");
     }
-    updateMembers(contestId: string, members: string[]): string[] | null {
+    async updateMembers(contestId: string, members: string[]): Promise<string[] | null> {
         throw new Error("Method not implemented.");
     }
-    updateModerator(contestId: string, userId: string, role: string): string | null {
+    async updateModerator(contestId: string, userId: string, role: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
-    deleteContest(contestId: string): string | null {
+    async deleteContest(contestId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
 

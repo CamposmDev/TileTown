@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import LayerSchemaType from "../types/LayerSchemaType";
 const Schema = mongoose.Schema;
-const PropertiesSchema = require("./properties");
+const PropertySchema = require("./properties").schema;
 
 /**
  * Data model for storing layer data
@@ -8,17 +9,16 @@ const PropertiesSchema = require("./properties");
  * @
  */
 
-const LayerSchema = new Schema({
+const LayerSchema = new Schema<LayerSchemaType>({
   data: { type: Number, required: true },
-  image: { type: String, required: true },
   height: { type: Number, required: true },
   width: { type: Number, required: true },
   name: { type: String, required: true },
   opacity: { type: Number, required: true },
-  properties: { type: PropertiesSchema, required: true },
+  properties: { type: [PropertySchema], required: true },
   visible: { type: Boolean, required: true },
   x: { type: Number, required: true },
   y: { type: Number, required: true },
 });
 
-exports = mongoose.model("Layer", LayerSchema);
+export = mongoose.model("Layer", LayerSchema);
