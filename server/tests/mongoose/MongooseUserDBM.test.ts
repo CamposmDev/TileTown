@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import UserSchema from "../database/mongoose/schemas/user";
-import MongooseUserDBM from "../database/mongoose/managers/MongooseUserDBM";
-import User from "../types/User";
+import UserSchema from "../../database/mongoose/schemas/user";
+import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
+import User from "../../types/User";
 import dotenv from "dotenv";
-import UserSchemaType from '../database/mongoose/types/UserSchemaType';
+import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 
 /** Config the env variables */
 dotenv.config()
@@ -26,11 +26,15 @@ describe("Testing MongooseUserDBM", function() {
      */
     before(async function() { await mongoose.connect(connect); });
 
+    describe("getUserById", function() {});
+
+    describe("loginUser", function() {});
+
     /** 
      * A set of tests for the method MongooseUserDBM.createUser()
      * @see MongooseUserDBM.createUser
      */
-    describe("MongooseUserDBM.createUser", function() {
+    describe("createUser", function() {
 
         /** 
          * The beforeEach function is another hook function like before. The only difference 
@@ -82,6 +86,34 @@ describe("Testing MongooseUserDBM", function() {
 
     });
 
+    describe("deleteUser", function() {});
+
+    describe("verifyUser", function() {});
+
+    describe("updatePassword", function() {});
+
+    describe("updateEmail", function() {});
+
+    describe("updateUsername", function() {});
+
+    describe("addFriend", function() {});
+
+    describe("joinCommunity", function() {});
+
+    describe("leaveCommunity", function() {});
+
+    describe("joinContest", function() {});
+
+    describe("leaveContest", function() {});
+
+    describe("favoriteTilemap", function() {});
+
+    describe("unfavoriteTilemap", function() {});
+
+    describe("favoriteTileset", function() {});
+
+    describe("unfavoriteTileset", function() {});
+
     /** 
      * The before method gets called after all of the tests have run. I am using it here
      * to close the connection to MongoDB.
@@ -89,4 +121,4 @@ describe("Testing MongooseUserDBM", function() {
      */
     after(async function() { await mongoose.connection.close(); });
 
-})
+});
