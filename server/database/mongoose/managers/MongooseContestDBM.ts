@@ -43,7 +43,23 @@ export default class MongooseContestDBM implements ContestDBM {
         
     }
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
-        throw new Error("Method not implemented.");
+        let con: any = await ContestSchema.findById(contestId)
+        if (con !== null) {
+            con.contest = contest
+            con.save()
+            return {
+                id: con._id.toString(),
+                owner: con.owner.toString(),
+                name: con.name,
+                description: con.description,
+                participates: con.particpates,
+                startDate: con.startDate,
+                endDate: con.endDate,
+                winner: con.winner,
+                isPublished: con.isPublished
+            }
+        }
+        return null
     }
     async updateMembers(contestId: string, members: string[]): Promise<string[] | null> {
         throw new Error("Method not implemented.");
