@@ -2,7 +2,7 @@ import { User } from '../../../types';
 
 /**
  * An interface defining a set of methods to work with TileTown users in an arbitrary DBMS. 
- * @author Peter Walsh
+ * @author Peter Walsh, Michael Campos
  */
 export default interface UserDBM {
 
