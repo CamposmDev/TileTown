@@ -61,20 +61,38 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         return null
     }
 
-
     async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
-
+        let community: any = await CommunitySchema.findById(communityId)
+        if (community !== null) {
+            let user: any = await CommunitySchema.findById(userId)
+            if (user !== null){
+                community.memberCounter = community.memberCounter + 1
+                community.save()
+                return userId
+            }
+        }
+        return null
 
     }
+     
     async removeCommunityMember(userId: string, communityId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        let community: any = await CommunitySchema.findById(communityId)
+        let user = await UserSchema.findById(userId)
+        if ((community !== null) && (user !== null)) {
+            community.memberCounter = community.memberCount - 1
+            community.save()
+            return true
 
+        }
+        return false
     }
     async deleteCommunity(communityId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
-
+        let community: any = await CommunitySchema.findById(communityId)
+        if (community !== null) {
+            community.delete()
+            return true
+        }
+        return false
 
     }
-    
 }
