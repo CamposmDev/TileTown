@@ -218,23 +218,68 @@ export default class MongooseUserDBM implements UserDBM {
         return null
     }
     
-    deleteUser(userId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteUser(userId: string): Promise<boolean> {
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.delete()
+            return true
+        }
+        return false
     }
     
-    leaveCommunity(userId: string, communityId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let comm = await CommunitySchema.findById(communityId)
+        if ((user !== null) && (comm !== null)) {
+            let index = user.joinedCommunities.indexOf(comm._id, 0)
+            if (index > -1) {
+                user.joinedCommunities.splice(index, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
     }
 
-    leaveContest(userId: string, contestId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async leaveContest(userId: string, contestId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let contest = await UserSchema.findById(contestId)
+        if ((user !== null) && (contest !== null)) {
+            let index = user.joinedContests.indexOf(contest._id, 0)
+            if (index > -1) {
+                user.joinedContests.splice(index, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
     }
 
-    unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let tilemap = await TilemapSchema.findById(tilemapId)
+        if ((user !== null) && (tilemap !== null)) {
+            let index = user.favoriteTileMaps.indexOf(tilemap._id, 0)
+            if (index > -1) {
+                user.favoriteTileMaps.splice(index, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
     }
 
-    unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
+        let user: any = await UserSchema.findById(userId)
+        let tileset = await TilesetSchema.findById(tilesetId)
+        if ((user !== null) && (tileset !== null)) {
+            let index = user.favoriteTileSets.indexOf(tileset._id, 0)
+            if (index > -1) {
+                user.favoriteTileSets.splice(index, 1)
+                user.save()
+            }
+            return true
+        }
+        return false
     }
 }
