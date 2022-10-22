@@ -77,8 +77,14 @@ export default class MongooseContestDBM implements ContestDBM {
         }
         return null
     }
+
     async deleteContest(contestId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let con = await ContestSchema.findById(contestId)
+        if (con !== null) {
+            con.delete()
+            return contestId
+        }
+        return null
     }
 
 }
