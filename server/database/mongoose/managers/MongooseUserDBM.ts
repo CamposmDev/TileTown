@@ -5,6 +5,7 @@ import CommunitySchema from '../../mongoose/schemas/community'
 import ContestSchema from '../../mongoose/schemas/contest'
 import TilemapSchema from '../../mongoose/schemas/tilemap'
 import TilesetSchema from '../../mongoose/schemas/tileset'
+import UserSchemaType from "../../mongoose/types/UserSchemaType";
 import { User } from "../../../types";
 
 export default class MongooseUserDBM implements UserDBM {
@@ -27,6 +28,34 @@ export default class MongooseUserDBM implements UserDBM {
             joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
             joinedContests: user.joinedContests.map((id) => id.toString())
         } : null
+    }
+
+    async loginUser(userEmail: string, userPassword: string): Promise<User | null> {
+        // Find the user based off their email
+        let user = await UserSchema.findOne({email: userEmail});
+        if (user === null) return null;
+
+        // Check the user's password I think
+        let isOwner: boolean = await compare(user.password, userPassword);
+        if (!isOwner) return null;
+
+        // If the password matches up - return the user.
+        return {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            imageURL: user.imageURL,
+            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
+            friends: user.friends.map((id) => id.toString()),
+            isVerified: user.isVerified,
+            verifyKey: user.verifyKey,
+            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
+            joinedContests: user.joinedContests.map((id) => id.toString())
+        }
     }
 
     async createUser(userpy: Partial<User>): Promise<User | null> {

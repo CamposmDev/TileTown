@@ -20,6 +20,15 @@ export default interface UserDBM {
      */
     getUserById(userId: string): Promise<User | null>;
 
+    /** 
+     * Handles logging a user into TileTown.
+     * 
+     * @param userEmail the users email
+     * @param userPassword the users password
+     * @return a user object with updated user info (including users session key)
+     */
+    loginUser(userEmail: string, userPassword: string): Promise<User | null>;
+
     /**
      * Creates a new user in the DBMS from the a partial User object. 
      * 
