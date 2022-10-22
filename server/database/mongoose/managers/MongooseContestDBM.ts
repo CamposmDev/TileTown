@@ -1,5 +1,5 @@
 import { Contest } from "../../../types";
-import ContestDBM from "../../interface/managers/ContestDBM";
+import { ContestDBM } from "../../interface";
 
 export default class MongooseContestDBM implements ContestDBM {
 

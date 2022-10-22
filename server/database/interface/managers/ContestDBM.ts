@@ -25,8 +25,8 @@ export default interface ContestDBM {
      * 
      * @remarks
      * 
-     * If the partial Contest object contains the neccessary information to create a new contest in the DBMS, the method will
-     * creaete a new contest in the DBMS and return a new Contest object with the data associated with the newly created 
+     * If the partial Contest object contains the necessary information to create a new contest in the DBMS, the method will
+     * create a new contest in the DBMS and return a new Contest object with the data associated with the newly created 
      * contest. 
      * 
      * If the partial contest is null or undefined or does not contain sufficient data to create a new contest in the DBMS, 

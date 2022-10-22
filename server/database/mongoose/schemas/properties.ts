@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import PropertySchemaType from "../types/PropertySchemaType";
 const Schema = mongoose.Schema;
 const Mixed = Schema.Types.Mixed;
 
@@ -8,10 +9,10 @@ const Mixed = Schema.Types.Mixed;
  * @
  */
 
-const PropertiesSchema = new Schema({
+const PropertySchema = new Schema<PropertySchemaType>({
   name: { type: String, required: true },
   type: { type: String, required: true },
   value: { type: Mixed, required: true },
 });
 
-exports = mongoose.model("Properties", PropertiesSchema);
+export = mongoose.model("Properties", PropertySchema);
