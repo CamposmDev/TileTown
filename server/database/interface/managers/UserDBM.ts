@@ -37,6 +37,19 @@ export default interface UserDBM {
     createUser(user: Partial<User>): Promise<User | null>;
 
     /**
+     * Deletes a user in the DBMS using a given user ID
+     * 
+     * @remarks
+     * If the method successfully deletes the user given the user ID, then the method returns true.
+     * 
+     * If there isn't a user that has the given user ID, then the method returns false
+     * 
+     * @param userId the id of the user to delete
+     * @return if the user is deleted successfully, true; false otherwise
+     */
+    deleteUser(userId: string): Promise<boolean>
+
+    /**
      * Verifies a user account in the DBMS with the given verification key. 
      * 
      * @remarks
@@ -128,6 +141,7 @@ export default interface UserDBM {
 
     /**
      * Adds a user with the given user id to the community with the given community id in the DBMS.
+     * @author Michael Campos
      * 
      * @remarks
      * 
@@ -141,9 +155,28 @@ export default interface UserDBM {
      * @param userId the id of the user in the DBMS
      * @param communityId the id of the community in the DBMS
      * @return if successful, the id of the community the user was added to in the DBMS; null otherwise.
+     * 
+     * 
      */
     joinCommunity(userId: string, communityId: string): Promise<string | null>;
 
+    /**
+     * Removes a user with the given user id from a community with a given community id in the DBMS
+     * @author Michael Campos
+     * 
+     * @remarks
+     * If a user with the given user id exists in the DBMS and a community with a given community id exists in the DBMS,
+     * then the method removes the community's id from the user's joined communities field. 
+     * If the method sucessfully accomplishes this task, then the method returns true
+     * 
+     * If the given user id or community id does not exist in the DBMS, then the method returns false
+     * 
+     * @param userId 
+     * @param communityId 
+     * @return if successful, true; false otherwise
+     */
+    leaveCommunity(userId: string, communityId: string): Promise<boolean>
+    
     /**
      * Adds a user with the given user id to the contest with the given contest id in the DBMS.
      * 
@@ -163,7 +196,22 @@ export default interface UserDBM {
     joinContest(userId: string, contestId: string): Promise<string | null>;
 
     /**
-     * Adds a tilemap with the given tilemap id the favorited tilemaps of the user with the given user id in the DBMS. 
+     * Removes a user given a user id from a contest given a contest id in the DBMS
+     * 
+     * @remarks
+     * If a user with the given user id exists in teh DBMS and a contest with the given contest id exists in the DBMS,
+     * then the method removes the user's id from the contest and the contest's id is removed from the user's joinedContests field.
+     * 
+     * If the user id or the contest id does not exist in the DBMS, then the method returns false
+     * 
+     * @param userId the id of the user in the DBMS
+     * @param contestId the id of the contest in the DBMS
+     * @return if successful, true; false otherwise
+     */
+    leaveContest(userId: string, contestId: string): Promise<boolean>
+
+    /**
+     * Adds a tilemap with the given tilemap id in the  favorited tilemaps field of the user with the given user id in the DBMS. 
      * 
      * @remarks
      * 
@@ -179,6 +227,22 @@ export default interface UserDBM {
      * @return if successful, the id of the tilemap added to the user's favorited tilemaps; null otherwise.
      */
     favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
+
+    /**
+     * Removes a tilemap of a given tilemap id from the user's favorite tilemaps field given a user id in the DBMS
+     * 
+     * @remarks
+     * If a user with the given user id exists in the DBMS and a tilemap with the given tilemap id exists in the DBMS,
+     * then the method adds the tilemap's id to the user's favorite tileset field.
+     * 
+     * If the method is successful, then the method returns true.
+     * If the user's id or tilemap's id does not exist in the DBMS, then the method returns false
+     * 
+     * @param userId the id of the user in the DBMS
+     * @param tilemapId the id of the tilemap in the DBMS
+     * @return if successful, true; false otherwise 
+     */
+    unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean>
 
     /**
      * Adds a tileset with the given id to the favorited tilesets of the user with the given user id in a DBMS. 
@@ -197,4 +261,19 @@ export default interface UserDBM {
      */
     favoriteTileset(userId: string, tilesetId: string): Promise<string | null>;
 
+    /**
+     * Removes a tileset of a given tileset id from the user's favorite tilesets field given a user id in the DBMS
+     * 
+     * @remarks
+     * If a user with the given user id exists in the DBMS and a tileset with the given tileset id exists in the DBMS,
+     * then the method adds the tileset's id to the user's favorite tileset field.
+     * 
+     * If the method is successful, then the method returns true.
+     * If the user's id or tileset's id does not exist in the DBMS, then the method returns false
+     * 
+     * @param userId the id of the user in the DBMS
+     * @param tilesetId the id of the tileset in the DBMS
+     * @return if successful, true; false otherwise 
+     */
+    unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean>
 }

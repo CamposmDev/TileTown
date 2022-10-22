@@ -217,4 +217,19 @@ export default class MongooseUserDBM implements UserDBM {
         }
     }
     
+    deleteUser(userId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    leaveCommunity(userId: string, communityId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    leaveContest(userId: string, contestId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
 }
