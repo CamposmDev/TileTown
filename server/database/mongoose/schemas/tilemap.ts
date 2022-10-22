@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
+import TilemapSchemaType from "../types/TileMapSchemaType";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const PropertiesSchema = require("./properties");
-const LayerSchema = require("./layer");
-const TilesetSchema = require("./tileset");
+const PropertySchema = require("./properties").schema;
+const LayerSchema = require("./layer").schema;
 
 /**
  * Data model for storing Tilemap data
@@ -11,7 +11,7 @@ const TilesetSchema = require("./tileset");
  * @
  */
 
-const TilemapSchema = new Schema({
+const TilemapSchema = new Schema<TilemapSchemaType>({
   backgroundColor: { type: String, required: true },
   collaborators: { type: [ObjectId], required: true },
   collaboratorNames: { type: [String], required: true },
@@ -19,6 +19,7 @@ const TilemapSchema = new Schema({
     type: { editMode: String, timeLimit: Number, tileLimit: Number },
     required: true,
   },
+  collaboratorIndex: { type: Number, required: true },
   image: { type: String, required: true },
   height: { type: Number, required: true },
   width: { type: Number, required: true },
@@ -27,11 +28,12 @@ const TilemapSchema = new Schema({
   tileWidth: { type: Number, required: true },
   nextLayerId: { type: Number, required: true },
   nextObjectId: { type: Number, required: true },
+  orientation: { type: String, required: true },
   name: { type: String, required: true },
   owner: { type: String, required: true },
-  tilesets: { type: [TilesetSchema], required: true },
-  properties: { type: PropertiesSchema, required: true },
-  renderOrder: { type: Number, required: true },
+  tilesets: { type: [ObjectId], required: true },
+  properties: { type: [PropertySchema], required: true },
+  renderOrder: { type: String, required: true },
   isPublished: { type: Boolean, required: true },
 });
 

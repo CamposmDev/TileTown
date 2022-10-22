@@ -1,5 +1,4 @@
-
-export default interface SocailStatisticsPermissions {
-    type: string,
-    setting: string
+export default interface SocialStatisticsPermissions {
+  type: string;
+  setting: string;
 }

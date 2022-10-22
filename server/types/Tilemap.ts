@@ -1,8 +1,12 @@
-import Properties from "./Properties";
+import Property from "./Properties";
 import Layer from "./Layer";
 import Tileset from "./Tileset";
 
-export type Orientation = "orthogonal" | "isometric" | "staggered" | "hexagonal";
+export type Orientation =
+  | "orthogonal"
+  | "isometric"
+  | "staggered"
+  | "hexagonal";
 export type EditMode = "free" | "queue";
 export type CollaboratorSettings = {
   editMode: EditMode;
@@ -32,13 +36,16 @@ export default interface Tilemap {
   /** Settings that determine who can edit the map, how much time per edit, and how many tiles per edit*/
   collaboratorSettings: CollaboratorSettings;
 
+  /** Index of which user can current edit tilemap, -1 if any user has permission*/
+  collaboratorIndex: number;
+
   /** Date When tilemap was created*/
   createDate: Date;
 
   /** Date When tilemap was last saved */
   lastSaveDate: Date;
 
-  /** Image of tilemap*/
+  /** Image URL of tilemap*/
   image: string;
 
   /** The height of the Tilemap (in tiles) */
@@ -72,10 +79,10 @@ export default interface Tilemap {
   owner: string;
 
   /** Represents an array of properties of the tile set */
-  properties: Properties[];
+  properties: Property[];
 
-  /** Array of tilesets used in tilemap */
-  tilesets: Tileset[];
+  /** Array of tilesets ids used in tilemap */
+  tilesets: string[];
 
   /** The order in which the tiles for this TileMap should be rendered*/
   renderOrder: RenderOrder;
