@@ -41,8 +41,17 @@ describe('ExpressUserController', function() {
 
         });
 
-        // Bad Request - 400 - missing body, missing data
-        it("", function() {})
+        // Success - 201 - User successfully and returned
+        it("", async function() {
+            let response = await request(app).post("/api/user").send({
+                username: "PeteyLumpkins",
+                password: "blackstarthedog",
+                email: "peter.t.walsh@stonybrook.edu",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(201);
+        })
 
         // Bad Request - 400 - non-unique email
         it("", function() {});
@@ -53,7 +62,7 @@ describe('ExpressUserController', function() {
         // Bad Request - 400 - invalid password (<= 12 chararacters)
         it("", function() {});
 
-        // Success - 201 - User successfully and returned
+        // Success - 400 - Missing body / data
         it("", function() {});
 
     });
