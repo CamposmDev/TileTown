@@ -25,6 +25,9 @@ export default interface ForumPost {
     /** An array of User ids in the DBMS who have disliked the ForumPost */
     dislikes: string[],
 
+    /** A number that represents the number of views a froum post has */
+    views: number
+
     /** A flag indicating whether this ForumPost has been published or not */
     isPublished: boolean,
     

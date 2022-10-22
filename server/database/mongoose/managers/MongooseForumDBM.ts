@@ -1,5 +1,6 @@
 import { ForumPost } from "../../../types";
 import ForumDBM from "../../interface/managers/ForumDBM";
+import forumPost from "../../mongoose/schemas/forumPost";
 import ForumPostSchema from '../../mongoose/schemas/forumPost'
 import UserSchema from '../../mongoose/schemas/user'
 
@@ -16,6 +17,7 @@ export default class MongooseForumDBM implements ForumDBM {
                 tags: forumPost.tags,
                 likes: forumPost.likes,
                 dislikes: forumPost.dislikes,
+                views: forumPost.views,
                 isPublished: forumPost.isPublished
             }
         }
@@ -41,6 +43,7 @@ export default class MongooseForumDBM implements ForumDBM {
             tags: forumPost.tags,
             likes: forumPost.likes,
             dislikes: forumPost.dislikes,
+            views: forumPost.views,
             isPublished: forumPost.isPublished
         } : null
     }
@@ -63,6 +66,7 @@ export default class MongooseForumDBM implements ForumDBM {
                 tags: forumPost.tags,
                 likes: forumPost.likes,
                 dislikes: forumPost.dislikes,
+                views: forumPost.views,
                 isPublished: forumPost.isPublished
             }
         }
@@ -90,6 +94,7 @@ export default class MongooseForumDBM implements ForumDBM {
                 } else {
                     likesArr.push(id)
                 }
+                await forumPost.save()
                 return {
                     id: forumPost._id.toString(),
                     author: forumPost.author,
@@ -98,6 +103,7 @@ export default class MongooseForumDBM implements ForumDBM {
                     tags: forumPost.tags,
                     likes: forumPost.likes,
                     dislikes: forumPost.dislikes,
+                    views: forumPost.views,
                     isPublished: forumPost.isPublished
                 }
             }
@@ -118,6 +124,7 @@ export default class MongooseForumDBM implements ForumDBM {
                 } else {
                     dislikesArr.push(id)
                 }
+                await forumPost.save()
                 return {
                     id: forumPost._id.toString(),
                     author: forumPost.author,
@@ -126,6 +133,7 @@ export default class MongooseForumDBM implements ForumDBM {
                     tags: forumPost.tags,
                     likes: forumPost.likes,
                     dislikes: forumPost.dislikes,
+                    views: forumPost.views,
                     isPublished: forumPost.isPublished
                 }
             }
@@ -133,7 +141,27 @@ export default class MongooseForumDBM implements ForumDBM {
         return null
     }
     async addView(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        if ((user !== null) && (forumPost !== null)) {
+            let views = forumPost.views
+            if (typeof views === 'number') {
+                views++
+                forumPost.views = views
+                await forumPost.save()
+                return {
+                    id: forumPost._id.toString(),
+                    author: forumPost.author,
+                    title: forumPost.title,
+                    body: forumPost.body,
+                    tags: forumPost.tags,
+                    likes: forumPost.likes,
+                    dislikes: forumPost.dislikes,
+                    views: forumPost.views,
+                    isPublished: forumPost.isPublished
+                }
+            }
+        }
+        return null
     }
-
 }

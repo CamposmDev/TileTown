@@ -13,6 +13,7 @@ const ForumPostSchema = new Schema({
     tags: { type: [String], require: true},
     likes: { type: [ObjectId], require: true},
     dislikes: { type: [ObjectId], require: true},
+    views: { type: Number, require: true },
     isPublished: { type: Boolean, require: true}
 })
 
