@@ -231,10 +231,15 @@ export default class MongooseUserDBM implements UserDBM {
         let user: any = await UserSchema.findById(userId)
         let comm = await CommunitySchema.findById(communityId)
         if ((user !== null) && (comm !== null)) {
-            let index = user.joinedCommunities.indexOf(comm._id, 0)
-            if (index > -1) {
-                user.joinedCommunities.splice(index, 1)
+            let i = user.joinedCommunities.indexOf(comm._id, 0)
+            if (i > -1) {
+                user.joinedCommunities.splice(i, 1)
                 user.save()
+            }
+            let memberCount = comm.memberCounter
+            if (memberCount) {
+                comm.memberCounter = memberCount - 1
+                comm.save()
             }
             return true
         }
@@ -243,12 +248,17 @@ export default class MongooseUserDBM implements UserDBM {
 
     async leaveContest(userId: string, contestId: string): Promise<boolean> {
         let user: any = await UserSchema.findById(userId)
-        let contest = await UserSchema.findById(contestId)
+        let contest = await ContestSchema.findById(contestId)
         if ((user !== null) && (contest !== null)) {
-            let index = user.joinedContests.indexOf(contest._id, 0)
-            if (index > -1) {
-                user.joinedContests.splice(index, 1)
+            let i = user.joinedContests.indexOf(contest._id, 0)
+            if (i > -1) {
+                user.joinedContests.splice(i, 1)
                 user.save()
+            }
+            let j = contest.particpates.indexOf(user._id, 0)
+            if (j > -1) {
+                contest.particpates.splice(j, 1)
+                contest.save()
             }
             return true
         }
@@ -259,9 +269,9 @@ export default class MongooseUserDBM implements UserDBM {
         let user: any = await UserSchema.findById(userId)
         let tilemap = await TilemapSchema.findById(tilemapId)
         if ((user !== null) && (tilemap !== null)) {
-            let index = user.favoriteTileMaps.indexOf(tilemap._id, 0)
-            if (index > -1) {
-                user.favoriteTileMaps.splice(index, 1)
+            let i = user.favoriteTileMaps.indexOf(tilemap._id, 0)
+            if (i > -1) {
+                user.favoriteTileMaps.splice(i, 1)
                 user.save()
             }
             return true
@@ -273,9 +283,9 @@ export default class MongooseUserDBM implements UserDBM {
         let user: any = await UserSchema.findById(userId)
         let tileset = await TilesetSchema.findById(tilesetId)
         if ((user !== null) && (tileset !== null)) {
-            let index = user.favoriteTileSets.indexOf(tileset._id, 0)
-            if (index > -1) {
-                user.favoriteTileSets.splice(index, 1)
+            let i = user.favoriteTileSets.indexOf(tileset._id, 0)
+            if (i > -1) {
+                user.favoriteTileSets.splice(i, 1)
                 user.save()
             }
             return true
