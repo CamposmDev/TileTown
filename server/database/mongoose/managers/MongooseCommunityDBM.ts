@@ -1,5 +1,5 @@
 import { Community } from "../../../types";
-import CommunityDBM from "../../interface/managers/CommunityDBM";
+import { CommunityDBM } from "../../interface";
 
 export default class MongooseCommunityDBM implements CommunityDBM {
 

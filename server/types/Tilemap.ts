@@ -2,14 +2,14 @@ import Properties from "./Properties";
 import Layer from "./Layer";
 import Tileset from "./Tileset";
 
-type Orientation = "orthogonal" | "isometric" | "staggered" | "hexagonal";
-type EditMode = "free" | "queue";
-type CollaboratorSettings = {
+export type Orientation = "orthogonal" | "isometric" | "staggered" | "hexagonal";
+export type EditMode = "free" | "queue";
+export type CollaboratorSettings = {
   editMode: EditMode;
   timeLimit: number;
   tileLimit: number;
 };
-type RenderOrder = "right-down" | "right-up" | "left-down" | "up";
+export type RenderOrder = "right-down" | "right-up" | "left-down" | "up";
 
 export default interface Tilemap {
   /**
