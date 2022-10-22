@@ -25,9 +25,24 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             visibility: community.visibility
         } : null
     }
-    async createCommunity(community: Partial<Community>): Promise<Community | null> {
-        throw new Error("Method not implemented.");
+     async createCommunity(community: Partial<Community>): Promise<Community | null> {
+        /** 
+        * Check if the community name or the community owner not empty 
+        * If it is empty then return null
+        * */
+        if (!community.name || !community.owner) return null
 
+        /**
+         * Check if the community name vilid
+         */
+        const validCommunityName = async (communityName: string): Promise<boolean> => {
+            const existCommunity = await CommunitySchema.findOne({communityName: communityName})
+            return existCommunity ? false : true
+        }
+
+        let communityName = community.name
+        if(!(await validCommunityName(communityName))) return null
+        return null
     }
     async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
         throw new Error("Method not implemented.");
