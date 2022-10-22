@@ -59,16 +59,18 @@ export default interface UserDBM {
      * 
      * If a user with the given user id exists in the DBMS and the password is a valid password, the method 
      * encrypts the password (ex. via salting or hashing), and saves the password as the user's new password in 
-     * the DBMS. If nothing goes wrong, the method returns updated, encrypted password of the user.
+     * the DBMS. If nothing goes wrong, the method returns updated, encrypted password of the user. Also, the user must 
+     * give the DBMS the user's old password to verify this is the appropiate owner of the user account.
      * 
      * If a user with the given user id does not exist in the DBMS or the password is not a valid password, or
      * the method fails to update the user's password for any reason, the method returns null.
      * 
      * @param userId the id of the user in the DBMS
-     * @param password the user's updated hashed password
+     * @param oldPassword the user's old password to save the user from a hacker
+     * @param newPassword the user's updated hashed password
      * @return the user's new hashed password if the user's password was updated successfully; null otherwise
      */
-    updatePassword(userId: string, password: string): Promise<string | null>;
+    updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null>;
 
     /**
      * Updates the email address of the user with the given user id in a DBMS to the given email address.

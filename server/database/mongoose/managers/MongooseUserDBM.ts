@@ -1,7 +1,7 @@
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
 import { User } from "../../../types";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -37,15 +37,13 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Check if the username is valid and is unique.
          */
-        const validUsername = async (username: string): Promise<Boolean> => {
+        const validUsername = async (username: string): Promise<boolean> => {
             const existingUser = await UserSchema.findOne({username: username})
             return existingUser ? false : true
         }
 
         let username = userpy.username
-        await validUsername(username).then(isValid => {
-            if (!isValid) return null
-        })
+        if (!(await validUsername(username))) return null
 
         let password = userpy.password
         /**
@@ -59,15 +57,13 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Check if the user's email is valid and is not being used by other user accounts
          */
-        const validEmail = async (email: string): Promise<Boolean> => {
+        const validEmail = async (email: string): Promise<boolean> => {
             let existingUser = await UserSchema.findOne({email: email})
             return existingUser ? false : true
         }
 
         let email = userpy.email
-        await validEmail(email).then(isValid => {
-            if (!isValid) return null
-        })
+        if (!(await validEmail(email))) return null
 
         const user = new UserSchema({
             firstName: userpy.firstName,
@@ -105,29 +101,60 @@ export default class MongooseUserDBM implements UserDBM {
     }
  
     async verifyUser(key: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        /**
+         * Acquire user by their verify key and update isVerified to true
+         */
+        return await UserSchema.findOne({verifyKey: key}).then(x => {
+            if (x) {
+                x.isVerified = true
+                x.save()
+                return (x.isVerified = true)
+            } else {
+                return false
+            }
+        })
     }
-    async updatePassword(userId: string, password: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+
+    async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
+        let userAccount = await UserSchema.findById(userId)
+        if (userAccount !== null) {
+            let currentPassword = userAccount.password
+            let isOwner: boolean = await compare(oldPassword, currentPassword)
+            if (isOwner) {
+                const ROUNDS = 10
+                let passwordHash = await hash(newPassword, ROUNDS)
+                userAccount.password = passwordHash.toString()
+                userAccount.save()
+                return passwordHash
+            }
+        }
+        return null
     }
+
     async updateEmail(userId: string, email: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async updateUsername(userId: string, username: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async addFriend(userId: string, friendId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async joinCommunity(userId: string, communityId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async joinContest(userId: string, contestId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        
     }
+
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
         throw new Error("Method not implemented.");
     }
