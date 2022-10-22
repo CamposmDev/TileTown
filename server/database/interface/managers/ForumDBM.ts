@@ -18,7 +18,7 @@ export default interface ForumDBM {
      * @param forumPostId the id of the forum post in the DBMS
      * @return if successful, a ForumPost object with all the data about the forum post; null otherwise
      */
-    getForumPost(forumPostId: string): ForumPost | null;
+    getForumPost(forumPostId: string): Promise<ForumPost | null>;
 
     /**
      * Creates a new forum post based on the given partial forum post in the DBMS. 
@@ -33,7 +33,7 @@ export default interface ForumDBM {
      * @param forumPost the partial forum post
      * @return if successful, the newly created ForumPost; null otherwise.
      */
-    createForumPost(forumPost: Partial<ForumPost>): ForumPost | null;
+    createForumPost(forumPost: Partial<ForumPost>): Promise<ForumPost | null>;
 
     /**
      * Updates a forum post in the DBMS with the given id based on the given partial forum post.
@@ -49,7 +49,7 @@ export default interface ForumDBM {
      * @return if successful, a ForumPost object containing the updated contents of the forum post in 
      * the DBMS; null otherwise.
      */
-    updateForumPost(forumPostId: string, forumPost: Partial<ForumPost>): ForumPost | null;
+    updateForumPost(forumPostId: string, forumPost: Partial<ForumPost>): Promise<ForumPost | null>;
 
     /**
      * Deletes a forum post in the DBMS with the given id.
@@ -64,7 +64,7 @@ export default interface ForumDBM {
      * @param forumPostId the id of the forum post in the DBMS
      * @return if successful, the id of the forum post that was deleted in the DBMS 
      */
-    deleteForumPost(forumPostId: string): string | null;
+    deleteForumPost(forumPostId: string): Promise<string | null>;
 
     /**
      * Adds a like from the user with the given user id to the forum post with the given forum post id.
@@ -84,7 +84,7 @@ export default interface ForumDBM {
      * @return if successful, the ForumPost object with the data associated with the forum post in the 
      * DBMS; null otherwise.
      */
-    toggleLike(userId: string, forumPostId: string): ForumPost | null;
+    toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null>;
 
     /**
      * Adds a dilike from the user with the given user id to the forum post with the given forum post id.
@@ -104,7 +104,7 @@ export default interface ForumDBM {
      * @return if successful, the ForumPost object with the data associated with the forum post in the 
      * DBMS; null otherwise.
      */
-    toggleDislike(userId: string, forumPostId: string): ForumPost | null;
+    toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null>;
 
     /**
      * Adds a view from the user with the given user id to the forum post with the given forum post id. 
@@ -122,6 +122,6 @@ export default interface ForumDBM {
      * @param forumPostId the id of the forum post in the DBMS
      * @return if successful, a new ForumPost object with the updated forum post data; null otherwise.
      */
-    addView(userId: string, forumPostId: string): ForumPost | null;
+    addView(userId: string, forumPostId: string): Promise<ForumPost | null>;
     
 }
