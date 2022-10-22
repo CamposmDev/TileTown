@@ -68,7 +68,12 @@ export default class MongooseForumDBM implements ForumDBM {
         return null
     }
     async deleteForumPost(forumPostId: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
+        let forumPost = await ForumPostSchema.findById(forumPostId)
+        if (forumPost !== null) {
+            await forumPost.delete()
+            return forumPostId
+        }
+        return null
     }
     async toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
