@@ -209,7 +209,7 @@ export default class MongooseUserDBM implements UserDBM {
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
         let user: any = await UserSchema.findById(userId)
-        let tileset = await UserSchema.findById(tilesetId)
+        let tileset = await TilesetSchema.findById(tilesetId)
         if ((user !== null) && (tileset != null)) {
             user.favoriteTileSets.push(tileset._id)
             user.save()
