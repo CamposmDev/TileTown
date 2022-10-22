@@ -116,15 +116,15 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
-        let userAccount = await UserSchema.findById(userId)
-        if (userAccount !== null) {
-            let currentPassword = userAccount.password
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let currentPassword = user.password
             let isOwner: boolean = await compare(oldPassword, currentPassword)
             if (isOwner) {
                 const ROUNDS = 10
                 let passwordHash = await hash(newPassword, ROUNDS)
-                userAccount.password = passwordHash.toString()
-                userAccount.save()
+                user.password = passwordHash.toString()
+                user.save()
                 return passwordHash
             }
         }
@@ -132,7 +132,15 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async updateEmail(userId: string, email: string): Promise<string | null> {
-        
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            user.email = email
+            // TODO Send verfication email
+            user.isVerified = false
+            user.save()
+            return email
+        }
+        return null
     }
 
     async updateUsername(userId: string, username: string): Promise<string | null> {
