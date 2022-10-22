@@ -29,7 +29,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         if (!community.name || !community.owner) return null
 
         /**
-         * Check if the community name vilid
+         * Check if the community name valid
          */
         const validCommunityName = async (communityName: string): Promise<boolean> => {
             const existCommunity = await CommunitySchema.findOne({communityName: communityName})

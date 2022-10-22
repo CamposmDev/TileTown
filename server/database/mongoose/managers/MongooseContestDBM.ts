@@ -1,3 +1,4 @@
+import { trusted } from "mongoose";
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
 import ContestSchema from '../../mongoose/schemas/contest'
@@ -23,7 +24,23 @@ export default class MongooseContestDBM implements ContestDBM {
         } : null
     }
     async createContest(contest: Partial<Contest>): Promise<Contest | null> {
-        throw new Error("Method not implemented.");
+        /**
+         * Check if the contest name or the contest owner not empty
+         * If it is empty then return null
+         */
+        if (!contest.name || !contest.owner == null) return null
+
+        /**
+         * Check the contest name is valid
+         */
+        const validContestName = async (contestName: string): Promise<boolean> => {
+            const exitContest = await ContestSchema.findOne({contestName: contestName})
+            return exitContest ? false : true
+        }
+        let contestName = contest.name
+        if(!(await validContestName(contestName))) return null
+        return null
+        
     }
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
         throw new Error("Method not implemented.");
