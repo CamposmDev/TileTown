@@ -1,7 +1,10 @@
+import mongoose from 'mongoose'
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
+import CommunitySchema from '../../mongoose/schemas/community'
 import { User } from "../../../types";
 import { hash, compare } from "bcrypt";
+import UserSchemaType from '../types/UserSchemaType';
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -153,19 +156,37 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async addFriend(userId: string, friendId: string): Promise<string | null> {
-        
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let friend: any = await UserSchema.findById(friendId)
+            if (friend !== null) {
+                user.friends.push(friend._id)
+                user.save()
+            }
+        }
+        return null
     }
 
     async joinCommunity(userId: string, communityId: string): Promise<string | null> {
-        
+        let user = await UserSchema.findById(userId)
+        if (user !== null) {
+            let comm: any = await CommunitySchema.findById(communityId)
+            if (comm !== null) {
+                user.joinedCommunities.push(comm._id)
+                comm.memberCounter = comm.memberCounter + 1
+                user.save()
+                comm.save()
+            }
+        }
+        return null
     }
 
     async joinContest(userId: string, contestId: string): Promise<string | null> {
-        
+        throw new Error("Method not implemented.");
     }
 
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        
+        throw new Error("Method not implemented.");
     }
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
