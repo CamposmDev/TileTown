@@ -66,7 +66,7 @@ export default class UserController {
         let user: User | null;
         user = await db.users.loginUser(req.body.email, req.body.password);
         if (user === null || user === undefined) {
-            res.status(400).json({message: "Bad request!"});
+            res.status(400).json({message: "Invalid username or password"});
         }
 
         // Give the user a signed token 
