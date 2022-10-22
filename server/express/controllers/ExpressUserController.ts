@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
+import { log } from 'npmlog';
 
 import { User } from '../../types';
 import { db } from '../../database';
+import { Auth } from '../middleware';
 
 export default class UserController {
 
@@ -38,8 +40,6 @@ export default class UserController {
             return;
         }
 
-        console.log(req.body.firstName);
-
         let user: User | null = await db.users.createUser({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -58,15 +58,90 @@ export default class UserController {
     }
 
     public async loginUser(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Logging in a user!"});
+        if (!req || !req.body || !req.body.email || !req.body.password) {
+            res.status(400).json({message: "Bad request!"});
+            return;
+        }
+
+        let user: User | null;
+        user = await db.users.loginUser(req.body.email, req.body.password);
+        if (user === null || user === undefined) {
+            res.status(400).json({message: "Bad request!"});
+        }
+
+        // Give the user a signed token 
+        let token: string = Auth.signJWT({})
+
+        res.status(200);
+        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none"});
+        res.json({user: user});
+        return;
     }
 
     public async logoutUser(req: Request, res: Response): Promise<void> {
         res.status(200).json({message: "Logging out a user!"});
     }
 
+    /**
+     * Updates a TileTown user by id.
+     * @param req 
+     * @param res 
+     * @returns 
+     */
     public async updateUserById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Updating a user!"});
+        // If any data is missing - Bad request
+        if (!req || !req.body || !req.body.user || !req.params || !req.params.id) {
+            res.status(400).json({message: "Bad Request"});
+        }
+
+        let user: User | null;
+
+        // The user exists
+        user = await db.users.getUserById(req.params.id);
+        if (user === null) {
+            res.status(404).json({message: "Not found"});
+            return;
+        }
+
+        // Users id if the the user exists
+        let id: string = req.params.id;
+
+        // Update the users email
+        let email: string | null | undefined = req.body.user.email;
+        if (email !== undefined && email !== null) {
+            email = await db.users.updateEmail(id, email);
+            if (email === null) {
+                res.status(500).json({message: "Bad Request"}); return;
+            }
+        }
+
+        // Update the users username
+        let username: string | null | undefined = req.body.user.username;
+        if (username !== undefined && username !== null) {
+            username = await db.users.updateUsername(id, username);
+            if (username === null) {
+                res.status(500).json({message: "Server Error"}); return;
+            }
+        }
+
+        // Update the users password
+        let oldpass: string | null | undefined = req.body.user.oldPassword;
+        let newpass: string | null | undefined = req.body.user.newPassword;
+        if (oldpass !== undefined && oldpass !== null && newpass !== undefined && newpass !== null) {
+            newpass = await db.users.updatePassword(id, oldpass, newpass);
+            if (newpass === null || newpass == undefined) { 
+                res.status(500).json({message: "Server Error"});
+            }
+        }
+
+        // Get the updated user
+        user = await db.users.getUserById(id);
+        if (user === null || user === undefined) {
+            res.status(400).json({message: "Server Error"});
+        }
+
+        // Return the updated user
+        res.status(200).json({user: user});
     }
 
     public async verifyUser(req: Request, res: Response): Promise<void> {
