@@ -7,6 +7,9 @@ import PropertySchemaType from "./PropertySchemaType";
  * @author Andrew Ojeda
  */
 export default interface TilemapSchemaType {
+  _id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
   backgroundColor: string;
   collaborators: [ObjectId];
   collaboratorNames: [string];
@@ -24,10 +27,11 @@ export default interface TilemapSchemaType {
   tileWidth: number;
   nextLayerId: number;
   nextObjectId: number;
+  orientation: string;
   name: string;
   owner: string;
   tilesets: [ObjectId];
   properties: [PropertySchemaType];
-  renderOrder: number;
+  renderOrder: string;
   isPublished: boolean;
 }

@@ -8,13 +8,43 @@ import {
 } from "../../../types";
 import TilemapSchema from "../../mongoose/schemas/tilemap";
 import { TilemapDBM } from "../../interface";
+import TilemapSchemaType from "../types/TileMapSchemaType";
+import { EditMode, RenderOrder } from "../../../types/Tilemap";
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
-    await TilemapSchema.findById(tilemapId, function (err: any, tileMap: any) {
-      if (err) return null;
-      return null;
-    });
+    await TilemapSchema.findById(
+      tilemapId,
+      function (err: any, tilemap: TilemapSchemaType) {
+        if (err) return null;
+        return {
+          id: tilemap._id.toString(),
+          backgroundColor: <Color>tilemap.backgroundColor,
+          collaborators: tilemap.collaborators.map((x) => x.toString()),
+          collaboratorNames: tilemap.collaboratorNames,
+          collaboratorSettings: <CollaboratorSettings>(
+            tilemap.collaboratorSettings
+          ),
+          collaboratorIndex: tilemap.collaboratorIndex,
+          createDate: new Date(tilemap.createdAt),
+          lastSaveDate: new Date(tilemap.updatedAt),
+          image: tilemap.image,
+          height: tilemap.height,
+          width: tilemap.width,
+          layers: <[Layer]>tilemap.layers,
+          tileHeight: tilemap.tileHeight,
+          tileWidth: tilemap.tileWidth,
+          nextLayerId: tilemap.nextLayerId,
+          nextObjectId: tilemap.nextObjectId,
+          orientation: tilemap.orientation,
+          name: tilemap.name,
+          owner: tilemap.owner,
+          properties: <[Property]>tilemap.properties,
+          tilesets: tilemap.tilesets.map((x) => x.toString()),
+          isPublished: tilemap.isPublished,
+        };
+      }
+    );
     return null;
   }
   async getTilemapPartials(

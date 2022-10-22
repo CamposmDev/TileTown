@@ -10,7 +10,7 @@ const PropertySchema = require("./properties").schema;
  */
 
 const LayerSchema = new Schema<LayerSchemaType>({
-  data: { type: Number, required: true },
+  data: { type: [Number], required: true },
   height: { type: Number, required: true },
   width: { type: Number, required: true },
   name: { type: String, required: true },

@@ -6,7 +6,7 @@ import PropertySchemaType from "./PropertySchemaType";
  * @author Andrew Ojeda
  */
 export default interface LayerSchemaType {
-  data: number;
+  data: number[];
   height: number;
   width: number;
   name: string;

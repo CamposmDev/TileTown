@@ -28,11 +28,12 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   tileWidth: { type: Number, required: true },
   nextLayerId: { type: Number, required: true },
   nextObjectId: { type: Number, required: true },
+  orientation: { type: String, required: true },
   name: { type: String, required: true },
   owner: { type: String, required: true },
   tilesets: { type: [ObjectId], required: true },
   properties: { type: [PropertySchema], required: true },
-  renderOrder: { type: Number, required: true },
+  renderOrder: { type: String, required: true },
   isPublished: { type: Boolean, required: true },
 });
 

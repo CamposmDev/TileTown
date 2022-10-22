@@ -7,6 +7,9 @@ import PropertySchemaType from "./PropertySchemaType";
  * @author Andrew Ojeda
  */
 export default interface TilesetSchemaType {
+  _id: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
   columns: number;
   firstgid: number;
   image: string;
