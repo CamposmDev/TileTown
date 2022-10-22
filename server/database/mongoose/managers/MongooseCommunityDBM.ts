@@ -1,10 +1,6 @@
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import CommunitySchema from '../../mongoose/schemas/community'
-import ContestSchema from '../../mongoose/schemas/contest'
-import TilemapSchema from '../../mongoose/schemas/tilemap'
-import TilesetSchema from '../../mongoose/schemas/tileset'
-import { hash, compare } from "bcrypt";
 import UserSchema from '../../mongoose/schemas/user'
 
 
