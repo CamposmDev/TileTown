@@ -16,7 +16,7 @@ export default interface TilesetDBM {
 
   deleteTilesetById(tilesetId: string): Promise<Tileset | null>;
 
-  addTilemapComment(
+  addTilesetComment(
     userId: string,
     socialId: string
   ): Promise<TilesetSocialStatistics | null>;

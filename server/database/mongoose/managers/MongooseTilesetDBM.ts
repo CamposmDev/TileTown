@@ -2,7 +2,6 @@ import { Tileset, TilesetSocialStatistics, SocialStatisticsPermissions } from ".
 import { TilesetDBM } from "../../interface";
 
 export default class MongooseTilesetDBM implements TilesetDBM {
-
     async getTilesetById(tilesetId: string): Promise<Tileset | null> {
         throw new Error("Method not implemented.");
     }
@@ -15,7 +14,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async deleteTilesetById(tilesetId: string): Promise<Tileset | null> {
         throw new Error("Method not implemented.");
     }
-    async addTilemapComment(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
+    async addTilesetComment(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
     }
     async toggleLike(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
@@ -27,8 +26,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async addView(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
     }
-    async updateTilemapPermissions(socialId: string, permissions: SocialStatisticsPermissions): Promise<TilesetSocialStatistics | null> {
+
+    updateTilesetPermissions(socialId: string, permissions: SocialStatisticsPermissions): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
     }
-
 }
