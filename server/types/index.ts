@@ -10,6 +10,7 @@ import TilemapSocialStatistics from "./TilemapSocialStatistics";
 import TilesetSocialStatistics from "./TilesetSocialStatistics";
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 import { RGB, RGBA, HEX, Color, } from "./Color";
+import { SortBy } from "./Enums";
 
 export {
   Community,
@@ -24,5 +25,6 @@ export {
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
   CollaboratorSettings,
-  RGB, RGBA, HEX, Color
+  RGB, RGBA, HEX, Color,
+  SortBy,
 };

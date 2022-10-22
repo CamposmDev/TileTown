@@ -5,6 +5,7 @@ import {
   SocialStatisticsPermissions,
   Layer,
   Property,
+  SortBy,
   Color
 } from "../../../types";
 import TilemapSchema from "../../mongoose/schemas/tilemap";
@@ -16,8 +17,11 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
     await TilemapSchema.findById(
       tilemapId,
-      (err: any, tilemap: TilemapSchemaType) => {
-        if (err) return null;
+      function (err: any, tilemap: TilemapSchemaType) {
+        if (err) {
+          console.log(err.message);
+          return null;
+        }
         return {
           id: tilemap._id.toString(),
           backgroundColor: <Color>tilemap.backgroundColor,
@@ -27,8 +31,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
             tilemap.collaboratorSettings
           ),
           collaboratorIndex: tilemap.collaboratorIndex,
-          createDate: new Date(tilemap.createdAt),
-          lastSaveDate: new Date(tilemap.updatedAt),
+          createDate: new Date(tilemap.createdAt.toString()),
+          lastSaveDate: new Date(tilemap.updatedAt.toString()),
           image: tilemap.image,
           height: tilemap.height,
           width: tilemap.width,
@@ -48,12 +52,66 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     );
     return null;
   }
+  //TODO Move sortBy to regex so it's done on database
   async getTilemapPartials(
     userId: string,
     search: string,
-    sortBy: string
+    sortBy: SortBy
   ): Promise<[Partial<Tilemap>] | null> {
-    throw new Error("Method not implemented.");
+    await TilemapSchema.find(
+      {
+        collaboratorSettings: [userId],
+        name: new RegExp(search, "i"),
+        isPublish: { $ne: true },
+      },
+      function (err: any, tilemapPartials: [Partial<TilemapSchemaType>]) {
+        if (err) {
+          console.log(err.message);
+          return null;
+        }
+        let partials: Partial<Tilemap>[] = new Array();
+        for (let partial of tilemapPartials) {
+          let newPartial: Partial<Tilemap> = {
+            id: partial._id?.toString(),
+            image: partial.image,
+            name: partial.name,
+            owner: partial.owner,
+            collaboratorNames: partial.collaboratorNames,
+            lastSaveDate: partial.updatedAt,
+          };
+          partials.push(newPartial);
+        }
+        //TODO Figure out a better workaround this type checking
+        switch (sortBy) {
+          case SortBy.Newest: {
+            partials.sort(function (a, b) {
+              if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
+              if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
+              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+              return <any>bDate - <any>aDate;
+            });
+            break;
+          }
+          case SortBy.Oldest: {
+            partials.sort(function (a, b) {
+              if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
+              if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
+              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+              return <any>aDate - <any>bDate;
+            });
+            break;
+          }
+          default:
+            break;
+        }
+        return partials;
+      }
+    );
+    return null;
   }
   async createTilemap(tilemap: Partial<Tilemap>): Promise<Tilemap | null> {
     throw new Error("Method not implemented.");
