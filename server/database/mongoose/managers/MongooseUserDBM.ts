@@ -1,12 +1,13 @@
 import UserDBM from "../../interface/managers/UserDBM";
 import UserSchema from '../../mongoose/schemas/user'
 import { User } from "../../../types";
+import { hash } from "bcrypt";
 
 export default class MongooseUserDBM implements UserDBM {
 
     async getUserById(userId: string): Promise<User | null> {
         let user = await UserSchema.findById({_id: userId});
-        return user === null ? null : {
+        return user !== null ? {
             id: user._id.toString(),
             username: user.username,
             email: user.email,
@@ -21,8 +22,9 @@ export default class MongooseUserDBM implements UserDBM {
             verifyKey: user.verifyKey,
             joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
             joinedContests: user.joinedContests.map((id) => id.toString())
-        }
+        } : null
     }
+
     async createUser(userpy: Partial<User>): Promise<User | null> {
         /**
          * Check if the user's credentials not empty.
@@ -32,27 +34,39 @@ export default class MongooseUserDBM implements UserDBM {
         if (!userpy.username || !userpy.password) return null
         if (!userpy.email) return null
 
-        let username = userpy.username
         /**
          * Check if the username is valid and is unique.
          */
-        UserSchema.findOne({username: username}, (err: Error, x: any) => {
-            if (err || !x) return null
+        const validUsername = async (username: string): Promise<Boolean> => {
+            const existingUser = await UserSchema.findOne({username: username})
+            return existingUser ? false : true
+        }
+
+        let username = userpy.username
+        await validUsername(username).then(isValid => {
+            if (!isValid) return null
         })
 
         let password = userpy.password
         /**
          * Check if the password is valid and then encrypt it
          */
+        const ROUNDS = 10
         const LENGTH = 12
         if (password.length <= LENGTH) return null
+        let passwordHash = hash(password, ROUNDS)
 
         /**
          * Check if the user's email is valid and is not being used by other user accounts
          */
+        const validEmail = async (email: string): Promise<Boolean> => {
+            let existingUser = await UserSchema.findOne({email: email})
+            return existingUser ? false : true
+        }
+
         let email = userpy.email
-        UserSchema.findOne({emai: email}, (err: Error, x: any) => {
-            if (err || !x) return null
+        await validEmail(email).then(isValid => {
+            if (!isValid) return null
         })
 
         const user = new UserSchema({
@@ -60,8 +74,8 @@ export default class MongooseUserDBM implements UserDBM {
             lastName: userpy.lastName,
             email: email,
             username: username,
-            password: password,
-            verifyKey: 'something',
+            password: passwordHash,
+            verifyKey: 'something?!',
             isVerified: false,
             favoriteTileMaps: [],
             favoriteTileSets: [],
