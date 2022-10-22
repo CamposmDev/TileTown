@@ -105,7 +105,32 @@ export default class MongooseForumDBM implements ForumDBM {
         return null
     }
     async toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        throw new Error("Method not implemented.");
+        let user = await UserSchema.findById(userId)
+        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        if ((user !== null) && (forumPost !== null)) {
+            let id = user._id.toString()
+            let likesArr = forumPost.likes
+            let dislikesArr = forumPost.dislikes
+            if (!likesArr.includes(id)) {
+                if (dislikesArr.includes(id)) {
+                    let i = dislikesArr.indexOf(id)
+                    dislikesArr.splice(i, 1)
+                } else {
+                    dislikesArr.push(id)
+                }
+                return {
+                    id: forumPost._id.toString(),
+                    author: forumPost.author,
+                    title: forumPost.title,
+                    body: forumPost.body,
+                    tags: forumPost.tags,
+                    likes: forumPost.likes,
+                    dislikes: forumPost.dislikes,
+                    isPublished: forumPost.isPublished
+                }
+            }
+        }
+        return null
     }
     async addView(userId: string, forumPostId: string): Promise<ForumPost | null> {
         throw new Error("Method not implemented.");
