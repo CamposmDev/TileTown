@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
-import UserSchemaType from "../types/UserSchemaType";
+import { UserSchemaType } from "../types";
 const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+const ObjectId = mongoose.Types.ObjectId
 
 /**
  * Data model for storing personal user data

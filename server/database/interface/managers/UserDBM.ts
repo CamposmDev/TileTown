@@ -2,7 +2,7 @@ import { User } from '../../../types';
 
 /**
  * An interface defining a set of methods to work with TileTown users in an arbitrary DBMS. 
- * @author Peter Walsh
+ * @author Peter Walsh, Michael Campos
  */
 export default interface UserDBM {
 
@@ -19,6 +19,15 @@ export default interface UserDBM {
      * @return a user object with all information about the user or null
      */
     getUserById(userId: string): Promise<User | null>;
+
+    /** 
+     * Handles logging a user into TileTown.
+     * 
+     * @param userEmail the users email
+     * @param userPassword the users password
+     * @return a user object with updated user info (including users session key)
+     */
+    loginUser(userEmail: string, userPassword: string): Promise<User | null>;
 
     /**
      * Creates a new user in the DBMS from the a partial User object. 

@@ -2,11 +2,13 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
+import ContestSchemaType from '../types/ContestSchemaType';
+
 /**
  * @author Tuyen Vo
  */
 
-const ContestSchema = new Schema({
+const ContestSchema = new Schema<ContestSchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
     description: { type: String, require: true},

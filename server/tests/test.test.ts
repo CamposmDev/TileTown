@@ -1,12 +1,13 @@
 import request from 'supertest';
 import app from '../express/app';
+import { expect } from 'chai';
 
 describe('Basic Test', () => {
 
     let server = app.listen('3000');
 
-    test("Dummy", () => {
-        expect(true).toBe(true);
+    describe("Dummy", () => {
+        expect(true).true;
     })
 
     // test("/ GET", async () => {

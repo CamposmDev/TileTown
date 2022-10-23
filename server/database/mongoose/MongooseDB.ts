@@ -48,10 +48,14 @@ export default class MongooseDB implements TileTownDB {
      */
     public async connect(uri: string, options: ConnectOptions = {}): Promise<void> {
         if (!this._connected) {
-            mongoose.connect(uri, options);
+            await mongoose.connect(uri, options);
             mongoose.connection.on("error", console.error.bind(console, "MongoDB Connection Error"));
         }
         return;
+    }
+
+    public async disconnect(): Promise<void> {
+        await mongoose.connection.close()
     }
 
     /**
