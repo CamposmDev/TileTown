@@ -11,8 +11,8 @@ export default interface TilemapSchemaType {
   createdAt: Date;
   updatedAt: Date;
   backgroundColor: string;
-  collaborators: [ObjectId];
-  collaboratorNames: [string];
+  collaborators: ObjectId[];
+  collaboratorNames: string[];
   collaboratorSettings: {
     editMode: string;
     timeLimit: number;
@@ -22,7 +22,7 @@ export default interface TilemapSchemaType {
   image: string;
   height: number;
   width: number;
-  layers: [LayerSchemaType];
+  layers: LayerSchemaType[];
   tileHeight: number;
   tileWidth: number;
   nextLayerId: number;
@@ -30,8 +30,9 @@ export default interface TilemapSchemaType {
   orientation: string;
   name: string;
   owner: string;
-  tilesets: [ObjectId];
-  properties: [PropertySchemaType];
+  tilesets: ObjectId[];
+  properties: PropertySchemaType[];
+  globalTileIDs: number[];
   renderOrder: string;
   isPublished: boolean;
 }

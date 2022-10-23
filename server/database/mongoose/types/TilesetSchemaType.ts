@@ -11,13 +11,12 @@ export default interface TilesetSchemaType {
   createdAt: Date;
   updatedAt: Date;
   columns: number;
-  firstgid: number;
   image: string;
   imageHeight: number;
   imageWidth: number;
   margin: number;
   name: string;
-  owner: string;
-  properties: [PropertySchemaType];
+  owner: ObjectId;
+  properties: PropertySchemaType[];
   isPublished: boolean;
 }

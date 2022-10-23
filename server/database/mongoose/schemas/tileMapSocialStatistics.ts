@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { TilemapSocialSchemaType } from "../types";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
@@ -6,7 +7,7 @@ const ObjectId = Schema.Types.ObjectId;
  * @author Tuyen Vo
  */
 
-const TileMapSocialStatisticsSchema = new Schema({
+const TileMapSocialStatisticsSchema = new Schema<TilemapSocialSchemaType>({
   tileMap: { type: ObjectId, require: true },
   name: { type: String, require: true },
   owner: { type: ObjectId, require: true },
@@ -29,7 +30,7 @@ const TileMapSocialStatisticsSchema = new Schema({
   publishDate: { type: Date, require: true },
   imageURL: { type: String, require: true },
 });
-export = mongoose.model(
+export default mongoose.model(
   "TileMapSocialStatisticsSchema",
   TileMapSocialStatisticsSchema
 );

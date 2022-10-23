@@ -5,23 +5,20 @@ import { ForumPost } from '../../types';
 export default class ForumController {
 
     public async getForumPostById(req: Request, res: Response): Promise<void> {
-        /** If there isn't an id in the url params return 400 */
         if (!req || !req.params || !req.params.id) {
-            res.status(400).json({message: 'Bad Request'})
-            return
+            res.status(400).json({message: "Bad Request!"});
+            return;
         }
 
-        /** If there isn't a forum post in the database with the id return 404 */
-        let id = req.params.id
-        let forumPost: ForumPost | null = await db.forums.getForumPost(id)
+        let id: string = req.params.id;
+        let forumPost: ForumPost | null = await db.forums.getForumPost(id);
+
         if (forumPost === null) {
-            res.status(404).json({message: 'Forum post does not exist'})
-            return
+            res.status(404).json({message: "Not found!"});
+            return;
         }
 
-        /** Otherwise return all the data about the forum post to the client */
-        res.status(200).json({forumPost: forumPost});
-        return
+        res.status(200).json({message: "Success!", forumPost: forumPost});
     }
 
     public async createForumPost(req: Request, res: Response): Promise<void> {
@@ -48,32 +45,31 @@ export default class ForumController {
     }
 
     public async updateForumPostById(req: Request, res: Response): Promise<void> {
-        if (!req || !req.params || !req.params.id || !req.body) {
-            res.status(400).json({message: 'Bad Request'})
-            return
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"});
+            return;
         }
 
-        console.log(req.params.id)
-        /** If there isn't a forum post in the database with the id return 404 */
-        let id = req.params.id
-        let forumPost: ForumPost | null = await db.forums.getForumPost(id)
-        if (forumPost === null) {
-            res.status(404).json({message: 'Forum post does not exist'})
-            return
+        if (!req.body.userId || !req.body.title || !req.body.tags || !req.body.body || !req.body.isPublished) {
+            res.status(400).json({message: "Bad Request"});
+            return;
         }
 
-        forumPost = await db.forums.updateForumPost(id, {
-            author: req.body.author,
+        let forumPost: ForumPost | null = await db.forums.createForumPost({
+            author: req.body.userId,
             title: req.body.title,
             body: req.body.body,
-            likes: req.body.likes,
-            dislikes: req.body.dislikes,
             tags: req.body.tags,
-            views: req.body.views,
             isPublished: req.body.isPublished
-        })
+        });
 
-        res.status(200).json({forumPost: forumPost})
+        if (forumPost === null) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+
+        res.status(201).json({message: "Success!"});
+        return;
     }
 
     public async likeForumPostById(req: Request, res: Response): Promise<void> {

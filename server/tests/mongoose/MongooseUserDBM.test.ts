@@ -46,7 +46,7 @@ describe("Testing MongooseUserDBM", function() {
                 joinedCommunities: [],
                 friends: [],
                 imageURL: " "
-            })
+            });
         });
 
         it("Successfully finds a user with the id", async function() {

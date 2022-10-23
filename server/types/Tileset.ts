@@ -13,13 +13,10 @@ export default interface Tileset {
   columns: number;
 
   /** Date When tileset is first created */
-  createdDate: Date;
+  createDate: Date;
 
   /** Date When tileset was last saved */
   lastSaveDate: Date;
-
-  /** GID corresponding to the first tile in the set */
-  firstgid: number;
 
   /** Image used for tiles in this set */
   image: string;

@@ -1,6 +1,7 @@
 import Property from "./Properties";
 import Layer from "./Layer";
 import Tileset from "./Tileset";
+import { Color } from "./Color";
 
 export type Orientation =
   | "orthogonal"
@@ -83,6 +84,9 @@ export default interface Tilemap {
 
   /** Array of tilesets ids used in tilemap */
   tilesets: string[];
+
+  /** Global Tile IDs of each Tileset */
+  globalTileIDs: number[];
 
   /** The order in which the tiles for this TileMap should be rendered*/
   renderOrder: RenderOrder;
