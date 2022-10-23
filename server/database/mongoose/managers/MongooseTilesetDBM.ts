@@ -1,3 +1,5 @@
+import mongoose, { Schema } from "mongoose";
+
 import {
   Tileset,
   TilesetSocialStatistics,
@@ -7,11 +9,7 @@ import {
   Comment
 } from "../../../types";
 import { TilesetDBM } from "../../interface";
-import TilesetSchema from "../../mongoose/schemas/tilemap";
-import UserSchema from '../../mongoose/schemas/user'
-import TilesetSocialStatisticsSchema from "../../mongoose/schemas/tileMapSocialStatistics";
-import CommentSchema from '../schemas/Comment'
-import { Schema } from "mongoose";
+import { TilesetSchema, CommentSchema, UserSchema, TilesetSocialSchema } from "../schemas";
 import { TilesetSchemaType, UserSchemaType, PropertySchemaType } from "../types";
 
 
@@ -25,23 +23,23 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async addTilesetComment(payload: Comment): Promise<TilesetSocialStatistics | null> {
         if (payload !== null) {
             let refId = payload.referenceId
-            let social: any = await TilesetSocialStatisticsSchema.findById(refId)
+            let social = await TilesetSocialSchema.findById(refId)
             if (social !== null) {
                 let comment = await CommentSchema.create(payload)
                 await comment.save()
                 return {
-                    tileset: social.tileset,
+                    tileset: social.tileSet.toString(),
                     name: social.name,
-                    owner: social.owner,
+                    owner: social.owner.toString(),
                     ownerName: social.ownerName,
                     tags: social.tags,
                     description: social.description,
-                    communities: social.communities,
-                    likes: social.likes,
-                    dislikes: social.dislikes,
+                    communities: social.communities.map(id => id.toString()),
+                    likes: social.likes.map(id => id.toString()),
+                    dislikes: social.dislikes.map(id => id.toString()),
                     views: social.views,
                     permissions: social.permissions,
-                    comments: social.comments,
+                    comments: social.comments.map(id => id.toString()),
                     publishDate: social.publishDate,
                     imageURL: social.imageURL
                 }
@@ -51,9 +49,9 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     }
     async toggleLike(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         let user = await UserSchema.findById(userId)
-        let social: any = await TilesetSocialStatisticsSchema.findById(socialId)
+        let social = await TilesetSocialSchema.findById(socialId)
         if ((user !== null) && (social !== null)) {
-            let id = user._id.toString()
+            let id = new mongoose.Schema.Types.ObjectId(user._id);
             let likes = social.likes
             let dislikes = social.dislikes
             if (!dislikes.includes(id)) {
@@ -65,18 +63,18 @@ export default class MongooseTilesetDBM implements TilesetDBM {
                 }
                 await social.save()
                 return {
-                    tileset: social.tileset,
+                    tileset: social.tileSet.toString(),
                     name: social.name,
-                    owner: social.owner,
+                    owner: social.owner.toString(),
                     ownerName: social.ownerName,
                     tags: social.tags,
                     description: social.description,
-                    communities: social.communities,
-                    likes: social.likes,
-                    dislikes: social.dislikes,
+                    communities: social.communities.map(id => id.toString()),
+                    likes: social.likes.map(id => id.toString()),
+                    dislikes: social.dislikes.map(id => id.toString()),
                     views: social.views,
                     permissions: social.permissions,
-                    comments: social.comments,
+                    comments: social.comments.map(id => id.toString()),
                     publishDate: social.publishDate,
                     imageURL: social.imageURL
                 }
@@ -86,9 +84,9 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     }
     async toggleDislike(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         let user = await UserSchema.findById(userId)
-        let social: any = await TilesetSocialStatisticsSchema.findById(socialId)
+        let social = await TilesetSocialSchema.findById(socialId)
         if ((user !== null) && social !== null) {
-            let id = user._id.toString()
+            let id = new mongoose.Schema.Types.ObjectId(user._id);
             let likes = social.likes
             let dislikes = social.dislikes
             if (!likes.includes(id)) {
@@ -100,18 +98,18 @@ export default class MongooseTilesetDBM implements TilesetDBM {
                 }
                 await social.save()
                 return {
-                    tileset: social.tileset,
+                    tileset: social.tileSet.toString(),
                     name: social.name,
-                    owner: social.owner,
+                    owner: social.owner.toString(),
                     ownerName: social.ownerName,
                     tags: social.tags,
                     description: social.description,
-                    communities: social.communities,
-                    likes: social.likes,
-                    dislikes: social.dislikes,
+                    communities: social.communities.map(id => id.toString()),
+                    likes: social.likes.map(id => id.toString()),
+                    dislikes: social.dislikes.map(id => id.toString()),
                     views: social.views,
                     permissions: social.permissions,
-                    comments: social.comments,
+                    comments: social.comments.map(id => id.toString()),
                     publishDate: social.publishDate,
                     imageURL: social.imageURL
                 }
@@ -121,23 +119,23 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     }
     async addView(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
         let user = await UserSchema.findById(userId)
-        let social = await TilesetSocialStatisticsSchema.findById(socialId)
+        let social = await TilesetSocialSchema.findById(socialId)
         if ((user !== null) && (social !== null)) {
             social.views++
             await social.save()
             return {
-                tileset: social.tileset,
+                tileset: social.tileSet.toString(),
                 name: social.name,
                 owner: social.owner.toString(),
                 ownerName: social.ownerName,
                 tags: social.tags,
                 description: social.description,
-                communities: social.communities,
-                likes: social.likes,
-                dislikes: social.dislikes,
+                communities: social.communities.map(id => id.toString()),
+                likes: social.likes.map(id => id.toString()),
+                dislikes: social.dislikes.map(id => id.toString()),
                 views: social.views,
                 permissions: social.permissions,
-                comments: social.comments,
+                comments: social.comments.map(id => id.toString()),
                 publishDate: social.publishDate,
                 imageURL: social.imageURL
             }

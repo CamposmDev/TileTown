@@ -1,23 +1,18 @@
-import {
-  Tilemap,
-  CollaboratorSettings,
-  TilemapSocialStatistics,
-  SocialStatisticsPermissions,
-  Layer,
-  Property,
-  SortBy,
-  Color
+import mongoose, { ObjectId, Schema } from "mongoose";
+
+import { 
+    Tilemap, CollaboratorSettings,TilemapSocialStatistics,
+    SocialStatisticsPermissions, Layer, Property, SortBy,
+    Color, Comment, EditMode, Orientation, RenderOrder
 } from "../../../types";
-import TilemapSchema from "../../mongoose/schemas/tilemap";
-import UserSchema from "../../mongoose/schemas/user";
+
+import { TilemapSchema, UserSchema, CommentSchema, TilemapSocialSchema } from "../schemas";
 import { TilemapDBM } from "../../interface";
-import TilemapSchemaType from "../types/TilemapSchemaType";
-import { EditMode, Orientation, RenderOrder } from "../../../types/Tilemap";
-import UserSchemaType from "../types/UserSchemaType";
-import { ObjectId } from "mongoose";
-import { Schema } from "mongoose";
-import LayerSchemaType from "../types/LayerSchemaType";
-import PropertySchemaType from "../types/PropertySchemaType";
+import { 
+    TilemapSchemaType, UserSchemaType, LayerSchemaType, 
+    PropertySchemaType 
+} from "../types";
+
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | string> {
@@ -376,25 +371,25 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   async addTilemapComment( payload: Comment): Promise<TilemapSocialStatistics | null> {
     if (payload !== null) {
       let refId = payload.referenceId
-      let social: any = await TilemapSocialStatisticsSchema.findById(refId)
+      let social = await TilemapSocialSchema.findById(refId)
       if (social !== null) {
         let comment = await CommentSchema.create(payload)
         await comment.save()
         return {
-          tileMap: social.tileMap,
+          tileMap: social.tileMap.toString(),
           name: social.name,
-          owner: social.owner,
+          owner: social.owner.toString(),
           ownerName: social.ownerName,
-          collaborators: social.collaborators,
+          collaborators: social.collaborators.map(id => id.toString()),
           collaboratorNames: social.collaboratorNames,
           tags: social.tags,
           description: social.description,
-          communities: social.communities,
-          likes: social.likes,
-          dislikes: social.dislikes,
+          communities: social.communities.map(id => id.toString()),
+          likes: social.likes.map(id => id.toString()),
+          dislikes: social.dislikes.map(id => id.toString()),
           views: social.views,
           permissions: social.permissions,
-          comments: social.comments,
+          comments: social.comments.map(id => id.toString()),
           publishDate: social.publishDate,
           imageURL: social.imageURL
         }
@@ -405,10 +400,10 @@ export default class MongooseTilemapDBM implements TilemapDBM {
 
   async toggleLike( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
-    let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
+    let social = await TilemapSocialSchema.findById(socialId)
     if ((user !== null) && (social !== null)) {
-      let id = user._id.toString()
-      let likes = social.likes
+      let id = new mongoose.Schema.Types.ObjectId(user._id);
+      let likes = social.likes;
       let dislikes = social.dislikes
       if (!dislikes.includes(id)) {
         if (likes.includes(id)) {
@@ -419,20 +414,20 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         }
         await social.save()
         return {
-          tileMap: social.tileMap,
+          tileMap: social.tileMap.toString(),
           name: social.name,
-          owner: social.owner,
+          owner: social.owner.toString(),
           ownerName: social.ownerName,
-          collaborators: social.collaborators,
+          collaborators: social.collaborators.map(id => id.toString()),
           collaboratorNames: social.collaboratorNames,
           tags: social.tags,
           description: social.description,
-          communities: social.communities,
-          likes: social.likes,
-          dislikes: social.dislikes,
+          communities: social.communities.map(id => id.toString()),
+          likes: social.likes.map(id => id.toString()),
+          dislikes: social.dislikes.map(id => id.toString()),
           views: social.views,
           permissions: social.permissions,
-          comments: social.comments,
+          comments: social.comments.map(id => id.toString()),
           publishDate: social.publishDate,
           imageURL: social.imageURL
         }
@@ -443,9 +438,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
 
   async toggleDislike( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
-    let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
+    let social = await TilemapSocialSchema.findById(socialId)
     if ((user !== null) && social !== null) {
-      let id = user._id.toString()
+      let id = new mongoose.Schema.Types.ObjectId(user._id);
       let likes = social.likes
       let dislikes = social.dislikes
       if (!likes.includes(id)) {
@@ -457,20 +452,20 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         }
         await social.save()
         return {
-          tileMap: social.tileMap,
+          tileMap: social.tileMap.toString(),
           name: social.name,
-          owner: social.owner,
+          owner: social.owner.toString(),
           ownerName: social.ownerName,
-          collaborators: social.collaborators,
+          collaborators: social.collaborators.map(id => id.toString()),
           collaboratorNames: social.collaboratorNames,
           tags: social.tags,
           description: social.description,
-          communities: social.communities,
-          likes: social.likes,
-          dislikes: social.dislikes,
+          communities: social.communities.map(id => id.toString()),
+          likes: social.likes.map(id => id.toString()),
+          dislikes: social.dislikes.map(id => id.toString()),
           views: social.views,
           permissions: social.permissions,
-          comments: social.comments,
+          comments: social.comments.map(id => id.toString()),
           publishDate: social.publishDate,
           imageURL: social.imageURL
         }
@@ -481,25 +476,25 @@ export default class MongooseTilemapDBM implements TilemapDBM {
 
   async addView( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
-    let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
+    let social = await TilemapSocialSchema.findById(socialId)
     if ((user !== null) && (social !== null)) {
       social.views++
       await social.save()
       return {
-        tileMap: social.tileMap,
+        tileMap: social.tileMap.toString(),
         name: social.name,
-        owner: social.owner,
+        owner: social.owner.toString(),
         ownerName: social.ownerName,
-        collaborators: social.collaborators,
+        collaborators: social.collaborators.map(id => id.toString()),
         collaboratorNames: social.collaboratorNames,
         tags: social.tags,
         description: social.description,
-        communities: social.communities,
-        likes: social.likes,
-        dislikes: social.dislikes,
+        communities: social.communities.map(id => id.toString()),
+        likes: social.likes.map(id => id.toString()),
+        dislikes: social.dislikes.map(id => id.toString()),
         views: social.views,
         permissions: social.permissions,
-        comments: social.comments,
+        comments: social.comments.map(id => id.toString()),
         publishDate: social.publishDate,
         imageURL: social.imageURL
       }
