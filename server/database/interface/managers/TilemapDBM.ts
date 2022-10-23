@@ -92,7 +92,7 @@ export default interface TilemapDBM {
    * @param tilemapId id of tilemap to be deleted
    * @return a message notifying if tilemap was deleted
    */
-  deleteTilemapById(tilemapId: string): Promise<string | string>;
+  deleteTilemapById(tilemapId: string): Promise<Partial<Tilemap> | string>;
 
   // /**
   //  * Adds a new layer to a specific tilemap

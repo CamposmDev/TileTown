@@ -11,8 +11,12 @@ import TilemapSchema from "../../mongoose/schemas/tilemap";
 import UserSchema from "../../mongoose/schemas/user";
 import { TilemapDBM } from "../../interface";
 import TilemapSchemaType from "../types/TileMapSchemaType";
-import { EditMode, RenderOrder } from "../../../types/Tilemap";
+import { EditMode, Orientation, RenderOrder } from "../../../types/Tilemap";
 import UserSchemaType from "../types/UserSchemaType";
+import { ObjectId } from "mongoose";
+import { Schema } from "mongoose";
+import LayerSchemaType from "../types/LayerSchemaType";
+import PropertySchemaType from "../types/PropertySchemaType";
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | string> {
@@ -37,7 +41,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
           image: tilemap.image,
           height: tilemap.height,
           width: tilemap.width,
-          layers: <[Layer]>tilemap.layers,
+          layers: <Layer[]>tilemap.layers,
           tileHeight: tilemap.tileHeight,
           tileWidth: tilemap.tileWidth,
           nextLayerId: tilemap.nextLayerId,
@@ -45,7 +49,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
           orientation: tilemap.orientation,
           name: tilemap.name,
           owner: tilemap.owner,
-          properties: <[Property]>tilemap.properties,
+          properties: <Property[]>tilemap.properties,
+          renderOrder: <RenderOrder>tilemap.renderOrder,
           tilesets: tilemap.tilesets.map((x) => x.toString()),
           isPublished: tilemap.isPublished,
         };
@@ -119,7 +124,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    TilemapSchema.findOne(
+    await TilemapSchema.findOne(
       { name: tilemap.name },
       function (err: Error, tilemap: TilemapSchemaType) {
         if (tilemap)
@@ -128,10 +133,13 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     );
 
     let user = new UserSchema();
-    UserSchema.findOne({ _id: userId }, (err: Error, user: UserSchemaType) => {
-      if (err) return err.message;
-      user = user;
-    });
+    await UserSchema.findOne(
+      { _id: userId },
+      (err: Error, user: UserSchemaType) => {
+        if (err) return err.message;
+        user = user;
+      }
+    );
 
     const newTilemap = new TilemapSchema({
       backgroundColor: "#FFFFFF",
@@ -190,7 +198,83 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     tilemapId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    throw new Error("Method not implemented.");
+    let updatedTilemap: TilemapSchemaType = new TilemapSchema();
+    await TilemapSchema.findOne(
+      { _id: tilemapId },
+      (err: Error, tilemap: TilemapSchemaType) => {
+        if (err) return err.message;
+        updatedTilemap = tilemap;
+      }
+    );
+    if (tilemap.backgroundColor)
+      updatedTilemap.backgroundColor = tilemap.backgroundColor;
+    if (tilemap.collaborators)
+      updatedTilemap.collaborators = tilemap.collaborators.map(
+        (x) => new Schema.Types.ObjectId(x)
+      );
+    if (tilemap.collaboratorNames)
+      updatedTilemap.collaboratorNames = tilemap.collaboratorNames;
+    if (tilemap.collaboratorSettings)
+      updatedTilemap.collaboratorSettings = tilemap.collaboratorSettings;
+    if (tilemap.collaboratorIndex)
+      updatedTilemap.collaboratorIndex = tilemap.collaboratorIndex;
+    if (tilemap.image) updatedTilemap.image = tilemap.image;
+    if (tilemap.height) updatedTilemap.height = tilemap.height;
+    if (tilemap.width) updatedTilemap.width = tilemap.width;
+    if (tilemap.layers)
+      updatedTilemap.layers = <LayerSchemaType[]>tilemap.layers;
+    if (tilemap.tileHeight) updatedTilemap.tileHeight = tilemap.tileHeight;
+    if (tilemap.tileWidth) updatedTilemap.tileWidth = tilemap.tileWidth;
+    if (tilemap.nextLayerId) updatedTilemap.nextLayerId = tilemap.nextLayerId;
+    if (tilemap.nextObjectId)
+      updatedTilemap.nextObjectId = tilemap.nextObjectId;
+    if (tilemap.orientation) updatedTilemap.orientation = tilemap.orientation;
+    if (tilemap.name) updatedTilemap.name = tilemap.name;
+    if (tilemap.owner) updatedTilemap.owner = tilemap.owner;
+    if (tilemap.tilesets)
+      updatedTilemap.tilesets = tilemap.tilesets.map(
+        (x) => new Schema.Types.ObjectId(x)
+      );
+    if (tilemap.properties)
+      updatedTilemap.properties = <PropertySchemaType[]>tilemap.properties;
+    if (tilemap.renderOrder) updatedTilemap.renderOrder = tilemap.renderOrder;
+    if (tilemap.isPublished) updatedTilemap.isPublished = tilemap.isPublished;
+
+    await TilemapSchema.findOneAndUpdate(
+      { _id: tilemapId },
+      updatedTilemap,
+      function (err: Error, tilemap: TilemapSchemaType) {
+        if (err) return err.message;
+      }
+    );
+
+    return {
+      id: updatedTilemap._id.toString(),
+      backgroundColor: <Color>updatedTilemap.backgroundColor,
+      collaborators: updatedTilemap.collaborators.map((x) => x.toString()),
+      collaboratorNames: updatedTilemap.collaboratorNames,
+      collaboratorSettings: <CollaboratorSettings>(
+        updatedTilemap.collaboratorSettings
+      ),
+      collaboratorIndex: updatedTilemap.collaboratorIndex,
+      createDate: new Date(updatedTilemap.createdAt.toString()),
+      lastSaveDate: new Date(updatedTilemap.updatedAt.toString()),
+      image: updatedTilemap.image,
+      height: updatedTilemap.height,
+      width: updatedTilemap.width,
+      layers: <Layer[]>updatedTilemap.layers,
+      tileHeight: updatedTilemap.tileHeight,
+      tileWidth: updatedTilemap.tileWidth,
+      nextLayerId: updatedTilemap.nextLayerId,
+      nextObjectId: updatedTilemap.nextObjectId,
+      orientation: <Orientation>updatedTilemap.orientation,
+      name: updatedTilemap.name,
+      owner: updatedTilemap.owner,
+      properties: <Property[]>updatedTilemap.properties,
+      renderOrder: <RenderOrder>updatedTilemap.renderOrder,
+      tilesets: updatedTilemap.tilesets.map((x) => x.toString()),
+      isPublished: updatedTilemap.isPublished,
+    };
   }
   async deleteTilemapById(tilemapId: string): Promise<string | string> {
     throw new Error("Method not implemented.");
