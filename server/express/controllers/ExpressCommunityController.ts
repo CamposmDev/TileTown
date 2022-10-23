@@ -52,7 +52,22 @@ export default class CommunityController {
     }
 
     public async updateCommunityById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Updating a community by id!"});
+         // If any data is missing - Bad request
+         if (!req || !req.body || !req.body.community || !req.params || !req.params.id) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+          // Update the community 
+          let id: string = req.params.id;
+          let name: Community | null | undefined = req.body.community.name;
+          if (name !== undefined && name !== null) {
+              name = await db.communities.updateCommunity(id, name);
+              if (name === null) {
+                  res.status(500).json({message: "Server Error"}); 
+                  return;
+                }
+          }
+
     }
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {

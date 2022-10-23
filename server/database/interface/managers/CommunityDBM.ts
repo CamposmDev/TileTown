@@ -115,7 +115,7 @@ export default interface CommunityDBM {
      * @param communityId the id of the community in the DBMS.
      * @return if successful, the id of the community in the DBMS the user was removed from; null otherwise
      */
-    removeCommunityMember(userId: string, communityId: string): Promise<boolean>;
+     deleteCommunity(communityId: string): Promise<boolean>;
 
     /**
      * Deletes the community with the given community id from the DBMS.
@@ -130,5 +130,4 @@ export default interface CommunityDBM {
      * @param communityId the id of the community in the DBMS
      * @return if successful, the id of the deleted community; null otherwise
      */
-    deleteCommunity(communityId: string): Promise<boolean>;
 }
