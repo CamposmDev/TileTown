@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import TilemapSchemaType from "../types/TilemapSchemaType";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const PropertySchema = require("./properties").schema;
+const PropertySchema = require("./property").schema;
 const LayerSchema = require("./layer").schema;
 
 /**
