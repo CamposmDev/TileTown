@@ -26,7 +26,28 @@ export default class ContestController {
 
 
     public async createContest(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Creating a contest!"});
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+        console.log(req.body)
+        let contest: Contest | null = await db.contests.createContest({
+            owner: req.body.owner,
+            name: req.body.name,
+            description: req.body.description,
+            participates: req.body.particpates,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            winner: req.body.winner,
+            isPublished: req.body.isPublished
+        });
+
+        if (contest === null) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+        res.status(201).json({contest: contest})
+        return
     }
 
     public async updateContestById(req: Request, res: Response): Promise<void> {
