@@ -2,6 +2,7 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
+
 import UserSchema from "../../database/mongoose/schemas/user";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
@@ -15,7 +16,7 @@ dotenv.config()
  * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
  * {@link https://mochajs.org/}
  */
-describe("Testing MongooseUserDBM", function() {
+describe("Testing MongooseTilemapDBM", function() {
 
     /** The connection string to connect to mongoose */
     const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
@@ -27,38 +28,23 @@ describe("Testing MongooseUserDBM", function() {
      */
     before(async function() { await mongoose.connect(connect); });
 
-    /** 
-     * A set of tests for the method MongooseUserDBM.createUser()
-     * @see MongooseUserDBM.createUser
-     */
-    describe("getForumPost", function() {
+    describe("getTilemapById", async function() {});
 
-    });
+    describe("getTilemapPartials", async function() {});
 
-    describe("createForumPost", function() {
+    describe("createTilemap", async function() {});
 
-    });
+    describe("updateTilemapById", async function() {});
 
-    describe("updateForumPost", function() {
+    describe("deleteTilemapById", async function() {});
 
-    });
+    describe("addTilemapComment", async function() {});
 
-    describe("deleteForumPost", function() {
+    describe("toggleLike", async function() {});
 
-    });
+    describe("toggleDislike", async function() {});
 
-    describe("toggleLike", function() {
-
-    });
-
-    describe("toggleDislike", function() {
-
-    });
-
-    describe("addView", function() {
-        
-    })
-
+    describe("addView", async function() {});
     /** 
      * The before method gets called after all of the tests have run. I am using it here
      * to close the connection to MongoDB.
