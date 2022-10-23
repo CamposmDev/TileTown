@@ -1,4 +1,4 @@
-import Properties from "./Properties";
+import Property from "./Properties";
 
 export default interface Tileset {
   /**
@@ -40,7 +40,7 @@ export default interface Tileset {
   owner: string;
 
   /** Represents an array of properties of the tile set */
-  properties: Properties[];
+  properties: Property[];
 
   /** A flag indicating whether this TileSet has been published or not */
   isPublished: boolean;

@@ -9,9 +9,6 @@ export default interface Layer {
   /** An array of data corresponding to the tiles associated with the tilemap */
   data: number[];
 
-  /** Image used for tiles in this set */
-  image: string;
-
   /** The height of the TileMap (in tiles) */
   height: number;
 
