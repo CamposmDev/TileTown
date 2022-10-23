@@ -1,6 +1,10 @@
 import request from 'supertest';
 import { app } from '../../express';
+import { db } from "../../database";
 import { expect } from 'chai';
+
+import UserSchema from "../../database/mongoose/schemas/user";
+
 
 /** 
  * Tests for the UserRouter and associated handlers
@@ -11,6 +15,10 @@ describe('ExpressUserController', function() {
     /** Start the server on port 3000 */
     const server = app.listen('3000');
 
+    before(async function() {
+        const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
+        await db.connect(connect)
+    });
 
     /** 
      * Method: GET
@@ -37,12 +45,19 @@ describe('ExpressUserController', function() {
      */
     describe("createUser", function() {
 
-        beforeEach(function() {
-
+        beforeEach(async function() {
+            await UserSchema.deleteMany({});
+            await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "Walsh9636@gmail.com",
+                username: "PeteyLumps",
+                password: "password", 
+            });
         });
 
-        // Success - 201 - User successfully and returned
-        it("", async function() {
+        // Success - 201 - User created successfully and returned
+        it("Successfully create and return a new user", async function() {
             let response = await request(app).post("/api/user").send({
                 username: "PeteyLumpkins",
                 password: "blackstarthedog",
@@ -54,16 +69,51 @@ describe('ExpressUserController', function() {
         })
 
         // Bad Request - 400 - non-unique email
-        it("", function() {});
+        it("Failure - Non-unique email", async function() {
+            let response = await request(app).post("/api/user").send({
+                username: "PeteyLumpkins",
+                password: "blackstarthedog",
+                email: "Walsh9636@gmail.com",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(400);
+        });
 
         // Bad Request - 400 - non-unique username
-        it("", function() {});
+        it("Failure - Non-unique username", async function() {
+            let response = await request(app).post("/api/user").send({
+                username: "PeteyLumps",
+                password: "blackstarthedog",
+                email: "walsh9636@gmail.com",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(400);
+        });
 
         // Bad Request - 400 - invalid password (<= 12 chararacters)
-        it("", function() {});
+        it("Failure - Invalid Password - Exactly 12 characters", async function() {
+            let response = await request(app).post("/api/user").send({
+                username: "PeteyLumpkins",
+                password: "blackstardog",
+                email: "walsh9636@gmail.com",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(400);
+        });
 
-        // Success - 400 - Missing body / data
-        it("", function() {});
+        // Success - 400 - Missing data in body
+        it("Failure - Missing data in body", async function() {
+            let response = await request(app).post("/api/user").send({
+                username: "PeteyLumpkins",
+                password: "blackstarthedog",
+                email: "walsh9636@gmail.com",
+                firstName: "Peter",
+            });
+            expect(response.status).equals(400);
+        });
 
     });
 
@@ -73,14 +123,45 @@ describe('ExpressUserController', function() {
      */
     describe("loginUser", function() {
 
+        beforeEach(async function() {
+            await UserSchema.deleteMany({});
+            let user = await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peter.t.walsh@stonybrook.edu",
+                username: "PeteyLumpkings",
+                password: "password12345"
+            });
+            expect(user).not.null;
+        });
+
         // Bad Request - 400 - Invalid user email
-        it("", function() {});
+        it("Failure - Invalid Email", async function() {
+            let response = await request(app).post("/api/user/login").send({
+                password: "password12345",
+                email: "walsh@stonybrook.edu",
+            });
+            expect(response.status).equals(400);
+        });
 
         // Bad Request - 400 - Incorrect password
-        it("", function() {});
+        it("Failure - Incorrect Password", async function() {
+            let response = await request(app).post("/api/user/login").send({
+                password: "password12346",
+                email: "peter.t.walsh@stonybrook.edu",
+            });
+            expect(response.status).equals(400);
+        });
 
         // Success - 200 - Valid email and password
-        it("", function() {});
+        it("Success - Email and Password match!", async function() {
+            let response = await request(app).post("/api/user/login").send({
+                password: "password12345",
+                email: "peter.t.walsh@stonybrook.edu",
+            });
+            expect(response.status).equals(200);
+            
+        });
 
     });
 
@@ -124,7 +205,10 @@ describe('ExpressUserController', function() {
     });
 
 
+    after(async function() {
+        /** Close the connection to the server */
+        server.close();
+        await db.disconnect();
+    });
 
-    /** Close the connection to the server */
-    server.close();
 });
