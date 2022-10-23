@@ -45,7 +45,7 @@ export default class ForumController {
     }
 
     public async updateForumPostById(req: Request, res: Response): Promise<void> {
-        if (!req || !req.body) {
+        if (!req || !req.params.id || !req.body) {
             res.status(400).json({message: "Bad Request"});
             return;
         }
@@ -55,13 +55,16 @@ export default class ForumController {
             return;
         }
 
-        let forumPost: ForumPost | null = await db.forums.createForumPost({
-            author: req.body.userId,
+        let id = req.params.id
+        let payload: Partial<ForumPost> = {
+            author: req.body.author,
             title: req.body.title,
             body: req.body.body,
             tags: req.body.tags,
             isPublished: req.body.isPublished
-        });
+        }
+
+        let forumPost = db.forums.updateForumPost(id, payload)
 
         if (forumPost === null) {
             res.status(400).json({message: "Bad Request"});
