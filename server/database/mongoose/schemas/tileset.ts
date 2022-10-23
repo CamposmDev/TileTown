@@ -12,7 +12,6 @@ const PropertySchema = require("./properties").schema;
 
 const TilesetSchema = new Schema<TilesetSchemaType>({
   columns: { type: Number, required: true },
-  firstgid: { type: Number, required: true },
   image: { type: String, required: true },
   imageHeight: { type: Number, required: true },
   imageWidth: { type: Number, required: true },

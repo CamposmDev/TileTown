@@ -7,7 +7,10 @@ import {
 export default interface TilesetDBM {
   getTilesetById(tilesetId: string): Promise<Tileset | string>;
 
-  createTileset(tileset: Partial<Tileset>): Promise<Tileset | string>;
+  createTileset(
+    userId: string,
+    tileset: Partial<Tileset>
+  ): Promise<Tileset | string>;
 
   updateTilesetById(
     tilesetId: string,

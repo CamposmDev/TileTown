@@ -32,6 +32,7 @@ export default interface TilemapSchemaType {
   owner: string;
   tilesets: ObjectId[];
   properties: PropertySchemaType[];
+  globalTileIDs: number[];
   renderOrder: string;
   isPublished: boolean;
 }

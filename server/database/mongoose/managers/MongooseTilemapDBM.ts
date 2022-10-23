@@ -158,7 +158,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       orientation: "orthogonal",
       name: tilemap.name,
       owner: user._id,
-      tilesets: [],
+      tilesets: tilemap.tilesets === null ? [] : tilemap.tilesets,
+      globalTileIDs:
+        tilemap.globalTileIDs == null ? [0] : tilemap.globalTileIDs,
       properties: [],
       renderOrder: "right-down",
       isPublished: false,
@@ -188,7 +190,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       orientation: "orthogonal",
       name: newTilemap.name,
       owner: user._id,
-      tilesets: [],
+      globalTileIDs: newTilemap.globalTileIDs,
+      tilesets: newTilemap.tilesets.map((x) => x.toString()),
       properties: [],
       renderOrder: "right-down",
       isPublished: false,
@@ -235,6 +238,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       updatedTilemap.tilesets = tilemap.tilesets.map(
         (x) => new Schema.Types.ObjectId(x)
       );
+    if (tilemap.globalTileIDs)
+      updatedTilemap.globalTileIDs = tilemap.globalTileIDs;
     if (tilemap.properties)
       updatedTilemap.properties = <PropertySchemaType[]>tilemap.properties;
     if (tilemap.renderOrder) updatedTilemap.renderOrder = tilemap.renderOrder;
@@ -268,6 +273,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       nextLayerId: updatedTilemap.nextLayerId,
       nextObjectId: updatedTilemap.nextObjectId,
       orientation: <Orientation>updatedTilemap.orientation,
+      globalTileIDs: updatedTilemap.globalTileIDs,
       name: updatedTilemap.name,
       owner: updatedTilemap.owner,
       properties: <Property[]>updatedTilemap.properties,
@@ -289,78 +295,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     );
     return { id: id! };
   }
-  //   addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   updateLayer(
-  //     tilemapId: string,
-  //     layer: Partial<Layer>,
-  //     index: number
-  //   ): Promise<[Layer] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   removeLayer(tilemapId: string, index: number): Promise<[Layer] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   moveLayers(
-  //     tilemapId: string,
-  //     firstIndex: number,
-  //     secondIndex: number
-  //   ): Promise<[Layer] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   addCollaborator(
-  //     tilemapId: string,
-  //     collaboratorId: string
-  //   ): Promise<{
-  //     collaboratorIds: [string];
-  //     collaboratorNames: [string];
-  //   } | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   removeCollaborator(
-  //     tilemapId: string,
-  //     collaboratorsId: string
-  //   ): Promise<{
-  //     collaboratorIds: [string];
-  //     collaboratorNames: [string];
-  //   } | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   updateCollaboratorSettings(
-  //     tilemapId: string,
-  //     collaboratorSettings: CollaboratorSettings
-  //   ): Promise<CollaboratorSettings | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   updateCollaboratorIndex(
-  //     tilemapId: string,
-  //     collaboratorIndex: number
-  //   ): Promise<number | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   addProperty(
-  //     tilemapId: string,
-  //     property: Property
-  //   ): Promise<[Property] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   removeProperty(tilemapId: string, index: number): Promise<[Property] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   updateProperty(
-  //     tilemapId: string,
-  //     property: Property,
-  //     index: number
-  //   ): Promise<[Property] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   addTileset(tilemapId: string, tilesetId: string): Promise<[string] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
-  //   removeTileset(tilemapId: string, index: number): Promise<[string] | string> {
-  //     throw new Error("Method not implemented.");
-  //   }
+
   addTilemapComment(
     userId: string,
     socialId: string
