@@ -11,8 +11,10 @@ import { TilemapDBM } from "../../interface";
 import TilemapSchemaType from "../types/TileMapSchemaType";
 import UserSchema from '../../mongoose/schemas/user'
 import TilemapSocialStatisticsSchema from "../../mongoose/schemas/tileMapSocialStatistics";
+import CommentSchema from '../../mongoose/schemas/comment'
 import { EditMode, RenderOrder } from "../../../types/Tilemap";
 import { AnyExpression } from "mongoose";
+import Comment from "../../../types/Comment";
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
@@ -144,12 +146,38 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   /**
    * @author Tuyen Vo
    */
-  addTilemapComment(
-    userId: string,
-    socialId: string
+  async addTilemapComment(
+    payload: Comment
   ): Promise<TilemapSocialStatistics | null> {
-    throw new Error("Method not implemented.")
+    if (payload !== null) {
+      let refId = payload.referenceId
+      let social: any = await TilemapSocialStatisticsSchema.findById(refId)
+      if (social !== null) {
+        let comment = await CommentSchema.create(payload)
+        await comment.save()
+        return {
+          tileMap: social.tileMap,
+          name: social.name,
+          owner: social.owner,
+          ownerName: social.ownerName,
+          collaborators: social.collaborators,
+          collaboratorNames: social.collaboratorNames,
+          tags: social.tags,
+          description: social.description,
+          communities: social.communities,
+          likes: social.likes,
+          dislikes: social.dislikes,
+          views: social.views,
+          permissions: social.permissions,
+          comments: social.comments,
+          publishDate: social.publishDate,
+          imageURL: social.imageURL
+        }
+      }
+    }
+    return null
   }
+
   async toggleLike(
     userId: string,
     socialId: string
@@ -190,12 +218,48 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     }  
     return null
   }
-  toggleDislike(
+
+  async toggleDislike(
     userId: string,
     socialId: string
   ): Promise<TilemapSocialStatistics | null> {
-    throw new Error("Method not implemented.");
-  }
+    let user = await UserSchema.findById(userId)
+    let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
+    if ((user !== null) && social !== null) {
+      let id = user._id.toString()
+      let likes = social.likes
+      let dislikes = social.dislikes
+      if (!likes.includes(id)) {
+        if (dislikes.includes(id)) {
+          let i = dislikes.indexOf(id, 0)
+          dislikes.splice(i, 1)
+        } else {
+          dislikes.push(id)
+        }
+        await social.save()
+        return {
+          tileMap: social.tileMap,
+          name: social.name,
+          owner: social.owner,
+          ownerName: social.ownerName,
+          collaborators: social.collaborators,
+          collaboratorNames: social.collaboratorNames,
+          tags: social.tags,
+          description: social.description,
+          communities: social.communities,
+          likes: social.likes,
+          dislikes: social.dislikes,
+          views: social.views,
+          permissions: social.permissions,
+          comments: social.comments,
+          publishDate: social.publishDate,
+          imageURL: social.imageURL
+        }
+      }
+    }
+    return null
+  }  
+
   addView(
     userId: string,
     socialId: string
