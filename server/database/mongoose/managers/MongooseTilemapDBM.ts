@@ -35,7 +35,6 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       tilemapId,
       function (err: Error, tilemap: TilemapSchemaType) {
         if (err) {
-          console.log(err.message);
           return err.message;
         }
         return {

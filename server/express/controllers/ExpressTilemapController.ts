@@ -4,8 +4,43 @@ import { SortBy, Tilemap } from "../../types";
 import { is } from "typescript-is";
 
 export default class TilemapController {
-  public async getTilemapById(req: Request, res: Response): Promise<void> {
-    res.status(200).json({ message: "Getting tilemap by id!" });
+  public async getTilemapById(req: Request, res: Response): Promise<Response> {
+    //check to see if a request body was sent
+    if (!req.body) {
+      return res.status(400).json({
+        errorMessage: "Improperly formatted request",
+      });
+    }
+
+    const tileMapId: string = req.body.tileMapId;
+
+    //check to see if a tilemap id was provided and if it was formatted as a string
+    if (!tileMapId || !is<string>(tileMapId)) {
+      return res.status(400).json({
+        errorMessage: "Improperly formatted request",
+      });
+    }
+
+    const response: Partial<Tilemap> | string =
+      await db.tilemaps.getTilemapById(tileMapId);
+
+    //check for error messages
+    if (is<string>(response)) {
+      return res.status(400).json({
+        errorMessage: response,
+      });
+    }
+
+    //make sure response is at in the format of a tilemap partial
+    if (!response || !is<Partial<Tilemap>>(response)) {
+      return res.status(400).json({
+        errorMessage: "unable to get tilemap",
+      });
+    }
+
+    return res
+      .status(201)
+      .json({ message: "Getting tilemap!", response: response });
   }
 
   public async getTilemapSocialStatsById(
@@ -71,7 +106,7 @@ export default class TilemapController {
     }
 
     return res
-      .status(201)
+      .status(200)
       .json({ message: "Returning Tilemap Partials!", response: response });
   }
 
@@ -114,7 +149,7 @@ export default class TilemapController {
     }
 
     //make sure response is at in the format of a tilemap partial
-    if (!reponse || !is<Partial<Tilemap>>(response)) {
+    if (!response || !is<Partial<Tilemap>>(response)) {
       return res.status(400).json({
         errorMessage: "unable to create new tilemap",
       });
