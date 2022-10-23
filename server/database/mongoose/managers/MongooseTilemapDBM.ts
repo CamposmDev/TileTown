@@ -142,13 +142,13 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   //   }
   //   removeTileset(tilemapId: string, index: number): Promise<[string] | null> {
   //     throw new Error("Method not implemented.");
-  //   }
+  // }
+  
+  
   /**
    * @author Tuyen Vo
    */
-  async addTilemapComment(
-    payload: Comment
-  ): Promise<TilemapSocialStatistics | null> {
+  async addTilemapComment( payload: Comment): Promise<TilemapSocialStatistics | null> {
     if (payload !== null) {
       let refId = payload.referenceId
       let social: any = await TilemapSocialStatisticsSchema.findById(refId)
@@ -178,10 +178,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return null
   }
 
-  async toggleLike(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  async toggleLike( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
     let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
     if ((user !== null) && (social !== null)) {
@@ -219,10 +216,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return null
   }
 
-  async toggleDislike(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  async toggleDislike( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
     let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
     if ((user !== null) && social !== null) {
@@ -260,14 +254,12 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return null
   }  
 
-  async addView(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null> {
+  async addView( userId: string, socialId: string): Promise<TilemapSocialStatistics | null> {
     let user = await UserSchema.findById(userId)
     let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
     if ((user !== null) && (social !== null)) {
       social.views++
+      await social.save()
       return {
         tileMap: social.tileMap,
         name: social.name,
@@ -289,10 +281,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     }
     return null
   }
-  updateTilemapPermissions(
-    socialId: string,
-    permissions: SocialStatisticsPermissions
-  ): Promise<TilemapSocialStatistics | null> {
+   updateTilemapPermissions( socialId: string, permissions: SocialStatisticsPermissions): Promise<TilemapSocialStatistics | null> {
     throw new Error("Method not implemented.");
   }
 }

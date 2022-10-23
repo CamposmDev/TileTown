@@ -3,6 +3,7 @@ import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 export default interface TilemapSocialStatistics {
   tileset: string;
   name: string;
+  owner: string;
   ownerName: string;
   tags: string[];
   description: string;
