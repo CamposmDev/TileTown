@@ -76,7 +76,19 @@ export default class CommunityController {
       }
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Deleting a community by id!"});
+        // If any data is missing - Bad request
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }      
+        const communityId: string = req.body.communityId
+        let isDeleted: boolean = await db.communities.deleteCommunity(communityId) 
+        if (isDeleted) {
+            res.status(200).json({message: 'Deleted community id' + communityId})
+            return
+        }
+        res.status(404).json({message: 'Community does not exist'})
     }
 
-} 
+
+}
