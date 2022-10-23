@@ -109,6 +109,10 @@ export default class ForumController {
     }
 
     public async commentForumPostById(req: Request, res: Response): Promise<void> {
+        if (!req || !req.params.id || !req.body) {
+            res.status(400).json({message: 'Bad Request'})
+        }
+        let id = req.params.id
         
     }
 }
