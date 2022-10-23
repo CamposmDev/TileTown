@@ -52,23 +52,30 @@ export default class CommunityController {
     }
 
     public async updateCommunityById(req: Request, res: Response): Promise<void> {
-         // If any data is missing - Bad request
-         if (!req || !req.body || !req.body.community || !req.params || !req.params.id) {
+        // If any data is missing - Bad request
+        if (!req || !req.body || !req.params || !req.params.id) {
             res.status(400).json({message: "Bad Request"})
             return
         }
-          // Update the community 
-          let id: string = req.params.id;
-          let name: Community | null | undefined = req.body.community.name;
-          if (name !== undefined && name !== null) {
-              name = await db.communities.updateCommunity(id, name);
-              if (name === null) {
-                  res.status(500).json({message: "Server Error"}); 
-                  return;
-                }
-          }
-
-    }
+        // Update the community 
+        let id = req.params.id
+        let payload: Partial<Community> = {
+            owner: req.body.owner,
+            name: req.body.name,
+            description: req.body.description,
+            visibility: req.body.visibility
+        }
+  
+        let community = db.communities.updateCommunity(id, payload)
+  
+        if (community === null) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+  
+        res.status(201).json({community: community});
+        return;
+      }
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {
         res.status(200).json({message: "Deleting a community by id!"});
