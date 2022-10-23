@@ -13,24 +13,42 @@ export default class CommunityController {
     public async getCommunityById(req: Request, res: Response): Promise<void> {
         /** If there isn't an id in the url params return 400 - Bad Request */
         if (!req || !req.params || !req.params.id) {
-            res.status(400).json({message: "Bad Request!"});
-            return;
+            res.status(400).json({message: "Bad Request!"})
+            return
         }
         /** If there isn't a community in the database with the id return 404 - Not Found */
-        let id: string = req.params.id;
-        let community: Community | null = await db.communities.getCommunityById(id);
+        let id: string = req.params.id
+        let community: Community | null = await db.communities.getCommunityById(id)
         if (community === null) {
-            res.status(404).json({message: "Community does not exist"});
-            return;
+            res.status(404).json({message: "Community does not exist"})
+            return
         }
 
         /** Otherwise return all the data about the community back to the client */
-        res.status(200).json({community: community});
-        return;
+        res.status(200).json({community: community})
+        return
     }
 
     public async createCommunity(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Creating a community!"});
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+        console.log(req.body)
+        let community: Community | null = await db.communities.createCommunity({
+            owner: req.body.owner,
+            name: req.body.name,
+            description: req.body.description,
+            visibility: req.body.visibility
+        });
+
+        if (community === null) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+
+        res.status(201).json({community: community})
+        return
     }
 
     public async updateCommunityById(req: Request, res: Response): Promise<void> {
