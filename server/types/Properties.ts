@@ -1,3 +1,5 @@
+import { Color } from "./Color";
+
 export default interface Property {
   /**
    * A type that defines a TileSetProperties object on our server.
