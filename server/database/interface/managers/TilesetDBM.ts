@@ -2,6 +2,7 @@ import {
   Tileset,
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
+  SortBy,
 } from "../../../types";
 
 export default interface TilesetDBM {
@@ -19,13 +20,13 @@ export default interface TilesetDBM {
 
   deleteTilesetById(tilesetId: string): Promise<Tileset | string>;
 
-  getTileSetPartials(
+  getTilesetPartials(
     userId: string,
     search: string,
-    sortBy: string
-  ): Promise<Tileset | string>;
+    sortBy: SortBy
+  ): Promise<[Partial<Tileset>] | string>;
 
-  addTilemapComment(
+  addTilesetComment(
     userId: string,
     socialId: string
   ): Promise<TilesetSocialStatistics | string>;

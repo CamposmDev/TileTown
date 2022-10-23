@@ -3,6 +3,7 @@ import {
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
   Property,
+  SortBy,
 } from "../../../types";
 import { TilesetDBM } from "../../interface";
 import TilesetSchemaType from "../types/TilesetSchemaType";
@@ -13,12 +14,65 @@ import { ObjectId } from "mongoose";
 import { Schema } from "mongoose";
 
 export default class MongooseTilesetDBM implements TilesetDBM {
-  async getTileSetPartials(
+  //TODO Move sortBy to regex so it's done on database
+  async getTilesetPartials(
     userId: string,
     search: string,
-    sortBy: string
-  ): Promise<string | Tileset> {
-    throw new Error("Method not implemented.");
+    sortBy: SortBy
+  ): Promise<[Partial<Tileset>] | string> {
+    await TilesetSchema.find(
+      {
+        owner: userId,
+        name: new RegExp(search, "i"),
+        isPublish: { $ne: true },
+      },
+      function (err: any, tilesetPartials: [Partial<TilesetSchemaType>]) {
+        if (err) {
+          console.log(err.message);
+          return err.message;
+        }
+        let partials: Partial<Tileset>[] = new Array();
+        for (let partial of tilesetPartials) {
+          let newPartial: Partial<Tileset> = {
+            id: partial._id?.toString(),
+            image: partial.image,
+            name: partial.name,
+            lastSaveDate: partial?.updatedAt,
+          };
+          partials.push(newPartial);
+        }
+        //TODO Figure out a better workaround this type checking
+        //Possibly move to controller or database query
+        switch (sortBy) {
+          case SortBy.Newest: {
+            partials.sort(function (a, b) {
+              if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
+              if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
+              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+              return <any>bDate - <any>aDate;
+            });
+            break;
+          }
+          case SortBy.Oldest: {
+            partials.sort(function (a, b) {
+              if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
+              if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
+              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+              return <any>aDate - <any>bDate;
+            });
+            break;
+          }
+          default:
+            break;
+        }
+        return partials;
+      }
+    );
+    return "Unable to get Tilesets";
   }
 
   async getTilesetById(tilesetId: string): Promise<Tileset | string> {
@@ -135,12 +189,6 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     socialId: string,
     permissions: SocialStatisticsPermissions
   ): Promise<TilesetSocialStatistics | string> {
-    throw new Error("Method not implemented.");
-  }
-  async addTilemapComment(
-    userId: string,
-    socialId: string
-  ): Promise<string | TilesetSocialStatistics> {
     throw new Error("Method not implemented.");
   }
 }

@@ -10,7 +10,7 @@ import {
 import TilemapSchema from "../../mongoose/schemas/tilemap";
 import UserSchema from "../../mongoose/schemas/user";
 import { TilemapDBM } from "../../interface";
-import TilemapSchemaType from "../types/TileMapSchemaType";
+import TilemapSchemaType from "../types/TilemapSchemaType";
 import { EditMode, Orientation, RenderOrder } from "../../../types/Tilemap";
 import UserSchemaType from "../types/UserSchemaType";
 import { ObjectId } from "mongoose";
