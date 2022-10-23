@@ -260,11 +260,34 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return null
   }  
 
-  addView(
+  async addView(
     userId: string,
     socialId: string
   ): Promise<TilemapSocialStatistics | null> {
-    throw new Error("Method not implemented.");
+    let user = await UserSchema.findById(userId)
+    let social: any = await TilemapSocialStatisticsSchema.findById(socialId)
+    if ((user !== null) && (social !== null)) {
+      social.views++
+      return {
+        tileMap: social.tileMap,
+        name: social.name,
+        owner: social.owner,
+        ownerName: social.ownerName,
+        collaborators: social.collaborators,
+        collaboratorNames: social.collaboratorNames,
+        tags: social.tags,
+        description: social.description,
+        communities: social.communities,
+        likes: social.likes,
+        dislikes: social.dislikes,
+        views: social.views,
+        permissions: social.permissions,
+        comments: social.comments,
+        publishDate: social.publishDate,
+        imageURL: social.imageURL
+      }
+    }
+    return null
   }
   updateTilemapPermissions(
     socialId: string,
