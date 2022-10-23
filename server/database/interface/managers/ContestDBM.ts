@@ -86,5 +86,5 @@ export default interface ContestDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, the id of the deleted contest; null otherwise.
      */
-    deleteContest(contestId: string): Promise<string | null>;
+    deleteContest(contestId: string): Promise<boolean>;
 }

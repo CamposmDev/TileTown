@@ -80,7 +80,19 @@ export default class ContestController {
       }
 
     public async deleteContestById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Deleting a contest by id!"});
+        // If any data is missing - Bad request
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }      
+        const contestId: string = req.body.contestId
+        let isDeleted: boolean = await db.contests.deleteContest(contestId) 
+        if (isDeleted) {
+            res.status(200).json({message: 'Deleted contest id' + contestId})
+            return
+        }
+        res.status(404).json({message: 'Contest does not exist'})
     }
+
 
 }
