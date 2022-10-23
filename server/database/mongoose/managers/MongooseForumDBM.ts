@@ -30,8 +30,8 @@ export default class MongooseForumDBM implements ForumDBM {
             title: payload.title,
             body: payload.body,
             tags: payload.tags,
-            likes: payload.likes,
-            dislikes: payload.dislikes,
+            likes: [],
+            dislikes: [],
             isPublished: payload.isPublished
         })
         let res = await forumPost.save()

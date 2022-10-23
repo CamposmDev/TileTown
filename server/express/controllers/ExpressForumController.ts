@@ -5,7 +5,7 @@ import { ForumPost } from '../../types';
 export default class ForumController {
 
     public async getForumPostById(req: Request, res: Response): Promise<void> {
-        /** If there ins't an id in the url params return 400 */
+        /** If there isn't an id in the url params return 400 */
         if (!req || !req.params || !req.params.id) {
             res.status(400).json({message: 'Bad Request'})
             return
@@ -25,7 +25,26 @@ export default class ForumController {
     }
 
     public async createForumPost(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Creating a forum post!"});
+        if (!req || !req.body) {
+            res.status(400).json({message: 'Bad Request'})
+            return
+        }
+
+        console.log(req.body)
+        let forumPost: ForumPost | null = await db.forums.createForumPost({
+            author: req.body.author,
+            title: req.body.title,
+            body: req.body.body,
+            tags: req.body.tags,
+            isPublished: req.body.isPublished
+        })
+        
+        if (forumPost === null) {
+            res.status(400).json({message: 'Bad Request'})
+            return
+        }
+        res.status(200).json({forumPost: forumPost})
+        return
     }
 
     public async updateForumPostById(req: Request, res: Response): Promise<void> {
