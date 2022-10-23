@@ -12,6 +12,7 @@ import UserSchemaType from "../types/UserSchemaType";
 import UserSchema from "../schemas/user";
 import { ObjectId } from "mongoose";
 import { Schema } from "mongoose";
+import PropertySchemaType from "../types/PropertySchemaType";
 
 export default class MongooseTilesetDBM implements TilesetDBM {
   //TODO Move sortBy to regex so it's done on database
@@ -85,7 +86,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return {
           id: tileset._id.toString(),
           columns: tileset.columns,
-          createdDate: new Date(tileset.createdAt.toString()),
+          createDate: new Date(tileset.createdAt.toString()),
           lastSaveDate: new Date(tileset.updatedAt.toString()),
           image: tileset.image,
           imageHeight: tileset.imageHeight,
@@ -139,7 +140,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
 
     return {
       id: newTileset._id.toString(),
-      createdDate: new Date(newTileset.createdAt),
+      createDate: new Date(newTileset.createdAt),
       lastSaveDate: new Date(newTileset.updatedAt),
       columns: newTileset.columns,
       image: newTileset.image,
@@ -156,7 +157,49 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     tilesetId: string,
     tileset: Partial<Tileset>
   ): Promise<Tileset | string> {
-    throw new Error("Method not implemented.");
+    let updatedTileset: TilesetSchemaType = new TilesetSchema();
+    await TilesetSchema.findOne(
+      { _id: tilesetId },
+      (err: Error, tileset: TilesetSchemaType) => {
+        if (err) return err.message;
+        updatedTileset = tileset;
+      }
+    );
+
+    if (tileset.columns) updatedTileset.columns = tileset.columns;
+    if (tileset.image) updatedTileset.image = tileset.image;
+    if (tileset.imageHeight) updatedTileset.imageHeight = tileset.imageHeight;
+    if (tileset.imageWidth) updatedTileset.imageWidth = tileset.imageWidth;
+    if (tileset.margin) updatedTileset.margin = tileset.margin;
+    if (tileset.name) updatedTileset.name = tileset.name;
+    if (tileset.owner)
+      updatedTileset.owner = new Schema.Types.ObjectId(tileset.owner);
+    if (tileset.properties)
+      updatedTileset.properties = <PropertySchemaType[]>tileset.properties;
+    if (tileset.isPublished) updatedTileset.isPublished = tileset.isPublished;
+
+    await TilesetSchema.findOneAndUpdate(
+      { _id: tilesetId },
+      updatedTileset,
+      function (err: Error, tileset: TilesetSchemaType) {
+        if (err) return err.message;
+      }
+    );
+
+    return {
+      id: updatedTileset._id.toString(),
+      createDate: new Date(updatedTileset.createdAt.toString()),
+      lastSaveDate: new Date(updatedTileset.updatedAt.toString()),
+      columns: updatedTileset.columns,
+      image: updatedTileset.image,
+      imageHeight: updatedTileset.imageHeight,
+      imageWidth: updatedTileset.imageWidth,
+      margin: updatedTileset.margin,
+      name: updatedTileset.name,
+      owner: updatedTileset.owner.toString(),
+      properties: <Property[]>updatedTileset.properties,
+      isPublished: updatedTileset.isPublished,
+    };
   }
   async deleteTilesetById(tilesetId: string): Promise<Tileset | string> {
     throw new Error("Method not implemented.");

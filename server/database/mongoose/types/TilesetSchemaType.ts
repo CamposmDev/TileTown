@@ -17,6 +17,6 @@ export default interface TilesetSchemaType {
   margin: number;
   name: string;
   owner: ObjectId;
-  properties: [PropertySchemaType];
+  properties: PropertySchemaType[];
   isPublished: boolean;
 }
