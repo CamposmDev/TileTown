@@ -8,5 +8,5 @@ ForumRouter.post('/', ForumController.createForumPost);
 ForumRouter.post('/comment/:id', ForumController.commentForumPostById);
 ForumRouter.put('/:id', ForumController.updateForumPostById);
 ForumRouter.put('/like/:id', ForumController.likeForumPostById);
-
+ForumRouter.put('/:id', ForumController.commentForumPostById)
 export default ForumRouter;

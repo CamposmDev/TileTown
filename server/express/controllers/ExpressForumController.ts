@@ -113,6 +113,21 @@ export default class ForumController {
             res.status(400).json({message: 'Bad Request'})
         }
         let id = req.params.id
-        
+        let forumPost: any = await db.forums.getForumPost(id)
+        if (forumPost === null) {
+            res.status(400).json({message: 'Bad Request'})
+            return
+        }
+        let comment = await db.forums.commentForumPostById(id, {
+            author: req.body.author,
+            title: req.body.title,
+            body: req.body.body,
+            referenceId: forumPost.id
+        })
+        if (comment === null) {
+            res.status(400).json({message: 'Bad Request'})
+            return
+        }
+        res.status(200).json({comment: comment})
     }
 }
