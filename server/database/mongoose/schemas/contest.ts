@@ -18,4 +18,4 @@ const ContestSchema = new Schema<ContestSchemaType>({
     winner: { type: ObjectId, require: true},
     isPublished: { type: Boolean, require: true}
 })
-export = mongoose.model('ContestSchema', ContestSchema)
+export default mongoose.model('ContestSchema', ContestSchema)

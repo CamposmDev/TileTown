@@ -16,5 +16,5 @@ const CommunityForumPostSchema = new Schema({
     dislikes: { type: [ObjectId], require: true},
     isPublished: { type: Boolean, require: true}
 
-})
-export = mongoose.model('CommunityForumPostSchema', CommunityForumPostSchema)
+});
+export default mongoose.model('CommunityForumPostSchema', CommunityForumPostSchema)

@@ -38,4 +38,4 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   isPublished: { type: Boolean, required: true },
 });
 
-export = mongoose.model("Tilemap", TilemapSchema);
+export default mongoose.model("Tilemap", TilemapSchema);

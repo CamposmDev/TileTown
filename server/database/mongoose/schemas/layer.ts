@@ -21,4 +21,4 @@ const LayerSchema = new Schema<LayerSchemaType>({
   y: { type: Number, required: true },
 });
 
-export = mongoose.model("Layer", LayerSchema);
+export default mongoose.model("Layer", LayerSchema);

@@ -6,9 +6,9 @@ const ObjectId = Schema.Types.ObjectId
  * @author Tuyen Vo
  */
 
-const ModeratorsSchema = new Schema({
+const ModeratorSchema = new Schema({
     groupId: { type: ObjectId, require: true},
     userId: { type: ObjectId, require: true},
     role: { type: String, require: true},
 })
-export = mongoose.model('ModeratorsSchema', ModeratorsSchema)
+export default mongoose.model('ModeratorSchema', ModeratorSchema)

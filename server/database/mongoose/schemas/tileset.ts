@@ -22,4 +22,4 @@ const TilesetSchema = new Schema<TilesetSchemaType>({
   isPublished: { type: Boolean, required: true },
 });
 
-export = mongoose.model("Tileset", TilesetSchema);
+export default mongoose.model("Tileset", TilesetSchema);
