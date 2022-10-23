@@ -80,15 +80,15 @@ export default class UserController {
     }
 
     public async logoutUser(req: Request, res: Response): Promise<void> {
+        if (!req.userId) {
+            res.status(401).send({message: "Unauthorized"});
+            return;
+        }
         res.status(200).clearCookie("token").json({message: "User successfully logged out!"});
+        return;
     }
 
-    /**
-     * Updates a TileTown user by id.
-     * @param req 
-     * @param res 
-     * @returns 
-     */
+    
     public async updateUserById(req: Request, res: Response): Promise<void> {
         // If any data is missing - Bad request
         if (!req || !req.body || !req.body.user || !req.params || !req.params.id) {
@@ -152,7 +152,60 @@ export default class UserController {
             res.status(400).json({message: "Bad Request"});
             return;
         }
-        
+
+        if (!req.userId) {
+            res.status(401).json({message: "Unauthorized"});
+            return;
+        }
+
+        let newPassword: string | null = await db.users.updatePassword(req.userId, req.body.oldPassword, req.body.newPassword);
+        if (newPassword === null) {
+            res.status(400).json({message: "Setting new password failed"});
+            return;
+        }
+
+        res.status(200).json({message: "Password updated successfully"});
+        return;
+    }
+    public async updateUserEmail(req: Request, res: Response): Promise<void> {
+        if (!req || !req.body || !req.body.email) {
+            res.status(400).send({message: "Bad request"});
+            return;
+        }
+
+        if (!req.userId) {
+            res.status(401).send({message: "Unauthorized"});
+            return;
+        }
+
+        let email: string | null = await db.users.updateEmail(req.userId, req.body.email);
+        if (email === null) {
+            res.status(400).send({message: "Bad Request"});
+            return;
+        }
+
+        res.status(200).json({message: "Email successfully changed!"});
+        return;
+    }
+    public async updateUserUsername(req: Request, res: Response): Promise<void> {
+        if (!req || !req.body || !req.body.username) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+
+        if (!req.userId) {
+            res.status(401).json({message: "Unauthorized"});
+            return;
+        }
+
+        let username: string | null = await db.users.updateUsername(req.userId, req.body.username);
+        if (username === null) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+
+        res.status(200).json({message: "Username updated successfully!"});
+        return;
     }
 
     public async verifyUser(req: Request, res: Response): Promise<void> {

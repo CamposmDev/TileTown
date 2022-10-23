@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { AuthRequest } from '../types';
 
 /** The JWT secret key */
 export const JWT_SECRET: string = 'SECRET' || process.env.JWT_SECRET;
 
 /**
  * The auth system from CSE-316 (more or less)
+ * @author Peter Walsh
  */
 export default class ExpressJWTAuth {
 
@@ -18,7 +18,7 @@ export default class ExpressJWTAuth {
                 return;
             }
             let verified = jwt.verify(token, JWT_SECRET);
-            // req.user = typeof verified === "string" ? verified : null;
+            req.userId = typeof verified === "string" ? verified : "";
             next();
         } catch (err) {
             console.log(err);

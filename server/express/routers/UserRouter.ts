@@ -12,9 +12,9 @@ UserRouter.post('/login', UserController.loginUser);
 UserRouter.post('/logout', Auth.verifyJWT, UserController.logoutUser);
 
 UserRouter.put('/', Auth.verifyJWT, UserController.updateUserById);
-UserRouter.put('/username', Auth.verifyJWT, )
-UserRouter.put('/password', Auth.verifyJWT,)
-UserRouter.put('/email', Auth.verifyJWT, )
+UserRouter.put('/username', Auth.verifyJWT, UserController.updateUserUsername);
+UserRouter.put('/password', Auth.verifyJWT, UserController.updateUserPassword);
+UserRouter.put('/email', Auth.verifyJWT, UserController.updateUserEmail);
 
 UserRouter.delete('/', Auth.verifyJWT, UserController.deleteUserById);
 
