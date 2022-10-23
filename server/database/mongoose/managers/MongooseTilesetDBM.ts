@@ -201,8 +201,18 @@ export default class MongooseTilesetDBM implements TilesetDBM {
       isPublished: updatedTileset.isPublished,
     };
   }
-  async deleteTilesetById(tilesetId: string): Promise<Tileset | string> {
-    throw new Error("Method not implemented.");
+  async deleteTilesetById(
+    tilesetId: string
+  ): Promise<Partial<Tileset> | string> {
+    let id: string;
+    await TilesetSchema.findOneAndDelete(
+      { _id: tilesetId },
+      function (err: Error, tileset: TilesetSchemaType) {
+        if (err) return err.message;
+        id = tileset._id.toString();
+      }
+    );
+    return { id: id! };
   }
   async addTilesetComment(
     userId: string,

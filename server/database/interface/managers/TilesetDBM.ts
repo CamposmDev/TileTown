@@ -18,7 +18,7 @@ export default interface TilesetDBM {
     tileset: Partial<Tileset>
   ): Promise<Tileset | string>;
 
-  deleteTilesetById(tilesetId: string): Promise<Tileset | string>;
+  deleteTilesetById(tilesetId: string): Promise<Partial<Tileset> | string>;
 
   getTilesetPartials(
     userId: string,
