@@ -3,6 +3,7 @@ import {
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
 } from "../../../types";
+import Comment from "../../../types/Comment";
 
 export default interface TilesetDBM {
   getTilesetById(tilesetId: string): Promise<Tileset | null>;
@@ -16,9 +17,8 @@ export default interface TilesetDBM {
 
   deleteTilesetById(tilesetId: string): Promise<Tileset | null>;
 
-  addTilemapComment(
-    userId: string,
-    socialId: string
+  addTilesetComment(
+    payload: Comment
   ): Promise<TilesetSocialStatistics | null>;
 
   toggleLike(

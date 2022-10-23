@@ -289,9 +289,9 @@ export default class MongooseUserDBM implements UserDBM {
                 user.joinedContests.splice(i, 1)
                 user.save()
             }
-            let j = contest.particpates.indexOf(user._id, 0)
+            let j = contest.participates.indexOf(user._id, 0)
             if (j > -1) {
-                contest.particpates.splice(j, 1)
+                contest.participates.splice(j, 1)
                 contest.save()
             }
             return true

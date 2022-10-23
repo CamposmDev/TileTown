@@ -6,6 +6,7 @@ import {
   Layer,
   Property,
 } from "../../../types";
+import Comment from "../../../types/Comment";
 
 /**
  * An interface defining a set of methods to work with TileTown Tilemaps and Tilemap social statistics in an arbitrary DBMS.
@@ -303,8 +304,7 @@ export default interface TilemapDBM {
   // removeTileset(tilemapId: string, index: number): Promise<[string] | null>;
 
   addTilemapComment(
-    userId: string,
-    socialId: string
+    payload: Comment
   ): Promise<TilemapSocialStatistics | null>;
 
   toggleLike(

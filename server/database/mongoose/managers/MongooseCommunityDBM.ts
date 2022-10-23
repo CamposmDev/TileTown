@@ -1,10 +1,6 @@
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import CommunitySchema from '../../mongoose/schemas/community'
-import ContestSchema from '../../mongoose/schemas/contest'
-import TilemapSchema from '../../mongoose/schemas/tilemap'
-import TilesetSchema from '../../mongoose/schemas/tileset'
-import { hash, compare } from "bcrypt";
 import UserSchema from '../../mongoose/schemas/user'
 
 
@@ -33,7 +29,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         if (!community.name || !community.owner) return null
 
         /**
-         * Check if the community name vilid
+         * Check if the community name valid
          */
         const validCommunityName = async (communityName: string): Promise<boolean> => {
             const existCommunity = await CommunitySchema.findOne({communityName: communityName})
@@ -93,6 +89,5 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             return true
         }
         return false
-
     }
 }

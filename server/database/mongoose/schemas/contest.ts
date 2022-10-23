@@ -12,7 +12,7 @@ const ContestSchema = new Schema<ContestSchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
     description: { type: String, require: true},
-    particpates: { type: [ObjectId], require: true },
+    participates: { type: [ObjectId], require: true },
     startDate: { type: Date, require: true},
     endDate: { type: Date, require: true},
     winner: { type: ObjectId, require: true},

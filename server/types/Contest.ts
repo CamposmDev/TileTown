@@ -19,6 +19,9 @@ export default interface Contest {
     /** The textual description of the Contest */
     description: string
 
+    /** The number of participating users of the contest */
+    participates: string[]
+
     /** The starting date of the Contest */
     startDate: Date,
 

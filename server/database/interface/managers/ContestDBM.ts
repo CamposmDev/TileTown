@@ -57,24 +57,6 @@ export default interface ContestDBM {
     updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null>;
 
     /**
-     * Updates the members of the contest with the given contest id in the DBMS.
-     * 
-     * @remarks
-     * 
-     * If a contest with the given contest id exists in the DBMS and a user exists in the DBMS for each of the user ids in 
-     * the array of members, the method updates the members associated with the contest with the given contest id in the DBMS
-     * according to the array of member user ids.
-     * 
-     * If the contest with the given contest id does not exist in the DBMS or any of the members ids do not exist in the DBMS, 
-     * or any error occurs the method returns null.
-     * 
-     * @param contestId the id of the contest in the DBMS
-     * @param members an array of the members user ids in the DBMS
-     * @return if successful, the updated members for the contest; null otherwise
-     */
-    updateMembers(contestId: string, members: string[]): Promise<string[] | null>;
-
-    /**
      * Updates the role of the user with the given user id in the contest with the given contest id.
      * 
      * @remarks
