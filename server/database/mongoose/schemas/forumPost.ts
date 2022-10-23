@@ -17,4 +17,4 @@ const ForumPostSchema = new Schema({
     isPublished: { type: Boolean, require: true}
 })
 
-export = mongoose.model('ForumPostSchema', ForumPostSchema)
+export default mongoose.model('ForumPostSchema', ForumPostSchema)

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import TilemapSchemaType from "../types/TileMapSchemaType";
+import TilemapSchemaType from "../types/TilemapSchemaType";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 const PropertySchema = require("./properties").schema;
@@ -32,9 +32,10 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   name: { type: String, required: true },
   owner: { type: String, required: true },
   tilesets: { type: [ObjectId], required: true },
+  globalTileIDs: { type: [Number], required: true },
   properties: { type: [PropertySchema], required: true },
   renderOrder: { type: String, required: true },
   isPublished: { type: Boolean, required: true },
 });
 
-export = mongoose.model("Tileset", TilemapSchema);
+export default mongoose.model("Tilemap", TilemapSchema);

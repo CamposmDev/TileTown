@@ -12,10 +12,15 @@ import UserDBM from "./managers/UserDBM";
 export default interface TileTownDB {
 
     /**
-     * Establishes a connection to a database or multiple databases.
+     * Establishes a connection to a database
      * @param args 
      */
-    connect(...args: any): Promise<void> | void;
+    connect(...args: any): Promise<void>;
+
+    /** 
+     * Closes the connection to a database 
+     */
+    disconnect(...args: any): Promise<void>;
 
     /**
      * @return the user database manager associated with this TileTown DBM

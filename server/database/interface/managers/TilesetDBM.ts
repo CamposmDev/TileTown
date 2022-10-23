@@ -2,20 +2,30 @@ import {
   Tileset,
   TilesetSocialStatistics,
   SocialStatisticsPermissions,
+  SortBy,
 } from "../../../types";
 import Comment from "../../../types/Comment";
 
 export default interface TilesetDBM {
-  getTilesetById(tilesetId: string): Promise<Tileset | null>;
+  getTilesetById(tilesetId: string): Promise<Tileset | string>;
 
-  createTileset(tileset: Partial<Tileset>): Promise<Tileset | null>;
+  createTileset(
+    userId: string,
+    tileset: Partial<Tileset>
+  ): Promise<Tileset | string>;
 
   updateTilesetById(
     tilesetId: string,
     tileset: Partial<Tileset>
-  ): Promise<Tileset | null>;
+  ): Promise<Tileset | string>;
 
-  deleteTilesetById(tilesetId: string): Promise<Tileset | null>;
+  deleteTilesetById(tilesetId: string): Promise<Partial<Tileset> | string>;
+
+  getTilesetPartials(
+    userId: string,
+    search: string,
+    sortBy: SortBy
+  ): Promise<[Partial<Tileset>] | string>;
 
   addTilesetComment(
     payload: Comment

@@ -1,6 +1,6 @@
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 
-export default interface TilemapSocialStatistics {
+export default interface TilesetSocialStatistics {
   tileset: string;
   name: string;
   owner: string;

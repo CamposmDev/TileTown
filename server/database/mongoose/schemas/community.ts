@@ -1,12 +1,12 @@
-import mongoose from "mongoose"
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+import mongoose, { Schema } from "mongoose"
+import { CommunitySchemaType } from "../types";
+
+const ObjectId = mongoose.Types.ObjectId
 
 /**
  * @author Tuyen Vo
  */
-
-const CommunitySchema = new Schema({
+const CommunitySchema = new Schema<CommunitySchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
     description: { type: String, require: true},
@@ -14,4 +14,4 @@ const CommunitySchema = new Schema({
     visibility: { type: String, require: true}
 
 })
-export = mongoose.model('CommunitySchema', CommunitySchema)
+export default mongoose.model('CommunitySchema', CommunitySchema)
