@@ -8,9 +8,6 @@ export default interface Comment {
     /** The author of the comment */
     author: ObjectId
 
-    /** The title of the comment */
-    title: string
-
     /** The content of the comment */
     body: string
 
