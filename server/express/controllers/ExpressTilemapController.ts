@@ -17,7 +17,7 @@ export default class TilemapController {
     //check to see if a tilemap id was provided and if it was formatted as a string
     if (!tileMapId || !is<string>(tileMapId)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No tilemapId provided",
       });
     }
 
@@ -66,7 +66,7 @@ export default class TilemapController {
     //check to see if a user id was provided and if it was formatted as a string
     if (!userId || !is<string>(userId)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No userId provided",
       });
     }
 
@@ -75,7 +75,7 @@ export default class TilemapController {
     //check to see if body has a search string and if it was formatted as a string
     if (!search || !is<string>(search)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No search string provided",
       });
     }
 
@@ -84,7 +84,7 @@ export default class TilemapController {
     //check to see if body has a sort by string and if it was formatted as a SortBy
     if (!sortBy || !is<SortBy>(SortBy)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No sortBy string provided",
       });
     }
 
@@ -123,7 +123,7 @@ export default class TilemapController {
     //check to see if a user id was provided and if it was formatted as a string
     if (!userId || !is<string>(userId)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No userId Provided",
       });
     }
 
@@ -132,7 +132,7 @@ export default class TilemapController {
     //check to see if a tilemap partial was provided and if it was formatted properly
     if (!tilemap || !is<Partial<Tilemap>>(tilemap)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No tilemap data provided",
       });
     }
 
@@ -176,7 +176,7 @@ export default class TilemapController {
     //check to see if a tilemap id was provided and if it was formatted as a string
     if (!tileMapId || !is<string>(tileMapId)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "No tilemap id provided",
       });
     }
 
@@ -218,7 +218,7 @@ export default class TilemapController {
     //check to see if a user id was provided and if it was formatted as a string
     if (!userId || !is<string>(userId)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "no userId provided",
       });
     }
 
@@ -227,7 +227,7 @@ export default class TilemapController {
     //check to see if a tilemap partial was provided and if it was formatted properly
     if (!tilemap || !is<Partial<Tilemap>>(tilemap)) {
       return res.status(400).json({
-        errorMessage: "Improperly formatted request",
+        errorMessage: "no tilemap data provided",
       });
     }
 
