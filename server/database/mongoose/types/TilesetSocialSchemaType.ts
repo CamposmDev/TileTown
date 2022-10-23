@@ -1,5 +1,4 @@
 import { ObjectId } from "mongoose";
-import { PropertySchemaType } from ".";
 
 /**
  * @author Peter Walsh
@@ -7,9 +6,8 @@ import { PropertySchemaType } from ".";
 export default interface TilesetSocialSchemaType {
     tileSet: ObjectId,
     name: string,
-    // I think there should be an owner field
-    // owner: ObjectId
-    ownerName: ObjectId,  // I think string...
+    owner: ObjectId
+    ownerName: string,  
     tags: string[],
     description: string,
     communities: ObjectId[],
