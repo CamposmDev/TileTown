@@ -41,7 +41,7 @@ export default class MongooseUserDBM implements UserDBM {
         if (user === null) return null;
 
         // Check the user's password I think
-        let isOwner: boolean = await compare(user.password, userPassword);
+        let isOwner: boolean = await compare(userPassword, user.password);
         if (!isOwner) return null;
 
         // If the password matches up - return the user.
@@ -255,7 +255,7 @@ export default class MongooseUserDBM implements UserDBM {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
         let user = await UserSchema.findById(userId)
         if (user !== null) {
-            user.delete()
+            await user.delete();
             return true
         }
         return false
