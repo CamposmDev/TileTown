@@ -51,8 +51,33 @@ export default class ContestController {
     }
 
     public async updateContestById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Updating a contest by id!"});
-    }
+         // If any data is missing - Bad request
+         if (!req || !req.body || !req.params || !req.params.id) {
+            res.status(400).json({message: "Bad Request"})
+            return
+        }
+        // Update the contest 
+        let id = req.params.id
+        let payload: Partial<Contest> = {
+            owner: req.body.owner,
+            name: req.body.name,
+            description: req.body.description,
+            participates: req.body.particpates,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            winner: req.body.winner,
+            isPublished: req.body.isPublished
+        }
+  
+        let contest = db.contests.updateContest(id, payload)
+        if (contest === null) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+        
+        res.status(201).json({contest: contest})
+        return;
+      }
 
     public async deleteContestById(req: Request, res: Response): Promise<void> {
         res.status(200).json({message: "Deleting a contest by id!"});
