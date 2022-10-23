@@ -46,7 +46,6 @@ export default class CommunityController {
             res.status(400).json({message: "Bad Request"})
             return
         }
-
         res.status(201).json({community: community})
         return
     }
@@ -67,12 +66,11 @@ export default class CommunityController {
         }
   
         let community = db.communities.updateCommunity(id, payload)
-  
         if (community === null) {
             res.status(400).json({message: "Bad Request"});
             return;
         }
-  
+        
         res.status(201).json({community: community});
         return;
       }
