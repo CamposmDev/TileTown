@@ -53,7 +53,7 @@ export default class UserController {
             return;
         }
 
-        res.status(200).json({user: user});
+        res.status(201).json({user: user});
         return;
     }
 
@@ -66,20 +66,21 @@ export default class UserController {
         let user: User | null;
         user = await db.users.loginUser(req.body.email, req.body.password);
         if (user === null || user === undefined) {
-            res.status(400).json({message: "Invalid username or password"});
+            res.status(400).json({message: "Invalid username or password!"});
+            return;
         }
 
         // Give the user a signed token 
-        let token: string = Auth.signJWT({})
+        let token: string = Auth.signJWT<string>(user.id);
 
-        res.status(200);
-        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none"});
-        res.json({user: user});
+        res.status(200).
+            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000)}).
+            json({message: "User successfully logged in!", user: user});
         return;
     }
 
     public async logoutUser(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Logging out a user!"});
+        res.status(200).clearCookie("token").json({message: "User successfully logged out!"});
     }
 
     /**
@@ -92,6 +93,7 @@ export default class UserController {
         // If any data is missing - Bad request
         if (!req || !req.body || !req.body.user || !req.params || !req.params.id) {
             res.status(400).json({message: "Bad Request"});
+            return;
         }
 
         let user: User | null;
@@ -111,8 +113,10 @@ export default class UserController {
         if (email !== undefined && email !== null) {
             email = await db.users.updateEmail(id, email);
             if (email === null) {
-                res.status(500).json({message: "Bad Request"}); return;
+                res.status(500).json({message: "Bad Request"}); 
+                return;
             }
+            user.email = email;
         }
 
         // Update the users username
@@ -120,8 +124,10 @@ export default class UserController {
         if (username !== undefined && username !== null) {
             username = await db.users.updateUsername(id, username);
             if (username === null) {
-                res.status(500).json({message: "Server Error"}); return;
+                res.status(500).json({message: "Server Error"}); 
+                return;
             }
+            user.username = username;
         }
 
         // Update the users password
@@ -131,17 +137,22 @@ export default class UserController {
             newpass = await db.users.updatePassword(id, oldpass, newpass);
             if (newpass === null || newpass == undefined) { 
                 res.status(500).json({message: "Server Error"});
+                return;
             }
-        }
-
-        // Get the updated user
-        user = await db.users.getUserById(id);
-        if (user === null || user === undefined) {
-            res.status(400).json({message: "Server Error"});
+            user.password = newpass;
         }
 
         // Return the updated user
         res.status(200).json({user: user});
+        return;
+    }
+
+    public async updateUserPassword(req: Request, res: Response): Promise<void> {
+        if (!req || !req.body || !req.body.oldPassword || !req.body.newPassword) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+        
     }
 
     public async verifyUser(req: Request, res: Response): Promise<void> {
