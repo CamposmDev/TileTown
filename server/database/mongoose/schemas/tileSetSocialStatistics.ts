@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import { TilesetSocialSchemaType } from "../types"
+
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
@@ -6,7 +8,7 @@ const ObjectId = Schema.Types.ObjectId
  * @author Tuyen Vo
  */
 
-const TileSetSocialStatisticsSchema = new Schema({
+const TileSetSocialStatisticsSchema = new Schema<TilesetSocialSchemaType>({
     tileSet: { type: ObjectId, require: true},
     name: { type: String, require: true},
     ownerName: { type: ObjectId, require: true},

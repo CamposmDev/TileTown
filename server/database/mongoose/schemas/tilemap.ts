@@ -32,6 +32,7 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   name: { type: String, required: true },
   owner: { type: String, required: true },
   tilesets: { type: [ObjectId], required: true },
+  globalTileIDs: { type: [Number], required: true },
   properties: { type: [PropertySchema], required: true },
   renderOrder: { type: String, required: true },
   isPublished: { type: Boolean, required: true },
