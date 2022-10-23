@@ -12,17 +12,17 @@ export default class TilemapController {
       });
     }
 
-    const tileMapId: string = req.body.tileMapId;
+    const tilemapId: string = req.body.tilemapId;
 
     //check to see if a tilemap id was provided and if it was formatted as a string
-    if (!tileMapId || !is<string>(tileMapId)) {
+    if (!tilemapId || !is<string>(tilemapId)) {
       return res.status(400).json({
         errorMessage: "No tilemapId provided",
       });
     }
 
     const response: Partial<Tilemap> | string =
-      await db.tilemaps.getTilemapById(tileMapId);
+      await db.tilemaps.getTilemapById(tilemapId);
 
     //check for error messages
     if (is<string>(response)) {
@@ -171,17 +171,17 @@ export default class TilemapController {
       });
     }
 
-    const tileMapId: string = req.body.tileMapId;
+    const tilemapId: string = req.body.tilemapId;
 
     //check to see if a tilemap id was provided and if it was formatted as a string
-    if (!tileMapId || !is<string>(tileMapId)) {
+    if (!tilemapId || !is<string>(tilemapId)) {
       return res.status(400).json({
         errorMessage: "No tilemap id provided",
       });
     }
 
     const response: Partial<Tilemap> | string =
-      await db.tilemaps.deleteTilemapById(tileMapId);
+      await db.tilemaps.deleteTilemapById(tilemapId);
 
     //check for error messages
     if (is<string>(response)) {
