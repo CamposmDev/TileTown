@@ -124,8 +124,30 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return null
       }      
     async addView(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
-        throw new Error("Method not implemented.");
-    }
+        let user = await UserSchema.findById(userId)
+        let social: any = await TilesetSocialStatisticsSchema.findById(socialId)
+        if ((user !== null) && (social !== null)) {
+          social.views++
+          await social.save()
+          return {
+            tileset: social.tileset,
+            name: social.name,
+            owner: social.owner,
+            ownerName: social.ownerName,
+            tags: social.tags,
+            description: social.description,
+            communities: social.communities,
+            likes: social.likes,
+            dislikes: social.dislikes,
+            views: social.views,
+            permissions: social.permissions,
+            comments: social.comments,
+            publishDate: social.publishDate,
+            imageURL: social.imageURL
+          }
+        }
+        return null
+      }
 
     updateTilesetPermissions(socialId: string, permissions: SocialStatisticsPermissions): Promise<TilesetSocialStatistics | null> {
         throw new Error("Method not implemented.");
