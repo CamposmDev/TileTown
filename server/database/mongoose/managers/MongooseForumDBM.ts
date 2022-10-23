@@ -176,14 +176,12 @@ export default class MongooseForumDBM implements ForumDBM {
         if (forumPost !== null) {
             let comment: any = await CommentSchema.create({
                 author: payload.author,
-                title: payload.title,
                 body: payload.body,
                 referenceId: payload.referenceId
             })
             await comment.save()
             return {
                 author: comment.author,
-                title: comment.title,
                 body: comment.body,
                 referenceId: comment.referenceId
             }

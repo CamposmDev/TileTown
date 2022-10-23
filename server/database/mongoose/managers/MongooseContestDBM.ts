@@ -3,7 +3,7 @@ import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
 import ContestSchema from '../../mongoose/schemas/contest'
 import UserSchema from '../../mongoose/schemas/user'
-import ModeratorSchema from '../../mongoose/schemas/moderators'
+import { ModeratorsSchema } from "../schemas";
 
 /**
  * @author Tuyen Vo
@@ -68,7 +68,7 @@ export default class MongooseContestDBM implements ContestDBM {
         let con = await ContestSchema.findById(contestId)
         let user = await UserSchema.findById(userId)
         if (user !== null && con !== null) {
-            let mod = await ModeratorSchema.findOne({groupId: con._id, userId: user._id})
+            let mod = await ModeratorsSchema.findOne({groupId: con._id, userId: user._id})
             if (mod !== null) {
                 mod.role = role
                 await mod.save()

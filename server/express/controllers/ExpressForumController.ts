@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../../database';
-<<<<<<< HEAD
 import { ForumPost } from '../../types';
-=======
-import { ForumPost } from "../../types";
->>>>>>> campos
 
 export default class ForumController {
 
