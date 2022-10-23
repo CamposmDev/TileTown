@@ -276,8 +276,18 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       isPublished: updatedTilemap.isPublished,
     };
   }
-  async deleteTilemapById(tilemapId: string): Promise<string | string> {
-    throw new Error("Method not implemented.");
+  async deleteTilemapById(
+    tilemapId: string
+  ): Promise<Partial<Tilemap> | string> {
+    let id: string;
+    await TilemapSchema.findOneAndDelete(
+      { _id: tilemapId },
+      function (err: Error, tilemap: TilemapSchemaType) {
+        if (err) return err.message;
+        id = tilemap._id.toString();
+      }
+    );
+    return { id: id! };
   }
   //   addLayer(tilemapId: string, layer: Partial<Layer>): Promise<[Layer] | string> {
   //     throw new Error("Method not implemented.");
