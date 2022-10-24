@@ -29,39 +29,39 @@ export default class MongooseContestDBM implements ContestDBM {
          */
         if (!contest.name || !contest.owner) return null
 
-        /**
-         * Check the contest name is valid
-         */
-        const validContestName = async (contestName: string): Promise<boolean> => {
-            const exitContest = await ContestSchema.findOne({name: contestName})
-            return exitContest ? false : true
-        }
+      /**
+       * Check the contest name is valid
+       */
+      const validContestName = async (contestName: string): Promise<boolean> => {
+          const exitContest = await ContestSchema.findOne({name: contestName})
+          return exitContest ? false : true
+      }
 
-        let contestName = contest.name
-        if(!(await validContestName(contestName))) {
-            console.log('not unique name')
-            return null
-        }
-        
-        let con: any = await ContestSchema.create({
-            owner: contest.owner,
-            name: contest.name,
-            description: contest.description,
-            startDate: contest.startDate,
-            endDate: contest.endDate,
-            isPublished: contest.isPublished
-        })
-        await con.save()
-        return {
-            id: con._id,
-            owner: con.owner,
-            name: con.name,
-            description: con.description,
-            participates: con.participates,
-            startDate: con.startDate,
-            endDate: con.endDate,
-            winner: con.winner,
-            isPublished: con.isPublished
+      let contestName = contest.name
+      if(!(await validContestName(contestName))) {
+          console.log('not unique name')
+          return null
+      }
+      
+      let con: any = await ContestSchema.create({
+          owner: contest.owner,
+          name: contest.name,
+          description: contest.description,
+          startDate: contest.startDate,
+          endDate: contest.endDate,
+          isPublished: contest.isPublished
+      })
+      await con.save()
+      return {
+          id: con._id,
+          owner: con.owner,
+          name: con.name,
+          description: con.description,
+          participates: con.participates,
+          startDate: con.startDate,
+          endDate: con.endDate,
+          winner: con.winner,
+          isPublished: con.isPublished
 
         }
         
