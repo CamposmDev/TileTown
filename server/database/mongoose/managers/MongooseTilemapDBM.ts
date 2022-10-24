@@ -65,65 +65,59 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   }
   //TODO Move sortBy to regex so it's done on database
   async getTilemapPartials(
-    userId: string,
+    userName: string,
     search: string,
     sortBy: SortBy
-  ): Promise<[Partial<Tilemap>] | string> {
-    await TilemapSchema.find(
-      {
-        collaboratorSettings: [userId],
-        name: new RegExp(search, "i"),
-        isPublish: { $ne: true },
-      },
-      function (err: any, tilemapPartials: [Partial<TilemapSchemaType>]) {
-        if (err) {
-          console.log(err.message);
-          return err.message;
-        }
-        let partials: Partial<Tilemap>[] = new Array();
-        for (let partial of tilemapPartials) {
-          let newPartial: Partial<Tilemap> = {
-            // id: partial._id.toString(),
-            image: partial.image,
-            name: partial.name,
-            owner: partial.owner,
-            collaboratorNames: partial.collaboratorNames,
-            lastSaveDate: partial.updatedAt,
-          };
-          partials.push(newPartial);
-        }
-        //TODO Figure out a better workaround this type checking
-        //Possibly move to controller or database query
-        switch (sortBy) {
-          case SortBy.Newest: {
-            partials.sort(function (a, b) {
-              if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
-              if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
-              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
-              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
-              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
-              return <any>bDate - <any>aDate;
-            });
-            break;
-          }
-          case SortBy.Oldest: {
-            partials.sort(function (a, b) {
-              if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
-              if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
-              if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
-              let aDate: any = new Date(<string>a.lastSaveDate?.toString());
-              let bDate: any = new Date(<string>b.lastSaveDate?.toString());
-              return <any>aDate - <any>bDate;
-            });
-            break;
-          }
-          default:
-            break;
-        }
-        return partials;
-      }
-    );
-    return "Unable to get Tilemaps";
+  ): Promise<Partial<Tilemap>[] | string> {
+    const tilemaps = await TilemapSchema.find({
+      collaboratorNames: userName,
+      name: new RegExp(search, "i"),
+      isPublish: { $ne: true },
+    });
+    if (tilemaps == null) return "unable to get partials";
+    let partials: Partial<Tilemap>[] = new Array();
+    for (let map of tilemaps) {
+      let partial: Partial<Tilemap> = {
+        id: map._id.toString(),
+        image: map.image,
+        name: map.name,
+        owner: map.owner,
+        collaboratorNames: map.collaboratorNames,
+        lastSaveDate: map.updatedAt,
+      };
+      partials.push(partial);
+    }
+    //TODO Figure out a better workaround this type checking
+    //Possibly move to controller or database query
+    // switch (sortBy) {
+    //   case SortBy.Newest: {
+    //     partials.sort(function (a, b) {
+    //       if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
+    //       if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
+    //       if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+    //       let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+    //       let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+    //       return <any>bDate - <any>aDate;
+    //     });
+    //     break;
+    //   }
+    //   case SortBy.Oldest: {
+    //     partials.sort(function (a, b) {
+    //       if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
+    //       if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
+    //       if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+    //       let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+    //       let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+    //       return <any>aDate - <any>bDate;
+    //     });
+    //     break;
+    //   }
+    //   default:
+    //     break;
+    // }
+    // console.log("partials");
+    // console.log(partials);
+    return partials;
   }
   async createTilemap(
     userId: string,
@@ -135,30 +129,31 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let user = await UserSchema.findOne({ _id: userId });
     if (user === null) return "Error Message";
 
+    //TODO add user to collaborators and collaborator names
     let newTilemap = new TilemapSchema({
       backgroundColor:
-        tilemap.backgroundColor === null ? "#FFFFFF" : tilemap.backgroundColor,
+        tilemap.backgroundColor == null ? "#FFFFFF" : tilemap.backgroundColor,
       collaborators: [],
       collaboratorNames: [],
       collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
       collaboratorIndex: -1,
-      image: tilemap.image === null ? "" : tilemap.image,
-      height: tilemap.height === null ? 12 : tilemap.height,
-      width: tilemap.width === null ? 12 : tilemap.width,
-      layers: tilemap.layers === null ? [] : tilemap.layers,
-      tileHeight: tilemap.tileHeight === null ? -1 : tilemap.tileHeight,
-      tileWidth: tilemap.tileWidth === null ? -1 : tilemap.tileWidth,
-      nextLayerId: tilemap.nextLayerId === null ? 0 : tilemap.nextLayerId,
-      nextObjectId: tilemap.nextObjectId === null ? 0 : tilemap.nextObjectId,
+      image: tilemap.image == null ? "noImage" : tilemap.image,
+      height: tilemap.height == null ? 12 : tilemap.height,
+      width: tilemap.width == null ? 12 : tilemap.width,
+      layers: tilemap.layers == null ? [] : tilemap.layers,
+      tileHeight: tilemap.tileHeight == null ? -1 : tilemap.tileHeight,
+      tileWidth: tilemap.tileWidth == null ? -1 : tilemap.tileWidth,
+      nextLayerId: tilemap.nextLayerId == null ? 0 : tilemap.nextLayerId,
+      nextObjectId: tilemap.nextObjectId == null ? 0 : tilemap.nextObjectId,
       orientation: "orthogonal",
       name: tilemap.name,
       owner: user._id,
-      tilesets: tilemap.tilesets === null ? [] : tilemap.tilesets,
+      tilesets: tilemap.tilesets == null ? [] : tilemap.tilesets,
       globalTileIDs:
-        tilemap.globalTileIDs == null ? [0] : tilemap.globalTileIDs,
-      properties: tilemap.properties === null ? 0 : tilemap.properties,
+        tilemap.globalTileIDs == null ? [1] : tilemap.globalTileIDs,
+      properties: tilemap.properties == null ? [] : tilemap.properties,
       renderOrder:
-        tilemap.renderOrder === null ? "right-down" : tilemap.renderOrder,
+        tilemap.renderOrder == null ? "right-down" : tilemap.renderOrder,
       isPublished: false,
     });
 
@@ -261,12 +256,14 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return {
       id: tm._id.toString(),
       backgroundColor: <Color>tm.backgroundColor,
-      collaborators: tm.collaborators.map((x) => x.toString()),
+      collaborators: tm.collaborators
+        ? tm.collaborators.map((x) => x.toString())
+        : [],
       collaboratorNames: tm.collaboratorNames,
       collaboratorSettings: <CollaboratorSettings>tm.collaboratorSettings,
       collaboratorIndex: tm.collaboratorIndex,
-      createDate: new Date(tm.createdAt.toString()),
-      lastSaveDate: new Date(tm.updatedAt.toString()),
+      createDate: new Date(tm.createdAt),
+      lastSaveDate: new Date(tm.updatedAt),
       image: tm.image,
       height: tm.height,
       width: tm.width,
@@ -281,7 +278,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       owner: tm.owner,
       properties: <Property[]>tm.properties,
       renderOrder: <RenderOrder>tm.renderOrder,
-      tilesets: tm.tilesets.map((x) => x.toString()),
+      tilesets: tm.tilesets ? tm.tilesets.map((x) => x.toString()) : [],
       isPublished: tm.isPublished,
     };
   }
