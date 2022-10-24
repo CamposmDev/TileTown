@@ -3,7 +3,8 @@ import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-import UserSchema from "../../database/mongoose/schemas/user";
+import UserSchema from "../../database/mongoose/schemas/User";
+import { Auth } from '../../express/middleware';
 
 
 /** 
@@ -26,16 +27,47 @@ describe('ExpressUserController', function() {
      */
     describe("getUserById", function() {
 
-        beforeEach(function() {});
+        beforeEach(async function() {
+            await UserSchema.deleteMany({});
+            await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peteylumpkins@gmail.com",
+                username: "peteylumpkins",
+                password: "blackstarthedog", 
+            });
+        });
 
         // Invalid Id - 404 - send id of nonexisting user
-        it("", function() {})
+        it("Failure - Invalid user id", async function() { 
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+
+            let response = await request(app).get(`/api/user/${id + "123"}`).set("Cookie", [`token=${token}`]);
+            expect(response.status).equals(404);
+        })
 
         // Unauthorized - 401 - request without authorization
-        it("", function() {});
+        it("Failure - Invalid token", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token: string = "Bad token!";
+
+            let response = await request(app).get(`/api/user/${id}`).set("Cookie", [`token=${token}`]);
+            expect(response.status).equals(401);
+        });
 
         // Valid Id - 200 - send id of exisitng user
-        it("", function() {})
+        it("Success - Valid token and valid user id", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+
+            let response = await request(app).get(`/api/user/${id}`).set("Cookie", [`token=${token}`]);
+            expect(response.status).equals(200);
+            expect(response.body.user.username).equals("peteylumpkins");
+        });
 
     });
 
@@ -171,11 +203,36 @@ describe('ExpressUserController', function() {
      */
     describe("logoutUser", function() {
 
+        beforeEach(async function() {
+            await UserSchema.deleteMany({});
+            let user = await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peter.t.walsh@stonybrook.edu",
+                username: "PeteyLumpkings",
+                password: "password12345"
+            });
+            expect(user).not.null;
+        });
+
         // Unauthorized - 401 - Request without authorization token
-        it("", function() {});
+        it("Failure - Unauthorized user", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token + "1"}`]);
+            expect(response.status).equal(401);
+
+        });
 
         // Success - 200 - User has valid credentials and logged out
-        it("", function() {});
+        it("Success - Authorized User", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token}`]);
+            expect(response.status).equals(200);
+        });
 
     });
 

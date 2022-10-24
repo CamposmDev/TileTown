@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import mongoose from 'mongoose';
 
 
-import UserSchema from "../../database/mongoose/schemas/user";
+import UserSchema from "../../database/mongoose/schemas/User";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
