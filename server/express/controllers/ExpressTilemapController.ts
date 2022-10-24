@@ -88,7 +88,7 @@ export default class TilemapController {
       });
     }
 
-    const response: [Partial<Tilemap>] | string =
+    const response: Partial<Tilemap>[] | string =
       await db.tilemaps.getTilemapPartials(userId, search, sortBy);
 
     //check for error messages
@@ -121,39 +121,38 @@ export default class TilemapController {
     const userId: string = req.userId;
 
     //check to see if a user id was provided and if it was formatted as a string
-    if (!userId || !is<string>(userId)) {
+    if (!userId) {
       return res.status(400).json({
         errorMessage: "No userId Provided",
       });
     }
 
-    const tilemap: Partial<Tilemap> = req.body.userId;
+    const tilemap: Partial<Tilemap> = req.body.tilemap;
 
     //check to see if a tilemap partial was provided and if it was formatted properly
-    if (!tilemap || !is<Partial<Tilemap>>(tilemap)) {
+    if (!tilemap) {
       return res.status(400).json({
         errorMessage: "No tilemap data provided",
       });
     }
 
-    const response: Partial<Tilemap> | string = await db.tilemaps.createTilemap(
-      userId,
-      tilemap
-    );
+    const response = await db.tilemaps.createTilemap(userId, tilemap);
+
+    const isTilemap = (response: string | Tilemap): response is Tilemap => {
+      return (response as Tilemap).id !== undefined;
+    };
 
     //check for error messages
-    if (is<string>(response)) {
+    if (!isTilemap(response)) {
       return res.status(400).json({
         errorMessage: response,
       });
     }
 
-    //make sure response is at in the format of a tilemap partial
-    if (!response || !is<Partial<Tilemap>>(response)) {
-      return res.status(400).json({
-        errorMessage: "unable to create new tilemap",
-      });
-    }
+    // //make sure response is at in the format of a tilemap partial
+    // if (!response || !is<Partial<Tilemap>>(response)) {
+
+    // }
 
     return res
       .status(201)

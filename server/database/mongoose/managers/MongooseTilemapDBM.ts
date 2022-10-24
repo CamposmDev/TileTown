@@ -124,9 +124,11 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
     let existingTilemap = await TilemapSchema.findOne({ name: tilemap.name });
+
     if (existingTilemap !== null) return "Error message";
 
     let user = await UserSchema.findOne({ _id: userId });
+
     if (user === null) return "Error Message";
 
     //TODO add user to collaborators and collaborator names
@@ -158,6 +160,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     });
 
     let savedTilemap = await newTilemap.save();
+    if (!savedTilemap) return "unable to create tilemap";
 
     return {
       id: newTilemap._id.toString(),
