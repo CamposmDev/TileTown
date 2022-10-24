@@ -2,41 +2,45 @@ import { Request, Response } from "express";
 import { db } from "../../database";
 import { SortBy, Tilemap } from "../../types";
 import { is } from "typescript-is";
+const isTilemap = (
+  response: string | Partial<Tilemap>
+): response is Tilemap => {
+  return (response as Tilemap).id !== undefined;
+};
 
 export default class TilemapController {
   public async getTilemapById(req: Request, res: Response): Promise<Response> {
     //check to see if a request body was sent
-    if (!req.body) {
-      return res.status(400).json({
-        errorMessage: "Improperly formatted request",
-      });
+    if (!req || !req.params || !req.params.id) {
+      return res.status(400).json({ message: "Bad request" });
     }
 
-    const tilemapId: string = req.body.tilemapId;
+    const tilemapId: string = req.params.id;
 
-    //check to see if a tilemap id was provided and if it was formatted as a string
-    if (!tilemapId || !is<string>(tilemapId)) {
-      return res.status(400).json({
-        errorMessage: "No tilemapId provided",
-      });
-    }
+    // //check to see if a tilemap id was provided and if it was formatted as a string
+    // if (!tilemapId || !is<string>(tilemapId)) {
+    //   return res.status(400).json({
+    //     errorMessage: "No tilemapId provided",
+    //   });
+    // }
 
-    const response: Partial<Tilemap> | string =
-      await db.tilemaps.getTilemapById(tilemapId);
+    const response: Tilemap | string = await db.tilemaps.getTilemapById(
+      tilemapId
+    );
 
     //check for error messages
-    if (is<string>(response)) {
+    if (!isTilemap(response)) {
       return res.status(400).json({
         errorMessage: response,
       });
     }
 
-    //make sure response is at in the format of a tilemap partial
-    if (!response || !is<Partial<Tilemap>>(response)) {
-      return res.status(400).json({
-        errorMessage: "unable to get tilemap",
-      });
-    }
+    // //make sure response is at in the format of a tilemap partial
+    // if (!response || !is<Partial<Tilemap>>(response)) {
+    //   return res.status(400).json({
+    //     errorMessage: "unable to get tilemap",
+    //   });
+    // }
 
     return res
       .status(200)
@@ -137,10 +141,6 @@ export default class TilemapController {
     }
 
     const response = await db.tilemaps.createTilemap(userId, tilemap);
-
-    const isTilemap = (response: string | Tilemap): response is Tilemap => {
-      return (response as Tilemap).id !== undefined;
-    };
 
     //check for error messages
     if (!isTilemap(response)) {

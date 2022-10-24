@@ -6,6 +6,7 @@ import { expect } from "chai";
 import { UserSchema } from "../../database/mongoose/schemas";
 import { TilemapSchema } from "../../database/mongoose/schemas";
 import { Auth } from "../../express/middleware";
+import { Tilemap } from "../../types";
 
 /**
  * Tests for the TilemapRouter and associated handlers
@@ -24,7 +25,7 @@ describe("ExpressUserController", function () {
 
   /**
    * Method: POST
-   * Route: api/forum
+   * Route: api/tilemap
    */
   describe("createTilemap", function () {
     beforeEach(async function () {
@@ -93,6 +94,41 @@ describe("ExpressUserController", function () {
         })
         .set("Cookie", [`token=${token}`]);
       expect(res.status).equals(201);
+    });
+  });
+  /**
+   * Method: GET
+   * Route: api/tilemap/id
+   */
+  describe("getTilemapByID", function () {
+    beforeEach(async function () {
+      await UserSchema.deleteMany();
+      await TilemapSchema.deleteMany();
+      await db.users.createUser({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peteylumpkins@gmail.com",
+        username: "peteylumpkins",
+        password: "blackstarthedog",
+      });
+    });
+
+    it("Successfully get tilemap by Id", async function () {
+      let user = await UserSchema.findOne({
+        email: "peteylumpkins@gmail.com",
+      });
+      let id: string = user !== null ? user._id.toString() : "";
+      let token = Auth.signJWT<string>(id);
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
+      const mapId = (<Tilemap>tilemap).id;
+      let response = await request(app)
+        .get(`/api/tilemap/${mapId}`)
+        .set("Cookie", [`token=${token}`]);
+      expect(response.status).equals(200);
     });
   });
 
