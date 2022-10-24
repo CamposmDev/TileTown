@@ -192,10 +192,11 @@ export default class MongooseUserDBM implements UserDBM {
     async addFriend(userId: string, friendId: string): Promise<string | null> {
         let user = await UserSchema.findById(userId)
         if (user !== null) {
-            let friend: any = await UserSchema.findById(friendId)
+            let friend = await UserSchema.findById(friendId)
             if (friend !== null) {
-                user.friends.push(friend._id)
-                user.save()
+                user.friends.push(new mongoose.Schema.Types.ObjectId(friend.id));
+                await user.save();
+                return friendId;
             }
         }
         return null

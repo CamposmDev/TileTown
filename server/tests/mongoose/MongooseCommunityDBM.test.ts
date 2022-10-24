@@ -1,3 +1,4 @@
+import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
@@ -9,7 +10,7 @@ import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 
 
 /** 
- * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
+ * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
  * {@link https://mochajs.org/}
  */
  describe("Testing MongooseCommunityDBM", function() {
