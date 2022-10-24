@@ -8,8 +8,8 @@ import { ForumPostSchema } from '../../database/mongoose/schemas';
 
 
 /** 
- * Tests for the UserRouter and associated handlers
- * @author Peter Walsh
+ * Tests for the ForumRouter and associated handlers
+ * @author Michael Campos
  */
 describe('ExpressUserController', function() {
 

@@ -3,10 +3,7 @@ import { expect } from 'chai';
 import mongoose from 'mongoose';
 
 import UserSchema from "../../database/mongoose/schemas/User";
-import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
 import dotenv from "dotenv";
-import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 import { ForumPostSchema } from '../../database/mongoose/schemas';
 import { MongooseForumDBM } from '../../database/mongoose/managers';
 import { ForumPost } from '../../types';
@@ -15,8 +12,8 @@ import { ForumPost } from '../../types';
 dotenv.config()
 
 /** 
- * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
- * {@link https://mochajs.org/}
+ * Tests for MongooseForumDBM
+ * @author Michael Campos
  */
 describe("Testing MongooseForumDBM", function() {
 
@@ -61,6 +58,10 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.getForumPost()
+     * @see MongooseForumDBM.createForumPost
+     */
     describe("MongooseForumDBM.getForumPost", function() {
         beforeEach(async function() {
             await ForumPostSchema.deleteMany()
@@ -93,6 +94,10 @@ describe("Testing MongooseForumDBM", function() {
         })
     });
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.updateForumPost()
+     * @see MongooseForumDBM.updateForumPost
+     */
     describe("MongooseForumDBM.updateForumPost", function() {
         beforeEach(async function() {
             await ForumPostSchema.deleteMany()
@@ -122,6 +127,10 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.toggleLike()
+     * @see MongooseForumDBM.toggleLike
+     */
     describe("MongooseForumDBM.toggleLike", function() {
         beforeEach(async function() {
             await UserSchema.deleteMany()
@@ -185,6 +194,10 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.toggleDislike()
+     * @see MongooseForumDBM.toggleDislike
+     */
     describe("MongooseForumDBM.toggleDislike", function() {
         beforeEach(async function() {
             await UserSchema.deleteMany()
@@ -248,7 +261,11 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
-    describe("addView", function() {
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.addView()
+     * @see MongooseForumDBM.addView
+     */
+    describe("MongooseForumDBM,addView", function() {
         beforeEach(async function() {
             await UserSchema.deleteMany()
             await ForumPostSchema.deleteMany()
