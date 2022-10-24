@@ -7,7 +7,7 @@ const router: Router = Router();
 router.get("/:id", Auth.verifyJWT, TilemapController.getTilemapById);
 router.get("/social/:id", TilemapController.getTilemapSocialStatsById);
 router.get(
-  "/pairs/:search/:sort",
+  "/partials/:search/:sort",
   Auth.verifyJWT,
   TilemapController.getTilemapPartials
 );
