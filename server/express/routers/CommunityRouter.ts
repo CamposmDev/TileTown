@@ -14,5 +14,4 @@ CommunityRouter.post('/', CommunityController.createCommunity);
 CommunityRouter.put('/:id', CommunityController.updateCommunityById);
 CommunityRouter.delete('/:id', CommunityController.deleteCommunityById);
 
-
 export default CommunityRouter;

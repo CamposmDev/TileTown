@@ -84,13 +84,11 @@ export default class MongooseCommunityDBM implements CommunityDBM {
 
     async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
         let community: any = await CommunitySchema.findById(communityId)
-        if (community !== null) {
-            let user: any = await CommunitySchema.findById(userId)
-            if (user !== null){
-                community.memberCounter = community.memberCounter + 1
-                community.save()
-                return userId
-            }
+        let user: any = await CommunitySchema.findById(userId)
+        if (community !== null && user !== null) {
+            community.memberCounter = community.memberCounter + 1
+            await community.save()
+            return community._id.toString()
         }
         return null
 
@@ -100,8 +98,8 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         let community: any = await CommunitySchema.findById(communityId)
         let user = await UserSchema.findById(userId)
         if ((community !== null) && (user !== null)) {
-            community.memberCounter = community.memberCount - 1
-            community.save()
+            community.memberCounter = community.memberCounter - 1
+            await community.save()
             return true
 
         }
