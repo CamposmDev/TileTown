@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../express';
 
-import UserSchema from "../../database/mongoose/schemas/user";
+import { UserSchema } from "../../database/mongoose/schemas";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
@@ -90,7 +90,7 @@ import { MongooseCommunityDBM } from '../../database/mongoose/managers';
                 imageURL: " "
             })
             let user = await UserSchema.findOne({username: 'PeteyLumpkins'})
-            userId = user !== null ? user._id : ''
+            userId = user !== null ? user._id.toString() : ''
             await CommunitySchema.deleteMany()
         })
         it('Successfully created community', async function() {
