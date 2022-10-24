@@ -40,7 +40,7 @@ export default class ForumController {
             res.status(400).json({message: 'Bad Request'})
             return
         }
-        res.status(200).json({forumPost: forumPost})
+        res.status(201).json({forumPost: forumPost})
         return
     }
 
@@ -50,7 +50,7 @@ export default class ForumController {
             return;
         }
 
-        if (!req.body.userId || !req.body.title || !req.body.tags || !req.body.body || !req.body.isPublished) {
+        if (!req.body.author || !req.body.title || !req.body.tags || !req.body.body || !req.body.isPublished) {
             res.status(400).json({message: "Bad Request"});
             return;
         }
@@ -64,14 +64,14 @@ export default class ForumController {
             isPublished: req.body.isPublished
         }
 
-        let forumPost = db.forums.updateForumPost(id, payload)
+        let forumPost = await db.forums.updateForumPost(id, payload)
 
         if (forumPost === null) {
             res.status(400).json({message: "Bad Request"});
             return;
         }
 
-        res.status(201).json({message: "Success!"});
+        res.status(200).json({forumPost: forumPost});
         return;
     }
 
