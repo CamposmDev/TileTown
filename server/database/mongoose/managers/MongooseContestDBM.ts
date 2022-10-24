@@ -1,4 +1,3 @@
-import { trusted } from "mongoose";
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
 import ContestSchema from '../../mongoose/schemas/contest'
@@ -78,13 +77,13 @@ export default class MongooseContestDBM implements ContestDBM {
         return null
     }
 
-    async deleteContest(contestId: string): Promise<string | null> {
+    async deleteContest(contestId: string): Promise<boolean> {
         let con = await ContestSchema.findById(contestId)
         if (con !== null) {
             con.delete()
-            return contestId
+            return true
         }
-        return null
+        return false
     }
 
 }
