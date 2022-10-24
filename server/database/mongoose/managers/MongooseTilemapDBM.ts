@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 import {
   Tilemap,
@@ -29,44 +29,39 @@ import {
   PropertySchemaType,
 } from "../types";
 
+const ObjectId = mongoose.Types.ObjectId;
+
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | string> {
-    await TilemapSchema.findById(
-      tilemapId,
-      function (err: Error, tilemap: any) {
-        if (err) {
-          return err.message;
-        }
-        return {
-          id: tilemap._id.toString(),
-          backgroundColor: <Color>tilemap.backgroundColor,
-          collaborators: tilemap.collaborators.map((x: any) => x.toString()),
-          collaboratorNames: tilemap.collaboratorNames,
-          collaboratorSettings: <CollaboratorSettings>(
-            tilemap.collaboratorSettings
-          ),
-          collaboratorIndex: tilemap.collaboratorIndex,
-          createDate: new Date(tilemap.createdAt.toString()),
-          lastSaveDate: new Date(tilemap.updatedAt.toString()),
-          image: tilemap.image,
-          height: tilemap.height,
-          width: tilemap.width,
-          layers: <any>tilemap.layers,
-          tileHeight: tilemap.tileHeight,
-          tileWidth: tilemap.tileWidth,
-          nextLayerId: tilemap.nextLayerId,
-          nextObjectId: tilemap.nextObjectId,
-          orientation: tilemap.orientation,
-          name: tilemap.name,
-          owner: tilemap.owner,
-          properties: <Property[]>tilemap.properties,
-          renderOrder: <RenderOrder>tilemap.renderOrder,
-          tilesets: tilemap.tilesets.map((x: any) => x.toString()),
-          isPublished: tilemap.isPublished,
-        };
-      }
-    );
-    return "unable to get tilemap";
+    let tilemap = await TilemapSchema.findById(tilemapId);
+    if (tilemap === null) return "unable to get tilemap";
+
+    return {
+      id: tilemap._id.toString(),
+      backgroundColor: <Color>tilemap.backgroundColor,
+      collaborators: tilemap.collaborators.map((x) => x.toString()),
+      collaboratorNames: tilemap.collaboratorNames,
+      collaboratorSettings: <CollaboratorSettings>tilemap.collaboratorSettings,
+      collaboratorIndex: tilemap.collaboratorIndex,
+      createDate: new Date(tilemap.createdAt.toString()),
+      lastSaveDate: new Date(tilemap.updatedAt.toString()),
+      image: tilemap.image,
+      height: tilemap.height,
+      width: tilemap.width,
+      layers: <any>tilemap.layers,
+      tileHeight: tilemap.tileHeight,
+      tileWidth: tilemap.tileWidth,
+      nextLayerId: tilemap.nextLayerId,
+      nextObjectId: tilemap.nextObjectId,
+      orientation: <Orientation>tilemap.orientation,
+      name: tilemap.name,
+      owner: tilemap.owner,
+      properties: <Property[]>tilemap.properties,
+      renderOrder: <RenderOrder>tilemap.renderOrder,
+      tilesets: tilemap.tilesets.map((x) => x.toString()),
+      isPublished: tilemap.isPublished,
+      globalTileIDs: tilemap.globalTileIDs,
+    };
   }
   //TODO Move sortBy to regex so it's done on database
   async getTilemapPartials(
@@ -80,14 +75,15 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         name: new RegExp(search, "i"),
         isPublish: { $ne: true },
       },
-      function (err: any, tilemapPartials: [any]) {
+      function (err: any, tilemapPartials: [Partial<TilemapSchemaType>]) {
         if (err) {
+          console.log(err.message);
           return err.message;
         }
         let partials: Partial<Tilemap>[] = new Array();
         for (let partial of tilemapPartials) {
           let newPartial: Partial<Tilemap> = {
-            id: partial._id?.toString(),
+            // id: partial._id.toString(),
             image: partial.image,
             name: partial.name,
             owner: partial.owner,
@@ -133,64 +129,40 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return "invalid id format";
-    }
-    let existingTilemap = await TilemapSchema.findOne(
-      { name: tilemap.name },
-      function (err: Error, tilemap: any) {
-        if (err) return err.message;
-        if (tilemap) {
-          return `tilemap with the name ${tilemap.name} already exists`;
-        }
-      }
-    ).clone();
+    let existingTilemap = await TilemapSchema.findOne({ name: tilemap.name });
+    if (existingTilemap !== null) return "Error message";
 
-    if (existingTilemap)
-      return `tilemap with the name ${tilemap.name} already exists`;
+    let user = await UserSchema.findOne({ _id: userId });
+    if (user === null) return "Error Message";
 
-    let user = new UserSchema();
-    await UserSchema.findOne(
-      { _id: userId },
-      (err: Error, user: UserSchemaType) => {
-        if (err) return err.message;
-        user = user;
-      }
-    ).clone();
-
-    const newTilemap = new TilemapSchema({
+    let newTilemap = new TilemapSchema({
       backgroundColor:
-        tilemap.backgroundColor == null ? "#FFFFFF" : tilemap.backgroundColor,
+        tilemap.backgroundColor === null ? "#FFFFFF" : tilemap.backgroundColor,
       collaborators: [],
       collaboratorNames: [],
       collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
       collaboratorIndex: -1,
-      image: tilemap.image == null ? "noImage" : tilemap.image,
-      height: tilemap.height == null ? 12 : tilemap.height,
-      width: tilemap.width == null ? 12 : tilemap.width,
-      layers: tilemap.layers == null ? [] : <any>tilemap.layers,
-      tileHeight: tilemap.tileHeight == null ? -1 : tilemap.tileHeight,
-      tileWidth: tilemap.tileWidth == null ? -1 : tilemap.tileWidth,
-      nextLayerId: tilemap.nextLayerId == null ? 0 : tilemap.nextLayerId,
-      nextObjectId: tilemap.nextObjectId == null ? 0 : tilemap.nextObjectId,
+      image: tilemap.image === null ? "" : tilemap.image,
+      height: tilemap.height === null ? 12 : tilemap.height,
+      width: tilemap.width === null ? 12 : tilemap.width,
+      layers: tilemap.layers === null ? [] : tilemap.layers,
+      tileHeight: tilemap.tileHeight === null ? -1 : tilemap.tileHeight,
+      tileWidth: tilemap.tileWidth === null ? -1 : tilemap.tileWidth,
+      nextLayerId: tilemap.nextLayerId === null ? 0 : tilemap.nextLayerId,
+      nextObjectId: tilemap.nextObjectId === null ? 0 : tilemap.nextObjectId,
       orientation: "orthogonal",
       name: tilemap.name,
       owner: user._id,
-      tilesets: tilemap.tilesets == null ? [] : tilemap.tilesets,
+      tilesets: tilemap.tilesets === null ? [] : tilemap.tilesets,
       globalTileIDs:
-        tilemap.globalTileIDs == null ? [1] : tilemap.globalTileIDs,
-      properties: tilemap.properties == null ? [] : <any>tilemap.properties,
+        tilemap.globalTileIDs == null ? [0] : tilemap.globalTileIDs,
+      properties: tilemap.properties === null ? 0 : tilemap.properties,
       renderOrder:
-        tilemap.renderOrder == null ? "right-down" : tilemap.renderOrder,
+        tilemap.renderOrder === null ? "right-down" : tilemap.renderOrder,
       isPublished: false,
     });
 
-    const res = await newTilemap.save().catch((err: Error) => {
-      return err.message;
-    });
-
-    // console.log("res newtilemap");
-    // console.log(res);
+    let savedTilemap = await newTilemap.save();
 
     return {
       id: newTilemap._id.toString(),
@@ -211,9 +183,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       nextObjectId: newTilemap.nextObjectId,
       orientation: "orthogonal",
       name: newTilemap.name,
-      owner: userId,
+      owner: user._id.toString(),
       globalTileIDs: newTilemap.globalTileIDs,
-      tilesets: newTilemap.tilesets.map((x: any) => x.toString()),
+      tilesets: newTilemap.tilesets.map((x) => x.toString()),
       properties: <Property[]>newTilemap.properties,
       renderOrder: <RenderOrder>newTilemap.renderOrder,
       isPublished: false,
@@ -223,78 +195,94 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     tilemapId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    let updatedTilemap = new TilemapSchema();
-    await TilemapSchema.findOne(
-      { _id: tilemapId },
-      (err: Error, tilemap: any) => {
-        if (err) return err.message;
-        updatedTilemap = tilemap;
+    let tm = await TilemapSchema.findOne({ _id: tilemapId });
+    if (tm === null) return "Error Message";
+
+    tm.backgroundColor = tilemap.backgroundColor
+      ? tilemap.backgroundColor
+      : tm.backgroundColor;
+    tm.collaboratorNames = tilemap.collaboratorNames
+      ? tilemap.collaboratorNames
+      : tm.collaboratorNames;
+    tm.collaboratorSettings = tilemap.collaboratorSettings
+      ? tilemap.collaboratorSettings
+      : tm.collaboratorSettings;
+    tm.collaboratorIndex = tilemap.collaboratorIndex
+      ? tilemap.collaboratorIndex
+      : tm.collaboratorIndex;
+    tm.image = tilemap.image ? tilemap.image : tm.image;
+    tm.height = tilemap.height ? tilemap.height : tm.height;
+    tm.width = tilemap.width ? tilemap.width : tm.width;
+    tm.layers = tilemap.layers ? tilemap.layers : tm.layers;
+    tm.tileHeight = tilemap.tileHeight ? tilemap.tileHeight : tm.tileHeight;
+    tm.tileWidth = tilemap.tileWidth ? tilemap.tileWidth : tm.tileWidth;
+    tm.nextLayerId = tilemap.nextLayerId ? tilemap.nextLayerId : tm.nextLayerId;
+    tm.nextObjectId = tilemap.nextObjectId
+      ? tilemap.nextObjectId
+      : tm.nextObjectId;
+    tm.orientation = tilemap.orientation ? tilemap.orientation : tm.orientation;
+    tm.name = tilemap.name ? tilemap.name : tm.name;
+    tm.owner = tilemap.owner ? tilemap.owner : tm.owner;
+    tm.properties = tilemap.properties ? tilemap.properties : tm.properties;
+    tm.renderOrder = tilemap.renderOrder ? tilemap.renderOrder : tm.renderOrder;
+    tm.isPublished = tilemap.isPublished ? tilemap.isPublished : tm.isPublished;
+    tm.globalTileIDs = tilemap.globalTileIDs
+      ? tilemap.globalTileIDs
+      : tm.globalTileIDs;
+
+    if (tilemap.collaborators) {
+      let colabs = new Array<mongoose.Types.ObjectId>();
+      for (let id of tilemap.collaborators) {
+        if (ObjectId.isValid(id)) {
+          let user = await UserSchema.findById(id);
+          if (user !== null) {
+            colabs.push(user._id);
+          }
+        }
       }
-    ).clone();
+      tm.collaborators = colabs;
+    }
 
-    if (tilemap.backgroundColor)
-      updatedTilemap.backgroundColor = tilemap.backgroundColor;
-    if (tilemap.collaboratorNames != null)
-      updatedTilemap.collaboratorNames = tilemap.collaboratorNames;
-    if (tilemap.collaboratorSettings != null)
-      updatedTilemap.collaboratorSettings = tilemap.collaboratorSettings;
-    if (tilemap.collaboratorIndex != null)
-      updatedTilemap.collaboratorIndex = tilemap.collaboratorIndex;
-    if (tilemap.image != null) updatedTilemap.image = tilemap.image;
-    if (tilemap.height != null) updatedTilemap.height = tilemap.height;
-    if (tilemap.width != null) updatedTilemap.width = tilemap.width;
-    if (tilemap.layers != null) updatedTilemap.layers = <any>tilemap.layers;
-    if (tilemap.tileHeight != null)
-      updatedTilemap.tileHeight = tilemap.tileHeight;
-    if (tilemap.tileWidth != null) updatedTilemap.tileWidth = tilemap.tileWidth;
-    if (tilemap.nextLayerId != null)
-      updatedTilemap.nextLayerId = tilemap.nextLayerId;
-    if (tilemap.nextObjectId != null)
-      updatedTilemap.nextObjectId = tilemap.nextObjectId;
-    if (tilemap.orientation != null)
-      updatedTilemap.orientation = tilemap.orientation;
-    if (tilemap.name != null) updatedTilemap.name = tilemap.name;
-    if (tilemap.owner != null) updatedTilemap.owner = tilemap.owner;
-    if (tilemap.globalTileIDs != null)
-      updatedTilemap.globalTileIDs = tilemap.globalTileIDs;
-    if (tilemap.properties != null)
-      updatedTilemap.properties = <PropertySchemaType[]>tilemap.properties;
-    if (tilemap.renderOrder != null)
-      updatedTilemap.renderOrder = tilemap.renderOrder;
-    if (tilemap.isPublished != null)
-      updatedTilemap.isPublished = tilemap.isPublished;
+    if (tilemap.tilesets) {
+      let tilesets = new Array<mongoose.Types.ObjectId>();
+      for (let id of tilemap.tilesets) {
+        if (ObjectId.isValid(id)) {
+          let user = await UserSchema.findById(id);
+          if (user !== null) {
+            tilesets.push(user._id);
+          }
+        }
+      }
+      tm.tilesets = tilesets;
+    }
 
-    const res = await updatedTilemap.save().catch((err: Error) => {
-      return err.message;
-    });
+    await tm.save();
 
     return {
-      id: updatedTilemap._id.toString(),
-      backgroundColor: <Color>updatedTilemap.backgroundColor,
-      collaborators: updatedTilemap.collaborators.map((x: any) => x.toString()),
-      collaboratorNames: updatedTilemap.collaboratorNames,
-      collaboratorSettings: <CollaboratorSettings>(
-        updatedTilemap.collaboratorSettings
-      ),
-      collaboratorIndex: updatedTilemap.collaboratorIndex,
-      createDate: updatedTilemap.createdAt,
-      lastSaveDate: updatedTilemap.updatedAt,
-      image: updatedTilemap.image,
-      height: updatedTilemap.height,
-      width: updatedTilemap.width,
-      layers: <any>updatedTilemap.layers,
-      tileHeight: updatedTilemap.tileHeight,
-      tileWidth: updatedTilemap.tileWidth,
-      nextLayerId: updatedTilemap.nextLayerId,
-      nextObjectId: updatedTilemap.nextObjectId,
-      orientation: <Orientation>updatedTilemap.orientation,
-      globalTileIDs: updatedTilemap.globalTileIDs,
-      name: updatedTilemap.name,
-      owner: updatedTilemap.owner,
-      properties: <Property[]>updatedTilemap.properties,
-      renderOrder: <RenderOrder>updatedTilemap.renderOrder,
-      tilesets: updatedTilemap.tilesets.map((x: any) => x.toString()),
-      isPublished: updatedTilemap.isPublished,
+      id: tm._id.toString(),
+      backgroundColor: <Color>tm.backgroundColor,
+      collaborators: tm.collaborators.map((x) => x.toString()),
+      collaboratorNames: tm.collaboratorNames,
+      collaboratorSettings: <CollaboratorSettings>tm.collaboratorSettings,
+      collaboratorIndex: tm.collaboratorIndex,
+      createDate: new Date(tm.createdAt.toString()),
+      lastSaveDate: new Date(tm.updatedAt.toString()),
+      image: tm.image,
+      height: tm.height,
+      width: tm.width,
+      layers: <any>tm.layers,
+      tileHeight: tm.tileHeight,
+      tileWidth: tm.tileWidth,
+      nextLayerId: tm.nextLayerId,
+      nextObjectId: tm.nextObjectId,
+      orientation: <Orientation>tm.orientation,
+      globalTileIDs: tm.globalTileIDs,
+      name: tm.name,
+      owner: tm.owner,
+      properties: <Property[]>tm.properties,
+      renderOrder: <RenderOrder>tm.renderOrder,
+      tilesets: tm.tilesets.map((x) => x.toString()),
+      isPublished: tm.isPublished,
     };
   }
   async deleteTilemapById(
@@ -303,9 +291,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let id: string;
     await TilemapSchema.findOneAndDelete(
       { _id: tilemapId },
-      function (err: Error, tilemap: any) {
+      function (err: Error, tilemap: TilemapSchemaType) {
         if (err) return err.message;
-        id = tilemap._id.toString();
+        // id = tilemap._id.toString();
       }
     );
     return { id: id! };
@@ -353,7 +341,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let user = await UserSchema.findById(userId);
     let social = await TilemapSocialSchema.findById(socialId);
     if (user !== null && social !== null) {
-      let id = new mongoose.Schema.Types.ObjectId(user._id);
+      let id = user._id;
       let likes = social.likes;
       let dislikes = social.dislikes;
       if (!dislikes.includes(id)) {
@@ -394,7 +382,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let user = await UserSchema.findById(userId);
     let social = await TilemapSocialSchema.findById(socialId);
     if (user !== null && social !== null) {
-      let id = new mongoose.Schema.Types.ObjectId(user._id);
+      let id = user._id;
       let likes = social.likes;
       let dislikes = social.dislikes;
       if (!likes.includes(id)) {

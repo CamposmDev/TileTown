@@ -6,6 +6,6 @@ import { ObjectId } from "mongoose";
  */
 export default interface PropertySchemaType {
   name: string;
-  type: string;
+  ptype: string;
   value: any;
 }

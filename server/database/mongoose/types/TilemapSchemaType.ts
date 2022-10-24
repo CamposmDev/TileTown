@@ -1,13 +1,14 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import LayerSchemaType from "./LayerSchemaType";
 import PropertySchemaType from "./PropertySchemaType";
+
+type ObjectId = mongoose.Types.ObjectId;
 
 /**
  * A type for the Mongoose Tilemap Schema
  * @author Andrew Ojeda
  */
 export default interface TilemapSchemaType {
-  // id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
   backgroundColor: string;
@@ -28,7 +29,7 @@ export default interface TilemapSchemaType {
     width: number;
     name: string;
     opacity: number;
-    properties: { name: string; type: string; value: string }[];
+    properties: { name: string; ptype: string; value: string }[];
     visible: boolean;
     x: number;
     y: number;
@@ -41,7 +42,7 @@ export default interface TilemapSchemaType {
   name: string;
   owner: string;
   tilesets: ObjectId[];
-  properties: { name: string; type: string; value: string }[];
+  properties: { name: string; ptype: string; value: string }[];
   globalTileIDs: number[];
   renderOrder: string;
   isPublished: boolean;

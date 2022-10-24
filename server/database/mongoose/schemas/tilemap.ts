@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { LayerSchemaType, PropertySchemaType } from "../types";
 import TilemapSchemaType from "../types/TilemapSchemaType";
+
+const LayerSchema = require("./Layer").schema;
+const PropertySchema = require("./Property").schema;
+
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const PropertySchema = require("./Property").schema;
-const LayerSchema = require("./layer").schema;
 
 /**
  * Data model for storing Tilemap data
@@ -14,10 +16,14 @@ const LayerSchema = require("./layer").schema;
 
 const TilemapSchema = new Schema<TilemapSchemaType>({
   backgroundColor: { type: String, required: true },
-  collaborators: { type: [ObjectId], required: true, ref: "UserSchema" },
+  collaborators: { type: [ObjectId], required: true },
   collaboratorNames: { type: [String], required: true },
   collaboratorSettings: {
-    type: { editMode: String, timeLimit: Number, tileLimit: Number },
+    type: {
+      editMode: { type: String, required: true },
+      timeLimit: { type: Number, required: true },
+      tileLimit: { type: Number, required: true },
+    },
     required: true,
   },
   collaboratorIndex: { type: Number, required: true },
@@ -27,17 +33,25 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   layers: {
     type: [
       {
-        data: [Number],
-        height: Number,
-        width: Number,
-        name: String,
-        opacity: Number,
-        properties: [{ name: String, type: { type: String }, value: String }],
-        visible: Boolean,
-        x: Number,
-        y: Number,
+        data: { type: [Number], required: true },
+        height: { type: Number, required: true },
+        width: { type: Number, required: true },
+        name: { type: String, required: true },
+        opacity: { type: Number, required: true },
+        properties: {
+          type: [
+            {
+              name: { type: String, required: true },
+              ptype: { type: String, required: true },
+              value: { type: String, required: true },
+            },
+          ],
+          required: false,
+        },
+        visible: { type: Boolean, required: true },
+        x: { type: Number, required: true },
+        y: { type: Number, required: true },
       },
-      { typeKey: "$type" },
     ],
     required: true,
   },
@@ -47,12 +61,18 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   nextObjectId: { type: Number, required: true },
   orientation: { type: String, required: true },
   name: { type: String, required: true },
-  owner: { type: String, required: true, ref: "UserSchema" },
-  tilesets: { type: [ObjectId], required: true, ref: "TilesetSchema" },
+  owner: { type: String, required: true },
+  tilesets: { type: [ObjectId], required: true },
   globalTileIDs: { type: [Number], required: true },
   properties: {
-    type: [{ name: String, type: { type: String }, value: String }],
-    required: true,
+    type: [
+      {
+        name: { type: String, required: true },
+        ptype: { type: String, required: true },
+        value: { type: String, required: true },
+      },
+    ],
+    required: false,
   },
   renderOrder: { type: String, required: true },
   isPublished: { type: Boolean, required: true },

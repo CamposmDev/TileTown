@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import mongoose from "mongoose";
 import mocha from "mocha";
-import UserSchema from "../../database/mongoose/schemas/user";
+import UserSchema from "../../database/mongoose/schemas/User";
 import dotenv from "dotenv";
 import UserSchemaType from "../../database/mongoose/types/UserSchemaType";
 import MongooseTilemapDBM from "../../database/mongoose/managers/MongooseTilemapDBM";
@@ -33,9 +33,9 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("createTilemap", function () {
     beforeEach(async function () {
-      // await UserSchema.deleteMany();
+      await UserSchema.deleteMany();
       await UserSchema.create({
-        firstName: "Peterrrrr",
+        firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
         username: "PeteyLumpkins",
@@ -75,7 +75,7 @@ describe("Testing MongooseUserDBM", function () {
             properties: [
               {
                 name: "test type",
-                type: "bool",
+                ptype: "bool",
                 value: "true",
               },
             ],
@@ -95,7 +95,7 @@ describe("Testing MongooseUserDBM", function () {
         properties: [
           {
             name: "test type",
-            type: "bool",
+            ptype: "bool",
             value: "true",
           },
         ],
@@ -103,7 +103,7 @@ describe("Testing MongooseUserDBM", function () {
       };
 
       const response = await tilemaps.createTilemap(id, newTilemap);
-
+      console.log(<Tilemap>response);
       expect(response).not.null;
       expect(response).not.string;
       expect(response).property("backgroundColor", newTilemap.backgroundColor);

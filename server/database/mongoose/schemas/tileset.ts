@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import TilesetSchemaType from "../types/TilesetSchemaType";
+
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const PropertySchema = require("./Property").schema;
 
 /**
  * Data model for storing Tileset data
@@ -17,8 +17,17 @@ const TilesetSchema = new Schema<TilesetSchemaType>({
   imageWidth: { type: Number, required: true },
   margin: { type: Number, required: true },
   name: { type: String, required: true },
-  owner: { type: ObjectId, required: true, ref: "UserSchema" },
-  properties: { type: [PropertySchema], required: true },
+  owner: { type: ObjectId, required: true },
+  properties: {
+    type: [
+      {
+        name: { type: String, required: true },
+        ptype: { type: String, required: true },
+        value: { type: String, required: true },
+      },
+    ],
+    required: false,
+  },
   isPublished: { type: Boolean, required: true },
 });
 

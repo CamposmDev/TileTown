@@ -9,7 +9,6 @@ type ObjectId = mongoose.Types.ObjectId;
  * @author Andrew Ojeda
  */
 export default interface TilesetSchemaType {
-  // _id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
   columns: number;
@@ -19,6 +18,6 @@ export default interface TilesetSchemaType {
   margin: number;
   name: string;
   owner: ObjectId;
-  properties: PropertySchemaType[];
+  properties: { name: string; ptype: string; value: string }[];
   isPublished: boolean;
 }

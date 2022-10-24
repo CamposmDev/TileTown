@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { log } from 'npmlog';
-
 import { User } from '../../types';
 import { db } from '../../database';
 import { Auth } from '../middleware';
