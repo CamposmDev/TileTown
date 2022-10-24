@@ -14,7 +14,7 @@ const LayerSchema = require("./layer").schema;
 
 const TilemapSchema = new Schema<TilemapSchemaType>({
   backgroundColor: { type: String, required: true },
-  collaborators: { type: [ObjectId], required: true },
+  collaborators: { type: [ObjectId], required: true, ref: "UserSchema" },
   collaboratorNames: { type: [String], required: true },
   collaboratorSettings: {
     type: { editMode: String, timeLimit: Number, tileLimit: Number },
@@ -32,11 +32,12 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
         width: Number,
         name: String,
         opacity: Number,
-        properties: [{ name: String, type: String, value: String }],
+        properties: [{ name: String, type: { type: String }, value: String }],
         visible: Boolean,
         x: Number,
         y: Number,
       },
+      { typeKey: "$type" },
     ],
     required: true,
   },
@@ -46,11 +47,11 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   nextObjectId: { type: Number, required: true },
   orientation: { type: String, required: true },
   name: { type: String, required: true },
-  owner: { type: String, required: true },
-  tilesets: { type: [ObjectId], required: true },
+  owner: { type: String, required: true, ref: "UserSchema" },
+  tilesets: { type: [ObjectId], required: true, ref: "TilesetSchema" },
   globalTileIDs: { type: [Number], required: true },
   properties: {
-    type: [{ name: String, type: String, value: String }],
+    type: [{ name: String, type: { type: String }, value: String }],
     required: true,
   },
   renderOrder: { type: String, required: true },

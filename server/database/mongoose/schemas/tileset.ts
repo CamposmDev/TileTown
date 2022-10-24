@@ -17,7 +17,7 @@ const TilesetSchema = new Schema<TilesetSchemaType>({
   imageWidth: { type: Number, required: true },
   margin: { type: Number, required: true },
   name: { type: String, required: true },
-  owner: { type: ObjectId, required: true },
+  owner: { type: ObjectId, required: true, ref: "UserSchema" },
   properties: { type: [PropertySchema], required: true },
   isPublished: { type: Boolean, required: true },
 });

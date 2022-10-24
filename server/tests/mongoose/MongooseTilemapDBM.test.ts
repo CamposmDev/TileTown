@@ -7,6 +7,7 @@ import UserSchemaType from "../../database/mongoose/types/UserSchemaType";
 import MongooseTilemapDBM from "../../database/mongoose/managers/MongooseTilemapDBM";
 import { TilemapSchema } from "../../database/mongoose/schemas";
 import { Layer, Tilemap } from "../../types";
+import tilemap from "../../database/mongoose/schemas/tilemap";
 
 /** Config the env variables */
 dotenv.config();
@@ -32,9 +33,9 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("createTilemap", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
+      // await UserSchema.deleteMany();
       await UserSchema.create({
-        firstName: "Peter",
+        firstName: "Peterrrrr",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
         username: "PeteyLumpkins",
@@ -102,7 +103,7 @@ describe("Testing MongooseUserDBM", function () {
       };
 
       const response = await tilemaps.createTilemap(id, newTilemap);
-      console.log(<Tilemap>response);
+
       expect(response).not.null;
       expect(response).not.string;
       expect(response).property("backgroundColor", newTilemap.backgroundColor);
@@ -140,32 +141,259 @@ describe("Testing MongooseUserDBM", function () {
       expect(response).property("isPublished", false);
     });
 
-    // it("Successfully finds a user with the id", async function () {
-    //   let users: MongooseUserDBM = new MongooseUserDBM();
+    it("Successfully creates a new tilemap with incomplete tilemap data", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
 
-    //   let schema = await UserSchema.findOne({
-    //     email: "peter.t.walsh@stonybrook.edu",
-    //   });
-    //   let id: string = schema !== null ? schema._id.toString() : "";
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = schema !== null ? schema._id.toString() : "";
 
-    //   let user: User | null = await users.getUserById(id);
-    //   expect(user).not.null;
-    //   expect(user).property("firstName", "Peter");
-    //   expect(user).property("lastName", "Walsh");
-    // });
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name 2",
+      };
 
-    // it("Fails to find a user - user with id doesn't exist", async function () {
-    //   let users: MongooseUserDBM = new MongooseUserDBM();
+      const response = await tilemaps.createTilemap(id, newTilemap);
 
-    //   let schema = await UserSchema.findOne({
-    //     email: "peter.t.walsh@stonybrook.edu",
-    //   });
-    //   let id: string = schema !== null ? schema._id.toString() : "";
+      expect(response).not.null;
+      expect(response).not.string;
+      expect(response).property("backgroundColor", "#FFFFFF");
+      expect(response).to.have.property("collaborators").that.deep.equals([]);
+      expect(response)
+        .to.have.property("collaboratorNames")
+        .that.deep.equals([]);
+      expect(response)
+        .to.have.property("collaboratorSettings")
+        .that.deep.equals({
+          editMode: "free",
+          timeLimit: 0,
+          tileLimit: 0,
+        });
+      expect(response).property("collaboratorIndex", -1);
+      expect(response).property("image", "noImage");
+      expect(response).property("height", 12);
+      expect(response).property("width", 12);
+      // expect(response).property("layers", <[Layer]>newTilemap.layers);
+      expect(response).property("tileHeight", -1);
+      expect(response).property("tileWidth", -1);
+      expect(response).property("nextLayerId", 0);
+      expect(response).property("nextObjectId", 0);
+      expect(response).property("orientation", "orthogonal");
+      expect(response).property("name", newTilemap.name);
+      expect(response).property("owner", id);
+      expect(response).to.have.property("globalTileIDs").that.deep.equals([1]);
+      expect(response).to.have.property("tilesets").that.deep.equals([]);
+      // expect(response).property("properties", newTilemap.properties);
+      expect(response).property("renderOrder", "right-down");
+      expect(response).property("isPublished", false);
+    });
+    it("Unsuccessfully creates a new tilemap with a name that already exists", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
 
-    //   let user: User | null = await users.getUserById(id + "123");
-    //   expect(user).null;
-    // });
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = schema !== null ? schema._id.toString() : "";
+
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      await tilemaps.createTilemap(id, newTilemap);
+
+      await TilemapSchema.findOne({ name: newTilemap.name });
+
+      const newTilemap2: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const response = await tilemaps.createTilemap(id, newTilemap2);
+
+      expect(response).not.null;
+      expect(response).string;
+    });
+
+    it("Successfully creates a new tilemap with incomplete tilemap data", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
+
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = schema !== null ? schema._id.toString() : "";
+
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name 2",
+      };
+
+      const response = await tilemaps.createTilemap(id, newTilemap);
+
+      expect(response).not.null;
+      expect(response).not.string;
+      expect(response).property("backgroundColor", "#FFFFFF");
+      expect(response).to.have.property("collaborators").that.deep.equals([]);
+      expect(response)
+        .to.have.property("collaboratorNames")
+        .that.deep.equals([]);
+      expect(response)
+        .to.have.property("collaboratorSettings")
+        .that.deep.equals({
+          editMode: "free",
+          timeLimit: 0,
+          tileLimit: 0,
+        });
+      expect(response).property("collaboratorIndex", -1);
+      expect(response).property("image", "noImage");
+      expect(response).property("height", 12);
+      expect(response).property("width", 12);
+      // expect(response).property("layers", <[Layer]>newTilemap.layers);
+      expect(response).property("tileHeight", -1);
+      expect(response).property("tileWidth", -1);
+      expect(response).property("nextLayerId", 0);
+      expect(response).property("nextObjectId", 0);
+      expect(response).property("orientation", "orthogonal");
+      expect(response).property("name", newTilemap.name);
+      expect(response).property("owner", id);
+      expect(response).to.have.property("globalTileIDs").that.deep.equals([1]);
+      expect(response).to.have.property("tilesets").that.deep.equals([]);
+      // expect(response).property("properties", newTilemap.properties);
+      expect(response).property("renderOrder", "right-down");
+      expect(response).property("isPublished", false);
+    });
+    it("Unsuccessfully creates a new tilemap with an incorrect userId", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
+
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = "489080980";
+
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const response = await tilemaps.createTilemap(id, newTilemap);
+
+      expect(response).not.null;
+      expect(response).string;
+    });
+    it("Unsuccessfully creates a new tilemap with an incorrect but properly formatted userId", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
+
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = "6356165924f889ac76eb40ec";
+
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const response = await tilemaps.createTilemap(id, newTilemap);
+
+      expect(response).not.null;
+      expect(response).string;
+    });
   });
+  describe("updateTilemapById", function () {
+    beforeEach(async function () {
+      // await UserSchema.deleteMany();
+      await UserSchema.create({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peter.t.walsh@stonybrook.edu",
+        username: "PeteyLumpkins",
+        password: "DummyPassword",
+        verifyKey: "something?!",
+        isVerified: false,
+        favoriteTileMaps: [],
+        favoriteTileSets: [],
+        joinedContests: [],
+        joinedCommunities: [],
+        friends: [],
+        imageURL: " ",
+      });
+      await TilemapSchema.deleteMany();
+    });
+
+    it("Update Tilemap successfully with complete information", async function name() {
+      const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
+      await TilemapSchema.deleteMany();
+
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      let id: string = "6356165924f889ac76eb40ec";
+
+      const newTilemap: Partial<Tilemap> = {
+        name: "test map",
+      };
+
+      const res = await tilemaps.createTilemap(id, newTilemap);
+
+      const mapId = (<Tilemap>res).id;
+
+      const updateTilemap: Partial<Tilemap> = {
+        backgroundColor: "#000000",
+        collaborators: ["507f191e810c19729de860ea"],
+        collaboratorNames: ["Camposm"],
+        collaboratorSettings: {
+          editMode: "queue",
+          timeLimit: 500,
+          tileLimit: 10,
+        },
+        image: "testURL2",
+        height: 20,
+        width: 36,
+        layers: [
+          {
+            data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            height: 20,
+            width: 30,
+            name: "test layer",
+            opacity: 0.8,
+            properties: [
+              {
+                name: "test type",
+                type: "bool",
+                value: "true",
+              },
+            ],
+            visible: true,
+            x: 0,
+            y: 0,
+          },
+        ],
+        tileHeight: 24,
+        tileWidth: 24,
+        nextLayerId: 1,
+        nextObjectId: 0,
+        orientation: "orthogonal",
+        name: "update name",
+        tilesets: ["507f1f77bcf86cd799439011"],
+        globalTileIDs: [45],
+        properties: [
+          {
+            name: "test type",
+            type: "bool",
+            value: "true",
+          },
+        ],
+        renderOrder: "right-up",
+      };
+
+      const response = await tilemaps.updateTilemapById(mapId, updateTilemap);
+      console.log(response);
+
+      expect(response).not.null;
+      expect(response).not.string;
+    });
+  });
+
   /**
    * The before method gets called after all of the tests have run. I am using it here
    * to close the connection to MongoDB.

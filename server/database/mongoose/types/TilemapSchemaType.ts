@@ -7,7 +7,7 @@ import PropertySchemaType from "./PropertySchemaType";
  * @author Andrew Ojeda
  */
 export default interface TilemapSchemaType {
-  _id: ObjectId;
+  // id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
   backgroundColor: string;
