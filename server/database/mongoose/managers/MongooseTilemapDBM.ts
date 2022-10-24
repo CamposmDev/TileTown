@@ -51,7 +51,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
           image: tilemap.image,
           height: tilemap.height,
           width: tilemap.width,
-          layers: <Layer[]>tilemap.layers,
+          layers: <any>tilemap.layers,
           tileHeight: tilemap.tileHeight,
           tileWidth: tilemap.tileWidth,
           nextLayerId: tilemap.nextLayerId,
@@ -140,7 +140,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         if (tilemap)
           return `tilemap with the name ${tilemap.name} already exists`;
       }
-    );
+    ).clone();
 
     let user = new UserSchema();
     await UserSchema.findOne(
@@ -149,30 +149,32 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         if (err) return err.message;
         user = user;
       }
-    );
+    ).clone();
 
     const newTilemap = new TilemapSchema({
-      backgroundColor: "#FFFFFF",
+      backgroundColor:
+        tilemap.backgroundColor === null ? "#FFFFFF" : tilemap.backgroundColor,
       collaborators: [],
       collaboratorNames: [],
       collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
       collaboratorIndex: -1,
-      image: "",
+      image: tilemap.image === null ? "" : tilemap.image,
       height: tilemap.height === null ? 12 : tilemap.height,
       width: tilemap.width === null ? 12 : tilemap.width,
-      layers: [],
+      layers: tilemap.layers === null ? [] : tilemap.layers,
       tileHeight: tilemap.tileHeight === null ? -1 : tilemap.tileHeight,
       tileWidth: tilemap.tileWidth === null ? -1 : tilemap.tileWidth,
-      nextLayerId: 0,
-      nextObjectId: 0,
+      nextLayerId: tilemap.nextLayerId === null ? 0 : tilemap.nextLayerId,
+      nextObjectId: tilemap.nextObjectId === null ? 0 : tilemap.nextObjectId,
       orientation: "orthogonal",
       name: tilemap.name,
       owner: user._id,
       tilesets: tilemap.tilesets === null ? [] : tilemap.tilesets,
       globalTileIDs:
         tilemap.globalTileIDs == null ? [0] : tilemap.globalTileIDs,
-      properties: [],
-      renderOrder: "right-down",
+      properties: tilemap.properties === null ? 0 : tilemap.properties,
+      renderOrder:
+        tilemap.renderOrder === null ? "right-down" : tilemap.renderOrder,
       isPublished: false,
     });
 
@@ -180,30 +182,32 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       return err.message;
     });
 
+    console.log(newTilemap.properties);
+
     return {
       id: newTilemap._id.toString(),
-      createDate: new Date(newTilemap.createdAt),
-      lastSaveDate: new Date(newTilemap.updatedAt),
-      backgroundColor: "#FFFFFF",
+      createDate: newTilemap.createdAt,
+      lastSaveDate: newTilemap.updatedAt,
+      backgroundColor: <Color>newTilemap.backgroundColor,
       collaborators: [],
       collaboratorNames: [],
       collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
       collaboratorIndex: -1,
-      image: "",
+      image: newTilemap.image,
       height: newTilemap.height,
       width: newTilemap.width,
-      layers: [],
+      layers: <any>newTilemap.layers,
       tileHeight: newTilemap.tileHeight,
       tileWidth: newTilemap.tileWidth,
-      nextLayerId: 0,
-      nextObjectId: 0,
+      nextLayerId: newTilemap.nextLayerId,
+      nextObjectId: newTilemap.nextObjectId,
       orientation: "orthogonal",
       name: newTilemap.name,
-      owner: user._id,
+      owner: userId,
       globalTileIDs: newTilemap.globalTileIDs,
       tilesets: newTilemap.tilesets.map((x) => x.toString()),
-      properties: [],
-      renderOrder: "right-down",
+      properties: <Property[]>newTilemap.properties,
+      renderOrder: <RenderOrder>newTilemap.renderOrder,
       isPublished: false,
     };
   }
@@ -234,8 +238,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     if (tilemap.image) updatedTilemap.image = tilemap.image;
     if (tilemap.height) updatedTilemap.height = tilemap.height;
     if (tilemap.width) updatedTilemap.width = tilemap.width;
-    if (tilemap.layers)
-      updatedTilemap.layers = <LayerSchemaType[]>tilemap.layers;
+    if (tilemap.layers) updatedTilemap.layers = <any>tilemap.layers;
     if (tilemap.tileHeight) updatedTilemap.tileHeight = tilemap.tileHeight;
     if (tilemap.tileWidth) updatedTilemap.tileWidth = tilemap.tileWidth;
     if (tilemap.nextLayerId) updatedTilemap.nextLayerId = tilemap.nextLayerId;
@@ -277,7 +280,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       image: updatedTilemap.image,
       height: updatedTilemap.height,
       width: updatedTilemap.width,
-      layers: <Layer[]>updatedTilemap.layers,
+      layers: <any>updatedTilemap.layers,
       tileHeight: updatedTilemap.tileHeight,
       tileWidth: updatedTilemap.tileWidth,
       nextLayerId: updatedTilemap.nextLayerId,

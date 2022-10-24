@@ -22,7 +22,17 @@ export default interface TilemapSchemaType {
   image: string;
   height: number;
   width: number;
-  layers: LayerSchemaType[];
+  layers: {
+    data: number[];
+    height: number;
+    width: number;
+    name: string;
+    opacity: number;
+    properties: { name: string; type: string; value: string }[];
+    visible: boolean;
+    x: number;
+    y: number;
+  }[];
   tileHeight: number;
   tileWidth: number;
   nextLayerId: number;
@@ -31,7 +41,7 @@ export default interface TilemapSchemaType {
   name: string;
   owner: string;
   tilesets: ObjectId[];
-  properties: PropertySchemaType[];
+  properties: { name: string; type: string; value: string }[];
   globalTileIDs: number[];
   renderOrder: string;
   isPublished: boolean;
