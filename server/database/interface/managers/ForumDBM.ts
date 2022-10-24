@@ -1,4 +1,5 @@
 import { ForumPost } from "../../../types";
+import Comment from "../../../types/Comment";
 
 /**
  * An interface defining a set of methods to work with TileTown forum posts in an arbitrary DBMS.
@@ -125,4 +126,14 @@ export default interface ForumDBM {
    * @return if successful, a new ForumPost object with the updated forum post data; null otherwise.
    */
   addView(userId: string, forumPostId: string): Promise<ForumPost | null>;
+
+
+  /**
+   * Creates a comment with a given forumPost id and a payload
+   * 
+   * @param forumPostId the id of the forum post in the DBMS
+   * @param payload the data of the comment
+   * @return if successful, 
+   */
+  commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null>
 }

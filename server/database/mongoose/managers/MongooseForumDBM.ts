@@ -1,6 +1,6 @@
-import { ForumPost } from "../../../types";
+import { ForumPost, Comment } from "../../../types";
 import { ForumDBM } from "../../interface";
-import { ForumPostSchema, UserSchema } from "../schemas";
+import { CommentSchema, ForumPostSchema, UserSchema } from "../schemas";
 
 export default class MongooseForumDBM implements ForumDBM {
 
@@ -28,8 +28,8 @@ export default class MongooseForumDBM implements ForumDBM {
             title: payload.title,
             body: payload.body,
             tags: payload.tags,
-            likes: payload.likes,
-            dislikes: payload.dislikes,
+            likes: [],
+            dislikes: [],
             isPublished: payload.isPublished
         })
         let res = await forumPost.save()
@@ -70,6 +70,7 @@ export default class MongooseForumDBM implements ForumDBM {
         }
         return null
     }
+
     async deleteForumPost(forumPostId: string): Promise<string | null> {
         let forumPost = await ForumPostSchema.findById(forumPostId)
         if (forumPost !== null) {
@@ -78,6 +79,7 @@ export default class MongooseForumDBM implements ForumDBM {
         }
         return null
     }
+
     async toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         let user = await UserSchema.findById(userId)
         let forumPost: any = await ForumPostSchema.findById(forumPostId)
@@ -108,6 +110,7 @@ export default class MongooseForumDBM implements ForumDBM {
         }
         return null
     }
+
     async toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null> {
         let user = await UserSchema.findById(userId)
         let forumPost: any = await ForumPostSchema.findById(forumPostId)
@@ -138,6 +141,7 @@ export default class MongooseForumDBM implements ForumDBM {
         }
         return null
     }
+
     async addView(userId: string, forumPostId: string): Promise<ForumPost | null> {
         let user = await UserSchema.findById(userId)
         let forumPost: any = await ForumPostSchema.findById(forumPostId)
@@ -158,6 +162,24 @@ export default class MongooseForumDBM implements ForumDBM {
                     views: forumPost.views,
                     isPublished: forumPost.isPublished
                 }
+            }
+        }
+        return null
+    }
+
+    async commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null> {
+        let forumPost = await ForumPostSchema.findById(forumPostId)
+        if (forumPost !== null) {
+            let comment: any = await CommentSchema.create({
+                author: payload.author,
+                body: payload.body,
+                referenceId: payload.referenceId
+            })
+            await comment.save()
+            return {
+                author: comment.author,
+                body: comment.body,
+                referenceId: comment.referenceId
             }
         }
         return null

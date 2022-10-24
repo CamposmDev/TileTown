@@ -51,7 +51,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         let user = await UserSchema.findById(userId)
         let social = await TilesetSocialSchema.findById(socialId)
         if ((user !== null) && (social !== null)) {
-            let id = new mongoose.Schema.Types.ObjectId(user._id);
+            let id = user._id;
             let likes = social.likes
             let dislikes = social.dislikes
             if (!dislikes.includes(id)) {
@@ -86,7 +86,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         let user = await UserSchema.findById(userId)
         let social = await TilesetSocialSchema.findById(socialId)
         if ((user !== null) && social !== null) {
-            let id = new mongoose.Schema.Types.ObjectId(user._id);
+            let id = user._id;
             let likes = social.likes
             let dislikes = social.dislikes
             if (!likes.includes(id)) {
@@ -304,8 +304,10 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         if (tileset.imageWidth) updatedTileset.imageWidth = tileset.imageWidth;
         if (tileset.margin) updatedTileset.margin = tileset.margin;
         if (tileset.name) updatedTileset.name = tileset.name;
-        if (tileset.owner)
-            updatedTileset.owner = new Schema.Types.ObjectId(tileset.owner);
+        if (tileset.owner) {
+            let owner = await UserSchema.findById(tileset.owner)
+            updatedTileset.owner = owner !== null ? owner._id : updatedTileset.owner;
+        }
         if (tileset.properties)
             updatedTileset.properties = <PropertySchemaType[]>tileset.properties;
         if (tileset.isPublished) updatedTileset.isPublished = tileset.isPublished;

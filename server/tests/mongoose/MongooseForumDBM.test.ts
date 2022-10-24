@@ -7,6 +7,9 @@ import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
 import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
+import { ForumPostSchema } from '../../database/mongoose/schemas';
+import { MongooseForumDBM } from '../../database/mongoose/managers';
+import { ForumPost } from '../../types';
 
 /** Config the env variables */
 dotenv.config()
@@ -15,7 +18,7 @@ dotenv.config()
  * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
  * {@link https://mochajs.org/}
  */
-describe("Testing MongooseUserDBM", function() {
+describe("Testing MongooseForumDBM", function() {
 
     /** The connection string to connect to mongoose */
     const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
@@ -26,37 +29,269 @@ describe("Testing MongooseUserDBM", function() {
      * {@link https://mochajs.org/#hooks}
      */
     before(async function() { await mongoose.connect(connect); });
-
-    /** 
-     * A set of tests for the method MongooseUserDBM.createUser()
-     * @see MongooseUserDBM.createUser
+    
+    /**
+     * A set of tests for the method MongooseForumDBM.createForumPost()
+     * @see MongooseForumDBM.createForumPost
      */
-    describe("getForumPost", function() {
+    describe('MongooseForumDBM.createForum', function() {
+        beforeEach(async function() { await ForumPostSchema.deleteMany() })
+        it('It should create and return a new forum post', async function() {
+            let forums: MongooseForumDBM = new MongooseForumDBM()
 
+            let partial = {
+                "author": "Camposm",
+                "title": "How to play MC",
+                "body": "How much dedicated RAM do I need for mc",
+                "tags": ["mc", "servers"],
+                "isPublished": true
+            }
+            let forumPost: ForumPost | null = await forums.createForumPost(partial)
+            expect(forumPost).not.null
+            expect(forumPost).property("author", "Camposm")
+            expect(forumPost).property("title", "How to play MC")
+            expect(forumPost).property("body", "How much dedicated RAM do I need for mc")
+            expect(forumPost).property("tags").eql(["mc", "servers"])
+            expect(forumPost).property("isPublished", true)
+            
+            if (forumPost !== null) {
+                let res = await ForumPostSchema.findById(forumPost.id)
+                expect(res).not.null;
+            }
+        })
+    })
+
+    describe("MongooseForumDBM.getForumPost", function() {
+        beforeEach(async function() {
+            await ForumPostSchema.deleteMany()
+            await ForumPostSchema.create({
+                author: "Camposm",
+                title: "Clean Tilemaps",
+                body: "Clean tilemaps use gradients",
+                tags: ['clean', 'tilemaps', 'design'],
+                likes: [],
+                dislikes: [],
+                views: 0,
+                isPublished: true
+            })
+        })
+
+        it('Successfully finds a forum post by id', async function() {
+            let forums: MongooseForumDBM = new MongooseForumDBM()
+            let schema = await ForumPostSchema.findOne({title: 'Clean Tilemaps'})
+            let id: string = schema !== null ? schema._id.toString() : ''
+            let forumPost: ForumPost | null = await forums.getForumPost(id)
+            expect(forumPost).not.null
+            expect(forumPost).property('author').eql('Camposm')
+            expect(forumPost).property('title').eql('Clean Tilemaps')
+            expect(forumPost).property('body').eql('Clean tilemaps use gradients')
+            expect(forumPost).property('tags').eql(['clean', 'tilemaps', 'design'])
+            expect(forumPost).property('likes').eql([])
+            expect(forumPost).property('dislikes').eql([])
+            expect(forumPost).property('views').eql(0)
+            expect(forumPost).property('isPublished').eql(true)
+        })
     });
 
-    describe("createForumPost", function() {
+    describe("MongooseForumDBM.updateForumPost", function() {
+        beforeEach(async function() {
+            await ForumPostSchema.deleteMany()
+            await ForumPostSchema.create({
+                author: "Camposm",
+                title: "Clean Tilesets",
+                body: "Clean tilesets use gradients",
+                tags: ['clean', 'tilesets', 'design'],
+                likes: [],
+                dislikes: [],
+                views: 0,
+                isPublished: true
+            })
+        })
 
-    });
+        it('Successfully updates a forum post by id', async function() {
+            let forums: MongooseForumDBM = new MongooseForumDBM()
+            let schema = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let id: string = schema !== null ? schema._id.toString() : ''
+            let forumPost: ForumPost | null = await forums.getForumPost(id)
+            if (forumPost !== null) {
+                forumPost.body = 'Tilesets can be well designed using color theory'
+                let returnValue = await forums.updateForumPost(forumPost.id, forumPost)
+                expect(returnValue).not.null
+                expect(returnValue).property('body').eql('Tilesets can be well designed using color theory')
+            }
+        })
+    })
 
-    describe("updateForumPost", function() {
+    describe("MongooseForumDBM.toggleLike", function() {
+        beforeEach(async function() {
+            await UserSchema.deleteMany()
+            await ForumPostSchema.deleteMany()
+            await UserSchema.create({
+                firstName: 'Michael',
+                lastName: 'Campos',
+                username: 'Camposm',
+                email: 'michael.campos@stonybrook.edu',
+                password: 'helloworld',
+                favoriteTileMaps: [],
+                favoriteTileSets: [],
+                joinedContests: [],
+                joinedCommunities: [],
+                friends: [],
+                isVerified: false,
+                verifyKey: 'string',
+                imageURL: 'https://google.com'
+            })
+            await ForumPostSchema.create({
+                author: "Camposm",
+                title: "Clean Tilesets",
+                body: "Clean tilesets use gradients",
+                tags: ['clean', 'tilesets', 'design'],
+                likes: [],
+                dislikes: [],
+                views: 0,
+                isPublished: true
+            })
+        })
 
-    });
+        it('Successfully toggled like for a forum post', async function() {
+            let user = await UserSchema.findOne({username: 'Camposm'})
+            let userId = user !== null ? user._id.toString() : ''
 
-    describe("deleteForumPost", function() {
+            let forums: MongooseForumDBM = new MongooseForumDBM()
+            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
-    });
+            if (user !== null && forumId !== null) {
+                let result = await forums.toggleLike(userId, forumId)
+                expect(result).not.null
+                if (result !== null) {
+                    let forumPostAfterLike = await forums.getForumPost(result.id)
+                    expect(forumPostAfterLike).not.null
+                    if (forumPostAfterLike !== null) {
+                        expect(forumPostAfterLike).property('likes').eql([user._id])
+                    }
+                }
 
-    describe("toggleLike", function() {
+                result = await forums.toggleLike(userId, forumId)
+                expect(result).not.null
+                if (result !== null) {
+                    let forumPostAfterLike = await forums.getForumPost(result.id)
+                    expect(forumPostAfterLike).not.null
+                    if (forumPostAfterLike !== null) [
+                        expect(forumPostAfterLike).property('likes').eql([])
+                    ]
+                }
+            }            
+        })
+    })
 
-    });
+    describe("MongooseForumDBM.toggleDislike", function() {
+        beforeEach(async function() {
+            await UserSchema.deleteMany()
+            await ForumPostSchema.deleteMany()
+            await UserSchema.create({
+                firstName: 'Michael',
+                lastName: 'Campos',
+                username: 'Camposm',
+                email: 'michael.campos@stonybrook.edu',
+                password: 'helloworld',
+                favoriteTileMaps: [],
+                favoriteTileSets: [],
+                joinedContests: [],
+                joinedCommunities: [],
+                friends: [],
+                isVerified: false,
+                verifyKey: 'string',
+                imageURL: 'https://google.com'
+            })
+            await ForumPostSchema.create({
+                author: "Camposm",
+                title: "Clean Tilesets",
+                body: "Clean tilesets use gradients",
+                tags: ['clean', 'tilesets', 'design'],
+                likes: [],
+                dislikes: [],
+                views: 0,
+                isPublished: true
+            })
+        })
 
-    describe("toggleDislike", function() {
+        it('Successfully toggled like for a forum post', async function() {
+            let user = await UserSchema.findOne({username: 'Camposm'})
+            let userId = user !== null ? user._id.toString() : ''
 
-    });
+            let forums: MongooseForumDBM = new MongooseForumDBM()
+            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumId = forumPost !== null ? forumPost._id.toString() : ''
+
+            if (user !== null && forumId !== null) {
+                let result = await forums.toggleDislike(userId, forumId)
+                expect(result).not.null
+                if (result !== null) {
+                    let forumPostAfterLike = await forums.getForumPost(result.id)
+                    expect(forumPostAfterLike).not.null
+                    if (forumPostAfterLike !== null) {
+                        expect(forumPostAfterLike).property('dislikes').eql([user._id])
+                    }
+                }
+
+                result = await forums.toggleDislike(userId, forumId)
+                expect(result).not.null
+                if (result !== null) {
+                    let forumPostAfterLike = await forums.getForumPost(result.id)
+                    expect(forumPostAfterLike).not.null
+                    if (forumPostAfterLike !== null) [
+                        expect(forumPostAfterLike).property('dislikes').eql([])
+                    ]
+                }
+            }            
+        })
+    })
 
     describe("addView", function() {
-        
+        beforeEach(async function() {
+            await UserSchema.deleteMany()
+            await ForumPostSchema.deleteMany()
+            await UserSchema.create({
+                firstName: 'Michael',
+                lastName: 'Campos',
+                username: 'Camposm',
+                email: 'michael.campos@stonybrook.edu',
+                password: 'helloworld',
+                favoriteTileMaps: [],
+                favoriteTileSets: [],
+                joinedContests: [],
+                joinedCommunities: [],
+                friends: [],
+                isVerified: false,
+                verifyKey: 'string',
+                imageURL: 'https://google.com'
+            })
+            await ForumPostSchema.create({
+                author: "Camposm",
+                title: "Clean Tilesets",
+                body: "Clean tilesets use gradients",
+                tags: ['clean', 'tilesets', 'design'],
+                likes: [],
+                dislikes: [],
+                views: 0,
+                isPublished: true
+            })
+        })
+        it('Successfully finds a forum post by id', async function() {
+            let user = await UserSchema.findOne({username: 'Camposm'})
+            let userId = user !== null ? user._id.toString() : ''
+
+            let forums: MongooseForumDBM = new MongooseForumDBM()
+            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumId = forumPost !== null ? forumPost._id.toString() : ''
+
+            if (userId !== null && forumId !== null) {
+                let forumPost: ForumPost | null = await forums.addView(userId, forumId)
+                expect(forumPost).not.null
+                expect(forumPost).property('views').eql(1)
+            }
+        })
     })
 
     /** 
@@ -64,6 +299,5 @@ describe("Testing MongooseUserDBM", function() {
      * to close the connection to MongoDB.
      * {@link https://mochajs.org/#hooks}
      */
-    after(async function() { await mongoose.connection.close(); });
-
-});
+    after(async function() { await mongoose.connection.close(); })
+})
