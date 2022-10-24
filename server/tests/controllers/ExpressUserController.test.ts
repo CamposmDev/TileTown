@@ -12,10 +12,10 @@ import { Auth } from '../../express/middleware';
  * @author Peter Walsh
  */
 describe("ExpressUserController", function () {
-  /** Start the server on port 3000 */
-  const server = app.listen("3000");
+    /** Start the server on port 3000 */
+    const server = app.listen("3003");
 
-    before(async function() {
+    before(async function () {
         const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
         await db.connect(connect)
     });
@@ -24,32 +24,32 @@ describe("ExpressUserController", function () {
      * Method: GET
      * Route: api/user/:id
      */
-    describe("getUserById", function() {
+    describe("getUserById", function () {
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             await UserSchema.deleteMany({});
             await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peteylumpkins@gmail.com",
                 username: "peteylumpkins",
-                password: "blackstarthedog", 
+                password: "blackstarthedog",
             });
         });
 
         // Invalid Id - 404 - send id of nonexisting user
-        it("Failure - Invalid user id", async function() { 
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Failure - Invalid user id", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
-            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let token = Auth.signJWT<string>(id);
 
             let response = await request(app).get(`/api/user/${id + "123"}`).set("Cookie", [`token=${token}`]);
             expect(response.status).equals(404);
         })
 
         // Unauthorized - 401 - request without authorization
-        it("Failure - Invalid token", async function() {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Failure - Invalid token", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token: string = "Bad token!";
 
@@ -58,10 +58,10 @@ describe("ExpressUserController", function () {
         });
 
         // Valid Id - 200 - send id of exisitng user
-        it("Success - Valid token and valid user id", async function() {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Success - Valid token and valid user id", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
-            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let token = Auth.signJWT<string>(id);
 
             let response = await request(app).get(`/api/user/${id}`).set("Cookie", [`token=${token}`]);
             expect(response.status).equals(200);
@@ -74,21 +74,21 @@ describe("ExpressUserController", function () {
      * Method: POST
      * Route: api/user
      */
-    describe("createUser", function() {
+    describe("createUser", function () {
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             await UserSchema.deleteMany({});
             await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
                 username: "PeteyLumps",
-                password: "password", 
+                password: "password",
             });
         });
 
         // Success - 201 - User created successfully and returned
-        it("Successfully create and return a new user", async function() {
+        it("Successfully create and return a new user", async function () {
             let response = await request(app).post("/api/user").send({
                 username: "PeteyLumpkins",
                 password: "blackstarthedog",
@@ -99,32 +99,32 @@ describe("ExpressUserController", function () {
             expect(response.status).equals(201);
         })
 
-        // Bad Request - 400 - non-unique email
-        it("Failure - Non-unique email", async function() {
-            let response = await request(app).post("/api/user/").send({
-                username: "PeteyLumpkins",
-                password: "blackstarthedog",
-                email: "Walsh9636@gmail.com",
-                firstName: "Peter",
-                lastName: "Walsh"
-            });
-            expect(response.status).equals(400);
-        });
+        // // Bad Request - 400 - non-unique email
+        // it("Failure - Non-unique email", async function () {
+        //     let response = await request(app).post("/api/user/").send({
+        //         username: "PeteyLumpkins",
+        //         password: "blackstarthedog",
+        //         email: "Walsh9636@gmail.com",
+        //         firstName: "Peter",
+        //         lastName: "Walsh"
+        //     });
+        //     expect(response.status).equals(400);
+        // });
 
-        // Bad Request - 400 - non-unique username
-        it("Failure - Non-unique username", async function() {
-            let response = await request(app).post("/api/user/").send({
-                username: "PeteyLumps",
-                password: "blackstarthedog",
-                email: "walsh9636@gmail.com",
-                firstName: "Peter",
-                lastName: "Walsh"
-            });
-            expect(response.status).equals(400);
-        });
+        // // Bad Request - 400 - non-unique username
+        // it("Failure - Non-unique username", async function () {
+        //     let response = await request(app).post("/api/user/").send({
+        //         username: "PeteyLumps",
+        //         password: "blackstarthedog",
+        //         email: "walsh9636@gmail.com",
+        //         firstName: "Peter",
+        //         lastName: "Walsh"
+        //     });
+        //     expect(response.status).equals(400);
+        // });
 
         // Bad Request - 400 - invalid password (<= 12 chararacters)
-        it("Failure - Invalid Password - Exactly 12 characters", async function() {
+        it("Failure - Invalid Password - Exactly 12 characters", async function () {
             let response = await request(app).post("/api/user").send({
                 username: "PeteyLumpkins",
                 password: "blackstardog",
@@ -136,7 +136,7 @@ describe("ExpressUserController", function () {
         });
 
         // Success - 400 - Missing data in body
-        it("Failure - Missing data in body", async function() {
+        it("Failure - Missing data in body", async function () {
             let response = await request(app).post("/api/user").send({
                 username: "PeteyLumpkins",
                 password: "blackstarthedog",
@@ -152,9 +152,9 @@ describe("ExpressUserController", function () {
      * Method: POST
      * Route: api/user/login
      */
-    describe("loginUser", function() {
+    describe("loginUser", function () {
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             await UserSchema.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
@@ -167,7 +167,7 @@ describe("ExpressUserController", function () {
         });
 
         // Bad Request - 400 - Invalid user email
-        it("Failure - Invalid Email", async function() {
+        it("Failure - Invalid Email", async function () {
             let response = await request(app).post("/api/user/login").send({
                 password: "password12345",
                 email: "walsh@stonybrook.edu",
@@ -175,32 +175,32 @@ describe("ExpressUserController", function () {
             expect(response.status).equals(400);
         });
 
-    // Bad Request - 400 - Incorrect password
-    it("Failure - Incorrect Password", async function () {
-      let response = await request(app).post("/api/user/login").send({
-        password: "password12346",
-        email: "peter.t.walsh@stonybrook.edu",
-      });
-      expect(response.status).equals(400);
-    });
+        // Bad Request - 400 - Incorrect password
+        it("Failure - Incorrect Password", async function () {
+            let response = await request(app).post("/api/user/login").send({
+                password: "password12346",
+                email: "peter.t.walsh@stonybrook.edu",
+            });
+            expect(response.status).equals(400);
+        });
 
-    // Success - 200 - Valid email and password
-    it("Success - Email and Password match!", async function () {
-      let response = await request(app).post("/api/user/login").send({
-        password: "password12345",
-        email: "peter.t.walsh@stonybrook.edu",
-      });
-      expect(response.status).equals(200);
+        // Success - 200 - Valid email and password
+        it("Success - Email and Password match!", async function () {
+            let response = await request(app).post("/api/user/login").send({
+                password: "password12345",
+                email: "peter.t.walsh@stonybrook.edu",
+            });
+            expect(response.status).equals(200);
+        });
     });
-  });
 
     /** 
      * Method: POST
      * Route: api/user/logout
      */
-    describe("logoutUser", function() {
+    describe("logoutUser", function () {
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             await UserSchema.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
@@ -213,18 +213,18 @@ describe("ExpressUserController", function () {
         });
 
         // Unauthorized - 401 - Request without authorization token
-        it("Failure - Unauthorized user", async function() {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Failure - Unauthorized user", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
-            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let token = Auth.signJWT<string>(id);
             let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token + "1"}`]);
             expect(response.status).equal(401);
 
         });
 
         // Success - 200 - User has valid credentials and logged out
-        it("Success - Authorized User", async function() {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Success - Authorized User", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token}`]);
@@ -233,19 +233,19 @@ describe("ExpressUserController", function () {
 
     });
 
-  /**
-   * Method: PUT
-   * Route: api/user/:id
-   */
-  describe("updateUserById", function () {});
+    /**
+     * Method: PUT
+     * Route: api/user/:id
+     */
+    describe("updateUserById", function () { });
 
     /** 
      * Method: DELETE
      * Route: api/user/:id
      */
-    describe("deleteUserById", function() {
+    describe("deleteUserById", function () {
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             await UserSchema.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
@@ -258,27 +258,27 @@ describe("ExpressUserController", function () {
         });
 
         // Unauthorized - 401 - User was not deleted
-        it("Bad Request - Unauthorized", async function() {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        it("Bad Request - Unauthorized", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token + "1"}`]);
             expect(response.status).equals(401);
         });
 
-    // Success - 200 - User deleted, deleted user id returned
-    it("Success - Authorized", async function () {
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+        // Success - 200 - User deleted, deleted user id returned
+        it("Success - Authorized", async function () {
+            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token}`]);
             expect(response.status).equals(200);
         });
-  });
+    });
 
-  after(async function () {
-    /** Close the connection to the server */
-    server.close();
-    await db.disconnect();
-  });
+    after(async function () {
+        /** Close the connection to the server */
+        server.close();
+        await db.disconnect();
+    });
 });

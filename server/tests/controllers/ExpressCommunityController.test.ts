@@ -18,6 +18,7 @@ import { MongooseCommunityDBM } from '../../database/mongoose/managers';
  */
  describe("Testing MongooseCommunityDBM", function() {
 
+    const server = app.listen("3000");
     /** The connection string to connect to mongoose */
     const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
 
@@ -200,5 +201,9 @@ import { MongooseCommunityDBM } from '../../database/mongoose/managers';
       })
     });
 
-    after(async function() { await mongoose.connection.close(); });
+    after(async function() { 
+        await mongoose.connection.close();
+        /** Close the connection to the server */
+        server.close(); 
+    });
  });

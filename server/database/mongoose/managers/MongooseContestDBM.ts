@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
 import { ModeratorSchema, ContestSchema, UserSchema } from '../schemas';
@@ -37,34 +38,35 @@ export default class MongooseContestDBM implements ContestDBM {
           return exitContest ? false : true
       }
 
-      let contestName = contest.name
-      if(!(await validContestName(contestName))) {
-          console.log('not unique name')
-          return null
-      }
-      
-      let con: any = await ContestSchema.create({
-          owner: contest.owner,
-          name: contest.name,
-          description: contest.description,
-          startDate: contest.startDate,
-          endDate: contest.endDate,
-          isPublished: contest.isPublished
-      })
-      await con.save()
-      return {
-          id: con._id,
-          owner: con.owner,
-          name: con.name,
-          description: con.description,
-          participates: con.participates,
-          startDate: con.startDate,
-          endDate: con.endDate,
-          winner: con.winner,
-          isPublished: con.isPublished
+        let contestName = contest.name
 
+        if(!(await validContestName(contestName))) {
+            console.log('not unique name')
+            return null
         }
         
+        let con = await ContestSchema.create({
+            owner: contest.owner,
+            name: contest.name,
+            description: contest.description,
+            startDate: contest.startDate,
+            endDate: contest.endDate,
+            isPublished: contest.isPublished,
+            participates: new Array<mongoose.Types.ObjectId>(),
+        })
+        await con.save()
+        return {
+            id: con._id.toString(),
+            owner: con.owner.toString(),
+            name: con.name,
+            description: con.description,
+            participates: con.participates.map((id) => id.toString()),
+            startDate: con.startDate,
+            endDate: con.endDate,
+            winner: con.winner ? con.winner.toString() : "",
+            isPublished: con.isPublished
+        }
+    
     }
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
         let con: any = await ContestSchema.findById(contestId)

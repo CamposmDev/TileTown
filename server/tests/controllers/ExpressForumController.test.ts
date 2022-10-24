@@ -14,7 +14,7 @@ import { ForumPostSchema } from '../../database/mongoose/schemas';
 describe('ExpressUserController', function() {
 
     /** Start the server on port 3000 */
-    const server = app.listen('3000');
+    const server = app.listen('3001');
 
     /** Before running the tests, connect to the database */
     before(async function() {

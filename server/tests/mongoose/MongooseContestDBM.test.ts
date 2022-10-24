@@ -51,9 +51,24 @@ import { ContestSchema } from '../../database/mongoose/schemas/';
 
         it('It should create and return a new contest', async function() {
             let contest: MongooseContestDBM = new MongooseContestDBM()
+            let user = await UserSchema.create({
+                firstName: "Tuyen",
+                lastName: "Vo",
+                email: "tuyen.vo@stonybrook.edu",
+                username: "Emdoiqua",
+                password: "DummyPassword",
+                verifyKey: 'something?!',
+                isVerified: false,
+                favoriteTileMaps: [],
+                favoriteTileSets: [],
+                joinedContests: [],
+                joinedCommunities: [],
+                friends: [],
+                imageURL: " "
+            })
     
             let partial: Partial<Contest> = {
-                "owner": "63560ddd205cc7cbe9c63b1d",
+                "owner": user._id.toString(),
                 "name": "Vo",
                 "description": "My Contest Description",
                 "participates": [],
@@ -61,12 +76,12 @@ import { ContestSchema } from '../../database/mongoose/schemas/';
             }
             let con: Contest | null = await contest.createContest(partial)
             expect(con).not.null
-            expect(con).property("owner", "63560ddd205cc7cbe9c63b1d")
+            expect(con).property("owner", user._id.toString())
             expect(con).property("name", "Vo")
             expect(con).property("description", "My Contest Description")
-            expect(con).property("participates", [])
-            expect(con).property("startDate", Date)
-            expect(con).property("endDate", Date)
+            expect(con).property("participates").to.have.length(0);
+            expect(con).to.have.property("startDate")
+            expect(con).to.have.property("endDate")
             expect(con).property("isPublished", true)
             
             if (con !== null) {

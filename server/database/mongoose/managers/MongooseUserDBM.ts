@@ -77,7 +77,7 @@ export default class MongooseUserDBM implements UserDBM {
         }
 
         let username = userpy.username
-        if (!(await validUsername(username))) return null
+        if (!(await validUsername(username))) return null;
 
         let password = userpy.password
         /**
