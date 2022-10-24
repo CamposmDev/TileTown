@@ -43,10 +43,10 @@ export default class CommunityController {
         });
 
         if (community === null) {
-            res.status(400).json({message: "Bad Request"})
+            res.status(400).json({message: "Failed to create community"})
             return
         }
-        res.status(201).json({community: community})
+        res.status(200).json({community: community})
         return
     }
 

@@ -1,3 +1,4 @@
+import common from "mocha/lib/interfaces/common";
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import CommunitySchema from '../../mongoose/schemas/community'
@@ -32,14 +33,34 @@ export default class MongooseCommunityDBM implements CommunityDBM {
          * Check if the community name valid
          */
         const validCommunityName = async (communityName: string): Promise<boolean> => {
-            const existCommunity = await CommunitySchema.findOne({communityName: communityName})
+            const existCommunity = await CommunitySchema.findOne({name: communityName})
             return existCommunity ? false : true
         }
 
         let communityName = community.name
-        if(!(await validCommunityName(communityName))) return null
-        return null
+        if(!(await validCommunityName(communityName))) {
+            console.log('not unique name')
+            return null
+        }
+    
+        let comm: any = await CommunitySchema.create({
+            owner: community.owner,
+            name: community.name,
+            description: community.description,
+            memberCounter: 1,
+            visibility: community.visibility
+        })
+        await comm.save()
+        return {
+            id: comm._id,
+            owner: comm.owner,
+            name: comm.name,
+            description: comm.description,
+            memberCount: comm.memberCounter,
+            visibility: comm.visibility
+        }
     }
+
    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
         let com: any = await CommunitySchema.findById(communityId)
         if (com !== null) {
