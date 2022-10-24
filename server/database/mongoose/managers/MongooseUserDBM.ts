@@ -21,13 +21,13 @@ export default class MongooseUserDBM implements UserDBM {
             lastName: user.lastName,
             password: user.password,
             imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
-            friends: user.friends.map((id) => id.toString()),
+            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
+            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
             isVerified: user.isVerified,
             verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
-            joinedContests: user.joinedContests.map((id) => id.toString())
+            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
+            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
         } : null
     }
 
@@ -49,13 +49,13 @@ export default class MongooseUserDBM implements UserDBM {
             lastName: user.lastName,
             password: user.password,
             imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
-            friends: user.friends.map((id) => id.toString()),
+            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
+            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
             isVerified: user.isVerified,
             verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
-            joinedContests: user.joinedContests.map((id) => id.toString())
+            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
+            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
         }
     }
 
@@ -124,13 +124,13 @@ export default class MongooseUserDBM implements UserDBM {
             lastName: user.lastName,
             password: user.password,
             imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id) => id.toString()),
+            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
             friends: user.friends.map((id) => id.toString()),
             isVerified: user.isVerified,
             verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id) => id.toString()),
-            joinedContests: user.joinedContests.map((id) => id.toString())
+            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
+            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
         } : null;
     }
  
