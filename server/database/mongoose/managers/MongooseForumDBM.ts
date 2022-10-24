@@ -4,7 +4,6 @@ import ForumDBM from "../../interface/managers/ForumDBM";
 import ForumPostSchema from '../../mongoose/schemas/forumPost'
 import UserSchema from '../../mongoose/schemas/user'
 import CommentSchema from '../../mongoose/schemas/comment'
-import forumPost from "../../mongoose/schemas/forumPost";
 
 export default class MongooseForumDBM implements ForumDBM {
 

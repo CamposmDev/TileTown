@@ -16,6 +16,6 @@ ForumRouter.get('/:id', ForumController.getForumPostById);
 ForumRouter.put('/:id', ForumController.updateForumPostById);
 ForumRouter.put('/like/:id', ForumController.likeForumPostById);
 ForumRouter.put('/dislike/:id', ForumController.dislikeForumPostById)
-ForumRouter.post('/comment/', ForumController.commentForumPostById);
+ForumRouter.put('/comment/:id', ForumController.commentForumPostById);
 
 export default ForumRouter;
