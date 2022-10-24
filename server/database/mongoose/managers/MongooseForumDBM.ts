@@ -1,8 +1,6 @@
 import { ForumPost } from "../../../types";
-import ForumDBM from "../../interface/managers/ForumDBM";
-import forumPost from "../../mongoose/schemas/forumPost";
-import ForumPostSchema from '../../mongoose/schemas/forumPost'
-import UserSchema from '../../mongoose/schemas/user'
+import { ForumDBM } from "../../interface";
+import { ForumPostSchema, UserSchema } from "../schemas";
 
 export default class MongooseForumDBM implements ForumDBM {
 

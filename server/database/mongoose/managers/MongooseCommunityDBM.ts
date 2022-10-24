@@ -1,7 +1,7 @@
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
-import CommunitySchema from '../../mongoose/schemas/community'
-import UserSchema from '../../mongoose/schemas/user'
+import CommunitySchema from '../schemas/Community'
+import UserSchema from '../schemas/User'
 
 
 /**
