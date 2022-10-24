@@ -199,7 +199,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       nextObjectId: 0,
       orientation: "orthogonal",
       name: newTilemap.name,
-      owner: user._id,
+      owner: user._id.toString(),
       globalTileIDs: newTilemap.globalTileIDs,
       tilesets: newTilemap.tilesets.map((x) => x.toString()),
       properties: [],
@@ -222,9 +222,10 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     if (tilemap.backgroundColor)
       updatedTilemap.backgroundColor = tilemap.backgroundColor;
     if (tilemap.collaborators)
-      updatedTilemap.collaborators = tilemap.collaborators.map(
-        (x) => new Schema.Types.ObjectId(x)
-      );
+    //   updatedTilemap.collaborators = tilemap.collaborators.map((id) => {
+    //         let user = await UserSchema.findById(id)
+            
+    //   });
     if (tilemap.collaboratorNames)
       updatedTilemap.collaboratorNames = tilemap.collaboratorNames;
     if (tilemap.collaboratorSettings)
@@ -245,9 +246,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     if (tilemap.name) updatedTilemap.name = tilemap.name;
     if (tilemap.owner) updatedTilemap.owner = tilemap.owner;
     if (tilemap.tilesets)
-      updatedTilemap.tilesets = tilemap.tilesets.map(
-        (x) => new Schema.Types.ObjectId(x)
-      );
+    //   updatedTilemap.tilesets = tilemap.tilesets.map(
+    //     (x) => new Schema.Types.ObjectId(x)
+    //   );
     if (tilemap.globalTileIDs)
       updatedTilemap.globalTileIDs = tilemap.globalTileIDs;
     if (tilemap.properties)
@@ -348,7 +349,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let user = await UserSchema.findById(userId);
     let social = await TilemapSocialSchema.findById(socialId);
     if (user !== null && social !== null) {
-      let id = new mongoose.Schema.Types.ObjectId(user._id);
+      let id = user._id;
       let likes = social.likes;
       let dislikes = social.dislikes;
       if (!dislikes.includes(id)) {
@@ -389,7 +390,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     let user = await UserSchema.findById(userId);
     let social = await TilemapSocialSchema.findById(socialId);
     if (user !== null && social !== null) {
-      let id = new mongoose.Schema.Types.ObjectId(user._id);
+      let id = user._id;
       let likes = social.likes;
       let dislikes = social.dislikes;
       if (!likes.includes(id)) {

@@ -102,7 +102,7 @@ describe('ExpressUserController', function() {
 
         // Bad Request - 400 - non-unique email
         it("Failure - Non-unique email", async function() {
-            let response = await request(app).post("/api/user").send({
+            let response = await request(app).post("/api/user/").send({
                 username: "PeteyLumpkins",
                 password: "blackstarthedog",
                 email: "Walsh9636@gmail.com",
@@ -114,7 +114,7 @@ describe('ExpressUserController', function() {
 
         // Bad Request - 400 - non-unique username
         it("Failure - Non-unique username", async function() {
-            let response = await request(app).post("/api/user").send({
+            let response = await request(app).post("/api/user/").send({
                 username: "PeteyLumps",
                 password: "blackstarthedog",
                 email: "walsh9636@gmail.com",
@@ -248,16 +248,35 @@ describe('ExpressUserController', function() {
      */
     describe("deleteUserById", function() {
 
-        beforeEach(function() {});
+        beforeEach(async function() {
+            await UserSchema.deleteMany({});
+            let user = await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peter.t.walsh@stonybrook.edu",
+                username: "PeteyLumpkings",
+                password: "password12345"
+            });
+            expect(user).not.null;
+        });
 
-        // Bad Request - 400 - Invalid User Id
-        it("", function() {});
-
-        // Unauthorized - 401 - Request without authorization token
-        it("", function() {});
+        // Unauthorized - 401 - User was not deleted
+        it("Bad Request - Unauthorized", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token + "1"}`]);
+            expect(response.status).equals(401);
+        });
 
         // Success - 200 - User deleted, deleted user id returned
-        it("", function() {});
+        it("Success - Authorized", async function() {
+            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"})
+            let id: string = user !== null ? user._id.toString() : "";
+            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token}`]);
+            expect(response.status).equals(200);
+        });
 
     });
 
