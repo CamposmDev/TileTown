@@ -352,7 +352,7 @@ describe("Testing MongooseUserDBM", function() {
         });
 
         it("Fails to update password - invalid user id", function() {
-
+            let users: MongooseUserDBM = new MongooseUserDBM();
         });
 
         it("Fails to update password - old password does not match", function() {
@@ -497,20 +497,96 @@ describe("Testing MongooseUserDBM", function() {
             });
         });
 
-        it("Successfully adds a user as a friend", function() {
+        it("Successfully adds a user as a friend", async function() {
+            let users: MongooseUserDBM = new MongooseUserDBM();
 
+            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userId: string = user !== null ? user.id : "";
+            let friendId: string = friend !== null ? friend.id : "";
+
+            let res: string | null = await users.addFriend(userId, friendId);
+            expect(res).equals(friendId, "Return value should be friend id");
+
+            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userFriends = user !== null ? user.friends : [];
+            let friendsFriends = friend !== null ? friend.friends : [];
+
+            expect(userFriends).length(1, "User should have 1 friend");
+            expect(friendsFriends).length(0, "Users friend should have 0 friends");
         });
 
-        it("Fails to add a user as a friend - user with id doesn't exist", function() {
+        it("Fails to add a user as a friend - user with id doesn't exist", async function() {
+            let users: MongooseUserDBM = new MongooseUserDBM();
 
+            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userId: string = user !== null ? user.id : "";
+            let friendId: string = friend !== null ? friend.id : "";
+
+            let res: string | null = await users.addFriend(userId + "123", friendId);
+            expect(res).null;
+
+            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userFriends = user !== null ? user.friends : [];
+            let friendsFriends = friend !== null ? friend.friends : [];
+
+            expect(userFriends).length(0, "User should have 0 friends");
+            expect(friendsFriends).length(0, "Users friend should have 0 friends");
         });
 
-        it("Fails to add a user as a friend - friend with id doesn't exist", function() {
+        it("Fails to add a user as a friend - friend with id doesn't exist", async function() {
+            let users: MongooseUserDBM = new MongooseUserDBM();
 
+            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userId: string = user !== null ? user.id : "";
+            let friendId: string = friend !== null ? friend.id : "";
+
+            let res: string | null = await users.addFriend(userId, friendId + "123");
+            expect(res).null;
+
+            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userFriends = user !== null ? user.friends : [];
+            let friendsFriends = friend !== null ? friend.friends : [];
+
+            expect(userFriends).length(0, "User should have 0 friends");
+            expect(friendsFriends).length(0, "Users friend should have 0 friends");
         });
 
-        it("Fails to add user as a friend - users are already friends", function() {
+        it("Fails to add user as a friend - users are already friends", async function() {
+            let users: MongooseUserDBM = new MongooseUserDBM();
 
+            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userId: string = user !== null ? user.id : "";
+            let friendId: string = friend !== null ? friend.id : "";
+
+            let res: string | null;
+            res = await users.addFriend(userId, friendId);
+            expect(res).equals(friendId, "Return value should be friend id");
+
+            res = await users.addFriend(userId, friendId);
+            expect(res).null;
+
+            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+
+            let userFriends = user !== null ? user.friends : [];
+            let friendsFriends = friend !== null ? friend.friends : [];
+
+            expect(userFriends).length(1, "User should have 1 friend");
+            expect(friendsFriends).length(0, "Users friend should have 0 friends");
         });
     });
 

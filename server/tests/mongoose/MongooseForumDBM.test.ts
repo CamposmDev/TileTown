@@ -1,3 +1,4 @@
+import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
@@ -113,8 +114,33 @@ describe("Testing MongooseForumDBM", function() {
     //         let res: UserSchemaType[] = await UserSchema.find({email: partial.email});
     //         expect(res).length(0);
     //     });
+    describe("getForumPost", function() {
 
     // });
+
+    describe("createForumPost", function() {
+
+    });
+
+    describe("updateForumPost", function() {
+
+    });
+
+    describe("deleteForumPost", function() {
+
+    });
+
+    describe("toggleLike", function() {
+
+    });
+
+    describe("toggleDislike", function() {
+
+    });
+
+    describe("addView", function() {
+        
+    })
 
     /** 
      * The before method gets called after all of the tests have run. I am using it here

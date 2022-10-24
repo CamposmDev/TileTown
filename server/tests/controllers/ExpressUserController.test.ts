@@ -1,8 +1,8 @@
+import mocha from 'mocha';
 import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-
 import UserSchema from "../../database/mongoose/schemas/user";
 
 

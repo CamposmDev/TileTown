@@ -7,6 +7,21 @@
   },
   "scripts": {
     "build": "npx tsc",
+
+    "test:user:routes": "mocha -r ts-node/register tests/controllers/ExpressUserController.test.ts",
+    "test:community:routes": "mocha -r ts-node/register tests/controllers/ExpressCommunityController.test.ts",
+    "testr:contest:routes": "mocha -r ts-node/register tests/controllers/ExpressContestController.test.ts",
+    "test:forum:routes": "mocha -r ts-node/register tests/controllers/ExpressForumController.test.ts",
+    "test:tilemap:routes": "mocha -r ts-node/register tests/controllers/ExpressTilemapController.test.ts",
+    "test:tileset:routes": "mocha -r ts-node/register tests/controllers/ExpressTilesetController.test.ts",
+
+    "test:user:dbm": "mocha -r ts-node/register tests/mongoose/MongooseUserDBM.test.ts",
+    "test:community:dbm": "mocha -r ts-node/register test/mongoose/MongooseCommunityDBM.test.ts",
+    "test:contest:dbm": "mocha -r ts-node/register tests/mongoose/MongooseContestDBM.test.ts",
+    "test:forum:dbm": "mocha -r ts-node/register tests/mongoose/MongooseForumDBM.test.ts",
+    "test:tilemap:dbm": "mocha -r ts-node/register tests/mongoose/MongooseTilemapDBM.test.ts",
+    "test:tileset:dbm": "mocha -r ts-node/register tests/mongoose/MongooseTilesetDBM.test.ts",
+
     "test": "mocha -r ts-node/register tests/**/*.test.ts"
   },
   "author": "",
