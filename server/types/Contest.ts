@@ -23,10 +23,10 @@ export default interface Contest {
     participates: string[]
 
     /** The starting date of the Contest */
-    startDate: Date,
+    startDate: string,
 
     /** The end date of the Contest */
-    endDate: Date,
+    endDate: string,
 
     /** A flag indicating whether the Contest has been published or not */
     isPublished: boolean

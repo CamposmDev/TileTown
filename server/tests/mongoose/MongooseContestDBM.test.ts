@@ -10,8 +10,6 @@ import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 import { ContestSchema } from '../../database/mongoose/schemas';
 import { MongooseContestDBM } from '../../database/mongoose/managers';
 import { Contest } from '../../types';
-import contest from '../../database/mongoose/schemas/contest';
-
 
 /** 
  * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
@@ -87,7 +85,6 @@ import contest from '../../database/mongoose/schemas/contest';
             expect(res).not.null;
         }
     })
-})
 
 
 
