@@ -100,7 +100,7 @@ describe("ExpressUserController", function () {
    * Method: GET
    * Route: api/tilemap/id
    */
-  describe("getTilemapByID", function () {
+  describe("getTilemapById", function () {
     beforeEach(async function () {
       await UserSchema.deleteMany();
       await TilemapSchema.deleteMany();
@@ -129,6 +129,86 @@ describe("ExpressUserController", function () {
         .get(`/api/tilemap/${mapId}`)
         .set("Cookie", [`token=${token}`]);
       expect(response.status).equals(200);
+    });
+  });
+
+  /**
+   * Method: Post
+   * Route: api/tilemap/id
+   */
+  describe("updateTilemapById", function () {
+    beforeEach(async function () {
+      await UserSchema.deleteMany();
+      await TilemapSchema.deleteMany();
+      await db.users.createUser({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peteylumpkins@gmail.com",
+        username: "peteylumpkins",
+        password: "blackstarthedog",
+      });
+    });
+
+    it("Successfully update tilemap by Id", async function () {
+      let user = await UserSchema.findOne({
+        email: "peteylumpkins@gmail.com",
+      });
+      let id: string = user !== null ? user._id.toString() : "";
+      let token = Auth.signJWT<string>(id);
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
+      const mapId = (<Tilemap>tilemap).id;
+      let response = await request(app)
+        .put(`/api/tilemap/${mapId}`)
+        .send({
+          tilemap: {
+            backgroundColor: "#000000",
+            image: "testURL",
+            height: 20,
+            width: 36,
+            layers: [
+              {
+                data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                height: 20,
+                width: 30,
+                name: "test layer",
+                opacity: 0.8,
+                properties: [
+                  {
+                    name: "test type",
+                    ptype: "bool",
+                    value: "true",
+                  },
+                ],
+                visible: true,
+                x: 0,
+                y: 0,
+              },
+            ],
+            tileHeight: 24,
+            tileWidth: 24,
+            nextLayerId: 1,
+            nextObjectId: 0,
+            orientation: "orthogonal",
+            name: "test name",
+            tilesets: ["507f1f77bcf86cd799439011"],
+            globalTileIDs: [45],
+            properties: [
+              {
+                name: "test type",
+                ptype: "bool",
+                value: "true",
+              },
+            ],
+            renderOrder: "right-down",
+          },
+        })
+        .set("Cookie", [`token=${token}`]);
+      console.log(response);
+      expect(response.status).equals(201);
     });
   });
 

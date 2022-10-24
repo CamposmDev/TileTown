@@ -205,45 +205,28 @@ export default class TilemapController {
     req: Request,
     res: Response
   ): Promise<Response> {
-    //check to see if a request body was sent
-    if (!req.body) {
-      return res.status(400).json({
-        errorMessage: "Improperly formatted request",
-      });
+    // If any data is missing - Bad request
+    if (
+      !req ||
+      !req.body ||
+      !req.body.tilemap ||
+      !req.params ||
+      !req.params.id
+    ) {
+      return res.status(400).json({ message: "Bad Request" });
     }
 
-    const userId: string = req.userId;
+    const mapId: string = req.params.id;
 
-    //check to see if a user id was provided and if it was formatted as a string
-    if (!userId || !is<string>(userId)) {
-      return res.status(400).json({
-        errorMessage: "no userId provided",
-      });
-    }
-
-    const tilemap: Partial<Tilemap> = req.body.userId;
-
-    //check to see if a tilemap partial was provided and if it was formatted properly
-    if (!tilemap || !is<Partial<Tilemap>>(tilemap)) {
-      return res.status(400).json({
-        errorMessage: "no tilemap data provided",
-      });
-    }
+    const tilemap: Partial<Tilemap> = req.body.tilemap;
 
     const response: Partial<Tilemap> | string =
-      await db.tilemaps.updateTilemapById(userId, tilemap);
+      await db.tilemaps.updateTilemapById(mapId, tilemap);
 
     //check for error messages
-    if (is<string>(response)) {
+    if (!isTilemap(response)) {
       return res.status(400).json({
         errorMessage: response,
-      });
-    }
-
-    //make sure response is at in the format of a tilemap partial
-    if (!response || !is<Partial<Tilemap>>(response)) {
-      return res.status(400).json({
-        errorMessage: "unable to update new tilemap",
       });
     }
 
