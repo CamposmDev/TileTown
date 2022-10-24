@@ -392,6 +392,46 @@ describe("Testing MongooseUserDBM", function () {
     });
   });
 
+  describe("getTilemapById", function () {
+    beforeEach(async function () {
+      await UserSchema.deleteMany();
+      await UserSchema.create({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peter.t.walsh@stonybrook.edu",
+        username: "PeteyLumpkins",
+        password: "DummyPassword",
+        verifyKey: "something?!",
+        isVerified: false,
+        favoriteTileMaps: [],
+        favoriteTileSets: [],
+        joinedContests: [],
+        joinedCommunities: [],
+        friends: [],
+        imageURL: " ",
+      });
+      await TilemapSchema.deleteMany();
+    });
+
+    it("get tilemap with mapId successfully", async function name() {
+      const tilemaps = new MongooseTilemapDBM();
+      const newTilemap: Partial<Tilemap> = {
+        name: "test map",
+      };
+      let schema = await UserSchema.findOne({
+        email: "peter.t.walsh@stonybrook.edu",
+      });
+      const id: string = schema !== null ? schema._id.toString() : "";
+      const mapSchema = await tilemaps.createTilemap(id, newTilemap);
+      const mapId: string =
+        schema !== null ? (<Tilemap>mapSchema).id.toString() : "";
+      const response = await tilemaps.getTilemapById(mapId);
+      console.log(response);
+      expect(response).not.null;
+      expect(response).not.string;
+    });
+  });
+
   /**
    * The before method gets called after all of the tests have run. I am using it here
    * to close the connection to MongoDB.
