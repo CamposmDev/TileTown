@@ -33,8 +33,33 @@ import contest from '../../database/mongoose/schemas/contest';
      * A set of tests for the method MongooseContestDBM.createContest()
      * @see MongooseContestDBM.createContest
      */
-    describe("createContest", function() {});
-    beforeEach(async function() { await ContestSchema.deleteMany() })
+    describe("createContest", function() {
+        let user
+        beforeEach(async function() { 
+            await UserSchema.deleteMany()
+            await UserSchema.create({
+                firstName: "Peter",
+                    lastName: "Walsh",
+                    email: "peter.t.walsh@stonybrook.edu",
+                    username: "PeteyLumpkins",
+                    password: "DummyPassword",
+                    verifyKey: 'something?!',
+                    isVerified: false,
+                    favoriteTileMaps: [],
+                    favoriteTileSets: [],
+                    joinedContests: [],
+                    joinedCommunities: [],
+                    friends: [],
+                    imageURL: " "
+            })
+            await ContestSchema.deleteMany()
+            
+            await ContestSchema.create({
+                
+            })
+    });
+    
+    })
     it('It should create and return a new contest', async function() {
         let contest: MongooseContestDBM = new MongooseContestDBM()
 

@@ -16,7 +16,7 @@
     "test:tileset:routes": "mocha -r ts-node/register tests/controllers/ExpressTilesetController.test.ts",
 
     "test:user:dbm": "mocha -r ts-node/register tests/mongoose/MongooseUserDBM.test.ts",
-    "test:community:dbm": "mocha -r ts-node/register test/mongoose/MongooseCommunityDBM.test.ts",
+    "test:community:dbm": "mocha -r ts-node/register tests/mongoose/MongooseCommunityDBM.test.ts",
     "test:contest:dbm": "mocha -r ts-node/register tests/mongoose/MongooseContestDBM.test.ts",
     "test:forum:dbm": "mocha -r ts-node/register tests/mongoose/MongooseForumDBM.test.ts",
     "test:tilemap:dbm": "mocha -r ts-node/register tests/mongoose/MongooseTilemapDBM.test.ts",
