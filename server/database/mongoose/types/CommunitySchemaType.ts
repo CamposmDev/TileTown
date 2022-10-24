@@ -7,8 +7,8 @@ type ObjectId = mongoose.Types.ObjectId;
  */
 export default interface CommunitySchemaType {
     owner: ObjectId,
-    name: String,
-    description: String,
+    name: string,
+    description: string,
     memberCounter: number,
-    visibility: String
+    visibility: string
 }
