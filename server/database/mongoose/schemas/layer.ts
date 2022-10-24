@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 import LayerSchemaType from "../types/LayerSchemaType";
 const Schema = mongoose.Schema;
-<<<<<<< HEAD
 const PropertySchema = require("./Property").schema;
-=======
-const PropertySchema = require("./property").schema;
->>>>>>> peter
 
 /**
  * Data model for storing layer data

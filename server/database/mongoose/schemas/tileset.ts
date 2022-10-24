@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 import TilesetSchemaType from "../types/TilesetSchemaType";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-<<<<<<< HEAD
 const PropertySchema = require("./Property").schema;
-=======
-const PropertySchema = require("./property").schema;
->>>>>>> peter
 
 /**
  * Data model for storing Tileset data

@@ -1,13 +1,4 @@
 {
-<<<<<<< HEAD
-    // "ts-node": {
-    //     "files": true
-    // },
-    // "files": [
-    //     "express/@types/index.d.ts"
-    // ],
-=======
->>>>>>> peter
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig to read more about this file */
         /* Projects */
