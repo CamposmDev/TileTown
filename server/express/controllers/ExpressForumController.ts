@@ -27,7 +27,6 @@ export default class ForumController {
             return
         }
 
-        console.log(req.body)
         let forumPost: ForumPost | null = await db.forums.createForumPost({
             author: req.body.author,
             title: req.body.title,
@@ -76,14 +75,15 @@ export default class ForumController {
     }
 
     public async likeForumPostById(req: Request, res: Response): Promise<void> {
-        if (!req || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body || !req.body.userId) {
             res.status(400).json({message: 'Bad Request'})
             return
         }
 
-        console.log(req.body)
-        let forumPost = await db.forums.toggleLike(req.body.userId, req.body.forumPostId)
-        
+        let forumPostId = req.params.id
+        let userId = req.body.userId
+        let forumPost: ForumPost | null = await db.forums.toggleLike(userId, forumPostId)
+                    
         if (forumPost === null) {
             res.status(400).json({message: 'Bad Request'})
             return
@@ -92,13 +92,14 @@ export default class ForumController {
     }
 
     public async dislikeForumPostById(req: Request, res: Response): Promise<void> {
-        if (!req || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body || !req.body.userId) {
             res.status(400).json({message: 'Bad Request'})
             return
         }
 
-        console.log(req.body)
-        let forumPost = await db.forums.toggleDislike(req.body.userId, req.body.forumPostId)
+        let forumPostId = req.params.id
+        let userId = req.body.userId
+        let forumPost = await db.forums.toggleDislike(userId, forumPostId)
 
         if (forumPost === null) {
             res.status(400).json({message: 'Bad Request'})
@@ -108,19 +109,19 @@ export default class ForumController {
     }
 
     public async commentForumPostById(req: Request, res: Response): Promise<void> {
-        if (!req || !req.params.id || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body) {
             res.status(400).json({message: 'Bad Request'})
         }
-        let id = req.params.id
-        let forumPost: any = await db.forums.getForumPost(id)
+        let forumPostId: any = req.params.id
+        let forumPost: any = await db.forums.getForumPost(forumPostId)
         if (forumPost === null) {
             res.status(400).json({message: 'Bad Request'})
             return
         }
-        let comment = await db.forums.commentForumPostById(id, {
+        let comment = await db.forums.commentForumPostById(forumPostId, {
             author: req.body.author,
             body: req.body.body,
-            referenceId: forumPost.id
+            referenceId: forumPostId
         })
         if (comment === null) {
             res.status(400).json({message: 'Bad Request'})
