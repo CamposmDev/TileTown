@@ -1,11 +1,7 @@
 import mongoose, { ObjectId } from 'mongoose';
 import { hash, compare } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
-import UserSchema from '../../mongoose/schemas/user'
-import CommunitySchema from '../../mongoose/schemas/community'
-import ContestSchema from '../../mongoose/schemas/contest'
-import TilemapSchema from '../../mongoose/schemas/tilemap'
-import TilesetSchema from '../../mongoose/schemas/tileset'
+import { UserSchema, CommunitySchema, ContestSchema, TilemapSchema, TilesetSchema } from '../schemas'
 import UserSchemaType from "../../mongoose/types/UserSchemaType";
 import { User } from "../../../types";
 
@@ -169,47 +165,69 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async updateEmail(userId: string, email: string): Promise<string | null> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return null
+        }
+
         let user = await UserSchema.findById(userId)
-        if (user !== null) {
+        let e = await UserSchema.findOne({email: email});
+
+        if (user !== null && e === null) {
             user.email = email
             // TODO Send verfication email
             user.isVerified = false
-            user.save()
+            await user.save()
             return email
         }
         return null
     }
 
     async updateUsername(userId: string, username: string): Promise<string | null> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return null
+        }
+
         let user = await UserSchema.findById(userId)
-        if (user !== null) {
+        let u = await UserSchema.findOne({username: username});
+
+        if (user !== null && u === null) {
             user.username = username
+            await user.save();
             return username
         }
         return null
     }
 
     async addFriend(userId: string, friendId: string): Promise<string | null> {
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(friendId)) {
+            return null;
+        }
+
         let user = await UserSchema.findById(userId)
         if (user !== null) {
-            let friend: any = await UserSchema.findById(friendId)
-            if (friend !== null) {
-                user.friends.push(friend._id)
-                user.save()
+            let friend = await UserSchema.findById(friendId)
+            if (friend !== null && !user.friends.includes(friend.id)) {
+                user.friends.push(friend.id);
+                await user.save();
+                return friendId;
             }
         }
         return null
     }
 
     async joinCommunity(userId: string, communityId: string): Promise<string | null> {
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(communityId)) {
+            return null;
+        }
+
         let user = await UserSchema.findById(userId)
         if (user !== null) {
-            let comm: any = await CommunitySchema.findById(communityId)
-            if (comm !== null) {
+            let comm = await CommunitySchema.findById(communityId)
+            if (comm !== null && comm.owner.toString() !== user._id.toString()) {
                 user.joinedCommunities.push(comm._id)
                 comm.memberCounter = comm.memberCounter + 1
-                user.save()
-                comm.save()
+                await user.save()
+                await comm.save()
                 return communityId
             }
         }
@@ -217,42 +235,55 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async joinContest(userId: string, contestId: string): Promise<string | null> {
-        let user: any = await UserSchema.findById(userId)
-        let contest: any = await ContestSchema.findById(contestId)
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(contestId)) {
+            return null;
+        }
+
+        let user = await UserSchema.findById(userId)
+        let contest = await ContestSchema.findById(contestId)
         if ((user !== null) && (contest !== null)) {
             user.joinedContests.push(contest._id)
-            user.save()
-            contest.particpates.push(user._id)
-            contest.save()
+            await user.save()
+            contest.participates.push(user._id)
+            await contest.save()
             return contestId
         }
         return null
     }
 
     async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        let user: any = await UserSchema.findById(userId)
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(tilemapId)) {
+            return null;
+        }
+
+        let user = await UserSchema.findById(userId)
         let tilemap = await TilemapSchema.findById(tilemapId)
         if ((user !== null) && (tilemap !== null)) {
             user.favoriteTileMaps.push(tilemap._id)
-            user.save()
+            await user.save()
             return tilemap._id.toString()
         }
         return null
     }
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
-        let user: any = await UserSchema.findById(userId)
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(tilesetId)) {
+            return null;
+        }
+
+        let user = await UserSchema.findById(userId)
         let tileset = await TilesetSchema.findById(tilesetId)
-        if ((user !== null) && (tileset != null)) {
+        if ((user !== null) && (tileset !== null)) {
             user.favoriteTileSets.push(tileset._id)
-            user.save()
-            return tileset._id.toString()
+            await user.save()
+            return tileset._id.toString();
         }
         return null
     }
     
     async deleteUser(userId: string): Promise<boolean> {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
+
         let user = await UserSchema.findById(userId)
         if (user !== null) {
             await user.delete();
@@ -262,20 +293,21 @@ export default class MongooseUserDBM implements UserDBM {
     }
     
     async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
-        let user: any = await UserSchema.findById(userId)
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(communityId)) {
+            return false;
+        }
+
+        let user = await UserSchema.findById(userId)
         let comm = await CommunitySchema.findById(communityId)
+
         if ((user !== null) && (comm !== null)) {
-            let i = user.joinedCommunities.indexOf(comm._id, 0)
+            let i = user.joinedCommunities.map(id => id.toString()).indexOf(comm._id.toString(), 0)
             if (i > -1) {
                 user.joinedCommunities.splice(i, 1)
-                user.save()
+                comm.memberCounter = comm.memberCounter - 1
+                await user.save()
+                return true;
             }
-            let memberCount = comm.memberCounter
-            if (memberCount) {
-                comm.memberCounter = memberCount - 1
-                comm.save()
-            }
-            return true
         }
         return false
     }

@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { LayerSchemaType, PropertySchemaType } from "../types";
 import TilemapSchemaType from "../types/TilemapSchemaType";
+
+const LayerSchema = require("./Layer").schema;
+const PropertySchema = require("./Property").schema;
+
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const PropertySchema = require("./Property").schema;
-const LayerSchema = require("./layer").schema;
 
 /**
  * Data model for storing Tilemap data

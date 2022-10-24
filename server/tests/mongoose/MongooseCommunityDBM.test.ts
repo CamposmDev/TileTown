@@ -1,7 +1,8 @@
+import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import UserSchema from "../../database/mongoose/schemas/user";
+import UserSchema from "../../database/mongoose/schemas/User";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
@@ -9,7 +10,7 @@ import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 
 
 /** 
- * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
+ * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
  * {@link https://mochajs.org/}
  */
  describe("Testing MongooseCommunityDBM", function() {

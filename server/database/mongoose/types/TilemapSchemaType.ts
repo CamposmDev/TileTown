@@ -1,6 +1,8 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import LayerSchemaType from "./LayerSchemaType";
 import PropertySchemaType from "./PropertySchemaType";
+
+type ObjectId = mongoose.Types.ObjectId;
 
 /**
  * A type for the Mongoose Tilemap Schema

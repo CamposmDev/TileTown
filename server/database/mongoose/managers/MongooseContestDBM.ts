@@ -1,9 +1,7 @@
 import { trusted } from "mongoose";
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
-import ContestSchema from "../../mongoose/schemas/contest";
-import UserSchema from "../../mongoose/schemas/user";
-import ModeratorSchema from "../../mongoose/schemas/Moderator";
+import { ModeratorSchema, ContestSchema, UserSchema } from '../schemas';
 
 /**
  * @author Tuyen Vo

@@ -15,4 +15,4 @@ const PropertySchema = new Schema<PropertySchemaType>({
   value: { type: Mixed, required: true },
 });
 
-export default mongoose.model("Properties", PropertySchema);
+export default mongoose.model("Property", PropertySchema);
