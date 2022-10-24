@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { db } from "../../database";
 import { Contest } from '../../types';
+import { is } from "typescript-is";
+
 
 export default class ContestController {
 
@@ -35,7 +37,7 @@ export default class ContestController {
             owner: req.body.owner,
             name: req.body.name,
             description: req.body.description,
-            participates: req.body.particpates,
+            participates: req.body.participates,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
             winner: req.body.winner,
@@ -81,11 +83,12 @@ export default class ContestController {
 
     public async deleteContestById(req: Request, res: Response): Promise<void> {
         // If any data is missing - Bad request
-        if (!req || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body) {
             res.status(400).json({message: "Bad Request"})
             return
         }      
-        const contestId: string = req.body.contestId
+        const contestId: string = req.params.id
+
         let isDeleted: boolean = await db.contests.deleteContest(contestId) 
         if (isDeleted) {
             res.status(200).json({message: 'Deleted contest id' + contestId})

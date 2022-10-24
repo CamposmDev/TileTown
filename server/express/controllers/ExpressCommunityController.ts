@@ -46,7 +46,7 @@ export default class CommunityController {
             res.status(400).json({message: "Failed to create community"})
             return
         }
-        res.status(200).json({community: community})
+        res.status(201).json({community: community})
         return
     }
 
@@ -79,11 +79,12 @@ export default class CommunityController {
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {
         // If any data is missing - Bad request
-        if (!req || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body) {
             res.status(400).json({message: "Bad Request"})
             return
-        }      
-        const communityId: string = req.body.communityId
+        }    
+        const communityId: string = req.params.id
+        
         let isDeleted: boolean = await db.communities.deleteCommunity(communityId) 
         if (isDeleted) {
             res.status(200).json({message: 'Deleted community id' + communityId})

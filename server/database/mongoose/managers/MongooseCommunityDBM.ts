@@ -108,9 +108,9 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         return false
     }
     async deleteCommunity(communityId: string): Promise<boolean> {
-        let community: any = await CommunitySchema.findById(communityId)
+        let community = await CommunitySchema.findById(communityId)
         if (community !== null) {
-            community.delete()
+            await community.delete()
             return true
         }
         return false

@@ -29,13 +29,13 @@ export default class MongooseContestDBM implements ContestDBM {
          * Check if the contest name or the contest owner not empty
          * If it is empty then return null
          */
-        if (!contest.name || !contest.owner == null) return null
+        if (!contest.name || !contest.owner) return null
 
         /**
          * Check the contest name is valid
          */
         const validContestName = async (contestName: string): Promise<boolean> => {
-            const exitContest = await ContestSchema.findOne({contestName: contestName})
+            const exitContest = await ContestSchema.findOne({name: contestName})
             return exitContest ? false : true
         }
 
@@ -112,7 +112,7 @@ export default class MongooseContestDBM implements ContestDBM {
     async deleteContest(contestId: string): Promise<boolean> {
         let con = await ContestSchema.findById(contestId)
         if (con !== null) {
-            con.delete()
+            await con.delete()
             return true
         }
         return false
