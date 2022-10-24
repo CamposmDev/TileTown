@@ -11,7 +11,7 @@ const Mixed = Schema.Types.Mixed;
 
 const PropertySchema = new Schema<PropertySchemaType>({
   name: { type: String, required: true },
-  type: { type: String, required: true },
+  ptype: { type: String, required: true },
   value: { type: Mixed, required: true },
 });
 
