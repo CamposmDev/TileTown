@@ -17,7 +17,7 @@ export default class MongooseContestDBM implements ContestDBM {
             owner: contest.owner.toString(),
             name: contest.name,
             description: contest.description,
-            participates: contest.particpates,
+            participates: contest.participates,
             startDate: contest.startDate,
             endDate: contest.endDate,
             winner: contest.winner,
@@ -38,9 +38,34 @@ export default class MongooseContestDBM implements ContestDBM {
             const exitContest = await ContestSchema.findOne({contestName: contestName})
             return exitContest ? false : true
         }
+
         let contestName = contest.name
-        if(!(await validContestName(contestName))) return null
-        return null
+        if(!(await validContestName(contestName))) {
+            console.log('not unique name')
+            return null
+        }
+        
+        let con: any = await ContestSchema.create({
+            owner: contest.owner,
+            name: contest.name,
+            description: contest.description,
+            startDate: contest.startDate,
+            endDate: contest.endDate,
+            isPublished: contest.isPublished
+        })
+        await con.save()
+        return {
+            id: con._id,
+            owner: con.owner,
+            name: con.name,
+            description: con.description,
+            participates: con.participates,
+            startDate: con.startDate,
+            endDate: con.endDate,
+            winner: con.winner,
+            isPublished: con.isPublished
+
+        }
         
     }
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
