@@ -29,25 +29,25 @@ import { Community } from '../../types';
     before(async function() { await mongoose.connect(connect); });
 
     describe("getCommunityById", function() {
-      let userId
-        let commId: string
-        beforeEach(async function() {
-            await UserSchema.deleteMany()
-            await UserSchema.create({
-               firstName: "Peter",
-               lastName: "Walsh",
-               email: "peter.t.walsh@stonybrook.edu",
-               username: "PeteyLumpkins",
-               password: "DummyPassword",
-               verifyKey: 'something?!',
-               isVerified: false,
-               favoriteTileMaps: [],
-               favoriteTileSets: [],
-               joinedContests: [],
-               joinedCommunities: [],
-               friends: [],
-               imageURL: " "
-            })
+         let userId
+         let commId: string
+         beforeEach(async function() {
+               await UserSchema.deleteMany()
+               await UserSchema.create({
+                  firstName: "Peter",
+                  lastName: "Walsh",
+                  email: "peter.t.walsh@stonybrook.edu",
+                  username: "PeteyLumpkins",
+                  password: "DummyPassword",
+                  verifyKey: 'something?!',
+                  isVerified: false,
+                  favoriteTileMaps: [],
+                  favoriteTileSets: [],
+                  joinedContests: [],
+                  joinedCommunities: [],
+                  friends: [],
+                  imageURL: " "
+               })
             let user = await UserSchema.findOne({username: 'PeteyLumpkins'})
             userId = user !== null ? user._id.toString() : ''
             await CommunitySchema.deleteMany()
@@ -117,7 +117,52 @@ import { Community } from '../../types';
         })
     });
 
-    describe("updateCommunity", function() {});
+    describe("updateCommunity", function() {
+         let userId: string
+         let commId: string
+         beforeEach(async function() {
+               await UserSchema.deleteMany()
+               await UserSchema.create({
+                  firstName: "Peter",
+                  lastName: "Walsh",
+                  email: "peter.t.walsh@stonybrook.edu",
+                  username: "PeteyLumpkins",
+                  password: "DummyPassword",
+                  verifyKey: 'something?!',
+                  isVerified: false,
+                  favoriteTileMaps: [],
+                  favoriteTileSets: [],
+                  joinedContests: [],
+                  joinedCommunities: [],
+                  friends: [],
+                  imageURL: " "
+               })
+               let user = await UserSchema.findOne({username: 'PeteyLumpkins'})
+               userId = user !== null ? user._id.toString() : ''
+               await CommunitySchema.deleteMany()
+               await CommunitySchema.create({
+                  owner: userId,
+                  name: 'A Commmunity',
+                  description: 'Description Goes Here',
+                  memberCounter: 0,
+                  visibility: "public"
+               })
+               let comm = await CommunitySchema.findOne({owner: userId})
+               commId = comm !== null ? comm._id.toString() : ''
+        })
+        it('Successfully updated community by id', async function() {
+            let communities = new MongooseCommunityDBM()
+            let comm = await communities.updateCommunity(commId, {
+               owner: userId,
+               name: 'Updated Community Name',
+               description: 'Another Description',
+               memberCount: 3,
+               visibility: 'private'
+            })
+            expect(comm).not.null
+            expect(comm).property('name').eql('Updated Community Name')
+        })
+    });
 
     describe("addCommunityMember", function() {});
 
