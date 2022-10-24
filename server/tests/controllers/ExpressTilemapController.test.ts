@@ -212,6 +212,43 @@ describe("ExpressUserController", function () {
     });
   });
 
+  /**
+   * Method: Delete
+   * Route: api/tilemap/id
+   */
+  describe("deleteTilemapById", function () {
+    beforeEach(async function () {
+      await UserSchema.deleteMany();
+      await TilemapSchema.deleteMany();
+      await db.users.createUser({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peteylumpkins@gmail.com",
+        username: "peteylumpkins",
+        password: "blackstarthedog",
+      });
+    });
+
+    it("Successfully update tilemap by Id", async function () {
+      let user = await UserSchema.findOne({
+        email: "peteylumpkins@gmail.com",
+      });
+      let id: string = user !== null ? user._id.toString() : "";
+      let token = Auth.signJWT<string>(id);
+      const newTilemap: Partial<Tilemap> = {
+        name: "test name",
+      };
+
+      const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
+      const mapId = (<Tilemap>tilemap).id;
+      let response = await request(app)
+        .delete(`/api/tilemap/${mapId}`)
+        .set("Cookie", [`token=${token}`]);
+      console.log(response);
+      expect(response.status).equals(201);
+    });
+  });
+
   after(async function () {
     /** Close the connection to the server */
     server.close();

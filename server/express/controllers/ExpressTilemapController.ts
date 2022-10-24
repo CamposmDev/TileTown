@@ -164,35 +164,21 @@ export default class TilemapController {
     res: Response
   ): Promise<Response> {
     //check to see if a request body was sent
-    if (!req.body) {
+    if (!req || !req.params || !req.params.id) {
       return res.status(400).json({
         errorMessage: "Improperly formatted request",
       });
     }
 
-    const tilemapId: string = req.body.tilemapId;
-
-    //check to see if a tilemap id was provided and if it was formatted as a string
-    if (!tilemapId || !is<string>(tilemapId)) {
-      return res.status(400).json({
-        errorMessage: "No tilemap id provided",
-      });
-    }
+    const tilemapId: string = req.params.id;
 
     const response: Partial<Tilemap> | string =
       await db.tilemaps.deleteTilemapById(tilemapId);
 
     //check for error messages
-    if (is<string>(response)) {
+    if (!isTilemap(response)) {
       return res.status(400).json({
         errorMessage: response,
-      });
-    }
-
-    //make sure response is at in the format of a tilemap partial
-    if (!response || !is<Partial<Tilemap>>(response)) {
-      return res.status(400).json({
-        errorMessage: "unable to delete tilemap",
       });
     }
 
