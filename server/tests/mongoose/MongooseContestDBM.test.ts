@@ -2,7 +2,7 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserSchema } from '../../database/mongoose/schemas/';
 import { MongooseContestDBM } from '../../database/mongoose/managers';
 import { Contest } from '../../types';
 import { ContestSchema } from '../../database/mongoose/schemas/';

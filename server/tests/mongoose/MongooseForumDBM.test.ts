@@ -2,7 +2,9 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserSchema } from '../../database/mongoose/schemas';
+import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
+import User from "../../types/User";
 import dotenv from "dotenv";
 import { ForumPostSchema } from '../../database/mongoose/schemas';
 import { MongooseForumDBM } from '../../database/mongoose/managers';
