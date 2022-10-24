@@ -114,5 +114,5 @@ export default class MongooseContestDBM implements ContestDBM {
             return true
         }
         return false
-    }
+      }
 }
