@@ -11,7 +11,7 @@ export default interface Property {
   name: string;
 
   /** Name of type*/
-  type: Type;
+  ptype: Type;
 
   /** Value of property */
   value: string;

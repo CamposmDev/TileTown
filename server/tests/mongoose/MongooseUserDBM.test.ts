@@ -343,19 +343,7 @@ describe("Testing MongooseUserDBM", function() {
                 imageURL: " "
             })
         });
-                    email: "Walsh9636@gmail.com",
-                    username: "PeteyLumps",
-                    password: "DummyPassword",
-                    verifyKey: 'something?!',
-                    isVerified: false,
-                    favoriteTileMaps: [],
-                    favoriteTileSets: [],
-                    joinedContests: [],
-                    joinedCommunities: [],
-                    friends: [],
-                    imageURL: " "
-                })
-            });
+                   
 
         it("Successfully updates a users password", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();

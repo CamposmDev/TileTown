@@ -15,48 +15,67 @@ const ObjectId = Schema.Types.ObjectId;
  */
 
 const TilemapSchema = new Schema<TilemapSchemaType>({
-  backgroundColor: { type: String, required: true },
-  collaborators: { type: [ObjectId], required: true },
-  collaboratorNames: { type: [String], required: true },
-  collaboratorSettings: {
-    type: { editMode: String, timeLimit: Number, tileLimit: Number },
-    required: true,
-  },
-  collaboratorIndex: { type: Number, required: true },
-  image: { type: String, required: true },
-  height: { type: Number, required: true },
-  width: { type: Number, required: true },
-  layers: {
-    type: [
-      {
-        data: [Number],
-        height: Number,
-        width: Number,
-        name: String,
-        opacity: Number,
-        properties: [{ name: String, type: String, value: String }],
-        visible: Boolean,
-        x: Number,
-        y: Number,
-      },
-    ],
-    required: true,
-  },
-  tileHeight: { type: Number, required: true },
-  tileWidth: { type: Number, required: true },
-  nextLayerId: { type: Number, required: true },
-  nextObjectId: { type: Number, required: true },
-  orientation: { type: String, required: true },
-  name: { type: String, required: true },
-  owner: { type: String, required: true },
-  tilesets: { type: [ObjectId], required: true },
-  globalTileIDs: { type: [Number], required: true },
-  properties: {
-    type: [{ name: String, type: String, value: String }],
-    required: true,
-  },
-  renderOrder: { type: String, required: true },
-  isPublished: { type: Boolean, required: true },
+    backgroundColor: { type: String, required: true },
+    collaborators: { type: [ObjectId], required: true },
+    collaboratorNames: { type: [String], required: true },
+    collaboratorSettings: {
+        type: { 
+            editMode: { type: String, required: true }, 
+            timeLimit: { type: Number, required: true },
+            tileLimit: { type: Number, required: true },
+        },
+        required: true,
+    },
+    collaboratorIndex: { type: Number, required: true },
+    image: { type: String, required: true },
+    height: { type: Number, required: true },
+    width: { type: Number, required: true },
+    layers: {
+        type: [
+            {
+                data: { type: [Number], required: true },
+                height: { type: Number, required: true },
+                width: { type: Number, required: true },
+                name: { type: String, required: true },
+                opacity: { type: Number, required: true },
+                properties: { 
+                    type: [
+                        {
+                            name: { type: String, required: true },
+                            ptype: { type: String, required: true },
+                            value: { type: String, required: true },
+                        }
+                    ],
+                    required: false,
+                },
+                visible: { type: Boolean, required: true },
+                x: { type: Number, required: true },
+                y: { type: Number, required: true }
+            },
+        ],
+        required: true,
+    },
+    tileHeight: { type: Number, required: true },
+    tileWidth: { type: Number, required: true },
+    nextLayerId: { type: Number, required: true },
+    nextObjectId: { type: Number, required: true },
+    orientation: { type: String, required: true },
+    name: { type: String, required: true },
+    owner: { type: String, required: true },
+    tilesets: { type: [ObjectId], required: true },
+    globalTileIDs: { type: [Number], required: true },
+    properties: {
+        type: [
+            {
+                name: { type: String, required: true },
+                ptype: { type: String, required: true },
+                value: { type: String, required: true },
+            }
+        ],
+        required: false,
+    },
+    renderOrder: { type: String, required: true },
+    isPublished: { type: Boolean, required: true },
 });
 
 export default mongoose.model("Tilemap", TilemapSchema);
