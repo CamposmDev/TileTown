@@ -1,11 +1,12 @@
-import { ObjectId } from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+type ObjectId = mongoose.Types.ObjectId;
 
 /**
  * A type for the Mongoose User Schema
  * @author Peter Walsh
  */
 export default interface UserSchemaType {
-  _id: string;
 
   /** The user's username */
   username: string;

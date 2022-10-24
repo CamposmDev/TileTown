@@ -3,9 +3,8 @@ import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-import UserSchema from "../../database/mongoose/schemas/user";
+import { UserSchema } from "../../database/mongoose/schemas";
 import { ForumPostSchema } from '../../database/mongoose/schemas';
-import user from '../../database/mongoose/schemas/user';
 import { UserSchemaType } from '../../database/mongoose/types';
 
 

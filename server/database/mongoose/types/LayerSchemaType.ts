@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import PropertySchemaType from "./PropertySchemaType";
 
 /**

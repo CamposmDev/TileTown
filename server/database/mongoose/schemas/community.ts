@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 import { CommunitySchemaType } from "../types";
 
-const ObjectId = mongoose.Types.ObjectId
+const ObjectId = Schema.Types.ObjectId;
 
 /**
  * @author Tuyen Vo
@@ -12,6 +12,6 @@ const CommunitySchema = new Schema<CommunitySchemaType>({
     description: { type: String, require: true},
     memberCounter: { type: Number, require: true},
     visibility: { type: String, require: true}
+});
 
-})
 export default mongoose.model('CommunitySchema', CommunitySchema)

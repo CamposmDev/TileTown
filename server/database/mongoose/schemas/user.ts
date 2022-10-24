@@ -1,7 +1,8 @@
-import mongoose from "mongoose"
+import mongoose, { Document, Model } from "mongoose"
 import { UserSchemaType } from "../types";
 const Schema = mongoose.Schema
-const ObjectId = mongoose.Types.ObjectId
+const ObjectId = mongoose.Schema.Types.ObjectId
+
 
 /**
  * Data model for storing personal user data
@@ -27,6 +28,6 @@ const UserSchema = new Schema<UserSchemaType>({
     joinedCommunities: { type: [ObjectId], required: true},
     friends: { type: [ObjectId], required: true},
     imageURL: { type: String, required: true }
-})
+});
 
 export default mongoose.model('UserSchema', UserSchema)
