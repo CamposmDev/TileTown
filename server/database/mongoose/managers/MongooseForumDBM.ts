@@ -49,6 +49,7 @@ export default class MongooseForumDBM implements ForumDBM {
     async updateForumPost(forumPostId: string, payload: Partial<ForumPost>): Promise<ForumPost | null> {
         let forumPost: any = await ForumPostSchema.findById(forumPostId)
         if (forumPost !== null) {
+            if (payload.author) forumPost.author = payload.author
             if (payload.title) forumPost.title = payload.title
             if (payload.body) forumPost.body = payload.body
             if (payload.tags) forumPost.tags = payload.tags

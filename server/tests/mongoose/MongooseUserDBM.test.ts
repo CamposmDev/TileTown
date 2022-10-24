@@ -4,7 +4,7 @@ import { hash, compare } from 'bcrypt'
 import mocha from 'mocha';
 
 import { CommunitySchema, ContestSchema } from "../../database/mongoose/schemas";
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserSchema } from '../../database/mongoose/schemas';
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";

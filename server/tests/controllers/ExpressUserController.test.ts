@@ -3,7 +3,7 @@ import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserSchema } from '../../database/mongoose/schemas';
 import { Auth } from '../../express/middleware';
 
 

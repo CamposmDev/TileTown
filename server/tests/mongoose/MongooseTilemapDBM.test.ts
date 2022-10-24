@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import mongoose from "mongoose";
 import mocha from "mocha";
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserSchema } from "../../database/mongoose/schemas";
 import dotenv from "dotenv";
 import MongooseTilemapDBM from "../../database/mongoose/managers/MongooseTilemapDBM";
 import { TilemapSchema } from "../../database/mongoose/schemas";
