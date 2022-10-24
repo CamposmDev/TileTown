@@ -1,4 +1,5 @@
 import { Color } from "./Color";
+import { Type } from "./Type";
 
 export default interface Property {
   /**
@@ -10,8 +11,8 @@ export default interface Property {
   name: string;
 
   /** Name of type*/
-  type: Type;
+  ptype: Type;
 
   /** Value of property */
-  value: string | number | boolean | Color | object;
+  value: string;
 }

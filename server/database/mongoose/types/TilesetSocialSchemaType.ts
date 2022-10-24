@@ -1,5 +1,6 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
+type ObjectId = mongoose.Types.ObjectId;
 /**
  * @author Peter Walsh
  */

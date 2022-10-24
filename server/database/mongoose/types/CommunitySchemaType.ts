@@ -1,5 +1,6 @@
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
+type ObjectId = mongoose.Types.ObjectId;
 /**
  * CommunitySchemaType for the CommunitySchema
  * @author Peter Walsh

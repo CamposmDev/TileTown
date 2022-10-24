@@ -1,8 +1,7 @@
 import common from "mocha/lib/interfaces/common";
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
-import CommunitySchema from '../../mongoose/schemas/community'
-import UserSchema from '../../mongoose/schemas/user'
+import { UserSchema, CommunitySchema } from "../schemas"
 
 
 /**

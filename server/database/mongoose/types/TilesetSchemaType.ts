@@ -1,13 +1,14 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import LayerSchemaType from "./LayerSchemaType";
 import PropertySchemaType from "./PropertySchemaType";
+
+type ObjectId = mongoose.Types.ObjectId;
 
 /**
  * A type for the Mongoose Tilemap Schema
  * @author Andrew Ojeda
  */
 export default interface TilesetSchemaType {
-  _id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
   columns: number;
@@ -17,6 +18,6 @@ export default interface TilesetSchemaType {
   margin: number;
   name: string;
   owner: ObjectId;
-  properties: PropertySchemaType[];
+  properties: { name: string; ptype: string; value: string }[];
   isPublished: boolean;
 }
