@@ -24,7 +24,6 @@ export default class ExpressJWTAuth {
       req.userId = typeof verified === "string" ? verified : "";
       next();
     } catch (err) {
-      console.log(err);
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
