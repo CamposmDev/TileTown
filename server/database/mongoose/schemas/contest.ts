@@ -15,7 +15,7 @@ const ContestSchema = new Schema<ContestSchemaType>({
     participates: { type: [ObjectId], require: true },
     startDate: { type: Date, require: true},
     endDate: { type: Date, require: true},
-    winner: { type: ObjectId, require: true},
+    winner: { type: ObjectId, require: false},
     isPublished: { type: Boolean, require: true}
 })
 export default mongoose.model('ContestSchema', ContestSchema)

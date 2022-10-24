@@ -88,7 +88,7 @@ export default class TilemapController {
       });
     }
 
-    const response: [Partial<Tilemap>] | string =
+    const response: Partial<Tilemap>[] | string =
       await db.tilemaps.getTilemapPartials(userId, search, sortBy);
 
     //check for error messages

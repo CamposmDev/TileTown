@@ -326,6 +326,20 @@ describe("Testing MongooseUserDBM", function() {
 
         it("Fails to verify a user - no user with matching key", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
+
+            let verified: boolean = await users.verifyUser("verificionkey");
+            expect(verified).false;
+
+            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            verified = user !== null ? user.isVerified : false;
+            expect(verified).false;
+        });
+    });
+               
+    describe("updatePassword", function() {
+
+        beforeEach(async function() {
+            let users: MongooseUserDBM = new MongooseUserDBM();
             await UserSchema.deleteMany(); 
             await UserSchema.create({
                 firstName: "Peter",
@@ -342,8 +356,7 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             })
-        });
-                   
+        })
 
         it("Successfully updates a users password", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
@@ -378,8 +391,6 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to update password - new password invalid length", function() {
 
         });
-
-
     });
 
     describe("updateEmail", function() {
@@ -767,140 +778,140 @@ describe("Testing MongooseUserDBM", function() {
 
     });
 
-    describe("leaveCommunity", function() {
+    // describe("leaveCommunity", function() {
 
-        beforeEach(async function() {
-            await UserSchema.deleteMany(); 
-            let user = await UserSchema.create({
-                firstName: "Peter",
-                lastName: "Walsh",
-                email: "peter.t.walsh@stonybrook.edu",
-                username: "PeteyLumpkins",
-                password: "DummyPassword",
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [],
-                friends: [],
-                imageURL: " "
-            });
-            await CommunitySchema.deleteMany();
-            let comm = await CommunitySchema.create({
-                owner: user._id.toString(),
-                name: "Peters Community",
-                description: "I don't know",
-                memberCounter: 2,
-                visibility: "private"
-            });
-            user.joinedContests.push(comm._id)
-            await user.save();
-            await UserSchema.create({
-                firstName: "Peter",
-                lastName: "Walsh",
-                email: "Walsh9636@gmail.com",
-                username: "PeteyLumps",
-                password: "DummyPassword",
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [comm._id.toString()],
-                friends: [],
-                imageURL: " "
-            });
-            await UserSchema.create({
-                firstName: "Peter",
-                lastName: "Walsh",
-                email: "peteylumpkins@gmail.com",
-                username: "PeteyLumpskins2",
-                password: "DummyPassword",
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [comm._id.toString()],
-                friends: [],
-                imageURL: " "
-            });
-        });
+    //     beforeEach(async function() {
+    //         await UserSchema.deleteMany(); 
+    //         let user = await UserSchema.create({
+    //             firstName: "Peter",
+    //             lastName: "Walsh",
+    //             email: "peter.t.walsh@stonybrook.edu",
+    //             username: "PeteyLumpkins",
+    //             password: "DummyPassword",
+    //             verifyKey: 'something?!',
+    //             isVerified: false,
+    //             favoriteTileMaps: [],
+    //             favoriteTileSets: [],
+    //             joinedContests: [],
+    //             joinedCommunities: [],
+    //             friends: [],
+    //             imageURL: " "
+    //         });
+    //         await CommunitySchema.deleteMany();
+    //         let comm = await CommunitySchema.create({
+    //             owner: user._id.toString(),
+    //             name: "Peters Community",
+    //             description: "I don't know",
+    //             memberCounter: 2,
+    //             visibility: "private"
+    //         });
+    //         user.joinedContests.push(comm._id)
+    //         await user.save();
+    //         await UserSchema.create({
+    //             firstName: "Peter",
+    //             lastName: "Walsh",
+    //             email: "Walsh9636@gmail.com",
+    //             username: "PeteyLumps",
+    //             password: "DummyPassword",
+    //             verifyKey: 'something?!',
+    //             isVerified: false,
+    //             favoriteTileMaps: [],
+    //             favoriteTileSets: [],
+    //             joinedContests: [],
+    //             joinedCommunities: [comm._id.toString()],
+    //             friends: [],
+    //             imageURL: " "
+    //         });
+    //         await UserSchema.create({
+    //             firstName: "Peter",
+    //             lastName: "Walsh",
+    //             email: "peteylumpkins@gmail.com",
+    //             username: "PeteyLumpskins2",
+    //             password: "DummyPassword",
+    //             verifyKey: 'something?!',
+    //             isVerified: false,
+    //             favoriteTileMaps: [],
+    //             favoriteTileSets: [],
+    //             joinedContests: [],
+    //             joinedCommunities: [comm._id.toString()],
+    //             friends: [],
+    //             imageURL: " "
+    //         });
+    //     });
 
-        it("Success - user successfully leaves a community", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
+    //     it("Success - user successfully leaves a community", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let cid = comm !== null ? comm._id.toString() : "";
-            let members = comm !== null ? comm.memberCounter : -1;
-            expect(cid).not.equals("");
+    //         let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let cid = comm !== null ? comm._id.toString() : "";
+    //         let members = comm !== null ? comm.memberCounter : -1;
+    //         expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
-            let uid = user !== null ? user._id.toString() : "";
-            expect(uid).not.equals("");
+    //         let user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+    //         let uid = user !== null ? user._id.toString() : "";
+    //         expect(uid).not.equals("");
 
-            let left = await users.leaveCommunity(uid, cid);
-            expect(left).true;
+    //         let left = await users.leaveCommunity(uid, cid);
+    //         expect(left).true;
 
-            comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let newMembers = comm !== null ? comm.memberCounter : "";
-            expect(members - 1).equals(newMembers);
+    //         comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let newMembers = comm !== null ? comm.memberCounter : "";
+    //         expect(members - 1).equals(newMembers);
 
-            user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
-            let newCommunities = user !== null ? user.joinedCommunities : [];
-            expect(newCommunities.map(id => id.toString()).includes(cid)).false;
-        })
+    //         user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+    //         let newCommunities = user !== null ? user.joinedCommunities : [];
+    //         expect(newCommunities.map(id => id.toString()).includes(cid)).false;
+    //     })
 
-        it("Failure - user is not a community member", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
+    //     it("Failure - user is not a community member", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let cid = comm !== null ? comm._id.toString() : "";
-            let members = comm !== null ? comm.memberCounter : -1;
-            expect(cid).not.equals("");
+    //         let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let cid = comm !== null ? comm._id.toString() : "";
+    //         let members = comm !== null ? comm.memberCounter : -1;
+    //         expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"});
-            let uid = user !== null ? user._id.toString() : "";
-            expect(uid).not.equals("");
+    //         let user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"});
+    //         let uid = user !== null ? user._id.toString() : "";
+    //         expect(uid).not.equals("");
 
-            let left = await users.leaveCommunity(uid, cid);
-            expect(left).false;
+    //         let left = await users.leaveCommunity(uid, cid);
+    //         expect(left).false;
 
-            comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let newMembers = comm !== null ? comm.memberCounter : "";
-            expect(members).equals(newMembers);
+    //         comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let newMembers = comm !== null ? comm.memberCounter : "";
+    //         expect(members).equals(newMembers);
 
-            user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"});
-            let newCommunities = user !== null ? user.joinedCommunities : [];
-            expect(newCommunities.map(id => id.toString()).includes(cid)).false;
-        })
+    //         user = await UserSchema.findOne({email: "peteylumpkins@gmail.com"});
+    //         let newCommunities = user !== null ? user.joinedCommunities : [];
+    //         expect(newCommunities.map(id => id.toString()).includes(cid)).false;
+    //     })
 
-        it("Failure - user is community owner", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
+    //     it("Failure - user is community owner", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let cid = comm !== null ? comm._id.toString() : "";
-            let members = comm !== null ? comm.memberCounter : -1;
-            expect(cid).not.equals("");
+    //         let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let cid = comm !== null ? comm._id.toString() : "";
+    //         let members = comm !== null ? comm.memberCounter : -1;
+    //         expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let uid = user !== null ? user._id.toString() : "";
-            expect(uid).not.equals("");
+    //         let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+    //         let uid = user !== null ? user._id.toString() : "";
+    //         expect(uid).not.equals("");
 
-            let left = await users.leaveCommunity(uid, cid);
-            expect(left).false;
+    //         let left = await users.leaveCommunity(uid, cid);
+    //         expect(left).false;
 
-            comm = await CommunitySchema.findOne({"name": "Peters Community"});
-            let newMembers = comm !== null ? comm.memberCounter : "";
-            expect(members).equals(newMembers);
+    //         comm = await CommunitySchema.findOne({"name": "Peters Community"});
+    //         let newMembers = comm !== null ? comm.memberCounter : "";
+    //         expect(members).equals(newMembers);
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let newCommunities = user !== null ? user.joinedCommunities : [];
-            expect(newCommunities.map(id => id.toString()).includes(cid)).true;
-        })
+    //         user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+    //         let newCommunities = user !== null ? user.joinedCommunities : [];
+    //         expect(newCommunities.map(id => id.toString()).includes(cid)).true;
+    //     })
 
-    });
+    // });
 
     describe("joinContest", function() {
 
