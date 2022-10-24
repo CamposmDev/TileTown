@@ -106,7 +106,52 @@ import { MongooseCommunityDBM } from '../../database/mongoose/managers';
         })
     });
 
-    describe("updateCommunity", function() {});
+    describe("updateCommunity", function() {
+        let userId: string
+         let commId: string
+         beforeEach(async function() {
+               await UserSchema.deleteMany()
+               await UserSchema.create({
+                  firstName: "Peter",
+                  lastName: "Walsh",
+                  email: "peter.t.walsh@stonybrook.edu",
+                  username: "PeteyLumpkins",
+                  password: "DummyPassword",
+                  verifyKey: 'something?!',
+                  isVerified: false,
+                  favoriteTileMaps: [],
+                  favoriteTileSets: [],
+                  joinedContests: [],
+                  joinedCommunities: [],
+                  friends: [],
+                  imageURL: " "
+               })
+               let user = await UserSchema.findOne({username: 'PeteyLumpkins'})
+               userId = user !== null ? user._id.toString() : ''
+               await CommunitySchema.deleteMany()
+               await CommunitySchema.create({
+                  owner: userId,
+                  name: 'A Commmunity',
+                  description: 'Description Goes Here',
+                  memberCounter: 0,
+                  visibility: "public"
+               })
+               let comm = await CommunitySchema.findOne({owner: userId})
+               commId = comm !== null ? comm._id.toString() : ''
+               
+        })
+        it('Successfully updated community by id', async function() {
+        let payload = {
+            owner: userId,
+            name: 'Updated Community Name',
+            description: 'Another Description',
+            memberCount: 3,
+            visibility: 'private'
+            }
+            let res = await request(app).put('/api/community/' + commId).send(payload)
+            expect(res.status).equals(200)
+        })
+    });
 
     describe("addCommunityMember", function() {});
 
