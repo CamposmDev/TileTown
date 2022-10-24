@@ -10,7 +10,7 @@
 
     "test:user:routes": "mocha -r ts-node/register tests/controllers/ExpressUserController.test.ts",
     "test:community:routes": "mocha -r ts-node/register tests/controllers/ExpressCommunityController.test.ts",
-    "testr:contest:routes": "mocha -r ts-node/register tests/controllers/ExpressContestController.test.ts",
+    "test:contest:routes": "mocha -r ts-node/register tests/controllers/ExpressContestController.test.ts",
     "test:forum:routes": "mocha -r ts-node/register tests/controllers/ExpressForumController.test.ts",
     "test:tilemap:routes": "mocha -r ts-node/register tests/controllers/ExpressTilemapController.test.ts",
     "test:tileset:routes": "mocha -r ts-node/register tests/controllers/ExpressTilesetController.test.ts",
