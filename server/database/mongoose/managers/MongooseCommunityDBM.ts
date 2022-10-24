@@ -64,8 +64,12 @@ export default class MongooseCommunityDBM implements CommunityDBM {
    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
         let com: any = await CommunitySchema.findById(communityId)
         if (com !== null) {
-            com.community = community
-            com.save()
+            if (community.owner !== null) com.owner = community.owner
+            if (community.name !== null) com.name = community.name
+            if (community.description !== null) com.description = community.description
+            if (community.memberCount !== null) com.memberCount = community.memberCount
+            if (community.visibility !== null) com.visibility = community.visibility
+            await com.save()
             return {
                 id: com._id.toString(),
                 owner: com.owner.toString(),

@@ -64,15 +64,17 @@ export default class CommunityController {
             description: req.body.description,
             visibility: req.body.visibility
         }
+
+        console.log(id)
+        console.log(payload)
   
-        let community = db.communities.updateCommunity(id, payload)
+        let community = await db.communities.updateCommunity(id, payload)
         if (community === null) {
-            res.status(400).json({message: "Bad Request"});
+            res.status(400).json({message: "Failed to update community"});
             return;
         }
         
-        res.status(201).json({community: community});
-        return;
+        res.status(200).json({community: community});
       }
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {

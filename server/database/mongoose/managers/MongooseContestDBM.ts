@@ -71,8 +71,15 @@ export default class MongooseContestDBM implements ContestDBM {
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
         let con: any = await ContestSchema.findById(contestId)
         if (con !== null) {
-            con.contest = contest
-            con.save()
+            if (contest.owner !== null) con.owner = contest.owner
+            if (contest.name !== null) con.name = contest.name
+            if (contest.description !== null) con.description = contest.description
+            if (contest.participates !== null) con.participates = contest.participates
+            if (contest.startDate !== null) con.startDate = contest.startDate
+            if (contest.endDate !== null) con.endDate = contest.endDate
+            if (contest.winner !== null) con.winner = contest.winner
+            if (contest.isPublished !== null) con.isPublished = contest.isPublished
+            await con.save()
             return {
                 id: con._id.toString(),
                 owner: con.owner.toString(),
