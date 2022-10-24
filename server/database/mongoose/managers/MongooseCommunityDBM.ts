@@ -1,3 +1,4 @@
+import common from "mocha/lib/interfaces/common";
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import { UserSchema, CommunitySchema } from "../schemas"
@@ -31,19 +32,43 @@ export default class MongooseCommunityDBM implements CommunityDBM {
          * Check if the community name valid
          */
         const validCommunityName = async (communityName: string): Promise<boolean> => {
-            const existCommunity = await CommunitySchema.findOne({communityName: communityName})
+            const existCommunity = await CommunitySchema.findOne({name: communityName})
             return existCommunity ? false : true
         }
 
         let communityName = community.name
-        if(!(await validCommunityName(communityName))) return null
-        return null
+        if(!(await validCommunityName(communityName))) {
+            console.log('not unique name')
+            return null
+        }
+    
+        let comm: any = await CommunitySchema.create({
+            owner: community.owner,
+            name: community.name,
+            description: community.description,
+            memberCounter: 1,
+            visibility: community.visibility
+        })
+        await comm.save()
+        return {
+            id: comm._id,
+            owner: comm.owner,
+            name: comm.name,
+            description: comm.description,
+            memberCount: comm.memberCounter,
+            visibility: comm.visibility
+        }
     }
+
    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
         let com: any = await CommunitySchema.findById(communityId)
         if (com !== null) {
-            com.community = community
-            com.save()
+            if (community.owner !== null) com.owner = community.owner
+            if (community.name !== null) com.name = community.name
+            if (community.description !== null) com.description = community.description
+            if (community.memberCount !== null) com.memberCount = community.memberCount
+            if (community.visibility !== null) com.visibility = community.visibility
+            await com.save()
             return {
                 id: com._id.toString(),
                 owner: com.owner.toString(),
@@ -58,13 +83,11 @@ export default class MongooseCommunityDBM implements CommunityDBM {
 
     async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
         let community: any = await CommunitySchema.findById(communityId)
-        if (community !== null) {
-            let user: any = await CommunitySchema.findById(userId)
-            if (user !== null){
-                community.memberCounter = community.memberCounter + 1
-                community.save()
-                return userId
-            }
+        let user: any = await CommunitySchema.findById(userId)
+        if (community !== null && user !== null) {
+            community.memberCounter = community.memberCounter + 1
+            await community.save()
+            return community._id.toString()
         }
         return null
 
@@ -74,17 +97,17 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         let community: any = await CommunitySchema.findById(communityId)
         let user = await UserSchema.findById(userId)
         if ((community !== null) && (user !== null)) {
-            community.memberCounter = community.memberCount - 1
-            community.save()
+            community.memberCounter = community.memberCounter - 1
+            await community.save()
             return true
 
         }
         return false
     }
     async deleteCommunity(communityId: string): Promise<boolean> {
-        let community: any = await CommunitySchema.findById(communityId)
+        let community = await CommunitySchema.findById(communityId)
         if (community !== null) {
-            community.delete()
+            await community.delete()
             return true
         }
         return false

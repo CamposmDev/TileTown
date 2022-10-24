@@ -84,7 +84,7 @@ export default interface ContestDBM {
      * the given contest id does not exist in the DBMS or any other error occurs, the method returns null.
      * 
      * @param contestId the id of the contest in the DBMS
-     * @return if successful, the id of the deleted contest; null otherwise.
+     * @return if successful, true; false otherwise.
      */
-    deleteContest(contestId: string): Promise<string | null>;
+    deleteContest(contestId: string): Promise<boolean>;
 }
