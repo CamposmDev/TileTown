@@ -3,13 +3,9 @@ import { expect } from 'chai';
 import mongoose from 'mongoose';
 
 import UserSchema from "../../database/mongoose/schemas/User";
-import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
-import dotenv from "dotenv";
-import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
-import { ContestSchema } from '../../database/mongoose/schemas';
 import { MongooseContestDBM } from '../../database/mongoose/managers';
 import { Contest } from '../../types';
+import { ContestSchema } from '../../database/mongoose/schemas/';
 
 /** 
  * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
@@ -32,7 +28,7 @@ import { Contest } from '../../types';
      * @see MongooseContestDBM.createContest
      */
     describe("createContest", function() {
-        let user
+    
         beforeEach(async function() { 
             await UserSchema.deleteMany()
             await UserSchema.create({
@@ -50,14 +46,37 @@ import { Contest } from '../../types';
                     friends: [],
                     imageURL: " "
             })
-            await ContestSchema.deleteMany()
+            await ContestSchema.deleteMany() 
+        });
+
+        it('It should create and return a new contest', async function() {
+            let contest: MongooseContestDBM = new MongooseContestDBM()
+    
+            let partial: Partial<Contest> = {
+                "owner": "63560ddd205cc7cbe9c63b1d",
+                "name": "Vo",
+                "description": "My Contest Description",
+                "participates": [],
+                "isPublished": true
+            }
+            let con: Contest | null = await contest.createContest(partial)
+            expect(con).not.null
+            expect(con).property("owner", "63560ddd205cc7cbe9c63b1d")
+            expect(con).property("name", "Vo")
+            expect(con).property("description", "My Contest Description")
+            expect(con).property("participates", [])
+            expect(con).property("startDate", Date)
+            expect(con).property("endDate", Date)
+            expect(con).property("isPublished", true)
             
-            await ContestSchema.create({
-                
-            })
+            if (con !== null) {
+                let res = await ContestSchema.findById(con.id)
+                expect(res).not.null;
+            }
+        });
+        
     });
     
-    })
     it('It should create and return a new contest', async function() {
         let contest: MongooseContestDBM = new MongooseContestDBM()
 
@@ -93,7 +112,6 @@ import { Contest } from '../../types';
 
     describe("getContest", function() {});
 
-
     describe("updateContest", function() {});
 
     describe("updateModerator", function() {});
@@ -101,4 +119,5 @@ import { Contest } from '../../types';
     describe("deleteContest", function() {});
 
     after(async function() { await mongoose.connection.close(); });
+  
 });
