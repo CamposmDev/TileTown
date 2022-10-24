@@ -13,7 +13,7 @@ import { Auth } from '../../express/middleware';
  */
 describe("ExpressUserController", function () {
     /** Start the server on port 3000 */
-    const server = app.listen("3000");
+    const server = app.listen("3003");
 
     before(async function () {
         const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
