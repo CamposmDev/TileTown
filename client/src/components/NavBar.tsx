@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactComponentElement, ReactElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
@@ -43,11 +43,11 @@ const MENU_PAPER_PROPS = {
     },
 }
 
-// export interface MenuProps {
-//     menu: JsxElement
-// }
+interface Props {
+    items: ReactElement<any>
+}
 
-const AppBanner = () => {
+const NavBar = ({items}: Props) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
     const open = Boolean(anchorEl)
@@ -127,7 +127,8 @@ const AppBanner = () => {
             <AppBar position='sticky'>
                 <Toolbar>
                      {/** The NavDrawer should only show in main feed and other areas though...hmm.. */}
-                    <NavDrawer/>
+                     {items}
+                    {/* <NavDrawer/>
                     <Typography
                         variant="h4"
                         noWrap
@@ -147,7 +148,7 @@ const AppBanner = () => {
                         >
                             {getAccountMenu(false)}
                         </IconButton>
-                    </Box>
+                    </Box> */}
                 </Toolbar>
             </AppBar>
             {menu}
@@ -155,4 +156,4 @@ const AppBanner = () => {
     )
 }
 
-export default AppBanner
+export default NavBar
