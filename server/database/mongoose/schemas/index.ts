@@ -16,11 +16,11 @@
 // export { default as TilesetSocialSchema } from "./TileSetSocialStatistics";
 // export { default as UserSchema } from "./User";
 
-import CommentSchema from "./Comment";
+import CommentSchema from "./Comment"
 import CommunitySchema from "./Community";
 import ContestSchema from "./Contest";
 import ForumPostSchema from "./ForumPost";
-import LayerSchema from "./Layer";
+import LayerSchema from "./layer";
 import ModeratorSchema from "./Moderator";
 import TilemapSchema from "./Tilemap";
 import TilemapSocialSchema from "./TileMapSocialStatistics";

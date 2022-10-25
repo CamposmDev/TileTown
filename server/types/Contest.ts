@@ -1,3 +1,4 @@
+
 /**
  * A type that defines a Contest object on our server.
  * @author Peter Walsh
@@ -23,10 +24,10 @@ export default interface Contest {
     participates: string[]
 
     /** The starting date of the Contest */
-    startDate: string,
+    startDate: Date,
 
     /** The end date of the Contest */
-    endDate: string,
+    endDate: Date,
 
     /** A flag indicating whether the Contest has been published or not */
     isPublished: boolean

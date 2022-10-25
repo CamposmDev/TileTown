@@ -30,13 +30,13 @@ export default class MongooseContestDBM implements ContestDBM {
          */
         if (!contest.name || !contest.owner) return null
 
-      /**
-       * Check the contest name is valid
-       */
-      const validContestName = async (contestName: string): Promise<boolean> => {
-          const exitContest = await ContestSchema.findOne({name: contestName})
-          return exitContest ? false : true
-      }
+        /**
+         * Check the contest name is valid
+         */
+        const validContestName = async (contestName: string): Promise<boolean> => {
+            const exitContest = await ContestSchema.findOne({name: contestName})
+            return exitContest ? false : true
+        }
 
         let contestName = contest.name
 
