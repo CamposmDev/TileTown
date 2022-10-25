@@ -20,6 +20,9 @@ export default interface UserDBM {
      */
     getUserById(userId: string): Promise<User | null>;
 
+    getUserByEmail(email: string): Promise<User | null>;
+    getUserByUsername(username: string): Promise<User | null>
+
     /** 
      * Handles logging a user into TileTown.
      * 

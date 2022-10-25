@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { log } from 'npmlog';
 import { User } from '../../types';
 import { db } from '../../database';
+import { HashingUtils } from "../../util";
 import { Auth } from '../middleware';
 
 export default class UserController {
@@ -24,12 +25,12 @@ export default class UserController {
         let id: string = req.params.id;
         let user: User | null = await db.users.getUserById(id);
         if (user === null) {
-            res.status(404).json({message: "User does not exist"});
+            res.status(404).json({message: `User with id '${id}' does not exist`});
             return;
         }
 
         /** Otherwise return all the data about the user back to the client */
-        res.status(200).json({user: user});
+        res.status(200).json({message: `Found user with id '${id}'!`, user: user});
         return;
     }
 
@@ -39,20 +40,54 @@ export default class UserController {
             return;
         }
 
+        if (!req.body.firstName) { 
+            res.status(400).json({message: "User missing required field 'firstName'"}); 
+            return;
+        }
+        if (!req.body.lastName) {
+            res.status(400).json({message: "User missing required field 'lastName'"}); 
+            return;
+        }
+        if (!req.body.username) {
+            res.status(400).json({messag: "User missing required field 'username'"});
+            return;
+        }
+        if (!req.body.password) {
+            res.status(400).json({messag: "User missing required field 'password'"});
+            return;
+        }
+        if (!req.body.email) {
+            res.status(400).json({messag: "User missing required field 'email'"});
+            return;
+        }
+
+        let existingEmail = await db.users.getUserByEmail(req.body.email);
+        if (existingEmail !== null) {
+            res.status(400).json({message: `User with email '${existingEmail}' already exists`});
+            return;
+        }
+
+        let existingUsername = await db.users.getUserById(req.body.username);
+        if (existingUsername !== null) {
+            res.status(400).json({messsage: `User with username '${req.body.username}' already exists`});
+            return;
+        }
+
+        let hashedPassword = await HashingUtils.hash(req.body.password);
         let user: User | null = await db.users.createUser({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             email: req.body.email
         });
 
         if (user === null) {
-            res.status(400).json({message: "Bad Request"});
+            res.status(500).json({message: "Server Error"});
             return;
         }
 
-        res.status(201).json({user: user});
+        res.status(201).json({message: "User created successfully!", user: user});
         return;
     }
 
