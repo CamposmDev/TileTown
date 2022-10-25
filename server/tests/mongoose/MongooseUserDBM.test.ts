@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import mongoose from 'mongoose';
 import { hash, compare } from 'bcrypt'
 import mocha from 'mocha';
-import { CommunitySchema, UserSchema, ContestSchema } from "../../database/mongoose/schemas";
+import { CommunityModel, UserModel, ContestModel } from "../../database/mongoose/schemas";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
@@ -30,8 +30,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("getUserById", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -51,7 +51,7 @@ describe("Testing MongooseUserDBM", function() {
         it("Successfully finds a user with the id", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let schema = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let schema = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = schema !== null ? schema._id.toString() : "";
 
             let user: User | null = await users.getUserById(id);
@@ -63,7 +63,7 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to find a user - user with id doesn't exist", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let schema = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let schema = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = schema !== null ? schema._id.toString() : "";
 
             let user: User | null = await users.getUserById(id + "123");
@@ -75,8 +75,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("loginUser", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -116,8 +116,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("createUser", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
@@ -152,7 +152,7 @@ describe("Testing MongooseUserDBM", function() {
             expect(user).property("lastName", "Walsh");
 
 
-            let res = await UserSchema.find({email: partial.email});
+            let res = await UserModel.find({email: partial.email});
             expect(res).not.null;
         });
 
@@ -170,7 +170,7 @@ describe("Testing MongooseUserDBM", function() {
             let user: User | null = await users.createUser(partial);
             expect(user).null;
 
-            let res: UserSchemaType[] = await UserSchema.find({email: partial.email});
+            let res: UserSchemaType[] = await UserModel.find({email: partial.email});
             expect(res).length(0);
         });
 
@@ -187,7 +187,7 @@ describe("Testing MongooseUserDBM", function() {
             let user: User | null = await users.createUser(partial);
             expect(user).null;
 
-            let res: UserSchemaType[] = await UserSchema.find({email: partial.username});
+            let res: UserSchemaType[] = await UserModel.find({email: partial.username});
             expect(res).length(0);
         })
 
@@ -206,10 +206,10 @@ describe("Testing MongooseUserDBM", function() {
             expect(user).null;
 
             let res: UserSchemaType[];
-            res = await UserSchema.find({username: partial.username});
+            res = await UserModel.find({username: partial.username});
             expect(res).length(0);
 
-            res = await UserSchema.find({email: partial.email});
+            res = await UserModel.find({email: partial.email});
             expect(res).length(1);
             expect(res[0]).to.have.property('email', 'Walsh9636@gmail.com');
             expect(res[0]).to.have.property('username', 'PeteyLumps');
@@ -231,10 +231,10 @@ describe("Testing MongooseUserDBM", function() {
 
             let res: UserSchemaType[];
 
-            res = await UserSchema.find({email: partial.email});
+            res = await UserModel.find({email: partial.email});
             expect(res).length(0);
 
-            res = await UserSchema.find({username: partial.username});
+            res = await UserModel.find({username: partial.username});
             expect(res).length(1);
             expect(res[0]).to.have.property('email', 'Walsh9636@gmail.com');
             expect(res[0]).to.have.property('username', 'PeteyLumps');
@@ -245,8 +245,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("deleteUser", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -266,26 +266,26 @@ describe("Testing MongooseUserDBM", function() {
         it("Successfully deletes a user with the id", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let deletedUserId: boolean = await users.deleteUser(id);
             expect(deletedUserId).true;
 
-            user = await UserSchema.findById(id);
+            user = await UserModel.findById(id);
             expect(user).null;
         });
 
         it("Fails to delete the user - invalid id", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let deletedUserId: boolean = await users.deleteUser(id + "123");
             expect(deletedUserId).false;
 
-            user = await UserSchema.findById(id);
+            user = await UserModel.findById(id);
             expect(user).not.null;
         });
     });
@@ -293,8 +293,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("verifyUser", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -317,7 +317,7 @@ describe("Testing MongooseUserDBM", function() {
             let verified: boolean = await users.verifyUser("verificationkey");
             expect(verified).true;
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             verified = user !== null ? user.isVerified : false;
             expect(verified).true;
         });
@@ -328,7 +328,7 @@ describe("Testing MongooseUserDBM", function() {
             let verified: boolean = await users.verifyUser("verificionkey");
             expect(verified).false;
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             verified = user !== null ? user.isVerified : false;
             expect(verified).false;
         });
@@ -338,8 +338,8 @@ describe("Testing MongooseUserDBM", function() {
 
         beforeEach(async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -359,13 +359,13 @@ describe("Testing MongooseUserDBM", function() {
         it("Successfully updates a users password", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let pass: string | null = await users.updatePassword(id, "DummyPassword", "Blackstarthedog");
             expect(pass).not.null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let pass2 = user !== null ? user.password : "DummyPassword";
             expect(pass).equals(pass2);
 
@@ -393,8 +393,8 @@ describe("Testing MongooseUserDBM", function() {
 
     describe("updateEmail", function() {
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -409,7 +409,7 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             });
-            await UserSchema.create({
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
@@ -428,39 +428,39 @@ describe("Testing MongooseUserDBM", function() {
 
         it("Successfully updates a users email", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let email: string | null = await users.updateEmail(id, "peter.t.walsh@gmail.com");
             expect(email).equals("peter.t.walsh@gmail.com");
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@gmail.com"});
+            user = await UserModel.findOne({email: "peter.t.walsh@gmail.com"});
             email = user !== null ? user.email : "";
             expect(email).equals("peter.t.walsh@gmail.com");
         });
 
         it("Fails to update email - invalid user id", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let email: string | null = await users.updateEmail(id + "123", "peter.t.walsh@gmail.com");
             expect(email).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             email = user !== null ? user.email : "";
             expect(email).equals("peter.t.walsh@stonybrook.edu");
         });
 
         it("Fails to update email - email already exists on another account", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let email: string | null = await users.updateEmail(id, "Walsh9636@gmail.com");
             expect(email).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             email = user !== null ? user.email : "";
             expect(email).equals("peter.t.walsh@stonybrook.edu");
         });
@@ -468,8 +468,8 @@ describe("Testing MongooseUserDBM", function() {
 
     describe("updateUsername", function() {
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
@@ -484,7 +484,7 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             });
-            await UserSchema.create({
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -503,39 +503,39 @@ describe("Testing MongooseUserDBM", function() {
 
         it("Successfully updates a users username", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let username: string | null = await users.updateUsername(id, "VertebralOrb932");
             expect(username).equals("VertebralOrb932");
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             username = user !== null ? user.username : "";
             expect(username).equals("VertebralOrb932");
         });
 
         it("Fails to update username - invalid user id", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let username: string | null = await users.updateUsername(id + "123", "VertebralOrb932");
             expect(username).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             username = user !== null ? user.username : "";
             expect(username).equals("PeteyLumpkins");
         });
 
         it("Fails to update username - username already exists on another account", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let id: string = user !== null ? user._id.toString() : "";
 
             let username: string | null = await users.updateUsername(id + "123", "PeteyLumps");
             expect(username).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             username = user !== null ? user.username : "";
             expect(username).equals("PeteyLumpkins");
         });
@@ -543,8 +543,8 @@ describe("Testing MongooseUserDBM", function() {
 
     describe("addFriend", function() {
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            await UserSchema.create({
+            await UserModel.deleteMany(); 
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
@@ -559,7 +559,7 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             });
-            await UserSchema.create({
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -579,8 +579,8 @@ describe("Testing MongooseUserDBM", function() {
         it("Successfully adds a user as a friend", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userId: string = user !== null ? user.id : "";
             let friendId: string = friend !== null ? friend.id : "";
@@ -588,8 +588,8 @@ describe("Testing MongooseUserDBM", function() {
             let res: string | null = await users.addFriend(userId, friendId);
             expect(res).equals(friendId, "Return value should be friend id");
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userFriends = user !== null ? user.friends : [];
             let friendsFriends = friend !== null ? friend.friends : [];
@@ -601,8 +601,8 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to add a user as a friend - user with id doesn't exist", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userId: string = user !== null ? user.id : "";
             let friendId: string = friend !== null ? friend.id : "";
@@ -610,8 +610,8 @@ describe("Testing MongooseUserDBM", function() {
             let res: string | null = await users.addFriend(userId + "123", friendId);
             expect(res).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userFriends = user !== null ? user.friends : [];
             let friendsFriends = friend !== null ? friend.friends : [];
@@ -623,8 +623,8 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to add a user as a friend - friend with id doesn't exist", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userId: string = user !== null ? user.id : "";
             let friendId: string = friend !== null ? friend.id : "";
@@ -632,8 +632,8 @@ describe("Testing MongooseUserDBM", function() {
             let res: string | null = await users.addFriend(userId, friendId + "123");
             expect(res).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userFriends = user !== null ? user.friends : [];
             let friendsFriends = friend !== null ? friend.friends : [];
@@ -645,8 +645,8 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to add user as a friend - users are already friends", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            let friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userId: string = user !== null ? user.id : "";
             let friendId: string = friend !== null ? friend.id : "";
@@ -658,8 +658,8 @@ describe("Testing MongooseUserDBM", function() {
             res = await users.addFriend(userId, friendId);
             expect(res).null;
 
-            user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            friend = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            friend = await UserModel.findOne({email: "Walsh9636@gmail.com"});
 
             let userFriends = user !== null ? user.friends : [];
             let friendsFriends = friend !== null ? friend.friends : [];
@@ -672,8 +672,8 @@ describe("Testing MongooseUserDBM", function() {
     describe("joinCommunity", function() {
 
         beforeEach(async function() { 
-            await UserSchema.deleteMany(); 
-            let user = await UserSchema.create({
+            await UserModel.deleteMany(); 
+            let user = await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -688,7 +688,7 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             });
-            await UserSchema.create({
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
@@ -703,8 +703,8 @@ describe("Testing MongooseUserDBM", function() {
                 friends: [],
                 imageURL: " "
             });
-            await CommunitySchema.deleteMany();
-            await CommunitySchema.create({
+            await CommunityModel.deleteMany();
+            await CommunityModel.create({
                 owner: user._id.toString(),
                 name: "Peters Community",
                 description: "I don't know",
@@ -716,11 +716,11 @@ describe("Testing MongooseUserDBM", function() {
         it("Successfully joins a new community", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+            let comm = await CommunityModel.findOne({"name": "Peters Community"});
             let cid = comm !== null ? comm._id.toString() : "";
             expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "Walsh9636@gmail.com"});
             let uid = user !== null ? user._id.toString() : "";
             expect(uid).not.equals("");
 
@@ -732,11 +732,11 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to join a new community - user with id doesn't exist", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+            let comm = await CommunityModel.findOne({"name": "Peters Community"});
             let cid = comm !== null ? comm._id.toString() : "";
             expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "Walsh9636@gmail.com"});
             let uid = user !== null ? user._id.toString() : "";
             expect(uid).not.equals("");
 
@@ -747,11 +747,11 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to join a community - community with id doesn't exist", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+            let comm = await CommunityModel.findOne({"name": "Peters Community"});
             let cid = comm !== null ? comm._id.toString() : "";
             expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "Walsh9636@gmail.com"});
+            let user = await UserModel.findOne({email: "Walsh9636@gmail.com"});
             let uid = user !== null ? user._id.toString() : "";
             expect(uid).not.equals("");
 
@@ -762,11 +762,11 @@ describe("Testing MongooseUserDBM", function() {
         it("Fails to join community - user is community owner", async function() {
             let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let comm = await CommunitySchema.findOne({"name": "Peters Community"});
+            let comm = await CommunityModel.findOne({"name": "Peters Community"});
             let cid = comm !== null ? comm._id.toString() : "";
             expect(cid).not.equals("");
 
-            let user = await UserSchema.findOne({email: "peter.t.walsh@stonybrook.edu"});
+            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
             let uid = user !== null ? user._id.toString() : "";
             expect(uid).not.equals("");
 

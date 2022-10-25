@@ -1,8 +1,7 @@
 import mongoose, { ObjectId } from 'mongoose';
 import { hash, compare } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
-import { UserSchema, CommunitySchema, ContestSchema, TilemapSchema, TilesetSchema } from '../schemas'
-import UserSchemaType from "../../mongoose/types/UserSchemaType";
+import { UserModel, CommunityModel, ContestModel, TilemapModel, TilesetModel } from '../schemas'
 import { User } from "../../../types";
 
 export default class MongooseUserDBM implements UserDBM {
@@ -12,7 +11,7 @@ export default class MongooseUserDBM implements UserDBM {
         // Checks if string is a valid object id
         if (!mongoose.Types.ObjectId.isValid(userId)) return null;
 
-        let user = await UserSchema.findById({_id: userId});
+        let user = await UserModel.findById({_id: userId});
         return user !== null ? {
             id: user._id.toString(),
             username: user.username,
@@ -33,7 +32,7 @@ export default class MongooseUserDBM implements UserDBM {
 
     async loginUser(userEmail: string, userPassword: string): Promise<User | null> {
         // Find the user based off their email
-        let user = await UserSchema.findOne({email: userEmail});
+        let user = await UserModel.findOne({email: userEmail});
         if (user === null) return null;
 
         // Check the user's password I think
@@ -72,7 +71,7 @@ export default class MongooseUserDBM implements UserDBM {
          * Check if the username is valid and is unique.
          */
         const validUsername = async (username: string): Promise<boolean> => {
-            const existingUser = await UserSchema.findOne({username: username})
+            const existingUser = await UserModel.findOne({username: username})
             return existingUser ? false : true
         }
 
@@ -92,14 +91,14 @@ export default class MongooseUserDBM implements UserDBM {
          * Check if the user's email is valid and is not being used by other user accounts
          */
         const validEmail = async (email: string): Promise<boolean> => {
-            let existingUser = await UserSchema.findOne({email: email})
+            let existingUser = await UserModel.findOne({email: email})
             return existingUser ? false : true
         }
 
         let email = userpy.email
         if (!(await validEmail(email))) return null
 
-        const user = new UserSchema({
+        const user = new UserModel({
             firstName: userpy.firstName,
             lastName: userpy.lastName,
             email: email,
@@ -138,7 +137,7 @@ export default class MongooseUserDBM implements UserDBM {
         /**
          * Acquire user by their verify key and update isVerified to true
          */
-        let x = await UserSchema.findOne({verifyKey: key});
+        let x = await UserModel.findOne({verifyKey: key});
         if (x) {
             x.isVerified = true
             await x.save();
@@ -149,7 +148,7 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
-        let user = await UserSchema.findById(userId)
+        let user = await UserModel.findById(userId)
         if (user !== null) {
             let currentPassword = user.password
             let isOwner: boolean = await compare(oldPassword, currentPassword)
@@ -169,8 +168,8 @@ export default class MongooseUserDBM implements UserDBM {
             return null
         }
 
-        let user = await UserSchema.findById(userId)
-        let e = await UserSchema.findOne({email: email});
+        let user = await UserModel.findById(userId)
+        let e = await UserModel.findOne({email: email});
 
         if (user !== null && e === null) {
             user.email = email
@@ -187,8 +186,8 @@ export default class MongooseUserDBM implements UserDBM {
             return null
         }
 
-        let user = await UserSchema.findById(userId)
-        let u = await UserSchema.findOne({username: username});
+        let user = await UserModel.findById(userId)
+        let u = await UserModel.findOne({username: username});
 
         if (user !== null && u === null) {
             user.username = username
@@ -203,9 +202,9 @@ export default class MongooseUserDBM implements UserDBM {
             return null;
         }
 
-        let user = await UserSchema.findById(userId)
+        let user = await UserModel.findById(userId)
         if (user !== null) {
-            let friend = await UserSchema.findById(friendId)
+            let friend = await UserModel.findById(friendId)
             if (friend !== null && !user.friends.includes(friend.id)) {
                 user.friends.push(friend.id);
                 await user.save();
@@ -220,9 +219,9 @@ export default class MongooseUserDBM implements UserDBM {
             return null;
         }
 
-        let user = await UserSchema.findById(userId)
+        let user = await UserModel.findById(userId)
         if (user !== null) {
-            let comm = await CommunitySchema.findById(communityId)
+            let comm = await CommunityModel.findById(communityId)
             if (comm !== null && comm.owner.toString() !== user._id.toString()) {
                 user.joinedCommunities.push(comm._id)
                 comm.memberCounter = comm.memberCounter + 1
@@ -239,8 +238,8 @@ export default class MongooseUserDBM implements UserDBM {
             return null;
         }
 
-        let user = await UserSchema.findById(userId)
-        let contest = await ContestSchema.findById(contestId)
+        let user = await UserModel.findById(userId)
+        let contest = await ContestModel.findById(contestId)
         if ((user !== null) && (contest !== null)) {
             user.joinedContests.push(contest._id)
             await user.save()
@@ -256,8 +255,8 @@ export default class MongooseUserDBM implements UserDBM {
             return null;
         }
 
-        let user = await UserSchema.findById(userId)
-        let tilemap = await TilemapSchema.findById(tilemapId)
+        let user = await UserModel.findById(userId)
+        let tilemap = await TilemapModel.findById(tilemapId)
         if ((user !== null) && (tilemap !== null)) {
             user.favoriteTileMaps.push(tilemap._id)
             await user.save()
@@ -271,8 +270,8 @@ export default class MongooseUserDBM implements UserDBM {
             return null;
         }
 
-        let user = await UserSchema.findById(userId)
-        let tileset = await TilesetSchema.findById(tilesetId)
+        let user = await UserModel.findById(userId)
+        let tileset = await TilesetModel.findById(tilesetId)
         if ((user !== null) && (tileset !== null)) {
             user.favoriteTileSets.push(tileset._id)
             await user.save()
@@ -284,7 +283,7 @@ export default class MongooseUserDBM implements UserDBM {
     async deleteUser(userId: string): Promise<boolean> {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
 
-        let user = await UserSchema.findById(userId)
+        let user = await UserModel.findById(userId)
         if (user !== null) {
             await user.delete();
             return true
@@ -297,8 +296,8 @@ export default class MongooseUserDBM implements UserDBM {
             return false;
         }
 
-        let user = await UserSchema.findById(userId)
-        let comm = await CommunitySchema.findById(communityId)
+        let user = await UserModel.findById(userId)
+        let comm = await CommunityModel.findById(communityId)
 
         if ((user !== null) && (comm !== null)) {
             let i = user.joinedCommunities.map(id => id.toString()).indexOf(comm._id.toString(), 0)
@@ -313,8 +312,8 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async leaveContest(userId: string, contestId: string): Promise<boolean> {
-        let user: any = await UserSchema.findById(userId)
-        let contest = await ContestSchema.findById(contestId)
+        let user: any = await UserModel.findById(userId)
+        let contest = await ContestModel.findById(contestId)
         if ((user !== null) && (contest !== null)) {
             let i = user.joinedContests.indexOf(contest._id, 0)
             if (i > -1) {
@@ -332,8 +331,8 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
-        let user: any = await UserSchema.findById(userId)
-        let tilemap = await TilemapSchema.findById(tilemapId)
+        let user: any = await UserModel.findById(userId)
+        let tilemap = await TilemapModel.findById(tilemapId)
         if ((user !== null) && (tilemap !== null)) {
             let i = user.favoriteTileMaps.indexOf(tilemap._id, 0)
             if (i > -1) {
@@ -346,8 +345,8 @@ export default class MongooseUserDBM implements UserDBM {
     }
 
     async unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
-        let user: any = await UserSchema.findById(userId)
-        let tileset = await TilesetSchema.findById(tilesetId)
+        let user: any = await UserModel.findById(userId)
+        let tileset = await TilesetModel.findById(tilesetId)
         if ((user !== null) && (tileset !== null)) {
             let i = user.favoriteTileSets.indexOf(tileset._id, 0)
             if (i > -1) {

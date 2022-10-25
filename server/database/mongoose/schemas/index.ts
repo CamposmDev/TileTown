@@ -16,23 +16,20 @@
 // export { default as TilesetSocialSchema } from "./TileSetSocialStatistics";
 // export { default as UserSchema } from "./User";
 
-import CommentSchema from "./Comment"
-import CommunitySchema from "./Community";
-import ContestSchema from "./Contest";
-import ForumPostSchema from "./ForumPost";
-import LayerSchema from "./layer";
-import ModeratorSchema from "./Moderator";
-import TilemapSchema from "./Tilemap";
-import TilemapSocialSchema from "./TileMapSocialStatistics";
-import TilesetSchema from "./Tileset";
-import TilesetSocialSchema from "./TilesetSocialStatistics";
-import UserSchema from "./User";
-
+import { CommentModel } from "./CommentModel"
+import { CommunityModel } from "./CommunityModel";
+import { ContestModel } from "./ContestModel";
+import { ForumPostModel } from "./ForumPostModel";
+import { ModeratorModel } from "./ModeratorModel";
+import { TilemapModel } from "./TilemapModel";
+import { TilemapSocialModel } from "./TilemapSocialModel";
+import { TilesetModel } from "./TilesetModel";
+import { TilesetSocialModel } from "./TilesetSocialModel";
+import { UserModel } from "./UserModel";
 
 export {
-    CommentSchema, CommunitySchema, ContestSchema, ForumPostSchema,
-    LayerSchema, ModeratorSchema, TilemapSchema, TilemapSocialSchema,
-    TilesetSchema, TilesetSocialSchema, UserSchema,
-
+    CommentModel, CommunityModel, ContestModel, ForumPostModel,
+    ModeratorModel, TilemapModel, TilemapSocialModel,
+    TilesetModel, TilesetSocialModel, UserModel,
 }
 

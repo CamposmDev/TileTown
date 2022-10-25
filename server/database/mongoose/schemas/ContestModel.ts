@@ -7,7 +7,6 @@ import ContestSchemaType from '../types/ContestSchemaType';
 /**
  * @author Tuyen Vo
  */
-
 const ContestSchema = new Schema<ContestSchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
@@ -18,4 +17,7 @@ const ContestSchema = new Schema<ContestSchemaType>({
     winner: { type: ObjectId, require: false},
     isPublished: { type: Boolean, require: true}
 })
-export default mongoose.model('ContestSchema', ContestSchema)
+
+const ContestModel = mongoose.model('ContestSchema', ContestSchema)
+
+export { ContestModel }

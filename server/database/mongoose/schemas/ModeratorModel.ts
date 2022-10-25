@@ -11,4 +11,7 @@ const ModeratorSchema = new Schema({
     userId: { type: ObjectId, require: true},
     role: { type: String, require: true},
 })
-export default mongoose.model('ModeratorSchema', ModeratorSchema)
+
+const ModeratorModel = mongoose.model('ModeratorSchema', ModeratorSchema)
+
+export { ModeratorModel } 

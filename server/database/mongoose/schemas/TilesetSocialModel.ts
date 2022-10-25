@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { TilesetSocialSchemaType } from "../types"
+import { TilesetSocialSchemaType } from "../types/index"
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
@@ -30,4 +30,7 @@ const TileSetSocialStatisticsSchema = new Schema<TilesetSocialSchemaType>({
 
 
 })
-export default mongoose.model('TileSetSocialStatisticsSchema', TileSetSocialStatisticsSchema)
+
+const TilesetSocialModel = mongoose.model('TileSetSocialStatisticsSchema', TileSetSocialStatisticsSchema)
+
+export { TilesetSocialModel }

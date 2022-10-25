@@ -1,5 +1,5 @@
 import mongoose, { Document, Model } from "mongoose"
-import { UserSchemaType } from "../types";
+import { UserSchemaType } from "../types/index";
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -30,4 +30,6 @@ const UserSchema = new Schema<UserSchemaType>({
     imageURL: { type: String, required: true }
 });
 
-export default mongoose.model('UserSchema', UserSchema)
+const UserModel = mongoose.model('UserSchema', UserSchema)
+
+export { UserModel }

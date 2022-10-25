@@ -3,8 +3,8 @@ import request from "supertest";
 import { app } from "../../express";
 import { db } from "../../database";
 import { expect } from "chai";
-import { UserSchema } from "../../database/mongoose/schemas";
-import { TilemapSchema } from "../../database/mongoose/schemas";
+import { UserModel } from "../../database/mongoose/schemas";
+import { TilemapModel } from "../../database/mongoose/schemas";
 import { Auth } from "../../express/middleware";
 
 /**
@@ -28,8 +28,8 @@ describe("ExpressTilemapController", function () {
      */
     describe("createTilemap", function () {
         beforeEach(async function () {
-            await UserSchema.deleteMany();
-            await TilemapSchema.deleteMany();
+            await UserModel.deleteMany();
+            await TilemapModel.deleteMany();
             await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -40,7 +40,7 @@ describe("ExpressTilemapController", function () {
         });
 
         it("Successfully created new tilemap", async function () {
-            let user = await UserSchema.findOne({
+            let user = await UserModel.findOne({
                 email: "peteylumpkins@gmail.com",
             });
             let id: string = user !== null ? user._id.toString() : "";

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Contest } from "../../../types";
 import { ContestDBM } from "../../interface";
-import { ModeratorSchema, ContestSchema, UserSchema } from '../schemas';
+import { ModeratorModel, ContestModel, UserModel } from '../schemas';
 
 /**
  * @author Tuyen Vo
@@ -10,7 +10,7 @@ import { ModeratorSchema, ContestSchema, UserSchema } from '../schemas';
 export default class MongooseContestDBM implements ContestDBM {
 
     async getContest(contestId: string): Promise<Contest | null> {
-        let contest: any = await ContestSchema.findById({_id: contestId})
+        let contest: any = await ContestModel.findById({_id: contestId})
         return contest !== null ? {
             id: contest._id.toString(),
             owner: contest.owner.toString(),
@@ -34,7 +34,7 @@ export default class MongooseContestDBM implements ContestDBM {
          * Check the contest name is valid
          */
         const validContestName = async (contestName: string): Promise<boolean> => {
-            const exitContest = await ContestSchema.findOne({name: contestName})
+            const exitContest = await ContestModel.findOne({name: contestName})
             return exitContest ? false : true
         }
 
@@ -45,7 +45,7 @@ export default class MongooseContestDBM implements ContestDBM {
             return null
         }
         
-        let con = await ContestSchema.create({
+        let con = await ContestModel.create({
             owner: contest.owner,
             name: contest.name,
             description: contest.description,
@@ -69,7 +69,7 @@ export default class MongooseContestDBM implements ContestDBM {
     
     }
     async updateContest(contestId: string, contest: Partial<Contest>): Promise<Contest | null> {
-        let con: any = await ContestSchema.findById(contestId)
+        let con: any = await ContestModel.findById(contestId)
         if (con !== null) {
             if (contest.owner !== null) con.owner = contest.owner
             if (contest.name !== null) con.name = contest.name
@@ -96,10 +96,10 @@ export default class MongooseContestDBM implements ContestDBM {
     }
     
     async updateModerator(contestId: string, userId: string, role: string): Promise<string | null> {
-        let con = await ContestSchema.findById(contestId)
-        let user = await UserSchema.findById(userId)
+        let con = await ContestModel.findById(contestId)
+        let user = await UserModel.findById(userId)
         if (user !== null && con !== null) {
-            let mod = await ModeratorSchema.findOne({groupId: con._id, userId: user._id})
+            let mod = await ModeratorModel.findOne({groupId: con._id, userId: user._id})
             if (mod !== null) {
                 mod.role = role
                 await mod.save()
@@ -110,7 +110,7 @@ export default class MongooseContestDBM implements ContestDBM {
     }
 
   async deleteContest(contestId: string): Promise<boolean> {
-      let con = await ContestSchema.findById(contestId)
+      let con = await ContestModel.findById(contestId)
       if (con !== null) {
           await con.delete()
           return true

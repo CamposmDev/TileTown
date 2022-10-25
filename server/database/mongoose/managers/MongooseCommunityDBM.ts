@@ -1,17 +1,15 @@
-import common from "mocha/lib/interfaces/common";
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
-import { UserSchema, CommunitySchema } from "../schemas"
+import { UserModel, CommunityModel } from "../schemas"
 
 
 /**
  * @author Tuyen Vo
  */
-
 export default class MongooseCommunityDBM implements CommunityDBM {
 
     async getCommunityById(communityId: string): Promise<Community | null> {
-        let community: any = await CommunitySchema.findById({_id: communityId});
+        let community: any = await CommunityModel.findById({_id: communityId});
         return community !== null ? {
             id: community._id.toString(),
             owner: community.owner.toString(),
@@ -32,7 +30,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
          * Check if the community name valid
          */
         const validCommunityName = async (communityName: string): Promise<boolean> => {
-            const existCommunity = await CommunitySchema.findOne({name: communityName})
+            const existCommunity = await CommunityModel.findOne({name: communityName})
             return existCommunity ? false : true
         }
 
@@ -42,7 +40,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             return null
         }
     
-        let comm = await CommunitySchema.create({
+        let comm = await CommunityModel.create({
             owner: community.owner,
             name: community.name,
             description: community.description,
@@ -61,7 +59,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
     }
 
    async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
-        let com: any = await CommunitySchema.findById(communityId)
+        let com: any = await CommunityModel.findById(communityId)
         if (com !== null) {
             if (community.owner !== null) com.owner = community.owner
             if (community.name !== null) com.name = community.name
@@ -82,8 +80,8 @@ export default class MongooseCommunityDBM implements CommunityDBM {
     }
 
     async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
-        let community = await CommunitySchema.findById(communityId);
-        let user = await UserSchema.findById(userId);
+        let community = await CommunityModel.findById(communityId);
+        let user = await UserModel.findById(userId);
 
         if (community !== null && user !== null) {
             community.memberCounter = community.memberCounter + 1
@@ -95,8 +93,8 @@ export default class MongooseCommunityDBM implements CommunityDBM {
     }
      
     async removeCommunityMember(userId: string, communityId: string): Promise<boolean> {
-        let community: any = await CommunitySchema.findById(communityId)
-        let user = await UserSchema.findById(userId)
+        let community: any = await CommunityModel.findById(communityId)
+        let user = await UserModel.findById(userId)
         if ((community !== null) && (user !== null)) {
             community.memberCounter = community.memberCounter - 1
             await community.save()
@@ -106,7 +104,7 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         return false
     }
     async deleteCommunity(communityId: string): Promise<boolean> {
-        let community = await CommunitySchema.findById(communityId)
+        let community = await CommunityModel.findById(communityId)
         if (community !== null) {
             await community.delete()
             return true

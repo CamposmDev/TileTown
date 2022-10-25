@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import mongoose, { Mongoose } from 'mongoose';
 
 
-import { UserSchema } from "../../database/mongoose/schemas"
-import { CommunitySchema } from '../../database/mongoose/schemas';
+import { UserModel } from "../../database/mongoose/schemas"
+import { CommunityModel } from '../../database/mongoose/schemas';
 import { MongooseCommunityDBM } from '../../database/mongoose/managers';
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
@@ -33,8 +33,8 @@ describe("Testing MongooseCommunityDBM", function () {
         let userId
         let commId: string
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -49,17 +49,17 @@ describe("Testing MongooseCommunityDBM", function () {
                 friends: [],
                 imageURL: " "
             })
-            let user = await UserSchema.findOne({ username: 'PeteyLumpkins' })
+            let user = await UserModel.findOne({ username: 'PeteyLumpkins' })
             userId = user !== null ? user._id.toString() : ''
-            await CommunitySchema.deleteMany()
-            await CommunitySchema.create({
+            await CommunityModel.deleteMany()
+            await CommunityModel.create({
                 owner: userId,
                 name: 'A Commmunity',
                 description: 'Description Goes Here',
                 memberCounter: 0,
                 visibility: "public"
             })
-            let comm = await CommunitySchema.findOne({ owner: userId })
+            let comm = await CommunityModel.findOne({ owner: userId })
             commId = comm !== null ? comm._id.toString() : ''
         })
 
@@ -77,9 +77,9 @@ describe("Testing MongooseCommunityDBM", function () {
     describe("createCommunity", function () {
         let userId: string
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            await CommunitySchema.deleteMany()
-            let user = await UserSchema.create({
+            await UserModel.deleteMany()
+            await CommunityModel.deleteMany()
+            let user = await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -95,7 +95,7 @@ describe("Testing MongooseCommunityDBM", function () {
                 imageURL: " "
             })
             userId = user._id.toString();
-            await CommunitySchema.deleteMany()
+            await CommunityModel.deleteMany()
         })
         it('Successfully created community', async function () {
             let communities = new MongooseCommunityDBM()
@@ -119,8 +119,8 @@ describe("Testing MongooseCommunityDBM", function () {
         let userId: string
         let commId: string
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -135,17 +135,17 @@ describe("Testing MongooseCommunityDBM", function () {
                 friends: [],
                 imageURL: " "
             })
-            let user = await UserSchema.findOne({ username: 'PeteyLumpkins' })
+            let user = await UserModel.findOne({ username: 'PeteyLumpkins' })
             userId = user !== null ? user._id.toString() : ''
-            await CommunitySchema.deleteMany()
-            await CommunitySchema.create({
+            await CommunityModel.deleteMany()
+            await CommunityModel.create({
                 owner: userId,
                 name: 'A Commmunity',
                 description: 'Description Goes Here',
                 memberCounter: 0,
                 visibility: "public"
             })
-            let comm = await CommunitySchema.findOne({ owner: userId })
+            let comm = await CommunityModel.findOne({ owner: userId })
             commId = comm !== null ? comm._id.toString() : ''
         })
         it('Successfully updated community by id', async function () {
@@ -167,8 +167,8 @@ describe("Testing MongooseCommunityDBM", function () {
         let commId: string
 
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            let user2 = await UserSchema.create({
+            await UserModel.deleteMany()
+            let user2 = await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -183,7 +183,7 @@ describe("Testing MongooseCommunityDBM", function () {
                 friends: [],
                 imageURL: " "
             })
-            let user1 = await UserSchema.create({
+            let user1 = await UserModel.create({
                 firstName: "Tuyen",
                 lastName: "Vo",
                 email: "tuyen.vo@stonybrook.edu",
@@ -201,9 +201,9 @@ describe("Testing MongooseCommunityDBM", function () {
             let ownerId = user1._id.toString();
             userId = user2._id.toString();
 
-            await CommunitySchema.deleteMany()
+            await CommunityModel.deleteMany()
 
-            let comm = await CommunitySchema.create({
+            let comm = await CommunityModel.create({
                 owner: ownerId,
                 name: 'A Commmunity',
                 description: 'Description Goes Here',
@@ -225,8 +225,8 @@ describe("Testing MongooseCommunityDBM", function () {
         let userId: string
         let commId: string
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -241,17 +241,17 @@ describe("Testing MongooseCommunityDBM", function () {
                 friends: [],
                 imageURL: " "
             })
-            let user = await UserSchema.findOne({ username: 'PeteyLumpkins' })
+            let user = await UserModel.findOne({ username: 'PeteyLumpkins' })
             userId = user !== null ? user._id.toString() : ''
-            await CommunitySchema.deleteMany()
-            await CommunitySchema.create({
+            await CommunityModel.deleteMany()
+            await CommunityModel.create({
                 owner: userId,
                 name: 'A Commmunity',
                 description: 'Description Goes Here',
                 memberCounter: 0,
                 visibility: "public"
             })
-            let comm = await CommunitySchema.findOne({ owner: userId })
+            let comm = await CommunityModel.findOne({ owner: userId })
             commId = comm !== null ? comm._id.toString() : ''
         })
         it('Successfully removed member from a community', async function () {
@@ -265,8 +265,8 @@ describe("Testing MongooseCommunityDBM", function () {
         let userId: string
         let commId: string
         beforeEach(async function () {
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
@@ -281,17 +281,17 @@ describe("Testing MongooseCommunityDBM", function () {
                 friends: [],
                 imageURL: " "
             })
-            let user = await UserSchema.findOne({ username: 'PeteyLumpkins' })
+            let user = await UserModel.findOne({ username: 'PeteyLumpkins' })
             userId = user !== null ? user._id.toString() : ''
-            await CommunitySchema.deleteMany()
-            await CommunitySchema.create({
+            await CommunityModel.deleteMany()
+            await CommunityModel.create({
                 owner: userId,
                 name: 'A Commmunity',
                 description: 'Description Goes Here',
                 memberCounter: 1,
                 visibility: "public"
             })
-            let comm = await CommunitySchema.findOne({ owner: userId })
+            let comm = await CommunityModel.findOne({ owner: userId })
             commId = comm !== null ? comm._id.toString() : ''
         })
         it('Successfully deleted a community', async function () {

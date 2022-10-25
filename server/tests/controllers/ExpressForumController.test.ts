@@ -3,8 +3,8 @@ import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-import { UserSchema } from "../../database/mongoose/schemas";
-import { ForumPostSchema } from '../../database/mongoose/schemas';
+import { UserModel } from "../../database/mongoose/schemas";
+import { ForumPostModel } from '../../database/mongoose/schemas';
 
 
 /** 
@@ -28,7 +28,7 @@ describe('ExpressUserController', function() {
      */
     describe('createForumPost', function() {
         this.beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
+            await ForumPostModel.deleteMany()
         })
 
         it('Successfully created forum post and returned new forum post', async function() {
@@ -53,8 +53,8 @@ describe('ExpressUserController', function() {
     describe('getForumPost', function() {
         let forumPostId: string
         this.beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: 'Camposm',
                 title: 'How do i comuter',
                 body: 'computer*',
@@ -64,7 +64,7 @@ describe('ExpressUserController', function() {
                 views: 0,
                 isPublished: true
             })
-            let forumPost = await ForumPostSchema.findOne({title: 'How do i comuter'})
+            let forumPost = await ForumPostModel.findOne({title: 'How do i comuter'})
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
         
@@ -81,8 +81,8 @@ describe('ExpressUserController', function() {
     describe('updateForumPost', function() {
         let forumPostId: string
         beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: 'Camposm',
                 title: 'How do i comuter',
                 body: 'computer*',
@@ -92,7 +92,7 @@ describe('ExpressUserController', function() {
                 views: 0,
                 isPublished: false
             })
-            let forumPost = await ForumPostSchema.findOne({author: 'Camposm'})
+            let forumPost = await ForumPostModel.findOne({author: 'Camposm'})
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
 
@@ -117,8 +117,8 @@ describe('ExpressUserController', function() {
         let userId: string
         let forumPostId: string
         this.beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: 'Camposm',
                 title: 'How do i comuter',
                 body: 'computer*',
@@ -128,8 +128,8 @@ describe('ExpressUserController', function() {
                 views: 0,
                 isPublished: false
             })
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -144,8 +144,8 @@ describe('ExpressUserController', function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            let forumPost = await ForumPostSchema.findOne({title: 'How do i comuter'})
-            let user = await UserSchema.findOne({username: 'Camposm'})
+            let forumPost = await ForumPostModel.findOne({title: 'How do i comuter'})
+            let user = await UserModel.findOne({username: 'Camposm'})
             userId = user !== null ? user._id.toString() : ''
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
@@ -175,8 +175,8 @@ describe('ExpressUserController', function() {
         let userId: string
         let forumPostId: string
         this.beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: 'Camposm',
                 title: 'How do i comuter',
                 body: 'computer*',
@@ -186,8 +186,8 @@ describe('ExpressUserController', function() {
                 views: 0,
                 isPublished: false
             })
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -202,8 +202,8 @@ describe('ExpressUserController', function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            let forumPost = await ForumPostSchema.findOne({title: 'How do i comuter'})
-            let user = await UserSchema.findOne({username: 'Camposm'})
+            let forumPost = await ForumPostModel.findOne({title: 'How do i comuter'})
+            let user = await UserModel.findOne({username: 'Camposm'})
             userId = user !== null ? user._id.toString() : ''
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
@@ -233,9 +233,9 @@ describe('ExpressUserController', function() {
         let forumPost
         let user
         this.beforeEach(async function() {
-            await UserSchema.deleteMany()
-            await ForumPostSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await ForumPostModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -250,7 +250,7 @@ describe('ExpressUserController', function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            await ForumPostSchema.create({
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilesets",
                 body: "Clean tilesets use gradients",
@@ -260,9 +260,9 @@ describe('ExpressUserController', function() {
                 views: 0,
                 isPublished: true
             })
-            user = await UserSchema.findOne({username: 'Camposm'})
+            user = await UserModel.findOne({username: 'Camposm'})
             userId = user !== null ? user._id.toString() : ''
-            forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
 

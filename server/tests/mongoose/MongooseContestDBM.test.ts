@@ -2,10 +2,9 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose, { mongo } from 'mongoose';
 
-import { UserSchema } from '../../database/mongoose/schemas/';
+import { UserModel, ContestModel } from '../../database/mongoose/schemas/';
 import { MongooseContestDBM } from '../../database/mongoose/managers';
 import { Contest } from '../../types';
-import { ContestSchema } from '../../database/mongoose/schemas/';
 
 /** 
  * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
@@ -30,8 +29,8 @@ import { ContestSchema } from '../../database/mongoose/schemas/';
     describe("createContest", function() {
     
         beforeEach(async function() { 
-            await UserSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await UserModel.create({
                 firstName: "Peter",
                     lastName: "Walsh",
                     email: "peter.t.walsh@stonybrook.edu",
@@ -46,12 +45,12 @@ import { ContestSchema } from '../../database/mongoose/schemas/';
                     friends: [],
                     imageURL: " "
             })
-            await ContestSchema.deleteMany() 
+            await ContestModel.deleteMany() 
         });
 
         it('It should create and return a new contest', async function() {
             let contest: MongooseContestDBM = new MongooseContestDBM()
-            let user = await UserSchema.create({
+            let user = await UserModel.create({
                 firstName: "Tuyen",
                 lastName: "Vo",
                 email: "tuyen.vo@stonybrook.edu",
@@ -85,7 +84,7 @@ import { ContestSchema } from '../../database/mongoose/schemas/';
             expect(con).property("isPublished", true)
             
             if (con !== null) {
-                let res = await ContestSchema.findById(con.id)
+                let res = await ContestModel.findById(con.id)
                 expect(res).not.null;
             }
         });

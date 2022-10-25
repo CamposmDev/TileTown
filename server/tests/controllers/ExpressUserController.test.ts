@@ -3,7 +3,7 @@ import request from 'supertest';
 import { app } from '../../express';
 import { db } from "../../database";
 import { expect } from 'chai';
-import { UserSchema } from '../../database/mongoose/schemas';
+import { UserModel } from '../../database/mongoose/schemas';
 import { Auth } from '../../express/middleware';
 
 
@@ -27,7 +27,7 @@ describe("ExpressUserController", function () {
     describe("getUserById", function () {
 
         beforeEach(async function () {
-            await UserSchema.deleteMany({});
+            await UserModel.deleteMany({});
             await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -39,7 +39,7 @@ describe("ExpressUserController", function () {
 
         // Invalid Id - 404 - send id of nonexisting user
         it("Failure - Invalid user id", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(id);
 
@@ -49,7 +49,7 @@ describe("ExpressUserController", function () {
 
         // Unauthorized - 401 - request without authorization
         it("Failure - Invalid token", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token: string = "Bad token!";
 
@@ -59,7 +59,7 @@ describe("ExpressUserController", function () {
 
         // Valid Id - 200 - send id of exisitng user
         it("Success - Valid token and valid user id", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(id);
 
@@ -77,7 +77,7 @@ describe("ExpressUserController", function () {
     describe("createUser", function () {
 
         beforeEach(async function () {
-            await UserSchema.deleteMany({});
+            await UserModel.deleteMany({});
             await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -155,7 +155,7 @@ describe("ExpressUserController", function () {
     describe("loginUser", function () {
 
         beforeEach(async function () {
-            await UserSchema.deleteMany({});
+            await UserModel.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -201,7 +201,7 @@ describe("ExpressUserController", function () {
     describe("logoutUser", function () {
 
         beforeEach(async function () {
-            await UserSchema.deleteMany({});
+            await UserModel.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -214,7 +214,7 @@ describe("ExpressUserController", function () {
 
         // Unauthorized - 401 - Request without authorization token
         it("Failure - Unauthorized user", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(id);
             let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token + "1"}`]);
@@ -224,7 +224,7 @@ describe("ExpressUserController", function () {
 
         // Success - 200 - User has valid credentials and logged out
         it("Success - Authorized User", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).post(`/api/user/logout`).set("Cookie", [`token=${token}`]);
@@ -246,7 +246,7 @@ describe("ExpressUserController", function () {
     describe("deleteUserById", function () {
 
         beforeEach(async function () {
-            await UserSchema.deleteMany({});
+            await UserModel.deleteMany({});
             let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
@@ -259,7 +259,7 @@ describe("ExpressUserController", function () {
 
         // Unauthorized - 401 - User was not deleted
         it("Bad Request - Unauthorized", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token + "1"}`]);
@@ -268,7 +268,7 @@ describe("ExpressUserController", function () {
 
         // Success - 200 - User deleted, deleted user id returned
         it("Success - Authorized", async function () {
-            let user = await UserSchema.findOne({ email: "peteylumpkins@gmail.com" })
+            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
             let id: string = user !== null ? user._id.toString() : "";
             let token = Auth.signJWT<string>(JSON.stringify(id));
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token}`]);
