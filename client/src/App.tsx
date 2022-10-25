@@ -5,6 +5,7 @@ import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import SplashScreen from './components/SplashScreen';
 import MainFeedScreen from './components/MainFeedScreen';
+import VerifyEmail from './components/VerifyEmail';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path='/register/' element={<AppBanner/>}/>
       </Routes>
       <Routes>
+        <Route path='/modals' element={<VerifyEmail/>}/>
         <Route path='/' element={<SplashScreen/>} />
         <Route path='/login' element={<LoginScreen/>} />
         <Route path='/register' element={<RegisterScreen/>} />
