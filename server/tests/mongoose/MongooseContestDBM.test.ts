@@ -90,29 +90,6 @@ import { Contest } from '../../types';
         });
         
     });
-    
-    it('It should create and return a new contest', async function() {
-        let contest: MongooseContestDBM = new MongooseContestDBM()
-        let startDate: Date = new Date()
-        let endDate: Date = new Date()
-        let partial = {
-            "owner": "63560ddd205cc7cbe9c63b1d",
-            "name": "Vo",
-            "description": "My Contest Description",
-            "startDate": startDate,
-            "endDate": endDate,
-            "isPublished": true
-        }
-        let con: Contest | null = await contest.createContest(partial)
-        expect(con).not.null
-        expect(con).property("owner", "63560ddd205cc7cbe9c63b1d")
-        expect(con).property("name", "Vo")
-        expect(con).property("description", "My Contest Description")
-        expect(con).property("participates", [])
-        expect(con).property("startDate", Date)
-        expect(con).property("endDate", Date)
-        expect(con).property("isPublished", true)
-    })
 
     describe("getContest", function() {});
 
