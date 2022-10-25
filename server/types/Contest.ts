@@ -1,3 +1,4 @@
+
 /**
  * A type that defines a Contest object on our server.
  * @author Peter Walsh

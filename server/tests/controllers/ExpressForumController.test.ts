@@ -5,18 +5,18 @@ import { db } from "../../database";
 import { expect } from 'chai';
 import { UserSchema } from "../../database/mongoose/schemas";
 import { ForumPostSchema } from '../../database/mongoose/schemas';
-import { UserSchemaType } from '../../database/mongoose/types';
 
 
 /** 
- * Tests for the UserRouter and associated handlers
- * @author Peter Walsh
+ * Tests for the ForumRouter and associated handlers
+ * @author Michael Campos
  */
 describe('ExpressUserController', function() {
 
     /** Start the server on port 3000 */
     const server = app.listen('3001');
 
+    /** Before running the tests, connect to the database */
     before(async function() {
         const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
         await db.connect(connect)
@@ -24,7 +24,7 @@ describe('ExpressUserController', function() {
 
     /**
      * Method: POST
-     * Route: api/forum
+     * Route: /api/forum
      */
     describe('createForumPost', function() {
         this.beforeEach(async function() {
@@ -46,6 +46,10 @@ describe('ExpressUserController', function() {
         })
     })
 
+    /**
+     * Method: GET
+     * Route: /api/forum/:id
+     */
     describe('getForumPost', function() {
         let forumPostId: string
         this.beforeEach(async function() {
@@ -63,13 +67,17 @@ describe('ExpressUserController', function() {
             let forumPost = await ForumPostSchema.findOne({title: 'How do i comuter'})
             forumPostId = forumPost !== null ? forumPost._id.toString() : ''
         })
-
+        
         it('Successfully retrieved forum post by id', async function() {
             let res = await request(app).get('/api/forum/' + forumPostId).send()
             expect(res.status).equal(200)
         })
     })
-
+    
+    /**
+     * Method: PUT
+     * Route: /api/forum/:id
+     */
     describe('updateForumPost', function() {
         let forumPostId: string
         beforeEach(async function() {
@@ -101,6 +109,10 @@ describe('ExpressUserController', function() {
         })
     })
 
+    /**
+     * Method: PUT
+     * Route: /api/forum/like/:id
+     */
     describe('likeForumPostById', function() {
         let userId: string
         let forumPostId: string
@@ -155,6 +167,10 @@ describe('ExpressUserController', function() {
         
     })
 
+    /**
+     * Method: PUT
+     * Route: /api/forum/dislike/:id
+     */
     describe('dislikeForumPost', function() {
         let userId: string
         let forumPostId: string
@@ -207,6 +223,10 @@ describe('ExpressUserController', function() {
         })
     })
 
+    /**
+     * Method: PUT
+     * Route: /api/forum/comment/:id
+     */
     describe("commentForumPostById", function() {
         let userId: string
         let forumPostId: string
@@ -256,6 +276,7 @@ describe('ExpressUserController', function() {
         })
     })
 
+    /** After running the tests, close the server and disconnect from database */
     after(async function() {
         /** Close the conenction to the server */
         server.close()

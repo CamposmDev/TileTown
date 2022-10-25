@@ -109,12 +109,12 @@ export default class MongooseContestDBM implements ContestDBM {
         return null
     }
 
-    async deleteContest(contestId: string): Promise<boolean> {
-        let con = await ContestSchema.findById(contestId)
-        if (con !== null) {
-            await con.delete()
-            return true
-        }
-        return false
-    }
+  async deleteContest(contestId: string): Promise<boolean> {
+      let con = await ContestSchema.findById(contestId)
+      if (con !== null) {
+          await con.delete()
+          return true
+      }
+      return false
+  }
 }
