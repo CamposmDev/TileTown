@@ -1,7 +1,8 @@
+import Box from '@mui/material/Box'
 
 const RegisterScreen = () => {
     return (
-        <div></div>
+        <Box></Box>
     )
 }
 

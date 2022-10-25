@@ -1,11 +1,13 @@
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
+import Fade from '@mui/material/Fade'
 
 const SplashScreen = () => {
     return (
-        <Box id='splash-screen'>
-            <Box id='title'></Box>
-        </Box>
+        <Fade in={true} timeout={1000} children={
+            <Box pt={8} id='splash-screen'>
+                <Box id='title'></Box>
+            </Box>
+        }></Fade>
     )
 }
 

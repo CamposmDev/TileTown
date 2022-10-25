@@ -119,7 +119,7 @@ const AppHeader = () => {
 
     return (
         <Box sx={{flexGrow: 1}}>
-            <AppBar position='static'>
+            <AppBar position='sticky'>
                 <Toolbar>
                      {/** The NavDrawer should only show in main feed and other areas though...hmm.. */}
                     <NavDrawer/>
