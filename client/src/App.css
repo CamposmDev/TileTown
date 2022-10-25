@@ -1,0 +1,37 @@
+#root {
+    background-color: var(--swatch-primary);
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    height: 95%;
+}
+
+#title {
+    /* border-color: black;
+    border-width: 1px;
+    border-style: solid; */
+    margin: auto;
+    /* display: flex; */
+    background-image: url('../public/res/tiletown.png');
+    background-size: cover;
+    /* background-size: 10%; */
+    background-repeat: no-repeat;
+    height: 15%;
+    width: 30%;
+    justify-content: center;
+}
+
+#splash-screen {
+    /* background-image: linear-gradient(to bottom, #e6c10a, #c400c7); */
+    background-image: url('../public/res/bg.jpg');
+    background-size: cover;
+    color: white;
+    /* border-color: black; */
+    /* border-width: 1px; */
+    /* border-style: solid; */
+    padding-top: 5%;
+    padding-bottom: 5%;
+    height: 75%;
+    /* text-align: center; */
+    /* vertical-align: center;  */
+}
