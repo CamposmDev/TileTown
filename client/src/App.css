@@ -1,9 +1,10 @@
 #root {
     /* background-color: var(--swatch-primary); */
     position: absolute;
-    width: 98%;
+    /* width: 98%; */
+    width: 99%;
     height: 90%;
-    left: 1%;
+    left: 0.5%;
 }
 
 #title {

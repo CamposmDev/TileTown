@@ -1,7 +1,7 @@
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Button from '@mui/material/Button';
-import { FormControlLabel, Checkbox } from '@mui/material';
+// import { FormControlLabel, Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -10,7 +10,6 @@ import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Fade from '@mui/material/Fade';
-import Grow from '@mui/material/Grow'
 // import { useState, useContext } from 'react';
 // import AuthContext from '../context/auth'
 import Copyright from './Copyright'
@@ -24,7 +23,7 @@ const LoginScreen = () => {
                     <LoginIcon />
                 </Avatar>
                 
-                <Typography component="h1" variant="h4">Login</Typography>
+                <Typography component="h1" variant="h5">Login</Typography>
 
                 <Box 
                     component="form" 
@@ -70,7 +69,7 @@ const LoginScreen = () => {
                 <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link href="/register/" variant="body2">
-                        Already have an account? Sign In
+                        Don't have an account? Register
                         </Link>
                     </Grid>
                 </Grid>
@@ -79,7 +78,7 @@ const LoginScreen = () => {
         </Container>
     )
     return (
-        <Grow in={true} timeout={1000} children={ui}></Grow>
+        <Fade in={true} timeout={1000} children={ui}></Fade>
     )
 }
 

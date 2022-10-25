@@ -14,6 +14,7 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import MeetingRoomSharpIcon from '@mui/icons-material/MeetingRoomSharp';
 import NavDrawer from './NavDrawer'
+import { JsxElement } from 'typescript'
 
 const MENU_PAPER_PROPS = {
     elevation: 0,
@@ -42,7 +43,11 @@ const MENU_PAPER_PROPS = {
     },
 }
 
-const AppHeader = () => {
+// export interface MenuProps {
+//     menu: JsxElement
+// }
+
+const AppBanner = () => {
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
     const open = Boolean(anchorEl)
@@ -129,7 +134,7 @@ const AppHeader = () => {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block', flexGrow: 1 } }}
                     >
-                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sub>T</sub></Link>
+                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>TileTown</Link>
                     </Typography>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
@@ -150,4 +155,4 @@ const AppHeader = () => {
     )
 }
 
-export default AppHeader
+export default AppBanner
