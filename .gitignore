@@ -1,7 +1,6 @@
-# Node Modules
 client/node_modules
+client/build
 server/node_modules
-
-# C Directory
-.dist
-*/.dist
+server/.env
+server/build
+.env
