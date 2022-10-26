@@ -78,13 +78,14 @@ describe("ExpressUserController", function () {
 
         beforeEach(async function () {
             await UserModel.deleteMany({});
-            await db.users.createUser({
+            let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
                 username: "PeteyLumps",
                 password: "password",
             });
+            expect(user).not.null;
         });
 
         // Success - 201 - User created successfully and returned
@@ -99,35 +100,35 @@ describe("ExpressUserController", function () {
             expect(response.status).equals(201);
         })
 
-        // // Bad Request - 400 - non-unique email
-        // it("Failure - Non-unique email", async function () {
-        //     let response = await request(app).post("/api/user/").send({
-        //         username: "PeteyLumpkins",
-        //         password: "blackstarthedog",
-        //         email: "Walsh9636@gmail.com",
-        //         firstName: "Peter",
-        //         lastName: "Walsh"
-        //     });
-        //     expect(response.status).equals(400);
-        // });
+        // Bad Request - 400 - non-unique email
+        it("Failure - Non-unique email", async function () {
+            let response = await request(app).post("/api/user/").send({
+                username: "PeteyLumpkins",
+                password: "blackstarthedog",
+                email: "Walsh9636@gmail.com",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(400);
+        });
 
-        // // Bad Request - 400 - non-unique username
-        // it("Failure - Non-unique username", async function () {
-        //     let response = await request(app).post("/api/user/").send({
-        //         username: "PeteyLumps",
-        //         password: "blackstarthedog",
-        //         email: "walsh9636@gmail.com",
-        //         firstName: "Peter",
-        //         lastName: "Walsh"
-        //     });
-        //     expect(response.status).equals(400);
-        // });
+        // Bad Request - 400 - non-unique username
+        it("Failure - Non-unique username", async function () {
+            let response = await request(app).post("/api/user/").send({
+                username: "PeteyLumps",
+                password: "blackstarthedog",
+                email: "walsh9636@gmail.com",
+                firstName: "Peter",
+                lastName: "Walsh"
+            });
+            expect(response.status).equals(400);
+        });
 
         // Bad Request - 400 - invalid password (<= 12 chararacters)
         it("Failure - Invalid Password - Exactly 12 characters", async function () {
             let response = await request(app).post("/api/user").send({
                 username: "PeteyLumpkins",
-                password: "blackstardog",
+                password: "blackstardo",
                 email: "walsh9636@gmail.com",
                 firstName: "Peter",
                 lastName: "Walsh"

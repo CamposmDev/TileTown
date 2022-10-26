@@ -20,6 +20,22 @@ describe("Testing MongooseUserDBM", function() {
     /** The connection string to connect to mongoose */
     const connect: string = process.env.MONGO_URI || "mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority";
 
+    const user1 = {
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peter.t.walsh@stonybrook.edu",
+        username: "peteylumpkins",
+        password: "password",
+        verifyKey: 'key',
+        isVerified: false,
+        favoriteTileMaps: [],
+        favoriteTileSets: [],
+        joinedContests: [],
+        joinedCommunities: [],
+        friends: [],
+        imageURL: " "
+    }
+
     /** 
      * The before method gets called before any of the nested testing suites or tests 
      * gets run. Before I do anything, I need to connect to the database.
@@ -72,66 +88,76 @@ describe("Testing MongooseUserDBM", function() {
 
     });
 
-    describe("loginUser", function() {
+    describe("getUserByEmail", function() {
 
-        beforeEach(async function() { 
+        beforeEach(async function() {
             await UserModel.deleteMany(); 
-            await UserModel.create({
-                firstName: "Peter",
-                lastName: "Walsh",
-                email: "peter.t.walsh@stonybrook.edu",
-                username: "PeteyLumps",
-                password: await hash("DummyPassword", 10),
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [],
-                friends: [],
-                imageURL: " "
-            })
-        });
+            await UserModel.create(user1);
+        })
 
-        it("Success - User email exists and associated password matches", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-            let user: User | null = await users.loginUser("peter.t.walsh@stonybrook.edu", "DummyPassword");
+        it("Success - returns user with email", async function() {
+            let users = new MongooseUserDBM();
+            let user = await users.getUserByEmail(user1.email);
             expect(user).not.null;
+            expect(user).to.have.property("email", user1.email);
         });
 
-        it("Failure - user email does not exist", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-            let user: User | null = await users.loginUser("peter.t.walsh@gmail.com", "DummyPassword");
+        it("Failure - user with email doesn't exist", async function() {
+            let users = new MongooseUserDBM();
+            let user = await users.getUserByEmail(user1.email + "1");
             expect(user).null;
         });
+    })
 
-        it("Failure - user password does not match", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-            let user: User | null = await users.loginUser("peter.t.walsh@stonybrook.edu", "blackstarthedog");
-            expect(user).null;
+    describe("getUserByUsername", function() {
+        beforeEach(async function() {
+            await UserModel.deleteMany(); 
+            await UserModel.create(user1);
+        });
+        it("Success - returns user with email", async function() {
+            let users = new MongooseUserDBM();
+            let user = await users.getUserByUsername(user1.username);
+            expect(user).not.null;
+            expect(user).to.have.property("username", user1.username);
         });
 
+        it("Failure - user with email doesn't exist", async function() {
+            let users = new MongooseUserDBM();
+            let user = await users.getUserByEmail(user1.username + "1");
+            expect(user).null;
+        });
     });
+
+    // describe("loginUser", function() {
+
+    //     beforeEach(async function() { 
+    //         await UserModel.deleteMany(); 
+    //     });
+
+    //     it("Success - User email exists and associated password matches", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
+    //         let user: User | null = await users.loginUser("peter.t.walsh@stonybrook.edu", "DummyPassword");
+    //         expect(user).not.null;
+    //     });
+
+    //     it("Failure - user email does not exist", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
+    //         let user: User | null = await users.loginUser("peter.t.walsh@gmail.com", "DummyPassword");
+    //         expect(user).null;
+    //     });
+
+    //     it("Failure - user password does not match", async function() {
+    //         let users: MongooseUserDBM = new MongooseUserDBM();
+    //         let user: User | null = await users.loginUser("peter.t.walsh@stonybrook.edu", "blackstarthedog");
+    //         expect(user).null;
+    //     });
+
+    // });
 
     describe("createUser", function() {
 
         beforeEach(async function() { 
             await UserModel.deleteMany(); 
-            await UserModel.create({
-                firstName: "Peter",
-                lastName: "Walsh",
-                email: "Walsh9636@gmail.com",
-                username: "PeteyLumps",
-                password: "DummyPassword",
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [],
-                friends: [],
-                imageURL: " "
-            })
         });
 
         it("Successfully creates a new user in the DBMS", async function() {
@@ -156,89 +182,7 @@ describe("Testing MongooseUserDBM", function() {
             expect(res).not.null;
         });
 
-        it("Fails to create a new user - password is not long enough", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let partial = {
-                firstName: "Peter", 
-                lastName: "Walsh",
-                username: "Peteylumpkins",
-                password: "blackstardog",
-                email: "peter.t.walsh@stonybrook.edu"
-            }
-    
-            let user: User | null = await users.createUser(partial);
-            expect(user).null;
-
-            let res: UserSchemaType[] = await UserModel.find({email: partial.email});
-            expect(res).length(0);
-        });
-
-        it("Fails to create a new user - missing info in partial", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-
-            let partial = {
-                firstName: "Peter", 
-                lastName: "Walsh",
-                username: "Peteylumpkins",
-                password: "blackstardog"
-            }
-
-            let user: User | null = await users.createUser(partial);
-            expect(user).null;
-
-            let res: UserSchemaType[] = await UserModel.find({email: partial.username});
-            expect(res).length(0);
-        })
-
-        it("Fails to create a new user - account with email already exists", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-
-            let partial = {
-                firstName: "Peter", 
-                lastName: "Walsh",
-                username: "Peteylumpkins",
-                password: "blackstardog",
-                email: "Walsh9636@gmail.com"
-            }
-
-            let user: User | null = await users.createUser(partial);
-            expect(user).null;
-
-            let res: UserSchemaType[];
-            res = await UserModel.find({username: partial.username});
-            expect(res).length(0);
-
-            res = await UserModel.find({email: partial.email});
-            expect(res).length(1);
-            expect(res[0]).to.have.property('email', 'Walsh9636@gmail.com');
-            expect(res[0]).to.have.property('username', 'PeteyLumps');
-        });
-
-        it("Fails to create a new user - account with username already exists", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
-
-            let partial = {
-                firstName: "Peter", 
-                lastName: "Walsh",
-                username: "PeteyLumps",
-                password: "blackstardog",
-                email: "peter.t.walsh@stonybrook.edu"
-            }
-
-            let user: User | null = await users.createUser(partial);
-            expect(user).null;
-
-            let res: UserSchemaType[];
-
-            res = await UserModel.find({email: partial.email});
-            expect(res).length(0);
-
-            res = await UserModel.find({username: partial.username});
-            expect(res).length(1);
-            expect(res[0]).to.have.property('email', 'Walsh9636@gmail.com');
-            expect(res[0]).to.have.property('username', 'PeteyLumps');
-        });
 
     });
 
