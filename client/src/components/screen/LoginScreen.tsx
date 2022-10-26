@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import Fade from '@mui/material/Fade';
 // import { useState, useContext } from 'react';
 // import AuthContext from '../context/auth'
-import Copyright from './Copyright'
+import Copyright from '../Copyright';
 
 const LoginScreen = () => {
     let ui = (

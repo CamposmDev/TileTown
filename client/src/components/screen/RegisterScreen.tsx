@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 // import AuthContext from '../context/auth'
-import Copyright from './Copyright'
+import Copyright from '../Copyright'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';

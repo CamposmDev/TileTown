@@ -31,12 +31,20 @@ export default function NavDrawer() {
     setIsDrawerOpen(false)
   }
 
+  const initMenuItem = (text: string, action: Action) => {
+    return (
+      <MenuItem onClick={() => handleClick(action)}>
+        <Typography variant='button'>{text}</Typography>
+      </MenuItem>
+    )
+  }
+
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
         <Box p={2} width='200px' role='presentation' textAlign='start'>
-          <Grid container justifyContent={'start'} alignContent={'center'} spacing={1}>
+          <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
-              <MenuIcon/>
+              <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>
             </Grid>
               <Grid item><Typography variant='h6' component='div'>TileTown</Typography>
             </Grid>
@@ -44,47 +52,51 @@ export default function NavDrawer() {
           <Divider/>
           <Grid mt={2} container direction={'column'} justifyContent={'flex-end'} spacing={1} >
             <Grid item >
-              <MenuItem onClick={() => handleClick(Action.Home)}><Typography variant='h6'>Home</Typography></MenuItem>
+              {initMenuItem('Home', Action.Home)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Tilemaps)}><Typography variant='h6'>Tilemaps</Typography></MenuItem>
+            {initMenuItem('Tilemaps', Action.Tilemaps)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Tilesets)}><Typography variant='h6'>Tilesets</Typography></MenuItem>
+            {initMenuItem('Tilesets', Action.Tilesets)}
             </Grid>
             <Grid item>
               <Divider/>
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Friends)}><Typography variant='h6'>Friends</Typography></MenuItem>
+            {initMenuItem('Friends', Action.Friends)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Users)}><Typography variant='h6'>Users</Typography></MenuItem>
+            {initMenuItem('Users', Action.Users)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Communties)}><Typography variant='h6'>Communities</Typography></MenuItem>
+            {initMenuItem('Communities', Action.Communties)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Contests)}><Typography variant='h6'>Contests</Typography></MenuItem>
+            {initMenuItem('Contest', Action.Contests)}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Forum)}><Typography variant='h6'>Forum</Typography></MenuItem>
+            {initMenuItem('Forum', Action.Forum)}
             </Grid>
           </Grid>
         </Box>
       </Drawer>
   )
   return (
-    <>
+    <Grid 
+      // borderRadius={'5%'} 
+      // boxShadow={1}
+    >
       <IconButton
         onClick={() => setIsDrawerOpen(true)}
         size='large'
-        edge='start'
         color='inherit'
         aria-label='logo'>
-        <MenuIcon />
+        <MenuIcon 
+          transform={'scale(1.3)'}
+        />
       </IconButton>
       {drawer}
-    </>
+    </Grid>
   )
 }
