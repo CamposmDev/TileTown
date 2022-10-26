@@ -340,7 +340,32 @@ export default class UserController {
     }
 
     public async deleteUserById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({message: "Deleting a user!"})
+        if (!req || !req.body) {
+            res.status(400).json({message: "Bad Request"});
+            return;
+        }
+        if (!req.userId) {
+            res.status(401).json({message: "Unauthorized"});
+            return;
+        }
+
+        // Check and see if the user exists in the database
+        let user = db.users.getUserById(req.userId);
+        if (user === null) {
+            res.status(404).json({message: "User not found"});
+            return;
+        }
+
+        // If user exists, try deleting the user
+        let deleted = db.users.deleteUser(req.userId);
+        if (!deleted) {
+            res.status(500).json({message: "Server Error"});
+            return;
+        }
+
+        // Return info on deleted user
+        res.status(200).json({message: "User deleted successfully!", user: user});
+        return;
     }
 
 }

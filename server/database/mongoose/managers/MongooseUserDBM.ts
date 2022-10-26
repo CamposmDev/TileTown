@@ -61,7 +61,7 @@ export default class MongooseUserDBM implements UserDBM {
 
         this.fillUserModel(user, partial);
         let savedUser = await user.save()
-        
+
         return this.fromUserSchema(savedUser);
     }
  
@@ -214,13 +214,11 @@ export default class MongooseUserDBM implements UserDBM {
     
     async deleteUser(userId: string): Promise<boolean> {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
-
         let user = await UserModel.findById(userId)
-        if (user !== null) {
-            await user.delete();
-            return true
+        if (user === null) {
+            return false;
         }
-        return false
+        return true;
     }
     
     async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
