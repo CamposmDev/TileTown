@@ -5,6 +5,7 @@ import { db } from "../../database";
 import { expect } from 'chai';
 import { UserModel } from '../../database/mongoose/schemas';
 import { Auth } from '../../express/middleware';
+import { HashingUtils } from '../../util/index';
 
 
 /** 
@@ -33,7 +34,7 @@ describe("ExpressUserController", function () {
                 lastName: "Walsh",
                 email: "peteylumpkins@gmail.com",
                 username: "peteylumpkins",
-                password: "blackstarthedog",
+                password: await HashingUtils.hash("blackstarthedog"),
             });
         });
 
@@ -83,7 +84,7 @@ describe("ExpressUserController", function () {
                 lastName: "Walsh",
                 email: "Walsh9636@gmail.com",
                 username: "PeteyLumps",
-                password: "password",
+                password: await HashingUtils.hash("password12345"),
             });
             expect(user).not.null;
         });
@@ -157,14 +158,13 @@ describe("ExpressUserController", function () {
 
         beforeEach(async function () {
             await UserModel.deleteMany({});
-            let user = await db.users.createUser({
+            await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
-                username: "PeteyLumpkings",
-                password: "password12345"
+                username: "PeteyLumps",
+                password: await HashingUtils.hash("password12345"),
             });
-            expect(user).not.null;
         });
 
         // Bad Request - 400 - Invalid user email
@@ -191,7 +191,7 @@ describe("ExpressUserController", function () {
                 password: "password12345",
                 email: "peter.t.walsh@stonybrook.edu",
             });
-            expect(response.status).equals(200);
+            expect(response.status).equals(200, response.body.message);
         });
     });
 
@@ -206,11 +206,11 @@ describe("ExpressUserController", function () {
             let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
-                email: "peter.t.walsh@stonybrook.edu",
-                username: "PeteyLumpkings",
-                password: "password12345"
+                email: "Walsh9636@gmail.com",
+                username: "PeteyLumps",
+                password: await HashingUtils.hash("password"),
             });
-            expect(user).not.null;
+
         });
 
         // Unauthorized - 401 - Request without authorization token
@@ -248,30 +248,39 @@ describe("ExpressUserController", function () {
 
         beforeEach(async function () {
             await UserModel.deleteMany({});
+            await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peter.t.walsh@stonybrook.edu",
+                username: "PeteyLumpkings",
+                password: await HashingUtils.hash("password12345")
+            })
+        });
+
+        // Unauthorized - 401 - User was not deleted
+        it("Bad Request - Unauthorized", async function () {
             let user = await db.users.createUser({
                 firstName: "Peter",
                 lastName: "Walsh",
                 email: "peter.t.walsh@stonybrook.edu",
                 username: "PeteyLumpkings",
-                password: "password12345"
+                password: await HashingUtils.hash("password12345")
             });
-            expect(user).not.null;
-        });
-
-        // Unauthorized - 401 - User was not deleted
-        it("Bad Request - Unauthorized", async function () {
-            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
-            let id: string = user !== null ? user._id.toString() : "";
-            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let token = Auth.signJWT<string>(user ? user.id : "");
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token + "1"}`]);
             expect(response.status).equals(401);
         });
 
         // Success - 200 - User deleted, deleted user id returned
         it("Success - Authorized", async function () {
-            let user = await UserModel.findOne({ email: "peteylumpkins@gmail.com" })
-            let id: string = user !== null ? user._id.toString() : "";
-            let token = Auth.signJWT<string>(JSON.stringify(id));
+            let user = await db.users.createUser({
+                firstName: "Peter",
+                lastName: "Walsh",
+                email: "peter.t.walsh@stonybrook.edu",
+                username: "PeteyLumpkings",
+                password: await HashingUtils.hash("password12345")
+            });
+            let token = Auth.signJWT<string>(user ? user.id : "");
             let response = await request(app).delete(`/api/user/`).set("Cookie", [`token=${token}`]);
             expect(response.status).equals(200);
         });
