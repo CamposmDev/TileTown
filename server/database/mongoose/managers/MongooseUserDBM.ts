@@ -30,34 +30,6 @@ export default class MongooseUserDBM implements UserDBM {
         return this.fromUserSchema(user);
     }
 
-    async loginUser(userEmail: string, userPassword: string): Promise<User | null> {
-        // Find the user based off their email
-        let user = await UserModel.findOne({email: userEmail});
-        if (user === null) return null;
-
-        // Check the user's password I think
-        let isOwner: boolean = await compare(userPassword, user.password);
-        if (!isOwner) return null;
-
-        // If the password matches up - return the user.
-        return {
-            id: user._id.toString(),
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            password: user.password,
-            imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
-            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
-            isVerified: user.isVerified,
-            verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
-            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
-        }
-    }
-
     async createUser(userpy: Partial<User>): Promise<User | null> {
         
         let user = await UserModel.create({
@@ -79,6 +51,18 @@ export default class MongooseUserDBM implements UserDBM {
         if (user === null) return null;
 
         return this.fromUserSchema(user);
+    }
+
+    async updateUser(id: string, partial: Partial<User>): Promise<User | null> {
+        if (!mongoose.Types.ObjectId.isValid(id)) { return null; }
+
+        let user = await UserModel.findById(id);
+        if (user === null) return null;
+
+        this.fillUserModel(user, partial);
+        let savedUser = await user.save()
+        
+        return this.fromUserSchema(savedUser);
     }
  
     async verifyUser(key: string): Promise<boolean> {
@@ -323,5 +307,21 @@ export default class MongooseUserDBM implements UserDBM {
             joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
             joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
         }
+    }
+
+    protected fillUserModel(user: UserSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<User>): void {
+        user.username = partial.username ? partial.username : user.username;
+        user.email = partial.email ? partial.email : user.email;
+        user.firstName = partial.firstName ? partial.firstName : user.firstName;
+        user.lastName = partial.lastName ? partial.lastName : user.lastName;
+        user.password = partial.password ? partial.password : user.password;
+        user.imageURL = partial.imageURL ? partial.imageURL : user.imageURL;
+        user.isVerified = partial.isVerified ? partial.isVerified : user.isVerified;
+        user.verifyKey = partial.verifyKey ? partial.verifyKey : user.verifyKey;
+        user.favoriteTileMaps = partial.favoriteTileMaps ? partial.favoriteTileMaps.map((id: string) => new mongoose.Types.ObjectId(id)) : user.favoriteTileMaps;
+        user.favoriteTileSets = partial.favoriteTileSets ? partial.favoriteTileSets.map((id: string) => new mongoose.Types.ObjectId(id)) : user.favoriteTileSets;
+        user.friends = partial.friends ? partial.friends.map((id: string) => new mongoose.Types.ObjectId(id)) : user.friends;
+        user.joinedCommunities = partial.joinedCommunities ? partial.joinedCommunities.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedCommunities;
+        user.joinedContests = partial.joinedContests ? partial.joinedContests.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedContests;
     }
 }

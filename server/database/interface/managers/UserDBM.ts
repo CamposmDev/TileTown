@@ -19,18 +19,8 @@ export default interface UserDBM {
      * @return a user object with all information about the user or null
      */
     getUserById(userId: string): Promise<User | null>;
-
     getUserByEmail(email: string): Promise<User | null>;
     getUserByUsername(username: string): Promise<User | null>
-
-    /** 
-     * Handles logging a user into TileTown.
-     * 
-     * @param userEmail the users email
-     * @param userPassword the users password
-     * @return a user object with updated user info (including users session key)
-     */
-    loginUser(userEmail: string, userPassword: string): Promise<User | null>;
 
     /**
      * Creates a new user in the DBMS from the a partial User object. 
@@ -76,6 +66,8 @@ export default interface UserDBM {
      * @return true if a users account was verified successfully; false otherwise.
      */
     verifyUser(key: string): Promise<boolean>;
+
+    updateUser(id: string, user: Partial<User>): Promise<User | null>
 
     /**
      * Updates the password of the user with the given user id in the DBMS to the given password
