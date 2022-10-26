@@ -214,7 +214,7 @@ export default class MongooseUserDBM implements UserDBM {
     
     async deleteUser(userId: string): Promise<boolean> {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
-        let user = await UserModel.findById(userId)
+        let user = await UserModel.findByIdAndDelete(userId);
         if (user === null) {
             return false;
         }

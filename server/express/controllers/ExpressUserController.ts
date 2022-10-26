@@ -215,6 +215,11 @@ export default class UserController {
             return;
         }
 
+        if (req.body.newPassword.length < 12) {
+            res.status(400).json({message: "New password must be at least 12 characters long"});
+            return;
+        }
+
         // Try and get the user with the user id
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
@@ -225,7 +230,7 @@ export default class UserController {
         // Check to see if the old password matches the users password
         let match = await HashingUtils.compare(req.body.oldPassword, user.password);
         if (!match) {
-            res.status(400).json({message: "Password do not match"});
+            res.status(400).json({message: "Current password does not match the users current password on record"});
             return;
         }
 
@@ -258,8 +263,12 @@ export default class UserController {
 
         // Check if a user with the new email exists that isn't the current user
         let existingEmail = await db.users.getUserByEmail(req.body.email);
-        if (existingEmail !== null && existingEmail.id !== req.userId) {
-            res.status(400).json({message: `User with email ${req.body.email} already registered to another user`});
+        if (existingEmail !== null) {
+            if (existingEmail.id === req.userId) {
+                res.status(400).json({message: `User is already registered to this email address`});
+            } else {
+                res.status(400).json({message: `User with email ${req.body.email} already registered to another user`});
+            }
             return;
         }
 
@@ -350,21 +359,21 @@ export default class UserController {
         }
 
         // Check and see if the user exists in the database
-        let user = db.users.getUserById(req.userId);
+        let user = await db.users.getUserById(req.userId);
         if (user === null) {
             res.status(404).json({message: "User not found"});
             return;
         }
 
         // If user exists, try deleting the user
-        let deleted = db.users.deleteUser(req.userId);
+        let deleted = await db.users.deleteUser(req.userId);
         if (!deleted) {
             res.status(500).json({message: "Server Error"});
             return;
         }
 
         // Return info on deleted user
-        res.status(200).json({message: "User deleted successfully!", user: user});
+        res.status(200).clearCookie("token").json({message: "User deleted successfully!", user: user});
         return;
     }
 
