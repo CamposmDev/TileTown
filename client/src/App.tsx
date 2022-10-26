@@ -9,11 +9,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<NavBar items={<WelcomeMenu/>}/>}/>
-        <Route path='/login/' element={<NavBar items={<WelcomeMenu/>}/>}/>
-        <Route path='/register/' element={<NavBar items={<WelcomeMenu/>}/>}/>
-        <Route path='/feed' element={<NavBar items={<UserMenu/>}/>}/>
-        <Route path='/settings' element={<NavBar items={<UserMenu/>}/>}/>
+        {['/', '/login', '/register'].map((x,i) => 
+          <Route path={x} element={<NavBar items={<WelcomeMenu/>}/>} key={i}/>
+          )}
+        {['/feed', '/settings'].map((x,i) =>
+          <Route path={x} element={<NavBar items={<UserMenu/>}/>}/>
+        )}
       </Routes>
       <Routes>
         <Route path='/' element={<SplashScreen/>} />

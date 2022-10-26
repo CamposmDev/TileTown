@@ -68,7 +68,7 @@ const LoginScreen = () => {
                 </Box>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <Link href="/register/" variant="body2">
+                        <Link href="/register" variant="body2">
                         Don't have an account? Register
                         </Link>
                     </Grid>

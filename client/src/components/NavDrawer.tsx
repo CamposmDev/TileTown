@@ -1,41 +1,20 @@
 import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
-
-
-enum Action {
-  Home = 0,
-  Tilemaps = 1,
-  Tilesets = 2,
-  Friends = 3,
-  Users = 4,
-  Communties = 5,
-  Contests = 6,
-  Forum = 7
-}
+// import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export default function NavDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  // const navigate = useNavigate()
 
-  const handleClick = (action: Action) => {
-    switch(action) {
-      case 0: break
-      case 1: break
-      case 2: break
-      case 3: break
-      case 4: break
-      case 5: break
-      case 6: break
-      case 7: break
-    }
+  const handleMenuClose = () => {
     setIsDrawerOpen(false)
   }
 
-  const initMenuItem = (text: string, action: Action) => {
+  const initMenuItem = (text: string, path: string) => {
     return (
-      <MenuItem onClick={() => handleClick(action)}>
-        <Typography variant='button'>{text}</Typography>
-      </MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to={path}>{text}</MenuItem>
     )
   }
 
@@ -52,31 +31,31 @@ export default function NavDrawer() {
           <Divider/>
           <Grid mt={2} container direction={'column'} justifyContent={'flex-end'} spacing={1} >
             <Grid item >
-              {initMenuItem('Home', Action.Home)}
+              {initMenuItem('Home', '/feed')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilemaps', Action.Tilemaps)}
+            {initMenuItem('Tilemaps', '/tilemaps')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilesets', Action.Tilesets)}
+            {initMenuItem('Tilesets', '/tilesets')}
             </Grid>
             <Grid item>
               <Divider/>
             </Grid>
             <Grid item>
-            {initMenuItem('Friends', Action.Friends)}
+            {initMenuItem('Friends', 'friends')}
             </Grid>
             <Grid item>
-            {initMenuItem('Users', Action.Users)}
+            {initMenuItem('Users', '/users')}
             </Grid>
             <Grid item>
-            {initMenuItem('Communities', Action.Communties)}
+            {initMenuItem('Communities', '/communities')}
             </Grid>
             <Grid item>
-            {initMenuItem('Contest', Action.Contests)}
+            {initMenuItem('Contest', '/contests')}
             </Grid>
             <Grid item>
-            {initMenuItem('Forum', Action.Forum)}
+            {initMenuItem('Forum', '/forums')}
             </Grid>
           </Grid>
         </Box>

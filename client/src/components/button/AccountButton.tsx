@@ -6,7 +6,7 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Hail from '@mui/icons-material/Hail'
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Typography } from "@mui/material"
+import { Avatar, Box, Grid, IconButton, Menu, MenuItem } from "@mui/material"
 
 interface Props {
     loggedIn: boolean
@@ -29,7 +29,7 @@ const MENU_PAPER_PROPS = {
             display: 'block',
             position: 'absolute',
             top: 0,
-            right: 20,
+            right: 27,
             width: 10,
             height: 10,
             bgcolor: 'background.paper',
@@ -51,22 +51,22 @@ const AccountButton = ({loggedIn}: Props) => {
     }
 
     const handleGuest = () => {
-        navigate('/feed/')
+        navigate('/feed')
         // auth.loginAsGuest()
         handleMenuClose()
     }
 
     const loggedInItems = (
         <>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings/'} ><SettingsIcon />Account Settings</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'} ><SettingsIcon />Account Settings</MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}><LogoutIcon />Logout</MenuItem>
         </>
     )
 
     const loggedOutItems = (
         <>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/login/'} ><Person />Login</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/register/'}><PersonAdd />Create New Account</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'} ><Person />Login</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/register'}><PersonAdd />Create New Account</MenuItem>
             <MenuItem onClick={handleGuest}><Hail />Continue as Guest</MenuItem>
         </>
     )

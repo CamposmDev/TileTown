@@ -1,10 +1,10 @@
 import { Avatar, Button, Divider, Grid, Stack, Typography } from "@mui/material"
-import { useState } from "react"
+// import { useState } from "react"
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";
 
 const AccountSettingsScreen = () => {
-    const [hasPicture, setHasPicture] = useState(false)
+    // const [hasPicture, setHasPicture] = useState(false)
 
     const stringToColor = (string: string) => {
         let hash = 0;

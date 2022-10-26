@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+// import { useState, useContext } from 'react';
 // import AuthContext from '../context/auth'
 import Copyright from '../Copyright'
 import Avatar from '@mui/material/Avatar';
@@ -112,7 +112,7 @@ const RegisterScreen = () => {
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link href="/login/" variant="body2">
+                            <Link href="/login" variant="body2">
                                 Already have an account? Login
                             </Link>
                         </Grid>
