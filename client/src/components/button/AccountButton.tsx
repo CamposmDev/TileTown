@@ -1,13 +1,12 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import Person from '@mui/icons-material/Person';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Hail from '@mui/icons-material/Hail'
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Grid, IconButton, Menu, MenuItem } from "@mui/material"
+import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Typography } from "@mui/material"
 
 interface Props {
     loggedIn: boolean
@@ -83,14 +82,23 @@ const AccountButton = ({loggedIn}: Props) => {
             {loggedIn ? loggedInItems : loggedOutItems}
         </Menu>
     )
+
+    const profile = loggedIn ? (
+        <Avatar sx={{bgcolor: 'primary.main', fontSize: '1.5rem', width: 40, height: 40}}>MC</Avatar>
+    ) : (
+        <Avatar sx={{bgcolor: 'primary.main'}} ></Avatar>
+    )
+
     return (
         <Grid borderRadius={'50%'} boxShadow={1}>
-            <IconButton
-                size="large"
-                onClick={handleMenuOpen}
-                color="inherit"
-            ><AccountCircle transform='scale(1.6)'/></IconButton>
-            {menu}
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <IconButton
+                    size="large"
+                    onClick={handleMenuOpen}
+                    color="inherit"
+                >{profile}</IconButton>
+                {menu}
+            </Box>
         </Grid>
     )
 }
