@@ -3,6 +3,7 @@ import { hash, compare } from "bcrypt";
 import UserDBM from "../../interface/managers/UserDBM";
 import { UserModel, CommunityModel, ContestModel, TilemapModel, TilesetModel } from '../schemas'
 import { User } from "../../../types";
+import UserSchemaType from '../types/UserSchemaType';
 
 export default class MongooseUserDBM implements UserDBM {
 
@@ -12,98 +13,31 @@ export default class MongooseUserDBM implements UserDBM {
         if (!mongoose.Types.ObjectId.isValid(userId)) return null;
 
         let user = await UserModel.findById({_id: userId});
-        return user !== null ? {
-            id: user._id.toString(),
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            password: user.password,
-            imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
-            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
-            isVerified: user.isVerified,
-            verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
-            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
-        } : null
-    }
-
-    async loginUser(userEmail: string, userPassword: string): Promise<User | null> {
-        // Find the user based off their email
-        let user = await UserModel.findOne({email: userEmail});
         if (user === null) return null;
 
-        // Check the user's password I think
-        let isOwner: boolean = await compare(userPassword, user.password);
-        if (!isOwner) return null;
+        return this.fromUserSchema(user);
+    }
 
-        // If the password matches up - return the user.
-        return {
-            id: user._id.toString(),
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            password: user.password,
-            imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
-            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
-            isVerified: user.isVerified,
-            verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
-            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
-        }
+    async getUserByEmail(email: string): Promise<User | null> {
+        let user = await UserModel.findOne({email: email});
+        if (user === null) return null;
+        return this.fromUserSchema(user);
+    }
+
+    async getUserByUsername(username: string): Promise<User | null> {
+        let user = await UserModel.findOne({username: username});
+        if (user === null) return null;
+        return this.fromUserSchema(user);
     }
 
     async createUser(userpy: Partial<User>): Promise<User | null> {
-        /**
-         * Check if the user's credentials not empty.
-         * If any field is empty, then return null.
-         */
-        if (!userpy.firstName || !userpy.lastName) return null
-        if (!userpy.username || !userpy.password) return null
-        if (!userpy.email) return null
-
-        /**
-         * Check if the username is valid and is unique.
-         */
-        const validUsername = async (username: string): Promise<boolean> => {
-            const existingUser = await UserModel.findOne({username: username})
-            return existingUser ? false : true
-        }
-
-        let username = userpy.username
-        if (!(await validUsername(username))) return null;
-
-        let password = userpy.password
-        /**
-         * Check if the password is valid and then encrypt it
-         */
-        const ROUNDS = 10
-        const LENGTH = 12
-        if (password.length <= LENGTH) return null
-        let passwordHash = await hash(password, ROUNDS)
-
-        /**
-         * Check if the user's email is valid and is not being used by other user accounts
-         */
-        const validEmail = async (email: string): Promise<boolean> => {
-            let existingUser = await UserModel.findOne({email: email})
-            return existingUser ? false : true
-        }
-
-        let email = userpy.email
-        if (!(await validEmail(email))) return null
-
-        const user = new UserModel({
+        
+        let user = await UserModel.create({
             firstName: userpy.firstName,
             lastName: userpy.lastName,
-            email: email,
-            username: username,
-            password: passwordHash,
+            email: userpy.email,
+            username: userpy.username,
+            password: userpy.password,
             verifyKey: 'something?!',
             isVerified: false,
             favoriteTileMaps: [],
@@ -114,23 +48,21 @@ export default class MongooseUserDBM implements UserDBM {
             imageURL: " "
         });
 
-        let res = await user.save();
-        return res !== null ? {
-            id: user._id.toString(),
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            password: user.password,
-            imageURL: user.imageURL,
-            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
-            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
-            friends: user.friends.map((id) => id.toString()),
-            isVerified: user.isVerified,
-            verifyKey: user.verifyKey,
-            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
-            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
-        } : null;
+        if (user === null) return null;
+
+        return this.fromUserSchema(user);
+    }
+
+    async updateUser(id: string, partial: Partial<User>): Promise<User | null> {
+        if (!mongoose.Types.ObjectId.isValid(id)) { return null; }
+
+        let user = await UserModel.findById(id);
+        if (user === null) return null;
+
+        this.fillUserModel(user, partial);
+        let savedUser = await user.save()
+
+        return this.fromUserSchema(savedUser);
     }
  
     async verifyUser(key: string): Promise<boolean> {
@@ -282,13 +214,11 @@ export default class MongooseUserDBM implements UserDBM {
     
     async deleteUser(userId: string): Promise<boolean> {
         if (!mongoose.Types.ObjectId.isValid(userId)) return false;
-
-        let user = await UserModel.findById(userId)
-        if (user !== null) {
-            await user.delete();
-            return true
+        let user = await UserModel.findByIdAndDelete(userId);
+        if (user === null) {
+            return false;
         }
-        return false
+        return true;
     }
     
     async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
@@ -356,5 +286,40 @@ export default class MongooseUserDBM implements UserDBM {
             return true
         }
         return false
+    }
+
+    protected fromUserSchema(user: UserSchemaType & { _id: mongoose.Types.ObjectId}): User {
+        return {
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            imageURL: user.imageURL,
+            favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
+            favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
+            friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),
+            isVerified: user.isVerified,
+            verifyKey: user.verifyKey,
+            joinedCommunities: user.joinedCommunities.map((id: mongoose.Types.ObjectId) => id.toString()),
+            joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
+        }
+    }
+
+    protected fillUserModel(user: UserSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<User>): void {
+        user.username = partial.username ? partial.username : user.username;
+        user.email = partial.email ? partial.email : user.email;
+        user.firstName = partial.firstName ? partial.firstName : user.firstName;
+        user.lastName = partial.lastName ? partial.lastName : user.lastName;
+        user.password = partial.password ? partial.password : user.password;
+        user.imageURL = partial.imageURL ? partial.imageURL : user.imageURL;
+        user.isVerified = partial.isVerified ? partial.isVerified : user.isVerified;
+        user.verifyKey = partial.verifyKey ? partial.verifyKey : user.verifyKey;
+        user.favoriteTileMaps = partial.favoriteTileMaps ? partial.favoriteTileMaps.map((id: string) => new mongoose.Types.ObjectId(id)) : user.favoriteTileMaps;
+        user.favoriteTileSets = partial.favoriteTileSets ? partial.favoriteTileSets.map((id: string) => new mongoose.Types.ObjectId(id)) : user.favoriteTileSets;
+        user.friends = partial.friends ? partial.friends.map((id: string) => new mongoose.Types.ObjectId(id)) : user.friends;
+        user.joinedCommunities = partial.joinedCommunities ? partial.joinedCommunities.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedCommunities;
+        user.joinedContests = partial.joinedContests ? partial.joinedContests.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedContests;
     }
 }
