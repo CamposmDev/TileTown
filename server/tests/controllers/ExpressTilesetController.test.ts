@@ -4,15 +4,56 @@ import { app } from "../../express";
 import { db } from "../../database";
 import { expect } from "chai";
 import { UserSchema } from "../../database/mongoose/schemas";
-import { TilemapSchema } from "../../database/mongoose/schemas";
+import { TilesetSchema } from "../../database/mongoose/schemas";
 import { Auth } from "../../express/middleware";
-import { Tilemap } from "../../types";
+import { Tileset } from "../../types";
+import { TilesetSchemaType } from "../../database/mongoose/types";
+import mongoose from "mongoose";
 
 /**
- * Tests for the TilemapRouter and associated handlers
+ * Tests for the TilesetRouter and associated handlers
  * @author Andrew Ojeda
  */
-describe("ExpressTilemapController", function () {
+describe("ExpressTilesetController", function () {
+  const tileset1: Partial<Tileset> = {
+    columns: 4,
+    lastSaveDate: new Date(Date.now()),
+    image: "imageurl",
+    imageHeight: 32,
+    imageWidth: 32,
+    margin: 4,
+    name: "tileset1",
+    properties: [],
+    isPublished: false,
+  };
+
+  const tileset2: TilesetSchemaType = {
+    owner: new mongoose.Types.ObjectId(),
+    columns: 4,
+    createdAt: new Date(Date.now()),
+    updatedAt: new Date(Date.now()),
+    image: "imageurl",
+    imageHeight: 32,
+    imageWidth: 32,
+    margin: 4,
+    name: "tileset2",
+    properties: [],
+    isPublished: false,
+  };
+
+  const tileset3: TilesetSchemaType = {
+    owner: new mongoose.Types.ObjectId(),
+    columns: 4,
+    createdAt: new Date(Date.now()),
+    updatedAt: new Date(Date.now()),
+    image: "imageurl",
+    imageHeight: 32,
+    imageWidth: 32,
+    margin: 4,
+    name: "tileset3",
+    properties: [],
+    isPublished: false,
+  };
   /** Start the server on port 3000 */
   const server = app.listen("3000");
 
@@ -25,12 +66,12 @@ describe("ExpressTilemapController", function () {
 
   /**
    * Method: POST
-   * Route: api/tilemap
+   * Route: api/tileset
    */
-  describe("createTilemap", function () {
+  describe("createTileset", function () {
     beforeEach(async function () {
       await UserSchema.deleteMany();
-      // await TilemapSchema.deleteMany();
+      await TilesetSchema.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -40,57 +81,17 @@ describe("ExpressTilemapController", function () {
       });
     });
 
-    it("Successfully created new tilemap", async function () {
+    it("Successfully created new tileset", async function () {
       let user = await UserSchema.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
       let token = Auth.signJWT<string>(id);
       let res = await request(app)
-        .post("/api/tilemap/")
+        .post("/api/tileset/")
         .send({
           userId: id,
-          tilemap: {
-            backgroundColor: "#000000",
-            image: "testURL",
-            height: 20,
-            width: 36,
-            layers: [
-              {
-                data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                height: 20,
-                width: 30,
-                name: "test layer",
-                opacity: 0.8,
-                properties: [
-                  {
-                    name: "test type",
-                    ptype: "bool",
-                    value: "true",
-                  },
-                ],
-                visible: true,
-                x: 0,
-                y: 0,
-              },
-            ],
-            tileHeight: 24,
-            tileWidth: 24,
-            nextLayerId: 1,
-            nextObjectId: 0,
-            orientation: "orthogonal",
-            name: "test name",
-            tilesets: ["507f1f77bcf86cd799439011"],
-            globalTileIDs: [45],
-            properties: [
-              {
-                name: "test type",
-                ptype: "bool",
-                value: "true",
-              },
-            ],
-            renderOrder: "right-down",
-          },
+          tileset: tileset1,
         })
         .set("Cookie", [`token=${token}`]);
       expect(res.status).equals(201);
@@ -98,12 +99,12 @@ describe("ExpressTilemapController", function () {
   });
   /**
    * Method: GET
-   * Route: api/tilemap/id
+   * Route: api/tileset/id
    */
-  describe("getTilemapById", function () {
+  describe("getTilesetById", function () {
     beforeEach(async function () {
       await UserSchema.deleteMany();
-      // await TilemapSchema.deleteMany();
+      await TilesetSchema.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -113,20 +114,20 @@ describe("ExpressTilemapController", function () {
       });
     });
 
-    it("Successfully get tilemap by Id", async function () {
+    it("Successfully get tileset by Id", async function () {
       let user = await UserSchema.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
       let token = Auth.signJWT<string>(id);
-      const newTilemap: Partial<Tilemap> = {
+      const newTileset: Partial<Tileset> = {
         name: "test name",
       };
 
-      const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
-      const mapId = (<Tilemap>tilemap).id;
+      const tileset = await db.tilesets.createTileset(id, newTileset);
+      const setId = (<Tileset>tileset).id;
       let response = await request(app)
-        .get(`/api/tilemap/${mapId}`)
+        .get(`/api/tileset/${setId}`)
         .set("Cookie", [`token=${token}`]);
       expect(response.status).equals(200);
     });
@@ -134,12 +135,12 @@ describe("ExpressTilemapController", function () {
 
   /**
    * Method: Post
-   * Route: api/tilemap/id
+   * Route: api/tileset/id
    */
-  describe("updateTilemapById", function () {
+  describe("updateTilesetById", function () {
     beforeEach(async function () {
       await UserSchema.deleteMany();
-      // await TilemapSchema.deleteMany();
+      await TilesetSchema.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -149,22 +150,22 @@ describe("ExpressTilemapController", function () {
       });
     });
 
-    it("Successfully update tilemap by Id", async function () {
+    it("Successfully update tileset by Id", async function () {
       let user = await UserSchema.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
       let token = Auth.signJWT<string>(id);
-      const newTilemap: Partial<Tilemap> = {
+      const newTileset: Partial<Tileset> = {
         name: "test name",
       };
 
-      const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
-      const mapId = (<Tilemap>tilemap).id;
+      const tileset = await db.tilesets.createTileset(id, newTileset);
+      const setId = (<Tileset>tileset).id;
       let response = await request(app)
-        .put(`/api/tilemap/${mapId}`)
+        .put(`/api/tileset/${setId}`)
         .send({
-          tilemap: {
+          tileset: {
             backgroundColor: "#000000",
             image: "testURL",
             height: 20,
@@ -214,40 +215,40 @@ describe("ExpressTilemapController", function () {
 
   /**
    * Method: Delete
-   * Route: api/tilemap/id
+   * Route: api/tileset/id
    */
-  // describe("deleteTilemapById", function () {
-  //   beforeEach(async function () {
-  //     await UserSchema.deleteMany();
-  //     await TilemapSchema.deleteMany();
-  //     await db.users.createUser({
-  //       firstName: "Peter",
-  //       lastName: "Walsh",
-  //       email: "peteylumpkins@gmail.com",
-  //       username: "peteylumpkins",
-  //       password: "blackstarthedog",
-  //     });
-  //   });
+  describe("deleteTilesetById", function () {
+    beforeEach(async function () {
+      await UserSchema.deleteMany();
+      await TilesetSchema.deleteMany();
+      await db.users.createUser({
+        firstName: "Peter",
+        lastName: "Walsh",
+        email: "peteylumpkins@gmail.com",
+        username: "peteylumpkins",
+        password: "blackstarthedog",
+      });
+    });
 
-  //   it("Successfully update tilemap by Id", async function () {
-  //     let user = await UserSchema.findOne({
-  //       email: "peteylumpkins@gmail.com",
-  //     });
-  //     let id: string = user !== null ? user._id.toString() : "";
-  //     let token = Auth.signJWT<string>(id);
-  //     const newTilemap: Partial<Tilemap> = {
-  //       name: "test name",
-  //     };
+    it("Successfully update tileset by Id", async function () {
+      let user = await UserSchema.findOne({
+        email: "peteylumpkins@gmail.com",
+      });
+      let id: string = user !== null ? user._id.toString() : "";
+      let token = Auth.signJWT<string>(id);
+      const newTileset: Partial<Tileset> = {
+        name: "test name",
+      };
 
-  //     const tilemap = await db.tilemaps.createTilemap(id, newTilemap);
-  //     const mapId = (<Tilemap>tilemap).id;
-  //     let response = await request(app)
-  //       .delete(`/api/tilemap/${mapId}`)
-  //       .set("Cookie", [`token=${token}`]);
-  //     console.log(response);
-  //     expect(response.status).equals(201);
-  //   });
-  // });
+      const tileset = await db.tilesets.createTileset(id, newTileset);
+      const setId = (<Tileset>tileset).id;
+      let response = await request(app)
+        .delete(`/api/tileset/${setId}`)
+        .set("Cookie", [`token=${token}`]);
+      console.log(response);
+      expect(response.status).equals(201);
+    });
+  });
 
   after(async function () {
     /** Close the connection to the server */
