@@ -43,7 +43,7 @@ const FriendCard = (props: Props) => {
         <Card sx={{p: 1}}>
             <Stack direction='row' alignItems='center' spacing={1}>
                 <Avatar {...stringAvatar(props.firstName, props.lastName)}/>
-                <Typography>{props.username}</Typography>
+                <Typography flexGrow={1}>{props.username}</Typography>
                 <IconButton children={<MoreVert/>}/>
             </Stack>
         </Card>
