@@ -6,7 +6,7 @@ export default interface Tileset {
    * @author Andrew Ojeda
    */
 
-  /** The id of the associated ForumPost in the DBMS */
+  /** The id of the associated Tileset in the DBMS */
   id: string;
 
   /** The number of tile columns in the tileset */
