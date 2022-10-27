@@ -3,6 +3,12 @@ import { is } from "typescript-is";
 import { db } from "../../database";
 import { SortBy, Tileset } from "../../types";
 
+const isTileset = (
+  response: string | Partial<Tileset>
+): response is Tileset => {
+  return (response as Tileset).id !== undefined;
+};
+
 export default class TilesetController {
     public async getTilesetById(req: Request, res: Response): Promise<Response> {
         // Check to see if a request body was sent
@@ -117,65 +123,65 @@ export default class TilesetController {
     }
 
 
-    public async getTilesetPartials(
-        req: Request,
-        res: Response
-    ): Promise<Response> {
-        //check to see if a request body was sent
-        if (!req.body) {
-            return res.status(400).json({
-                errorMessage: "Improperly formatted request",
-            });
-        }
-
-        const userId: string = req.userId;
-
-        //check to see if a user id was provided and if it was formatted as a string
-        if (!userId || !is<string>(userId)) {
-            return res.status(400).json({
-                errorMessage: "No userId provided",
-            });
-        }
-
-        const search: string = req.body.search;
-
-        //check to see if body has a search string and if it was formatted as a string
-        if (!search || !is<string>(search)) {
-            return res.status(400).json({
-                errorMessage: "No search string provided",
-            });
-        }
-
-        const sortBy: SortBy = req.body.sortBy;
-
-        //check to see if body has a sort by string and if it was formatted as a SortBy
-        if (!sortBy || !is<SortBy>(SortBy)) {
-            return res.status(400).json({
-                errorMessage: "No sortBy string provided",
-            });
-        }
-
-        const response: [Partial<Tileset>] | string =
-            await db.tilesets.getTilesetPartials(userId, search, sortBy);
-
-        //check for error messages
-        if (is<string>(response)) {
-            return res.status(400).json({
-                errorMessage: response,
-            });
-        }
-
-        //make sure response is at in the format of a tileset partial
-        if (!response || !is<[Partial<Tileset>]>(response)) {
-            return res.status(400).json({
-                errorMessage: "unable to get tileset partials",
-            });
-        }
-
-        return res
-            .status(200)
-            .json({ message: "Returning Tileset Partials!", response: response });
+  public async getTilesetPartials(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    //check to see if a request body was sent
+    if (!req.body) {
+      return res.status(400).json({
+        errorMessage: "Improperly formatted request",
+      });
     }
+
+    const userId: string = req.userId;
+
+    //check to see if a user id was provided and if it was formatted as a string
+    if (!userId || !is<string>(userId)) {
+      return res.status(400).json({
+        errorMessage: "No userId provided",
+      });
+    }
+
+    const search: string = req.body.search;
+
+    //check to see if body has a search string and if it was formatted as a string
+    if (!search || !is<string>(search)) {
+      return res.status(400).json({
+        errorMessage: "No search string provided",
+      });
+    }
+
+    const sortBy: SortBy = req.body.sortBy;
+
+    //check to see if body has a sort by string and if it was formatted as a SortBy
+    if (!sortBy || !is<SortBy>(SortBy)) {
+      return res.status(400).json({
+        errorMessage: "No sortBy string provided",
+      });
+    }
+
+    const response: [Partial<Tileset>] | string =
+      await db.tilesets.getTilesetPartials(userId, search, sortBy);
+
+    //check for error messages
+    if (is<string>(response)) {
+      return res.status(400).json({
+        errorMessage: response,
+      });
+    }
+
+    //make sure response is at in the format of a tileset partial
+    if (!response || !is<[Partial<Tileset>]>(response)) {
+      return res.status(400).json({
+        errorMessage: "unable to get tileset partials",
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Returning Tileset Partials!", response: response });
+  }
 
 
     public async getTilesetSocialById(req: Request, res: Response): Promise<Response> {
