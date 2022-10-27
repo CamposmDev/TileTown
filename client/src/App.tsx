@@ -4,18 +4,20 @@ import NavBar from './components/NavBar';
 import { SplashScreen, LoginScreen, RegisterScreen, MainFeedScreen, AccountSettingsScreen, TilesetEditorScreen, TilemapEditorScreen } from './components/screen';
 import WelcomeMenu from './components/menu/WelcomeMenu';
 import UserMenu from './components/menu/UserMenu';
+import CardTester from './components/CardTester';
 
 /**
  * Pixel Editors 
  * @see https://github.com/alekspopovic/pixel-art-drawing-editor
  * @see https://github.com/satansdeer/drawing-react-canvas/tree/master/src 
  * @see https://github.com/CodingGarden/react-pixel-art-maker
+ * @see https://github.com/0shuvo0/pilex-art.git
  * 
  * Color Picker
  * @see https://www.npmjs.com/package/material-ui-color-picker
  */
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -27,6 +29,7 @@ function App() {
         )}
       </Routes>
       <Routes>
+        <Route path='/cards' element={<CardTester/>}/>
         <Route path='/' element={<SplashScreen/>} />
         <Route path='/login' element={<LoginScreen/>} />
         <Route path='/register' element={<RegisterScreen/>} />
