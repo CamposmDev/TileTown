@@ -3,8 +3,8 @@ import request from "supertest";
 import { app } from "../../express";
 import { db } from "../../database";
 import { expect } from "chai";
-import { UserSchema } from "../../database/mongoose/schemas";
-import { TilesetSchema } from "../../database/mongoose/schemas";
+import { UserModel } from "../../database/mongoose/schemas";
+import { TilesetModel } from "../../database/mongoose/schemas";
 import { Auth } from "../../express/middleware";
 import { Tileset } from "../../types";
 import { TilesetSchemaType } from "../../database/mongoose/types";
@@ -70,8 +70,8 @@ describe("ExpressTilesetController", function () {
    */
   describe("createTileset", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await TilesetSchema.deleteMany();
+      await UserModel.deleteMany();
+      await TilesetModel.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -82,7 +82,7 @@ describe("ExpressTilesetController", function () {
     });
 
     it("Successfully created new tileset", async function () {
-      let user = await UserSchema.findOne({
+      let user = await UserModel.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
@@ -103,8 +103,8 @@ describe("ExpressTilesetController", function () {
    */
   describe("getTilesetById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await TilesetSchema.deleteMany();
+      await UserModel.deleteMany();
+      await TilesetModel.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -115,7 +115,7 @@ describe("ExpressTilesetController", function () {
     });
 
     it("Successfully get tileset by Id", async function () {
-      let user = await UserSchema.findOne({
+      let user = await UserModel.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
@@ -139,8 +139,8 @@ describe("ExpressTilesetController", function () {
    */
   describe("updateTilesetById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await TilesetSchema.deleteMany();
+      await UserModel.deleteMany();
+      await TilesetModel.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -151,7 +151,7 @@ describe("ExpressTilesetController", function () {
     });
 
     it("Successfully update tileset by Id", async function () {
-      let user = await UserSchema.findOne({
+      let user = await UserModel.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
@@ -219,8 +219,8 @@ describe("ExpressTilesetController", function () {
    */
   describe("deleteTilesetById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await TilesetSchema.deleteMany();
+      await UserModel.deleteMany();
+      await TilesetModel.deleteMany();
       await db.users.createUser({
         firstName: "Peter",
         lastName: "Walsh",
@@ -231,7 +231,7 @@ describe("ExpressTilesetController", function () {
     });
 
     it("Successfully update tileset by Id", async function () {
-      let user = await UserSchema.findOne({
+      let user = await UserModel.findOne({
         email: "peteylumpkins@gmail.com",
       });
       let id: string = user !== null ? user._id.toString() : "";
