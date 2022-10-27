@@ -1,42 +1,29 @@
 import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
-
-
-enum Action {
-  Home = 0,
-  Tilemaps = 1,
-  Tilesets = 2,
-  Friends = 3,
-  Users = 4,
-  Communties = 5,
-  Contests = 6,
-  Forum = 7
-}
+// import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export default function NavDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  // const navigate = useNavigate()
 
-  const handleClick = (action: Action) => {
-    switch(action) {
-      case 0: break
-      case 1: break
-      case 2: break
-      case 3: break
-      case 4: break
-      case 5: break
-      case 6: break
-      case 7: break
-    }
+  const handleMenuClose = () => {
     setIsDrawerOpen(false)
+  }
+
+  const initMenuItem = (text: string, path: string) => {
+    return (
+      <MenuItem onClick={handleMenuClose} component={Link} to={path}>{text}</MenuItem>
+    )
   }
 
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
         <Box p={2} width='200px' role='presentation' textAlign='start'>
-          <Grid container justifyContent={'start'} alignContent={'center'} spacing={1}>
+          <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
-              <MenuIcon/>
+              <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>
             </Grid>
               <Grid item><Typography variant='h6' component='div'>TileTown</Typography>
             </Grid>
@@ -44,47 +31,51 @@ export default function NavDrawer() {
           <Divider/>
           <Grid mt={2} container direction={'column'} justifyContent={'flex-end'} spacing={1} >
             <Grid item >
-              <MenuItem onClick={() => handleClick(Action.Home)}><Typography variant='h6'>Home</Typography></MenuItem>
+              {initMenuItem('Home', '/feed')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Tilemaps)}><Typography variant='h6'>Tilemaps</Typography></MenuItem>
+            {initMenuItem('Tilemaps', '/tilemaps')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Tilesets)}><Typography variant='h6'>Tilesets</Typography></MenuItem>
+            {initMenuItem('Tilesets', '/tilesets')}
             </Grid>
             <Grid item>
               <Divider/>
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Friends)}><Typography variant='h6'>Friends</Typography></MenuItem>
+            {initMenuItem('Friends', 'friends')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Users)}><Typography variant='h6'>Users</Typography></MenuItem>
+            {initMenuItem('Users', '/users')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Communties)}><Typography variant='h6'>Communities</Typography></MenuItem>
+            {initMenuItem('Communities', '/communities')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Contests)}><Typography variant='h6'>Contests</Typography></MenuItem>
+            {initMenuItem('Contest', '/contests')}
             </Grid>
             <Grid item>
-              <MenuItem onClick={() => handleClick(Action.Forum)}><Typography variant='h6'>Forum</Typography></MenuItem>
+            {initMenuItem('Forum', '/forums')}
             </Grid>
           </Grid>
         </Box>
       </Drawer>
   )
   return (
-    <>
+    <Grid 
+      // borderRadius={'5%'} 
+      // boxShadow={1}
+    >
       <IconButton
         onClick={() => setIsDrawerOpen(true)}
         size='large'
-        edge='start'
         color='inherit'
         aria-label='logo'>
-        <MenuIcon />
+        <MenuIcon 
+          transform={'scale(1.3)'}
+        />
       </IconButton>
       {drawer}
-    </>
+    </Grid>
   )
 }

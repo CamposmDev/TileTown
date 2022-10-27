@@ -7,7 +7,7 @@ import Layer from "./Layer";
 import Tileset from "./Tileset";
 import Tilemap, { CollaboratorSettings, EditMode, Orientation, RenderOrder } from "./Tilemap";
 import TilemapSocialStatistics from "./TilemapSocialStatistics";
-import TilesetSocialStatistics from "./TilesetSocialStatistics";
+import TilesetSocial from "./TilesetSocial";
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 import { RGB, RGBA, HEX, Color, } from "./Color";
 import { SortBy } from "./Enums";
@@ -22,7 +22,7 @@ export {
     Tileset,
     Tilemap,
     TilemapSocialStatistics,
-    TilesetSocialStatistics,
+    TilesetSocial,
     SocialStatisticsPermissions,
     CollaboratorSettings,
     RGB, RGBA, HEX, Color,

@@ -119,6 +119,7 @@ export default class ForumController {
             return
         }
         let comment = await db.forums.commentForumPostById(forumPostId, {
+            id: "",
             author: req.body.author,
             body: req.body.body,
             referenceId: forumPostId
