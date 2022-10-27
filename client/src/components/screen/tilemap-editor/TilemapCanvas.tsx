@@ -70,7 +70,7 @@ const TilemapCanvas = () => {
       onMouseMove={draw}
       ref={canvasRef}
     >
-      You're browser sucks!
+      Your browser sucks!
     </canvas>
   );
   return (

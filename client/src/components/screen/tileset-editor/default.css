@@ -1,6 +1,6 @@
 #tileset-canvas {
-    width: 600px;
-    height: 600px;
-    image-rendering: crisp-edges;
-    border: 1px solid black;
+  /* width: 600px;
+  height: 600px; */
+  image-rendering: crisp-edges;
+  border: 1px solid black;
 }
