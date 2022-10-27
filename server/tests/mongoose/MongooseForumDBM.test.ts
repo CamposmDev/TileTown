@@ -2,12 +2,10 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserModel, ForumPostModel } from '../../database/mongoose/schemas';
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
 import User from "../../types/User";
 import dotenv from "dotenv";
-import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
-import { ForumPostSchema } from '../../database/mongoose/schemas';
 import { MongooseForumDBM } from '../../database/mongoose/managers';
 import { ForumPost } from '../../types';
 
@@ -15,8 +13,8 @@ import { ForumPost } from '../../types';
 dotenv.config()
 
 /** 
- * A mocha testing suite for the MongooseUserDBM. I have linked the official documentation below.
- * {@link https://mochajs.org/}
+ * Tests for MongooseForumDBM
+ * @author Michael Campos
  */
 describe("Testing MongooseForumDBM", function() {
 
@@ -35,7 +33,7 @@ describe("Testing MongooseForumDBM", function() {
      * @see MongooseForumDBM.createForumPost
      */
     describe('MongooseForumDBM.createForum', function() {
-        beforeEach(async function() { await ForumPostSchema.deleteMany() })
+        beforeEach(async function() { await ForumPostModel.deleteMany() })
         it('It should create and return a new forum post', async function() {
             let forums: MongooseForumDBM = new MongooseForumDBM()
 
@@ -55,16 +53,20 @@ describe("Testing MongooseForumDBM", function() {
             expect(forumPost).property("isPublished", true)
             
             if (forumPost !== null) {
-                let res = await ForumPostSchema.findById(forumPost.id)
+                let res = await ForumPostModel.findById(forumPost.id)
                 expect(res).not.null;
             }
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.getForumPost()
+     * @see MongooseForumDBM.createForumPost
+     */
     describe("MongooseForumDBM.getForumPost", function() {
         beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilemaps",
                 body: "Clean tilemaps use gradients",
@@ -78,7 +80,7 @@ describe("Testing MongooseForumDBM", function() {
 
         it('Successfully finds a forum post by id', async function() {
             let forums: MongooseForumDBM = new MongooseForumDBM()
-            let schema = await ForumPostSchema.findOne({title: 'Clean Tilemaps'})
+            let schema = await ForumPostModel.findOne({title: 'Clean Tilemaps'})
             let id: string = schema !== null ? schema._id.toString() : ''
             let forumPost: ForumPost | null = await forums.getForumPost(id)
             expect(forumPost).not.null
@@ -93,10 +95,14 @@ describe("Testing MongooseForumDBM", function() {
         })
     });
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.updateForumPost()
+     * @see MongooseForumDBM.updateForumPost
+     */
     describe("MongooseForumDBM.updateForumPost", function() {
         beforeEach(async function() {
-            await ForumPostSchema.deleteMany()
-            await ForumPostSchema.create({
+            await ForumPostModel.deleteMany()
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilesets",
                 body: "Clean tilesets use gradients",
@@ -110,7 +116,7 @@ describe("Testing MongooseForumDBM", function() {
 
         it('Successfully updates a forum post by id', async function() {
             let forums: MongooseForumDBM = new MongooseForumDBM()
-            let schema = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let schema = await ForumPostModel.findOne({title: 'Clean Tilesets'})
             let id: string = schema !== null ? schema._id.toString() : ''
             let forumPost: ForumPost | null = await forums.getForumPost(id)
             if (forumPost !== null) {
@@ -122,11 +128,15 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.toggleLike()
+     * @see MongooseForumDBM.toggleLike
+     */
     describe("MongooseForumDBM.toggleLike", function() {
         beforeEach(async function() {
-            await UserSchema.deleteMany()
-            await ForumPostSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await ForumPostModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -141,7 +151,7 @@ describe("Testing MongooseForumDBM", function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            await ForumPostSchema.create({
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilesets",
                 body: "Clean tilesets use gradients",
@@ -154,11 +164,11 @@ describe("Testing MongooseForumDBM", function() {
         })
 
         it('Successfully toggled like for a forum post', async function() {
-            let user = await UserSchema.findOne({username: 'Camposm'})
+            let user = await UserModel.findOne({username: 'Camposm'})
             let userId = user !== null ? user._id.toString() : ''
 
             let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
             let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
             if (user !== null && forumId !== null) {
@@ -185,11 +195,15 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.toggleDislike()
+     * @see MongooseForumDBM.toggleDislike
+     */
     describe("MongooseForumDBM.toggleDislike", function() {
         beforeEach(async function() {
-            await UserSchema.deleteMany()
-            await ForumPostSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await ForumPostModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -204,7 +218,7 @@ describe("Testing MongooseForumDBM", function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            await ForumPostSchema.create({
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilesets",
                 body: "Clean tilesets use gradients",
@@ -217,11 +231,11 @@ describe("Testing MongooseForumDBM", function() {
         })
 
         it('Successfully toggled like for a forum post', async function() {
-            let user = await UserSchema.findOne({username: 'Camposm'})
+            let user = await UserModel.findOne({username: 'Camposm'})
             let userId = user !== null ? user._id.toString() : ''
 
             let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
             let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
             if (user !== null && forumId !== null) {
@@ -248,11 +262,15 @@ describe("Testing MongooseForumDBM", function() {
         })
     })
 
-    describe("addView", function() {
+    /**
+     * A set of tests fo rthe method MongooseForumDBM.addView()
+     * @see MongooseForumDBM.addView
+     */
+    describe("MongooseForumDBM,addView", function() {
         beforeEach(async function() {
-            await UserSchema.deleteMany()
-            await ForumPostSchema.deleteMany()
-            await UserSchema.create({
+            await UserModel.deleteMany()
+            await ForumPostModel.deleteMany()
+            await UserModel.create({
                 firstName: 'Michael',
                 lastName: 'Campos',
                 username: 'Camposm',
@@ -267,7 +285,7 @@ describe("Testing MongooseForumDBM", function() {
                 verifyKey: 'string',
                 imageURL: 'https://google.com'
             })
-            await ForumPostSchema.create({
+            await ForumPostModel.create({
                 author: "Camposm",
                 title: "Clean Tilesets",
                 body: "Clean tilesets use gradients",
@@ -279,11 +297,11 @@ describe("Testing MongooseForumDBM", function() {
             })
         })
         it('Successfully finds a forum post by id', async function() {
-            let user = await UserSchema.findOne({username: 'Camposm'})
+            let user = await UserModel.findOne({username: 'Camposm'})
             let userId = user !== null ? user._id.toString() : ''
 
             let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostSchema.findOne({title: 'Clean Tilesets'})
+            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
             let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
             if (userId !== null && forumId !== null) {

@@ -1,0 +1,10 @@
+#tileset-canvas {
+    width: 600px;
+    height: 600px;
+    image-rendering: crisp-edges;
+    border: 1px solid black;
+}
+
+#tile-map-drawer {
+    padding: 2px;
+}

@@ -43,7 +43,7 @@ export default class CommunityController {
         });
 
         if (community === null) {
-            res.status(400).json({message: "Bad Request"})
+            res.status(400).json({message: "Failed to create community"})
             return
         }
         res.status(201).json({community: community})
@@ -64,24 +64,27 @@ export default class CommunityController {
             description: req.body.description,
             visibility: req.body.visibility
         }
+
+        console.log(id)
+        console.log(payload)
   
-        let community = db.communities.updateCommunity(id, payload)
+        let community = await db.communities.updateCommunity(id, payload)
         if (community === null) {
-            res.status(400).json({message: "Bad Request"});
+            res.status(400).json({message: "Failed to update community"});
             return;
         }
         
-        res.status(201).json({community: community});
-        return;
+        res.status(200).json({community: community});
       }
 
     public async deleteCommunityById(req: Request, res: Response): Promise<void> {
         // If any data is missing - Bad request
-        if (!req || !req.body) {
+        if (!req || !req.params || !req.params.id || !req.body) {
             res.status(400).json({message: "Bad Request"})
             return
-        }      
-        const communityId: string = req.body.communityId
+        }    
+        const communityId: string = req.params.id
+        
         let isDeleted: boolean = await db.communities.deleteCommunity(communityId) 
         if (isDeleted) {
             res.status(200).json({message: 'Deleted community id' + communityId})

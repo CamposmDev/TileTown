@@ -1,11 +1,11 @@
 import { ForumPost, Comment } from "../../../types";
 import { ForumDBM } from "../../interface";
-import { CommentSchema, ForumPostSchema, UserSchema } from "../schemas";
+import { CommentModel, ForumPostModel, UserModel } from "../schemas";
 
 export default class MongooseForumDBM implements ForumDBM {
 
     async getForumPost(forumPostId: string): Promise<ForumPost | null> {
-        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        let forumPost: any = await ForumPostModel.findById(forumPostId)
         if (forumPost !== null) {
             return {
                 id: forumPost._id.toString(),
@@ -23,7 +23,7 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async createForumPost(payload: Partial<ForumPost>): Promise<ForumPost | null> {
-        const forumPost: any = new ForumPostSchema({
+        const forumPost: any = new ForumPostModel({
             author: payload.author,
             title: payload.title,
             body: payload.body,
@@ -47,8 +47,9 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async updateForumPost(forumPostId: string, payload: Partial<ForumPost>): Promise<ForumPost | null> {
-        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        let forumPost: any = await ForumPostModel.findById(forumPostId)
         if (forumPost !== null) {
+            if (payload.author) forumPost.author = payload.author
             if (payload.title) forumPost.title = payload.title
             if (payload.body) forumPost.body = payload.body
             if (payload.tags) forumPost.tags = payload.tags
@@ -72,7 +73,7 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async deleteForumPost(forumPostId: string): Promise<string | null> {
-        let forumPost = await ForumPostSchema.findById(forumPostId)
+        let forumPost = await ForumPostModel.findById(forumPostId)
         if (forumPost !== null) {
             await forumPost.delete()
             return forumPostId
@@ -81,8 +82,8 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        let user = await UserSchema.findById(userId)
-        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        let user = await UserModel.findById(userId)
+        let forumPost: any = await ForumPostModel.findById(forumPostId)
         if ((user !== null) && (forumPost !== null)) {
             let id = user._id.toString()
             let likesArr = forumPost.likes
@@ -112,8 +113,8 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        let user = await UserSchema.findById(userId)
-        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        let user = await UserModel.findById(userId)
+        let forumPost: any = await ForumPostModel.findById(forumPostId)
         if ((user !== null) && (forumPost !== null)) {
             let id = user._id.toString()
             let likesArr = forumPost.likes
@@ -143,8 +144,8 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async addView(userId: string, forumPostId: string): Promise<ForumPost | null> {
-        let user = await UserSchema.findById(userId)
-        let forumPost: any = await ForumPostSchema.findById(forumPostId)
+        let user = await UserModel.findById(userId)
+        let forumPost: any = await ForumPostModel.findById(forumPostId)
         if ((user !== null) && (forumPost !== null)) {
             let views = forumPost.views
             if (typeof views === 'number') {
@@ -168,9 +169,9 @@ export default class MongooseForumDBM implements ForumDBM {
     }
 
     async commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null> {
-        let forumPost = await ForumPostSchema.findById(forumPostId)
+        let forumPost = await ForumPostModel.findById(forumPostId)
         if (forumPost !== null) {
-            let comment: any = await CommentSchema.create({
+            let comment: any = await CommentModel.create({
                 author: payload.author,
                 body: payload.body,
                 referenceId: payload.referenceId

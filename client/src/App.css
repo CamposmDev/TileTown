@@ -1,0 +1,28 @@
+#root {
+    /* background-color: var(--swatch-primary); */
+    position: absolute;
+    /* width: 98%; */
+    width: 99%;
+    height: 90%;
+    left: 0.5%;
+}
+
+#title {
+    background: url('../public/res/tiletown.png') center center; 
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 12%;
+}
+
+#splash-screen {
+    background: url('../public/res/bg.jpg') no-repeat; 
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /* padding-top: 1%; */
+    /* width: 99%; */
+    height: 90%;
+    width: auto;
+}

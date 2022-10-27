@@ -1,13 +1,10 @@
 import mocha from 'mocha';
 import { expect } from 'chai';
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 
-import UserSchema from "../../database/mongoose/schemas/User";
-import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
-import dotenv from "dotenv";
-import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
-
+import { UserModel, ContestModel } from '../../database/mongoose/schemas/';
+import { MongooseContestDBM } from '../../database/mongoose/managers';
+import { Contest } from '../../types';
 
 /** 
  * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.
@@ -25,9 +22,76 @@ import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
      */
     before(async function() { await mongoose.connect(connect); });
 
-    describe("getContest", function() {});
+    /**
+     * A set of tests for the method MongooseContestDBM.createContest()
+     * @see MongooseContestDBM.createContest
+     */
+    describe("createContest", function() {
+    
+        beforeEach(async function() { 
+            await UserModel.deleteMany()
+            await UserModel.create({
+                firstName: "Peter",
+                    lastName: "Walsh",
+                    email: "peter.t.walsh@stonybrook.edu",
+                    username: "PeteyLumpkins",
+                    password: "DummyPassword",
+                    verifyKey: 'something?!',
+                    isVerified: false,
+                    favoriteTileMaps: [],
+                    favoriteTileSets: [],
+                    joinedContests: [],
+                    joinedCommunities: [],
+                    friends: [],
+                    imageURL: " "
+            })
+            await ContestModel.deleteMany() 
+        });
 
-    describe("createContest", function() {});
+        it('It should create and return a new contest', async function() {
+            let contest: MongooseContestDBM = new MongooseContestDBM()
+            let user = await UserModel.create({
+                firstName: "Tuyen",
+                lastName: "Vo",
+                email: "tuyen.vo@stonybrook.edu",
+                username: "Emdoiqua",
+                password: "DummyPassword",
+                verifyKey: 'something?!',
+                isVerified: false,
+                favoriteTileMaps: [],
+                favoriteTileSets: [],
+                joinedContests: [],
+                joinedCommunities: [],
+                friends: [],
+                imageURL: " "
+            })
+    
+            let partial: Partial<Contest> = {
+                "owner": user._id.toString(),
+                "name": "Vo",
+                "description": "My Contest Description",
+                "participates": [],
+                "isPublished": true
+            }
+            let con: Contest | null = await contest.createContest(partial)
+            expect(con).not.null
+            expect(con).property("owner", user._id.toString())
+            expect(con).property("name", "Vo")
+            expect(con).property("description", "My Contest Description")
+            expect(con).property("participates").to.have.length(0);
+            expect(con).to.have.property("startDate")
+            expect(con).to.have.property("endDate")
+            expect(con).property("isPublished", true)
+            
+            if (con !== null) {
+                let res = await ContestModel.findById(con.id)
+                expect(res).not.null;
+            }
+        });
+        
+    });
+
+    describe("getContest", function() {});
 
     describe("updateContest", function() {});
 
@@ -36,4 +100,5 @@ import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
     describe("deleteContest", function() {});
 
     after(async function() { await mongoose.connection.close(); });
+  
 });

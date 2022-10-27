@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import mongoose from "mongoose";
 import mocha from "mocha";
-import UserSchema from "../../database/mongoose/schemas/User";
+import { UserModel, TilemapModel } from "../../database/mongoose/schemas";
 import dotenv from "dotenv";
 import MongooseTilemapDBM from "../../database/mongoose/managers/MongooseTilemapDBM";
-import { TilemapSchema } from "../../database/mongoose/schemas";
 import { Layer, SortBy, Tilemap } from "../../types";
 
 /** Config the env variables */
@@ -31,8 +30,8 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("createTilemap", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await UserSchema.create({
+      await UserModel.deleteMany();
+      await UserModel.create({
         firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
@@ -47,13 +46,13 @@ describe("Testing MongooseUserDBM", function () {
         friends: [],
         imageURL: " ",
       });
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
     });
 
     it("Successfully creates a new tilemap with complete tilemap data", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = schema !== null ? schema._id.toString() : "";
@@ -141,9 +140,9 @@ describe("Testing MongooseUserDBM", function () {
 
     it("Successfully creates a new tilemap with incomplete tilemap data", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = schema !== null ? schema._id.toString() : "";
@@ -188,9 +187,9 @@ describe("Testing MongooseUserDBM", function () {
     });
     it("Unsuccessfully creates a new tilemap with a name that already exists", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = schema !== null ? schema._id.toString() : "";
@@ -201,7 +200,7 @@ describe("Testing MongooseUserDBM", function () {
 
       await tilemaps.createTilemap(id, newTilemap);
 
-      const res = await TilemapSchema.findOne({ name: newTilemap.name });
+      const res = await TilemapModel.findOne({ name: newTilemap.name });
 
       const newTilemap2: Partial<Tilemap> = {
         name: "test name",
@@ -215,9 +214,9 @@ describe("Testing MongooseUserDBM", function () {
 
     it("Unsuccessfully creates a new tilemap with an incorrect but properly formatted userId", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = "6356165924f889ac76eb40ec";
@@ -234,8 +233,8 @@ describe("Testing MongooseUserDBM", function () {
   });
   describe("updateTilemapById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await UserSchema.create({
+      await UserModel.deleteMany();
+      await UserModel.create({
         firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
@@ -250,14 +249,14 @@ describe("Testing MongooseUserDBM", function () {
         friends: [],
         imageURL: " ",
       });
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
     });
 
     it("Update Tilemap successfully with complete information", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = "6356165924f889ac76eb40ec";
@@ -328,8 +327,8 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("getTilemapPartials", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await UserSchema.create({
+      await UserModel.deleteMany();
+      await UserModel.create({
         firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
@@ -344,12 +343,12 @@ describe("Testing MongooseUserDBM", function () {
         friends: [],
         imageURL: " ",
       });
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
     });
     it("Get tilemapPartials successfully", async function name() {
       const tilemaps: MongooseTilemapDBM = new MongooseTilemapDBM();
 
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       let id: string = schema !== null ? schema._id.toString() : "";
@@ -394,8 +393,8 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("getTilemapById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await UserSchema.create({
+      await UserModel.deleteMany();
+      await UserModel.create({
         firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
@@ -410,7 +409,7 @@ describe("Testing MongooseUserDBM", function () {
         friends: [],
         imageURL: " ",
       });
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
     });
 
     it("get tilemap with mapId successfully", async function name() {
@@ -418,7 +417,7 @@ describe("Testing MongooseUserDBM", function () {
       const newTilemap: Partial<Tilemap> = {
         name: "test map",
       };
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       const id: string = schema !== null ? schema._id.toString() : "";
@@ -434,8 +433,8 @@ describe("Testing MongooseUserDBM", function () {
 
   describe("deleteTilemapById", function () {
     beforeEach(async function () {
-      await UserSchema.deleteMany();
-      await UserSchema.create({
+      await UserModel.deleteMany();
+      await UserModel.create({
         firstName: "Peter",
         lastName: "Walsh",
         email: "peter.t.walsh@stonybrook.edu",
@@ -450,7 +449,7 @@ describe("Testing MongooseUserDBM", function () {
         friends: [],
         imageURL: " ",
       });
-      await TilemapSchema.deleteMany();
+      await TilemapModel.deleteMany();
     });
 
     it("delete tilemap with mapId successfully", async function name() {
@@ -458,7 +457,7 @@ describe("Testing MongooseUserDBM", function () {
       const newTilemap: Partial<Tilemap> = {
         name: "test map",
       };
-      let schema = await UserSchema.findOne({
+      let schema = await UserModel.findOne({
         email: "peter.t.walsh@stonybrook.edu",
       });
       const id: string = schema !== null ? schema._id.toString() : "";

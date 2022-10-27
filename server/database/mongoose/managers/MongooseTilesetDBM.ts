@@ -9,8 +9,8 @@ import {
   Comment
 } from "../../../types";
 import { TilesetDBM } from "../../interface";
-import { TilesetSchema, CommentSchema, UserSchema, TilesetSocialSchema } from "../schemas";
-import { TilesetSchemaType, UserSchemaType, PropertySchemaType } from "../types";
+import { TilesetModel, CommentModel, UserModel, TilesetSocialModel } from "../schemas";
+import { TilesetSchemaType, PropertySchemaType } from "../types";
 
 /**
  * The mongoose database manager for working with tilesets in tiletown
@@ -26,9 +26,9 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async addTilesetComment(payload: Comment): Promise<TilesetSocialStatistics | null> {
         if (payload !== null) {
             let refId = payload.referenceId
-            let social = await TilesetSocialSchema.findById(refId)
+            let social = await TilesetSocialModel.findById(refId)
             if (social !== null) {
-                let comment = await CommentSchema.create(payload)
+                let comment = await CommentModel.create(payload)
                 await comment.save()
                 return {
                     tileset: social.tileSet.toString(),
@@ -51,8 +51,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return null
     }
     async toggleLike(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
-        let user = await UserSchema.findById(userId)
-        let social = await TilesetSocialSchema.findById(socialId)
+        let user = await UserModel.findById(userId)
+        let social = await TilesetSocialModel.findById(socialId)
         if ((user !== null) && (social !== null)) {
             let id = user._id;
             let likes = social.likes
@@ -86,8 +86,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return null
     }
     async toggleDislike(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
-        let user = await UserSchema.findById(userId)
-        let social = await TilesetSocialSchema.findById(socialId)
+        let user = await UserModel.findById(userId)
+        let social = await TilesetSocialModel.findById(socialId)
         if ((user !== null) && social !== null) {
             let id = user._id;
             let likes = social.likes
@@ -121,8 +121,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return null
     }
     async addView(userId: string, socialId: string): Promise<TilesetSocialStatistics | null> {
-        let user = await UserSchema.findById(userId)
-        let social = await TilesetSocialSchema.findById(socialId)
+        let user = await UserModel.findById(userId)
+        let social = await TilesetSocialModel.findById(socialId)
         if ((user !== null) && (social !== null)) {
             social.views++
             await social.save()
@@ -156,7 +156,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         search: string,
         sortBy: SortBy
     ): Promise<[Partial<Tileset>] | string> {
-        await TilesetSchema.find(
+        await TilesetModel.find(
             {
                 owner: userId,
                 name: new RegExp(search, "i"),
@@ -214,7 +214,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async getTilesetById(tilesetId: string): Promise<Tileset | string> {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) { return "Error"; }
 
-        let tileset = await TilesetSchema.findById(tilesetId);
+        let tileset = await TilesetModel.findById(tilesetId);
         if (tileset === null) { return "Error"; }
 
         return {
@@ -237,14 +237,14 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async createTileset(userId: string, tileset: Partial<Tileset>): Promise<Tileset | string> {
         if (!mongoose.Types.ObjectId.isValid(userId)) { return "Error"; }
 
-        let existingTileset = await TilesetSchema.findOne({ name: tileset.name });
+        let existingTileset = await TilesetModel.findOne({ name: tileset.name });
         if (existingTileset !== null) { return "Error"; }
 
-        let user = await UserSchema.findById(userId);
+        let user = await UserModel.findById(userId);
         if (user === null) { return "Error"; }
         
 
-        const newTileset = new TilesetSchema({
+        const newTileset = new TilesetModel({
             columns: tileset.columns === null ? 0 : tileset.columns,
             image: tileset.image === null ? "" : tileset.image,
             imageHeight: tileset.imageHeight === null ? 0 : tileset.imageHeight,
@@ -277,7 +277,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async updateTilesetById(tilesetId: string, tileset: Partial<Tileset>): Promise<Tileset | string> {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) { return "Error"; }
 
-        let updatedTileset = await TilesetSchema.findById(tilesetId);
+        let updatedTileset = await TilesetModel.findById(tilesetId);
         if (updatedTileset === null) { return "Error"; }
 
         updatedTileset.columns = tileset.columns ? tileset.columns : updatedTileset.columns;
@@ -291,7 +291,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         updatedTileset.updatedAt = new Date(Date.now());
 
         if (tileset.owner) {
-            let owner = await UserSchema.findById(tileset.owner)
+            let owner = await UserModel.findById(tileset.owner)
             updatedTileset.owner = owner !== null ? owner._id : updatedTileset.owner;
         }
 
@@ -316,7 +316,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     async deleteTilesetById(tilesetId: string): Promise<Partial<Tileset> | string> {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) { return "Error"; }
 
-        let tileset = await TilesetSchema.findOneAndDelete({ _id: tilesetId });
+        let tileset = await TilesetModel.findOneAndDelete({ _id: tilesetId });
         if (tileset === null) { return "Error"; }
 
         return { 

@@ -5,7 +5,7 @@ import { Auth } from "../middleware";
 const UserRouter: Router = Router();
 
 UserRouter.get('/:id', Auth.verifyJWT, UserController.getUserById);
-UserRouter.get('/verify/:key', UserController.verifyUser);
+UserRouter.get('/verify/:id', UserController.verifyUser);
 
 UserRouter.post('/', UserController.createUser);
 UserRouter.post('/login', UserController.loginUser);

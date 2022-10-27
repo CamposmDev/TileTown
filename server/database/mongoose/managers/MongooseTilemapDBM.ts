@@ -15,12 +15,7 @@ import {
   RenderOrder,
 } from "../../../types";
 
-import {
-  TilemapSchema,
-  UserSchema,
-  CommentSchema,
-  TilemapSocialSchema,
-} from "../schemas";
+import { TilemapModel, UserModel, CommentModel, TilemapSocialModel } from "../schemas";
 import { TilemapDBM } from "../../interface";
 import {
   TilemapSchemaType,
@@ -33,7 +28,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export default class MongooseTilemapDBM implements TilemapDBM {
   async getTilemapById(tilemapId: string): Promise<Tilemap | string> {
-    let tilemap = await TilemapSchema.findById(tilemapId);
+    let tilemap = await TilemapModel.findById(tilemapId);
     if (tilemap === null) return "unable to get tilemap";
 
     return {
@@ -69,7 +64,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     search: string,
     sortBy: SortBy
   ): Promise<Partial<Tilemap>[] | string> {
-    const tilemaps = await TilemapSchema.find({
+    const tilemaps = await TilemapModel.find({
       collaboratorNames: userName,
       name: new RegExp(search, "i"),
       isPublish: { $ne: true },
@@ -123,16 +118,16 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    let existingTilemap = await TilemapSchema.findOne({ name: tilemap.name });
+    let existingTilemap = await TilemapModel.findOne({ name: tilemap.name });
 
     if (existingTilemap !== null) return "Error message";
 
-    let user = await UserSchema.findOne({ _id: userId });
+    let user = await UserModel.findOne({ _id: userId });
 
     if (user === null) return "Error Message";
 
     //TODO add user to collaborators and collaborator names
-    let newTilemap = new TilemapSchema({
+    let newTilemap = new TilemapModel({
       backgroundColor:
         tilemap.backgroundColor == null ? "#FFFFFF" : tilemap.backgroundColor,
       collaborators: [],
@@ -193,7 +188,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     tilemapId: string,
     tilemap: Partial<Tilemap>
   ): Promise<Tilemap | string> {
-    let tm = await TilemapSchema.findOne({ _id: tilemapId });
+    let tm = await TilemapModel.findOne({ _id: tilemapId });
     if (tm === null) return "Error Message";
 
     tm.backgroundColor = tilemap.backgroundColor
@@ -232,7 +227,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       let colabs = new Array<mongoose.Types.ObjectId>();
       for (let id of tilemap.collaborators) {
         if (ObjectId.isValid(id)) {
-          let user = await UserSchema.findById(id);
+          let user = await UserModel.findById(id);
           if (user !== null) {
             colabs.push(user._id);
           }
@@ -245,7 +240,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
       let tilesets = new Array<mongoose.Types.ObjectId>();
       for (let id of tilemap.tilesets) {
         if (ObjectId.isValid(id)) {
-          let user = await UserSchema.findById(id);
+          let user = await UserModel.findById(id);
           if (user !== null) {
             tilesets.push(user._id);
           }
@@ -288,7 +283,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   async deleteTilemapById(
     tilemapId: string
   ): Promise<Partial<Tilemap> | string> {
-    await TilemapSchema.findOneAndDelete(
+    await TilemapModel.findOneAndDelete(
       { _id: tilemapId },
       function (err: Error) {
         if (err) return err.message;
@@ -305,9 +300,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
   ): Promise<TilemapSocialStatistics | null> {
     if (payload !== null) {
       let refId = payload.referenceId;
-      let social = await TilemapSocialSchema.findById(refId);
+      let social = await TilemapSocialModel.findById(refId);
       if (social !== null) {
-        let comment = await CommentSchema.create(payload);
+        let comment = await CommentModel.create(payload);
         await comment.save();
         return {
           tileMap: social.tileMap.toString(),
@@ -336,8 +331,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     socialId: string
   ): Promise<TilemapSocialStatistics | null> {
-    let user = await UserSchema.findById(userId);
-    let social = await TilemapSocialSchema.findById(socialId);
+    let user = await UserModel.findById(userId);
+    let social = await TilemapSocialModel.findById(socialId);
     if (user !== null && social !== null) {
       let id = user._id;
       let likes = social.likes;
@@ -377,8 +372,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     socialId: string
   ): Promise<TilemapSocialStatistics | null> {
-    let user = await UserSchema.findById(userId);
-    let social = await TilemapSocialSchema.findById(socialId);
+    let user = await UserModel.findById(userId);
+    let social = await TilemapSocialModel.findById(socialId);
     if (user !== null && social !== null) {
       let id = user._id;
       let likes = social.likes;
@@ -418,8 +413,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     userId: string,
     socialId: string
   ): Promise<TilemapSocialStatistics | null> {
-    let user = await UserSchema.findById(userId);
-    let social = await TilemapSocialSchema.findById(socialId);
+    let user = await UserModel.findById(userId);
+    let social = await TilemapSocialModel.findById(socialId);
     if (user !== null && social !== null) {
       social.views++;
       await social.save();

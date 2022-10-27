@@ -2,7 +2,7 @@ import mocha from 'mocha';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 
-import { TilesetSchema, UserSchema } from "../../database/mongoose/schemas";
+import { TilesetModel, UserModel } from "../../database/mongoose/schemas";
 import { MongooseTilesetDBM } from "../../database/mongoose/managers";
 import { Tileset } from '../../types';
 import { TilesetSchemaType } from '../../database/mongoose/types';
@@ -100,8 +100,8 @@ describe("Testing MongooseTilesetDBM", function() {
         let id: string | undefined;
 
         beforeEach(async function() {
-            await TilesetSchema.deleteMany();
-            let tileset = await TilesetSchema.create(tileset2);
+            await TilesetModel.deleteMany();
+            let tileset = await TilesetModel.create(tileset2);
             id = tileset._id.toString();
         });
 
@@ -133,14 +133,14 @@ describe("Testing MongooseTilesetDBM", function() {
     describe("createTileset", function() {
 
         beforeEach(async function() {
-            await UserSchema.deleteMany();
-            await TilesetSchema.deleteMany();
-            await UserSchema.create(user1);
+            await UserModel.deleteMany();
+            await TilesetModel.deleteMany();
+            await UserModel.create(user1);
         });
 
         it("Success - Creates a new tileset", async function() { 
             let tilesets = new MongooseTilesetDBM()
-            let usr = await UserSchema.findOne({email: user1.email});
+            let usr = await UserModel.findOne({email: user1.email});
             let id = usr !== null ? usr._id.toString() : "";
             expect(id).not.equals("");
             let ts = await tilesets.createTileset(id, tileset1);
@@ -149,17 +149,17 @@ describe("Testing MongooseTilesetDBM", function() {
 
         it("Failure - Valid id but doesn't exist", async function() {
             let tilesets = new MongooseTilesetDBM()
-            let usr = await UserSchema.findOne({email: user1.email});
+            let usr = await UserModel.findOne({email: user1.email});
             let id = usr !== null ? usr._id.toString() : "";
             expect(id).not.equals("");
-            await UserSchema.findByIdAndDelete(id);
+            await UserModel.findByIdAndDelete(id);
             let ts = await tilesets.createTileset(id, tileset1);
             expect(ts).equals('Error');
         });
 
         it("Failure - Invalid Id", async function() {
             let tilesets = new MongooseTilesetDBM()
-            let usr = await UserSchema.findOne({email: user1.email});
+            let usr = await UserModel.findOne({email: user1.email});
             let id = usr !== null ? usr._id.toString() : "";
             expect(id).not.equals("");
             let ts = await tilesets.createTileset(id + "1", tileset1);
@@ -170,23 +170,23 @@ describe("Testing MongooseTilesetDBM", function() {
     describe("updateTileset", function() {
 
         beforeEach(async function() {
-            await TilesetSchema.deleteMany();
-            await TilesetSchema.create(tileset2);
+            await TilesetModel.deleteMany();
+            await TilesetModel.create(tileset2);
         });
 
         it("Success - updates existing tileset with new data", async function() {
             let tilesets = new MongooseTilesetDBM();
-            let tileset = await TilesetSchema.findOne({name: tileset2.name});
+            let tileset = await TilesetModel.findOne({name: tileset2.name});
             let id = tileset !== null ? tileset._id.toString() : "";
             expect(id).not.equal("");
 
             let updatedTileset = await tilesets.updateTilesetById(id, tileset1);
             expect(updatedTileset).to.have.property("name", "tileset1");
 
-            tileset = await TilesetSchema.findOne({name: tileset2.name});
+            tileset = await TilesetModel.findOne({name: tileset2.name});
             expect(tileset).null;
 
-            tileset = await TilesetSchema.findOne({name: tileset1.name});
+            tileset = await TilesetModel.findOne({name: tileset1.name});
             expect(tileset).not.null;
         });
 
@@ -199,9 +199,9 @@ describe("Testing MongooseTilesetDBM", function() {
         let id: string | undefined;
 
         this.beforeEach(async function() {
-            await TilesetSchema.deleteMany();
-            await TilesetSchema.create(tileset3);
-            let tileset = await TilesetSchema.create(tileset2);
+            await TilesetModel.deleteMany();
+            await TilesetModel.create(tileset3);
+            let tileset = await TilesetModel.create(tileset2);
             id = tileset._id.toString();
         });
 
@@ -212,10 +212,10 @@ describe("Testing MongooseTilesetDBM", function() {
             let result = await tilesets.deleteTilesetById(id || "");
             expect(result).to.have.property("id", id);
 
-            let tileset = await TilesetSchema.findById(id || "");
+            let tileset = await TilesetModel.findById(id || "");
             expect(tileset).null;
 
-            let tileset3 = await TilesetSchema.findOne({name: "tileset3"});
+            let tileset3 = await TilesetModel.findOne({name: "tileset3"});
             expect(tileset3).not.null;
         });
 
@@ -227,10 +227,10 @@ describe("Testing MongooseTilesetDBM", function() {
             expect(result).equals("Error");
 
 
-            let tileset2 = await TilesetSchema.findOne({name: "tileset2"});
+            let tileset2 = await TilesetModel.findOne({name: "tileset2"});
             expect(tileset2).not.null;
 
-            let tileset3 = await TilesetSchema.findOne({name: "tileset3"});
+            let tileset3 = await TilesetModel.findOne({name: "tileset3"});
             expect(tileset3).not.null;
         });
     });

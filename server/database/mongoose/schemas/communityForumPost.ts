@@ -17,4 +17,5 @@ const CommunityForumPostSchema = new Schema({
     isPublished: { type: Boolean, require: true}
 
 });
+
 export default mongoose.model('CommunityForumPostSchema', CommunityForumPostSchema)
