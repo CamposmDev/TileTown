@@ -3,11 +3,6 @@ import { is } from "typescript-is";
 import { db } from "../../database";
 import { SortBy, Tileset } from "../../types";
 
-const isTileset = (
-  response: string | Partial<Tileset>
-): response is Tileset => {
-  return (response as Tileset).id !== undefined;
-};
 
 export default class TilesetController {
     public async getTilesetById(req: Request, res: Response): Promise<Response> {
@@ -29,6 +24,7 @@ export default class TilesetController {
         // Success - 200 - return the tileset
         return res.status(200).json({message: "Getting tileset!", tileset: tileset});
     }
+  
     public async createTileset(req: Request, res: Response): Promise<Response> {
         // Check to see if a request body was sent
         if (!req || !res || !req.body) {
@@ -67,6 +63,7 @@ export default class TilesetController {
         // Success - 201 - return the tileset
         return res.status(201).json({message: "Creating tileset!", tileset: tileset});
     }
+  
     public async deleteTilesetById(req: Request, res: Response): Promise<Response> {
         // Check to see if a request body was sent
         if (!req || !res || !req.params) {
@@ -86,6 +83,7 @@ export default class TilesetController {
         // Success - 200 - return the deleted tileset
         return res.status(200).json({ message: "Deleting a tileset!", tileset: tileset });
     }
+  
     public async updateTilesetById(req: Request, res: Response): Promise<Response> {
         // Check to see if a request body was sent
         if (!req || !res || !req.body || !req.params) {
@@ -238,6 +236,7 @@ export default class TilesetController {
         return res.status(200).json({message: "Tileset published! Social data created!", social: social});
 
     }
+  
     public async likeTilesetById(req: Request, res: Response): Promise<Response> {
         /** Check for bad requests and missing data */
         if (!req || !res || !req.params) {
