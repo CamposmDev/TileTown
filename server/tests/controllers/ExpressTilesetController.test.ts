@@ -55,7 +55,7 @@ describe("ExpressTilesetController", function () {
     isPublished: false,
   };
   /** Start the server on port 3000 */
-  const server = app.listen("3000");
+  const server = app.listen("3004");
 
   before(async function () {
     const connect: string =
