@@ -176,8 +176,9 @@ export default class MongooseForumDBM implements ForumDBM {
                 body: payload.body,
                 referenceId: payload.referenceId
             })
-            await comment.save()
+            let savedComment = await comment.save()
             return {
+                id: savedComment._id.toString(),
                 author: comment.author,
                 body: comment.body,
                 referenceId: comment.referenceId
