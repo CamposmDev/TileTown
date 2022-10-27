@@ -1,5 +1,5 @@
 import { NavigateBefore, Tune } from "@mui/icons-material"
-import { IconButton, Drawer, Grid, Divider, Typography, TextField, Stack, Box, InputAdornment, Checkbox, FormControlLabel } from "@mui/material"
+import { IconButton, Drawer, Grid, Divider, Typography, TextField, Stack, InputAdornment, Checkbox, FormControlLabel } from "@mui/material"
 import { useState } from "react"
 
 const TilesetEditorDrawer = () => {
@@ -10,7 +10,13 @@ const TilesetEditorDrawer = () => {
     const handleMenuClose = () => setIsDrawerOpen(false)
 
     const drawer = (
-        <Drawer anchor='left' open={isDrawerOpen} BackdropProps={{ invisible: true }} onClose={handleMenuClose}>
+        <Drawer
+            anchor='left' 
+            open={isDrawerOpen} 
+            onClose={handleMenuClose}
+            PaperProps={{sx: { mt: 15 }}}
+            BackdropProps={{ invisible: true }}
+        >
             <Stack spacing={1} width='300px' role='presentation' textAlign='start' p={1}>
                 <Grid container alignItems='center'>
                     <IconButton onClick={handleMenuClose} children={<NavigateBefore/>}/>

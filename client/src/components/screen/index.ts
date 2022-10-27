@@ -4,6 +4,7 @@ import RegisterScreen from "./RegisterScreen";
 import MainFeedScreen from "./MainFeedScreen";
 import AccountSettingsScreen from "./account-settings/AccountSettings";
 import TilesetEditorScreen from "./tileset-editor/TilesetEditorScreen";
+import TilemapEditorScreen from "./tilemap-editor/TilemapEditorScreen";
 
 export {
     SplashScreen,
@@ -11,5 +12,6 @@ export {
     RegisterScreen,
     MainFeedScreen,
     AccountSettingsScreen,
-    TilesetEditorScreen
+    TilesetEditorScreen,
+    TilemapEditorScreen
 }

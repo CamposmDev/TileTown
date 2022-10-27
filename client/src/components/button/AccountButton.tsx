@@ -1,12 +1,8 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom';
-import Person from '@mui/icons-material/Person';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Hail from '@mui/icons-material/Hail'
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { Avatar, Box, Grid, IconButton, Menu, MenuItem } from "@mui/material"
+import { Avatar, Box, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
+import { Logout, Hail, Person, Settings, PersonAdd } from "@mui/icons-material";
 
 interface Props {
     loggedIn: boolean
@@ -58,16 +54,35 @@ const AccountButton = ({loggedIn}: Props) => {
 
     const loggedInItems = (
         <Box>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'} ><SettingsIcon />Account Settings</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}><LogoutIcon />Logout</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/profile'}>
+                <ListItemIcon><Person/></ListItemIcon>
+                <ListItemText>Your Profile</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'}>
+                <ListItemIcon><Settings/></ListItemIcon>
+                <ListItemText>Settings</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}>
+                <ListItemIcon><Logout/></ListItemIcon>
+                <ListItemText>Logout</ListItemText>
+            </MenuItem>
         </Box>
     )
 
     const loggedOutItems = (
         <Box>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'} ><Person />Login</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/register'}><PersonAdd />Create New Account</MenuItem>
-            <MenuItem onClick={handleGuest}><Hail />Continue as Guest</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'} >
+                <ListItemIcon><Person/></ListItemIcon>
+                <ListItemText>Login</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to={'/register'}>
+                <ListItemIcon><PersonAdd/></ListItemIcon>
+                <ListItemText>Create New Account</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleGuest}>
+                <ListItemIcon><Hail/></ListItemIcon>
+                <ListItemText>Continue as Guest</ListItemText>
+            </MenuItem>
         </Box>
     )
     const menu = (
