@@ -5,50 +5,117 @@ import { SortBy, Tileset } from "../../types";
 
 export default class TilesetController {
     public async getTilesetById(req: Request, res: Response): Promise<Response> {
-        //check to see if a request body was sent
-        if (!req.body) {
-            return res.status(400).json({
-                errorMessage: "Improperly formatted request",
-            });
+        // Check to see if a request body was sent
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: "Improperly formatted request"});
+        }
+        // Check to see if a tileset id was provided and if it was formatted as a string
+        if (!req.params.id) {
+            return res.status(400).json({message: "No tilesetId provided"});
         }
 
-        const tilesetId: string = req.body.tilesetId;
-
-        //check to see if a tileset id was provided and if it was formatted as a string
-        if (!tilesetId || !is<string>(tilesetId)) {
-            return res.status(400).json({
-                errorMessage: "No tilesetId provided",
-            });
+        // Check tileset exists - if error 404
+        let tileset = await db.tilesets.getTilesetById(req.params.id);
+        if (tileset === null) {
+            return res.status(404).json({message: "Tileset with id not found"});
         }
 
-        const response: Partial<Tileset> | string =
-            await db.tilesets.getTilesetById(tilesetId);
-
-        //check for error messages
-        if (is<string>(response)) {
-            return res.status(400).json({
-                errorMessage: response,
-            });
+        // Success - 200 - return the tileset
+        return res.status(200).json({message: "Getting tileset!", tileset: tileset});
+    }
+    public async createTileset(req: Request, res: Response): Promise<Response> {
+        // Check to see if a request body was sent
+        if (!req || !res || !req.body) {
+            return res.status(400).json({message: "Improperly formatted request"});
+        }
+        // Check to see if a user id was provided and if it was formatted as a string
+        if (!req.userId) {
+            return res.status(400).json({message: "No userId Provided"});
+        }
+        // Check to see if a tileset partial was provided and if it was formatted properly
+        if (!req.body.tileset) {
+            return res.status(400).json({message: "No tileset data provided"});
+        }
+        // Check if the tileset has a name
+        if (!req.body.tileset.name) {
+            return res.status(400).json({message: "Tileset must have a name"});
         }
 
-        //make sure response is at in the format of a tileset partial
-        if (!response || !is<Partial<Tileset>>(response)) {
-            return res.status(400).json({
-                errorMessage: "unable to get tileset",
-            });
+        // Check if a user exists in the database
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: "User not found"});
+        }
+        // Check if a tileset exists in the database with the name
+        let existingTileset = await db.tilesets.getTilesetByName(req.body.tileset.name);
+        if (existingTileset !== null) { 
+            return res.status(400).json({message: "Tileset must have a unique name"});
         }
 
-        return res
-            .status(200)
-            .json({ message: "Getting tileset!", response: response });
+        // Create the tileset
+        let tileset = await db.tilesets.createTileset(req.userId, req.body.tileset);
+        if (tileset === null) {
+            return res.status(500).json({message: "Server Error. Error while creating tileset."});
+        }
+
+        // Success - 201 - return the tileset
+        return res.status(201).json({message: "Creating tileset!", tileset: tileset});
+    }
+    public async deleteTilesetById(req: Request, res: Response): Promise<Response> {
+        // Check to see if a request body was sent
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: "Improperly formatted request"});
+        }
+        // Check to see if a tileset id was provided and if it was formatted as a string
+        if (!req.params.id) {
+            return res.status(400).json({message: "No tileset id provided"});
+        }
+
+        // Delete the tileset from the database
+        let tileset = await db.tilesets.deleteTilesetById(req.params.id);
+        if (tileset === null) {
+            return res.status(500).json({message: "Server error. Error deleting tileset"});
+        }
+
+        // Success - 200 - return the deleted tileset
+        return res.status(200).json({ message: "Deleting a tileset!", tileset: tileset });
+    }
+    public async updateTilesetById(req: Request, res: Response): Promise<Response> {
+        // Check to see if a request body was sent
+        if (!req || !res || !req.body || !req.params) {
+            return res.status(400).json({message: "Improperly formatted request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "No tileest id provided"});
+        }
+        // Check to see if a user id was provided and if it was formatted as a string
+        if (!req.userId) {
+            return res.status(400).json({message: "No userId provided"});
+        }
+        // Check to see if a tileset partial was provided and if it was formatted properly
+        if (!req.body.tileset) {
+            return res.status(400).json({message: "No tileset data provided"});
+        }
+
+        let existingTileset = await db.tilesets.getTilesetById(req.params.id);
+        // If tileset doesn't exist - error 404
+        if (existingTileset === null) {
+            return res.status(404).json({message: `No tileset with id ${req.params.id}`});
+        }
+        // If tileset has been published - error 400
+        if (existingTileset.isPublished) {
+            return res.status(400).json({message: "This tileset has been published and cannot be updated"})
+        }
+
+        // Update the tileset - if an error occurs - 500
+        let updatedTileset = await db.tilesets.updateTilesetById(req.params.id, req.body.tileset);
+        if (updatedTileset === null) {
+            return res.status(500).json({message: "Server Error. Error updating tileset"});
+        }
+
+        return res.status(200).json({message: "Updating a tileset!", tileset: updatedTileset});
     }
 
-    public async getTilesetSocialStatsById(
-        req: Request,
-        res: Response
-    ): Promise<void> {
-        res.status(200).json({ message: "Getting tileset social stats by id!" });
-    }
 
     public async getTilesetPartials(
         req: Request,
@@ -110,162 +177,230 @@ export default class TilesetController {
             .json({ message: "Returning Tileset Partials!", response: response });
     }
 
-    public async createTileset(req: Request, res: Response): Promise<Response> {
-        //check to see if a request body was sent
-        if (!req.body) {
-            return res.status(400).json({
-                errorMessage: "Improperly formatted request",
-            });
+
+    public async getTilesetSocialById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: `Bad Request`});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({messagee: `Missing tileset social data id`});
         }
 
-        const userId: string = req.userId;
-
-        //check to see if a user id was provided and if it was formatted as a string
-        if (!userId || !is<string>(userId)) {
-            return res.status(400).json({
-                errorMessage: "No userId Provided",
-            });
+        // Check social data exists in the database
+        let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: `Tileset social data with id ${req.params.id} not found`});
         }
 
-        const tileset: Partial<Tileset> = req.body.userId;
-
-        //check to see if a tileset partial was provided and if it was formatted properly
-        if (!tileset || !is<Partial<Tileset>>(tileset)) {
-            return res.status(400).json({
-                errorMessage: "No tileset data provided",
-            });
-        }
-
-        const response: Partial<Tileset> | string = await db.tilesets.createTileset(
-            userId,
-            tileset
-        );
-
-        //check for error messages
-        if (is<string>(response)) {
-            return res.status(400).json({
-                errorMessage: response,
-            });
-        }
-
-        //make sure response is at in the format of a tileset partial
-        if (!response || !is<Partial<Tileset>>(response)) {
-            return res.status(400).json({
-                errorMessage: "unable to create new tileset",
-            });
-        }
-
-        return res
-            .status(201)
-            .json({ message: "Creating tileset!", response: response });
+        // Return the social data
+        return res.status(200).json({message: "Got tileset social data!", social: social});
     }
-
-    public async deleteTilesetById(
-        req: Request,
-        res: Response
-    ): Promise<Response> {
-        //check to see if a request body was sent
-        if (!req.body) {
-            return res.status(400).json({
-                errorMessage: "Improperly formatted request",
-            });
+    public async publishTileset(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters 
+        if (!req || !res || !req.params || !req.body) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({message: "Missing user id"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tileset id"});
+        }
+        if (!req.body.social) {
+            return res.status(400).json({message: "Missing social in body"});
         }
 
-        const tilesetId: string = req.body.tilesetId;
-
-        //check to see if a tileset id was provided and if it was formatted as a string
-        if (!tilesetId || !is<string>(tilesetId)) {
-            return res.status(400).json({
-                errorMessage: "No tileset id provided",
-            });
+        // Check tileset exists
+        let tileset = await db.tilesets.getTilesetById(req.params.id);
+        if (tileset === null) {
+            return res.status(404).json({message: `Tileset with id ${req.params.id} not found`});
         }
 
-        const response: Partial<Tileset> | string =
-            await db.tilesets.deleteTilesetById(tilesetId);
-
-        //check for error messages
-        if (is<string>(response)) {
-            return res.status(400).json({
-                errorMessage: response,
-            });
+        // Check if social data already exists for this tileset
+        let existingSocial = await db.tilesetSocials.getTilesetSocialByTilesetId(tileset.id);
+        if (existingSocial !== null) {
+            return res.status(400).json({message: `Social data already exists for tileset with id ${tileset.id}`});
         }
 
-        //make sure response is at in the format of a tileset partial
-        if (!response || !is<Partial<Tileset>>(response)) {
-            return res.status(400).json({
-                errorMessage: "unable to delete tileset",
-            });
+        // Create the social data
+        let social = await db.tilesetSocials.createTilesetSocial(tileset.id, req.body.social);
+        if (social === null) { 
+            return res.status(500).json({message: `Server Error. Error creating social data for tileset with id ${tileset.id}`});
         }
 
-        return res
-            .status(201)
-            .json({ message: "Deleting tileset!", response: response });
+        return res.status(200).json({message: "Tileset published! Social data created!", social: social});
+
     }
-
-    public async updateTilesetById(
-        req: Request,
-        res: Response
-    ): Promise<Response> {
-        //check to see if a request body was sent
-        if (!req.body) {
-            return res.status(400).json({
-                errorMessage: "Improperly formatted request",
-            });
+    public async likeTilesetById(req: Request, res: Response): Promise<Response> {
+        /** Check for bad requests and missing data */
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tileset id"});
+        }
+        if (!req.userId) {
+            console.log(req.userId);
+            return res.status(400).json({message: "Missing user id"});
         }
 
-        const userId: string = req.userId;
-
-        //check to see if a user id was provided and if it was formatted as a string
-        if (!userId || !is<string>(userId)) {
-            return res.status(400).json({
-                errorMessage: "no userId provided",
-            });
+        /** Check both the user and social statistics exists */
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: "User not found"});
+        }
+        let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: "Tileset not found"});
         }
 
-        const tileset: Partial<Tileset> = req.body.userId;
+        
+        let likeIndex = social.likes.indexOf(user.id);
+        let dislikeIndex = social.dislikes.indexOf(user.id);
 
-        //check to see if a tileset partial was provided and if it was formatted properly
-        if (!tileset || !is<Partial<Tileset>>(tileset)) {
-            return res.status(400).json({
-                errorMessage: "no tileset data provided",
-            });
+        // Like the tileset
+        if (likeIndex === -1) {
+            social.likes.push(user.id);
+        }
+        // Undislike the tileset
+        if (dislikeIndex > -1) {
+            social.dislikes.splice(dislikeIndex, 1);
         }
 
-        const response: Partial<Tileset> | string =
-            await db.tilesets.updateTilesetById(userId, tileset);
+        /** Update the social statistics for the tileset */
+        let updatedSocial = await db.tilesetSocials.updateTilesetSocial(social.id, {
+            likes: social.likes,
+            dislikes: social.dislikes
+        });
+        if (updatedSocial === null) {
+            return res.status(500);
+        }   
 
-        //check for error messages
-        if (is<string>(response)) {
-            return res.status(400).json({
-                errorMessage: response,
-            });
-        }
-
-        //make sure response is at in the format of a tileset partial
-        if (!response || !is<Partial<Tileset>>(response)) {
-            return res.status(400).json({
-                errorMessage: "unable to update new tileset",
-            });
-        }
-
-        return res
-            .status(201)
-            .json({ message: "updating tileset!", response: response });
+        return res.status(200).json({social: updatedSocial});
     }
+    public async dislikeTilesetById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: `Bad request`});
+        }
+        if (!req.userId) {
+            return res.status(400).json({message: `Missing user id`});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({messagee: `Missing tileset id from params`});
+        }
 
-    public async likeTilesetById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Liking a tileset by id!" });
+        // Check user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.userId} not found`});
+        }
+
+        // Check social data exists
+        let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: `Tileset social data with id ${req.params.id} not found`});
+        }
+
+        // Dislike the tileset - unlike the tileset if need be
+        let likeIndex = social.likes.indexOf(user.id);
+        let dislikeIndex = social.dislikes.indexOf(user.id);
+
+        // Dislike the tileset
+        if (dislikeIndex === -1) {
+            social.dislikes.push(user.id);
+        }  
+        // Unlike the tileset
+        if (likeIndex > -1) {
+            social.likes.splice(likeIndex, 1);
+        }
+
+        // Update the social statistics
+        let updatedSocial = await db.tilesetSocials.updateTilesetSocial(req.params.id, {
+            likes: social.likes, 
+            dislikes: social.dislikes
+        });
+        if (updatedSocial === null) {
+            return res.status(500).json({message: `Server Error. Error updating tileset social data with id ${req.params.id}`});
+        }
+
+        // Return updated social statistics
+        return res.status(200).json({message: "Tileset disliked!", social: updatedSocial});
     }
+    public async commentTilesetById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.body || !req.params) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({message: "Missing user id"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tileset id"});
+        }
+        if (!req.body.comment) {
+            return res.status(400).json({message: "Missing comment from body"})
+        }
+        if (!req.body.comment.body) {
+            return res.status(400).json({message: "Missing text body from comment"});
+        }
 
-    public async dislikeTilesetById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Dislike a tileset by id!" });
+        // Check the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.userId} not found`})
+        }
+        // Check the social data exists 
+        let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: `Tileset social data with id ${req.params.id} not found`});
+        }
+
+        // Create the comment
+        let comment = await db.comments.createComment(user.id, social.id, req.body.comment.body);
+        if (comment === null) {
+            return res.status(500).json({message: "Server Error"});
+        }
+
+        // Add the comment to the tilesets social data
+        social.comments.push(comment.id);
+
+        // Update the tilesets social data
+        let updatedSocial = await db.tilesetSocials.updateTilesetSocial(req.params.id, social)
+        if (updatedSocial === null) {
+            return res.status(500).json({message: "Server Error. Error updating tileset social data"});
+        }
+
+        // Return the successfully created comment
+        return res.status(201).json({message: "Comment created!", comment: comment});
+
     }
+    public async viewTilesetById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tileset social id"});
+        }
 
-    public async commentTilesetById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Comment on tileset by id!" });
-    }
+        // Check social data exists 
+        let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+        if (social === null) { 
+            return res.status(404).json({message: `Tileset with id ${req.params.id} not found`});
+        }
 
-    public async viewTilesetById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Viewing a tileset by id!" });
+        // Increment the views
+        social.views += 1;
+
+        // Update the social data
+        let updatedSocial = await db.tilesetSocials.updateTilesetSocial(social.id, social);
+        if (updatedSocial === null) {
+            return res.status(500).json({message: `Server Error. Error updating server with id ${req.params.id}`});
+        }
+
+        // Return the updated social data
+        return res.status(200).json({message: "Tileset social updated!", social: updatedSocial});
     }
 }
