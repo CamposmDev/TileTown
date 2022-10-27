@@ -117,14 +117,14 @@ describe("Testing MongooseTilesetDBM", function() {
             let tilesets = new MongooseTilesetDBM();
             expect(id).not.undefined;
             let tileset = await tilesets.getTilesetById(new mongoose.Types.ObjectId().toString());
-            expect(tileset).equals("Error");
+            expect(tileset).null;
         })
 
         it("Failure - Invalid tileset id", async function() {
             let tilesets = new MongooseTilesetDBM();
             expect(id).not.undefined;
             let tileset = await tilesets.getTilesetById(id + "1" || "");
-            expect(tileset).equals("Error");
+            expect(tileset).null;
         })
 
 
@@ -147,23 +147,13 @@ describe("Testing MongooseTilesetDBM", function() {
             expect(ts).to.have.property("owner", id);
         });
 
-        it("Failure - Valid id but doesn't exist", async function() {
-            let tilesets = new MongooseTilesetDBM()
-            let usr = await UserModel.findOne({email: user1.email});
-            let id = usr !== null ? usr._id.toString() : "";
-            expect(id).not.equals("");
-            await UserModel.findByIdAndDelete(id);
-            let ts = await tilesets.createTileset(id, tileset1);
-            expect(ts).equals('Error');
-        });
-
         it("Failure - Invalid Id", async function() {
             let tilesets = new MongooseTilesetDBM()
             let usr = await UserModel.findOne({email: user1.email});
             let id = usr !== null ? usr._id.toString() : "";
             expect(id).not.equals("");
             let ts = await tilesets.createTileset(id + "1", tileset1);
-            expect(ts).equals('Error');
+            expect(ts).null;
         });
     });
 
@@ -188,10 +178,6 @@ describe("Testing MongooseTilesetDBM", function() {
 
             tileset = await TilesetModel.findOne({name: tileset1.name});
             expect(tileset).not.null;
-        });
-
-        it("Success - updating existing tileset with empty object does nothing", async function() {
-
         });
     });
 
@@ -224,7 +210,7 @@ describe("Testing MongooseTilesetDBM", function() {
 
             expect(id).not.undefined;
             let result = await tilesets.deleteTilesetById(new mongoose.Types.ObjectId().toString());
-            expect(result).equals("Error");
+            expect(result).null;
 
 
             let tileset2 = await TilesetModel.findOne({name: "tileset2"});
