@@ -57,18 +57,18 @@ const AccountButton = ({loggedIn}: Props) => {
     }
 
     const loggedInItems = (
-        <>
+        <Box>
             <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'} ><SettingsIcon />Account Settings</MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}><LogoutIcon />Logout</MenuItem>
-        </>
+        </Box>
     )
 
     const loggedOutItems = (
-        <>
+        <Box>
             <MenuItem onClick={handleMenuClose} component={Link} to={'/login'} ><Person />Login</MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} to={'/register'}><PersonAdd />Create New Account</MenuItem>
             <MenuItem onClick={handleGuest}><Hail />Continue as Guest</MenuItem>
-        </>
+        </Box>
     )
     const menu = (
         <Menu

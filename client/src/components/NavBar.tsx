@@ -10,7 +10,7 @@ interface Props {
 const NavBar = ({items}: Props) => {
     return (
         <Box sx={{flexGrow: 1}}>
-            <AppBar position='sticky'>
+            <AppBar position='relative'>
                 <Toolbar>
                      {items}
                 </Toolbar>

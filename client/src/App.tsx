@@ -1,9 +1,19 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar';
-import { SplashScreen, LoginScreen, RegisterScreen, MainFeedScreen, AccountSettingsScreen } from './components/screen';
+import { SplashScreen, LoginScreen, RegisterScreen, MainFeedScreen, AccountSettingsScreen, TilesetEditorScreen } from './components/screen';
 import WelcomeMenu from './components/menu/WelcomeMenu';
 import UserMenu from './components/menu/UserMenu';
+
+/**
+ * Pixel Editors 
+ * @see https://github.com/alekspopovic/pixel-art-drawing-editor
+ * @see https://github.com/satansdeer/drawing-react-canvas/tree/master/src 
+ * @see https://github.com/CodingGarden/react-pixel-art-maker
+ * 
+ * Color Picker
+ * @see https://www.npmjs.com/package/material-ui-color-picker
+ */
 
 function App() {
   return (
@@ -12,8 +22,8 @@ function App() {
         {['/', '/login', '/register'].map((x,i) => 
           <Route path={x} element={<NavBar items={<WelcomeMenu/>}/>} key={i}/>
           )}
-        {['/feed', '/settings'].map((x,i) =>
-          <Route path={x} element={<NavBar items={<UserMenu/>}/>}/>
+        {['/feed', '/settings', '/create/tileset', '/create/tilemap'].map((x,i) =>
+          <Route path={x} element={<NavBar items={<UserMenu/>} key={i}/>}/>
         )}
       </Routes>
       <Routes>
@@ -22,6 +32,7 @@ function App() {
         <Route path='/register' element={<RegisterScreen/>} />
         <Route path='/feed' element={<MainFeedScreen />} />
         <Route path='/settings' element={<AccountSettingsScreen/>}/>
+        <Route path='/create/tileset' element={<TilesetEditorScreen/>}/>
       </Routes>
     </BrowserRouter>
   );
