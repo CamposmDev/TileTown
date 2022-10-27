@@ -4,6 +4,7 @@ import NavBar from './components/NavBar';
 import { SplashScreen, LoginScreen, RegisterScreen, MainFeedScreen, AccountSettingsScreen, TilesetEditorScreen, TilemapEditorScreen } from './components/screen';
 import WelcomeMenu from './components/menu/WelcomeMenu';
 import UserMenu from './components/menu/UserMenu';
+import VerifyEmail from './components/VerifyEmail';
 
 /**
  * Pixel Editors 
@@ -27,6 +28,7 @@ function App() {
         )}
       </Routes>
       <Routes>
+        <Route path='/modals' element={<VerifyEmail/>}/>
         <Route path='/' element={<SplashScreen/>} />
         <Route path='/login' element={<LoginScreen/>} />
         <Route path='/register' element={<RegisterScreen/>} />
