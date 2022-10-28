@@ -3,6 +3,7 @@ import CommunityDBM from "./managers/CommunityDBM";
 import ContestDBM from "./managers/ContestDBM";
 import ForumDBM from "./managers/ForumDBM";
 import TilemapDBM from "./managers/TilemapDBM";
+import TilemapSocialDBM from "./managers/TilemapSocialDBM";
 import TilesetDBM from "./managers/TilesetDBM";
 import TilesetSocialDBM from "./managers/TilesetSocialDBM";
 import UserDBM from "./managers/UserDBM";
@@ -57,5 +58,7 @@ export default interface TileTownDB {
     get tilesets(): TilesetDBM;
 
     get tilesetSocials(): TilesetSocialDBM;
+
+    get tilemapSocials(): TilemapSocialDBM;
     
 }
