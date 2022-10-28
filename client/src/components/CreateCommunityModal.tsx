@@ -2,16 +2,20 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Modal } from '@mui/material';
+import { Grid, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import {  MenuItem } from '@mui/material';
 
 
 
-const ChangeUsernameModal = () => {
+
+
+const CreateCommunityModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
-
+    
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -35,46 +39,54 @@ const ChangeUsernameModal = () => {
             <Box sx={style} textAlign='center'>
 
                 <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
-                  Really change your username?
+                 Create Community
                 </Typography>
-           
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  We will create redirects for your tile maps and sets
-                </Typography>
-
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Rename will take a few minutes to complete
-                </Typography>
-                
+        
                 <TextField
                     variant='outlined'
                     margin="normal"
                     required
                     fullWidth
-                    id="username"
-                    label="New Username"
-                    name="username"
-                    autoComplete="username"
+                    id="name"
+                    label="Name"
+                    name="name"
+                    autoComplete="name"
                     autoFocus
                 />
-        
+                <Grid >
+                    <TextField
+                        variant='outlined'
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="discription"
+                        label="Discription"
+                        name="discription"
+                        autoFocus
+                        multiline
+                        rows={7}
+                    />
+                </Grid>
 
                 <Button
                     type="submit"
                     variant="contained"
                     sx={{ mt: 4 }}>
-                    Change my username
+                    Create Community
                 </Button>
+
+
             </Box>
             
         </Modal>
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Change Username Modal</Button>
+            <MenuItem onClick={() => setIsOpen(!isOpen)}>Create Comunity</MenuItem>
             {ui}
         </>
     )
+
 }
 
-export default ChangeUsernameModal
+export default CreateCommunityModal

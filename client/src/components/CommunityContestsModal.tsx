@@ -10,7 +10,6 @@ import { useState } from 'react';
 
 const CommunityContestsModal = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
     const style = {
@@ -22,6 +21,8 @@ const CommunityContestsModal = () => {
         bgcolor: 'background.paper',
         boxShadow: 1,
         p: 4,
+        borderRadius: 2
+
       };
 
     let ui = (
