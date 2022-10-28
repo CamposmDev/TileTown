@@ -1,8 +1,10 @@
+import CommentDBM from "./managers/CommentDBM";
 import CommunityDBM from "./managers/CommunityDBM";
 import ContestDBM from "./managers/ContestDBM";
 import ForumDBM from "./managers/ForumDBM";
 import TilemapDBM from "./managers/TilemapDBM";
 import TilesetDBM from "./managers/TilesetDBM";
+import TilesetSocialDBM from "./managers/TilesetSocialDBM";
 import UserDBM from "./managers/UserDBM";
 
 /**
@@ -42,6 +44,8 @@ export default interface TileTownDB {
      */
     get communities(): CommunityDBM
 
+    get comments(): CommentDBM;
+    
     /**
      * @return the tilemaps database manager assoociated with the TileTownDB
      */
@@ -51,5 +55,7 @@ export default interface TileTownDB {
      * @return the tilesets database manager associated with the TileTown
      */
     get tilesets(): TilesetDBM;
+
+    get tilesetSocials(): TilesetSocialDBM;
     
 }

@@ -1,12 +1,14 @@
 import mongoose, { ConnectOptions } from "mongoose";
 import { TileTownDB } from "../interface";
 import { 
+    MongooseCommentDBM,
     MongooseCommunityDBM, 
     MongooseContestDBM, 
     MongooseForumDBM, 
     MongooseUserDBM,
     MongooseTilemapDBM,
-    MongooseTilesetDBM
+    MongooseTilesetDBM,
+    MongooseTilesetSocialDBM,
 } from "./managers";
 
 /**
@@ -30,6 +32,8 @@ export default class MongooseDB implements TileTownDB {
     protected _contests: MongooseContestDBM;
     protected _tilemaps: MongooseTilemapDBM;
     protected _tilesets: MongooseTilesetDBM;
+    protected _tilesetSocials: MongooseTilesetSocialDBM;
+    protected _comments: MongooseCommentDBM;
 
     public constructor() {
         this._users = new MongooseUserDBM();
@@ -38,6 +42,8 @@ export default class MongooseDB implements TileTownDB {
         this._contests = new MongooseContestDBM();
         this._tilemaps = new MongooseTilemapDBM();
         this._tilesets = new MongooseTilesetDBM();
+        this._tilesetSocials = new MongooseTilesetSocialDBM();
+        this._comments = new MongooseCommentDBM();
         this._connected = false;
     }
 
@@ -68,4 +74,6 @@ export default class MongooseDB implements TileTownDB {
     get communities(): MongooseCommunityDBM { return this._communities; }
     get tilesets(): MongooseTilesetDBM { return this._tilesets; }
     get tilemaps(): MongooseTilemapDBM { return this._tilemaps; }
+    get tilesetSocials(): MongooseTilesetSocialDBM { return this._tilesetSocials; }
+    get comments(): MongooseCommentDBM { return this._comments; }
 }
