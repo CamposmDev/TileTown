@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Icon, Modal } from '@mui/material';
+import { Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
@@ -10,7 +10,6 @@ import TextField from '@mui/material/TextField';
 
 const ChangeUsernameModal = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
     const style = {
@@ -22,6 +21,8 @@ const ChangeUsernameModal = () => {
         bgcolor: 'background.paper',
         boxShadow: 1,
         p: 4,
+        borderRadius: 2
+
       };
 
     let ui = (
@@ -60,7 +61,6 @@ const ChangeUsernameModal = () => {
 
                 <Button
                     type="submit"
-                    // fullWidth
                     variant="contained"
                     sx={{ mt: 4 }}>
                     Change my username
