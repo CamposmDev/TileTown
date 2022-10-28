@@ -22,6 +22,8 @@ const EmailChangeModal = () => {
         bgcolor: 'background.paper',
         boxShadow: 1,
         p: 4,
+        borderRadius: 2
+
       };
 
     let ui = (
