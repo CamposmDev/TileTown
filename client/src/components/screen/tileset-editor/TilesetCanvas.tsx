@@ -4,29 +4,35 @@ import "./default.css";
 
 const TilesetCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const [restrictToGrid, setRestrictToGrd] = useState<boolean>(true);
+  const [currentTile, setCurrentTile] = useState<{
+    x: number | null;
+    y: number | null;
+  }>({ x: null, y: null });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [zoom, setZoom] = useState<number>(0.8);
-  const imageHeight: number = 400;
-  const imageWidth: number = 400;
+  const imageHeight: number = 800;
+  const imageWidth: number = 800;
   const tileHeight: number = 100;
   const tileWidth: number = 100;
-  const canvasHeight: number = 300;
-  const canvasWidth: number = 300;
+  const canvasHeight: number = 400;
+  const canvasWidth: number = 400;
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas: HTMLCanvasElement = canvasRef.current;
-      canvas.height = canvasHeight * (1 / zoom);
-      canvas.width = canvasWidth * (1 / zoom);
+    if (gridCanvasRef.current) {
+      const canvas: HTMLCanvasElement = gridCanvasRef.current;
+      canvas.height = canvasHeight;
+      canvas.width = canvasWidth;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
       if (ctx) {
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
         const scaleY = rectHeight / imageHeight;
         const scaleX = rectWidth / imageWidth;
-        const scaledTileHeight = tileHeight * scaleY * zoom;
-        const scaledTileWidth = tileWidth * scaleX * zoom;
+        const scaledTileHeight = tileHeight * scaleY;
+        const scaledTileWidth = tileWidth * scaleX;
         contextRef.current = ctx;
 
         //draw vertical lines of grid
@@ -39,11 +45,16 @@ const TilesetCanvas = () => {
           ctx.moveTo(i, 0);
           ctx.lineTo(i, rectHeight);
         }
-
         ctx.strokeStyle = "#000000";
         ctx.stroke();
-
-        // ctx.scale(10,10)
+      }
+    }
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      canvas.height = canvasHeight;
+      canvas.width = canvasWidth;
+      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      if (ctx) {
         ctx.beginPath(); // Note the Non Null Assertion
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, 16, 8);
@@ -55,7 +66,6 @@ const TilesetCanvas = () => {
         ctx.lineCap = "square";
         ctx.lineWidth = 1;
         ctx.strokeStyle = "blue";
-        // ctx.scale(zoom, zoom);
       }
     }
   }, []);
@@ -72,6 +82,12 @@ const TilesetCanvas = () => {
       context.moveTo(canvasCoords.x, canvasCoords.y);
       context.lineTo(canvasCoords.x, canvasCoords.y);
       setIsDrawing(true);
+      let updateTile = calcCurrentTile(canvasCoords.x, canvasCoords.y);
+      setCurrentTile((currentTile) => ({
+        ...currentTile,
+        x: updateTile.x,
+        y: updateTile.y,
+      }));
     }
   };
 
@@ -81,6 +97,7 @@ const TilesetCanvas = () => {
       context.closePath();
     }
     setIsDrawing(false);
+    setCurrentTile({ x: null, y: null });
   };
 
   const draw = ({ nativeEvent }: any) => {
@@ -89,9 +106,11 @@ const TilesetCanvas = () => {
         const canvas: HTMLCanvasElement = canvasRef.current;
         const canvasCoords: { x: number; y: number } =
           screenToCanvasCoordinates(nativeEvent, canvas);
-        const context: CanvasRenderingContext2D = contextRef.current;
-        context.lineTo(canvasCoords.x, canvasCoords.y);
-        context.stroke();
+        if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
+          const context: CanvasRenderingContext2D = contextRef.current;
+          context.lineTo(canvasCoords.x, canvasCoords.y);
+          context.stroke();
+        }
       }
     }
   };
@@ -109,17 +128,66 @@ const TilesetCanvas = () => {
     };
   };
 
+  /**
+   *
+   * @param x current x Position of mouse relative to Canvas
+   * @param y current y Position of mouse relative to Canvas
+   * @returns top left point of current tile being edited
+   */
+  const calcCurrentTile = (
+    x: number,
+    y: number
+  ): { x: number | null; y: number | null } => {
+    if (restrictToGrid) {
+      const scaleY = canvasHeight / imageHeight;
+      const scaleX = canvasWidth / imageWidth;
+      const scaledTileHeight = tileHeight * scaleY;
+      const scaledTileWidth = tileWidth * scaleX;
+      return {
+        x: Math.floor(x / scaledTileWidth) * scaledTileWidth,
+        y: Math.floor(y / scaledTileHeight) * scaledTileHeight,
+      };
+    }
+    return { x: null, y: null };
+  };
+
+  /**
+   *
+   * @param x current x Position of mouse relative to Canvas
+   * @param y current y Position of mouse relative to Canvas
+   * @returns returns false if mouse is outside of current tile
+   *          true if it is or if there is no current tile
+   */
+  const withinCurrentTile = (x: number, y: number): boolean => {
+    if (currentTile.x !== null && currentTile.y !== null) {
+      const scaleY = canvasHeight / imageHeight;
+      const scaleX = canvasWidth / imageWidth;
+      const scaledTileHeight = tileHeight * scaleY;
+      const scaledTileWidth = tileWidth * scaleX;
+      const endX = currentTile.x + scaledTileWidth;
+      const endY = currentTile.y + scaledTileHeight;
+      return x < endX && y < endY && x > currentTile.x && y > currentTile.y;
+    }
+    return true;
+  };
+
   let root = (
-    <canvas
-      id="tileset-canvas"
-      onMouseDown={startDrawing}
-      onMouseUp={finishDrawing}
-      onMouseMove={draw}
-      ref={canvasRef}
-    >
-      You're browser sucks!
-    </canvas>
+    <div>
+      <canvas className="tileset-canvas" ref={gridCanvasRef}>
+        Your browser sucks!
+      </canvas>
+      <canvas
+        className="tileset-canvas"
+        onMouseDown={startDrawing}
+        onMouseUp={finishDrawing}
+        onMouseMove={draw}
+        ref={canvasRef}
+      >
+        Your browser sucks!
+      </canvas>
+    </div>
   );
+
   return (
     <Grid item textAlign="center" p={1}>
       {root}

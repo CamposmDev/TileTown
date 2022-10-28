@@ -1,6 +1,9 @@
-#tileset-canvas {
-  /* width: 600px;
-  height: 600px; */
+.tileset-canvas {
+  max-width: 80%;
+  height: 80%;
   image-rendering: crisp-edges;
   border: 1px solid black;
+  position: absolute;
+  top: 20%;
+  left: 33%;
 }
