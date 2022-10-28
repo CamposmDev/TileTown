@@ -25,13 +25,6 @@ export default class TilemapController {
         return res.status(200).json({ message: "Getting tilemap!", tilemap: tilemap });
     }
 
-    public async getTilemapSocialStatsById(
-        req: Request,
-        res: Response
-    ): Promise<void> {
-        res.status(200).json({ message: "Getting tilemap social stats by id!" });
-    }
-
     public async getTilemapPartials(
         req: Request,
         res: Response
@@ -142,7 +135,6 @@ export default class TilemapController {
 
         return res.status(201).json({ message: "Creating tilemap!", tilemap: tilemap });
     }
-
     public async deleteTilemapById(req: Request, res: Response): Promise<Response> {
         //check to see if a request body was sent
         if (!req || !res || !req.params) {
@@ -172,7 +164,6 @@ export default class TilemapController {
         // Return the tilemap that was deleted
         return res.status(200).json({ message: "Deleting tilemap!", tilemap: deletedTilemap});
     }
-
     public async updateTilemapById(req: Request, res: Response): Promise<Response> {
         //check to see if a request body was sent
         if (!req || !res || !req.body || !req.params) {
@@ -237,7 +228,24 @@ export default class TilemapController {
         return res.status(200).json({ message: "Updating a tilemap!", tilemap: tilemap});
     }
 
-    public async likeTilemapById(req: Request, res: Response): Promise<Response> {
+
+    public async getTilemapSocialById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tilemap social id"});
+        }
+
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) { 
+            return res.status(404).json({message: `Tilemap socials for tilemap social with id ${req.params.id} not found`}); 
+        }
+
+        return res.status(200).json({messsage: "Got social data for a tilemap!", social: social});
+    }
+    public async likeTilemapSocialById(req: Request, res: Response): Promise<Response> {
         // Check bad request
         if (!req || !res || !req.params) {
             return res.status(400).json({message: "Bad Request"});
@@ -251,28 +259,160 @@ export default class TilemapController {
             return res.status(400).json({message: "No tilemap provided"});
         }
 
+        // Check the user exists
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
             return res.status(404).json({message: "User not found"});
         }
-        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
-        if (tilemap === null) {
+        // Check the social data exists
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) {
             return res.status(404).json({message: "Tilemap not found"});
         }
 
+        // Update the likes and dislikes
+        let likeIndex = social.likes.indexOf(user.id);
+        let dislikeIndex = social.dislikes.indexOf(user.id);
+        if (likeIndex === -1) {
+            social.likes.push(user.id);
+            if (dislikeIndex > -1) {
+                social.dislikes.splice(dislikeIndex, 1);
+            }
+        }
 
-        return res.status(200).json({ message: "Liking a tilemap by id!" });
+        // Update the social statistics
+        let updatedSocial = await db.tilemapSocials.updateTilemapSocial(social.id, {
+            likes: social.likes,
+            dislikes: social.dislikes
+        });
+        if (updatedSocial === null) {
+            return res.status(500).json({message: "Server Error. Error while updating tilemap social data"});
+        }
+
+        // Return the updated tilemap social date
+        return res.status(200).json({ message: "Liking a tilemap", social: social});
     }
+    public async dislikeTilemapById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.params) {
+            return res.status(400).json({message: `Bad request`});
+        }
+        if (!req.userId) {
+            return res.status(400).json({message: `Missing user id`});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({messagee: `Missing tileset id from params`});
+        }
 
-    public async dislikeTilemapById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Dislike a tilemap by id!" });
+        // Check user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.userId} not found`});
+        }
+
+        // Check social data exists
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: `Tileset social data with id ${req.params.id} not found`});
+        }
+
+        // Dislike the tilemap - unlike the tileset if need be
+        let likeIndex = social.likes.indexOf(user.id);
+        let dislikeIndex = social.dislikes.indexOf(user.id);
+
+        // Dislike the tilemap
+        if (dislikeIndex === -1) {
+            social.dislikes.push(user.id);
+            // Unlike the tilemap
+            if (likeIndex > -1) {
+                social.likes.splice(likeIndex, 1);
+            }
+        }  
+
+        // Update the social statistics
+        let updatedSocial = await db.tilemapSocials.updateTilemapSocial(req.params.id, {
+            likes: social.likes, 
+            dislikes: social.dislikes
+        });
+        if (updatedSocial === null) {
+            return res.status(500).json({message: `Server Error. Error updating tileset social data with id ${req.params.id}`});
+        }
+
+        // Return updated social statistics
+        return res.status(200).json({message: "Tileset disliked!", social: updatedSocial});
     }
+    public async commentTilemapById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.body || !req.params) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({message: "Missing user id"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tilemap id"});
+        }
+        if (!req.body.comment) {
+            return res.status(400).json({message: "Missing comment from body"})
+        }
+        if (!req.body.comment.body) {
+            return res.status(400).json({message: "Missing text body from comment"});
+        }
 
-    public async commentTilemapById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Comment on tilemap by id!" });
+        // Check the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.userId} not found`})
+        }
+        // Check the social data exists 
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) {
+            return res.status(404).json({message: `Tileset social data with id ${req.params.id} not found`});
+        }
+
+        // Create the comment
+        let comment = await db.comments.createComment(user.id, social.id, req.body.comment.body);
+        if (comment === null) {
+            return res.status(500).json({message: "Server Error"});
+        }
+
+        // Add the comment to the tilesets social data
+        social.comments.push(comment.id);
+
+        // Update the tilesets social data
+        let updatedSocial = await db.tilemapSocials.updateTilemapSocial(req.params.id, social)
+        if (updatedSocial === null) {
+            return res.status(500).json({message: "Server Error. Error updating tileset social data"});
+        }
+
+        // Return the successfully created comment
+        return res.status(201).json({message: "Comment created!", comment: comment});
     }
+    public async viewTilemapById(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({message: "Missing tileset social id"});
+        }
 
-    public async viewTilemapById(req: Request, res: Response): Promise<void> {
-        res.status(200).json({ message: "Viewing a tilemap by id!" });
+        // Check social data exists 
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) { 
+            return res.status(404).json({message: `Tileset with id ${req.params.id} not found`});
+        }
+
+        // Increment the views
+        social.views += 1;
+
+        // Update the social data
+        let updatedSocial = await db.tilemapSocials.updateTilemapSocial(social.id, social);
+        if (updatedSocial === null) {
+            return res.status(500).json({message: `Server Error. Error updating server with id ${req.params.id}`});
+        }
+
+        // Return the updated social data
+        return res.status(200).json({message: "Tileset social updated!", social: updatedSocial});
     }
 }
