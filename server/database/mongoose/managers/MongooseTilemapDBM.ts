@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import {
     Tilemap,
     CollaboratorSettings,
-    TilemapSocialStatistics,
+    TilemapSocial,
     SocialStatisticsPermissions,
     Layer,
     Property,
@@ -19,10 +19,7 @@ import { TilemapModel, UserModel, CommentModel, TilemapSocialModel } from "../sc
 import { TilemapDBM } from "../../interface";
 import {
     TilemapSchemaType,
-    UserSchemaType,
-    LayerSchemaType,
-    PropertySchemaType,
-} from "../types";
+ } from "../types";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -36,9 +33,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
 
         return this.parseTilemap(tilemap);
     }
-
     async getTilemapByName(name: string): Promise<Tilemap | null> {
-        let tilemap = await TilemapModel.findOne({name: name});
+        let tilemap = await TilemapModel.findOne({ name: name });
         if (tilemap === null) return null;
         return this.parseTilemap(tilemap);
     }
@@ -133,13 +129,14 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         console.log(savedTilemap.collaboratorSettings);
         return this.parseTilemap(savedTilemap);
     }
-
     async updateTilemapById(tilemapId: string, partial: Partial<Tilemap>): Promise<Tilemap | null> {
         // Verify user is valid mongoose ObjectId
         if (!mongoose.Types.ObjectId.isValid(tilemapId)) return null;
+        // Verify collaborators are all valid mongoose ObjectIds
         if (partial.collaborators && partial.collaborators.some(c => !mongoose.Types.ObjectId.isValid(c))) {
             return null;
         }
+        // Verify tilesets are all valid mongoose ObjectIds
         if (partial.tilesets && partial.tilesets.some(t => !mongoose.Types.ObjectId.isValid(t))) {
             return null;
         }
@@ -148,12 +145,10 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         if (tilemap === null) return null;
 
         this.fillTilemapModel(tilemap, partial);
-
         let savedTilemap = await tilemap.save();
 
         return this.parseTilemap(savedTilemap);
     }
-
     async deleteTilemapById(tilemapId: string): Promise<Tilemap | null> {
         if (!mongoose.Types.ObjectId.isValid(tilemapId)) return null;
 
@@ -161,160 +156,6 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         if (tilemap === null) return null;
 
         return this.parseTilemap(tilemap);
-    }
-
-    /**
-     * @author Tuyen Vo
-     */
-    async addTilemapComment(
-        payload: Comment
-    ): Promise<TilemapSocialStatistics | null> {
-        if (payload !== null) {
-            let refId = payload.referenceId;
-            let social = await TilemapSocialModel.findById(refId);
-            if (social !== null) {
-                let comment = await CommentModel.create(payload);
-                await comment.save();
-                return {
-                    tileMap: social.tileMap.toString(),
-                    name: social.name,
-                    owner: social.owner.toString(),
-                    ownerName: social.ownerName,
-                    collaborators: social.collaborators.map((id) => id.toString()),
-                    collaboratorNames: social.collaboratorNames,
-                    tags: social.tags,
-                    description: social.description,
-                    communities: social.communities.map((id) => id.toString()),
-                    likes: social.likes.map((id) => id.toString()),
-                    dislikes: social.dislikes.map((id) => id.toString()),
-                    views: social.views,
-                    permissions: social.permissions,
-                    comments: social.comments.map((id) => id.toString()),
-                    publishDate: social.publishDate,
-                    imageURL: social.imageURL,
-                };
-            }
-        }
-        return null;
-    }
-
-    async toggleLike(
-        userId: string,
-        socialId: string
-    ): Promise<TilemapSocialStatistics | null> {
-        let user = await UserModel.findById(userId);
-        let social = await TilemapSocialModel.findById(socialId);
-        if (user !== null && social !== null) {
-            let id = user._id;
-            let likes = social.likes;
-            let dislikes = social.dislikes;
-            if (!dislikes.includes(id)) {
-                if (likes.includes(id)) {
-                    let i = likes.indexOf(id, 0);
-                    likes.splice(i, 1);
-                } else {
-                    likes.push(id);
-                }
-                await social.save();
-                return {
-                    tileMap: social.tileMap.toString(),
-                    name: social.name,
-                    owner: social.owner.toString(),
-                    ownerName: social.ownerName,
-                    collaborators: social.collaborators.map((id) => id.toString()),
-                    collaboratorNames: social.collaboratorNames,
-                    tags: social.tags,
-                    description: social.description,
-                    communities: social.communities.map((id) => id.toString()),
-                    likes: social.likes.map((id) => id.toString()),
-                    dislikes: social.dislikes.map((id) => id.toString()),
-                    views: social.views,
-                    permissions: social.permissions,
-                    comments: social.comments.map((id) => id.toString()),
-                    publishDate: social.publishDate,
-                    imageURL: social.imageURL,
-                };
-            }
-        }
-        return null;
-    }
-
-    async toggleDislike(
-        userId: string,
-        socialId: string
-    ): Promise<TilemapSocialStatistics | null> {
-        let user = await UserModel.findById(userId);
-        let social = await TilemapSocialModel.findById(socialId);
-        if (user !== null && social !== null) {
-            let id = user._id;
-            let likes = social.likes;
-            let dislikes = social.dislikes;
-            if (!likes.includes(id)) {
-                if (dislikes.includes(id)) {
-                    let i = dislikes.indexOf(id, 0);
-                    dislikes.splice(i, 1);
-                } else {
-                    dislikes.push(id);
-                }
-                await social.save();
-                return {
-                    tileMap: social.tileMap.toString(),
-                    name: social.name,
-                    owner: social.owner.toString(),
-                    ownerName: social.ownerName,
-                    collaborators: social.collaborators.map((id) => id.toString()),
-                    collaboratorNames: social.collaboratorNames,
-                    tags: social.tags,
-                    description: social.description,
-                    communities: social.communities.map((id) => id.toString()),
-                    likes: social.likes.map((id) => id.toString()),
-                    dislikes: social.dislikes.map((id) => id.toString()),
-                    views: social.views,
-                    permissions: social.permissions,
-                    comments: social.comments.map((id) => id.toString()),
-                    publishDate: social.publishDate,
-                    imageURL: social.imageURL,
-                };
-            }
-        }
-        return null;
-    }
-
-    async addView(
-        userId: string,
-        socialId: string
-    ): Promise<TilemapSocialStatistics | null> {
-        let user = await UserModel.findById(userId);
-        let social = await TilemapSocialModel.findById(socialId);
-        if (user !== null && social !== null) {
-            social.views++;
-            await social.save();
-            return {
-                tileMap: social.tileMap.toString(),
-                name: social.name,
-                owner: social.owner.toString(),
-                ownerName: social.ownerName,
-                collaborators: social.collaborators.map((id) => id.toString()),
-                collaboratorNames: social.collaboratorNames,
-                tags: social.tags,
-                description: social.description,
-                communities: social.communities.map((id) => id.toString()),
-                likes: social.likes.map((id) => id.toString()),
-                dislikes: social.dislikes.map((id) => id.toString()),
-                views: social.views,
-                permissions: social.permissions,
-                comments: social.comments.map((id) => id.toString()),
-                publishDate: social.publishDate,
-                imageURL: social.imageURL,
-            };
-        }
-        return null;
-    }
-    updateTilemapPermissions(
-        socialId: string,
-        permissions: SocialStatisticsPermissions
-    ): Promise<TilemapSocialStatistics | null> {
-        throw new Error("Method not implemented.");
     }
 
     protected parseTilemap(tilemap: TilemapSchemaType & { _id: mongoose.Types.ObjectId }): Tilemap {
@@ -345,7 +186,6 @@ export default class MongooseTilemapDBM implements TilemapDBM {
             globalTileIDs: tilemap.globalTileIDs,
         }
     }
-
     protected fillTilemapModel(tilemap: TilemapSchemaType & { _id: mongoose.Types.ObjectId }, partial: Partial<Tilemap>): void {
         tilemap.backgroundColor = partial.backgroundColor ? partial.backgroundColor : tilemap.backgroundColor;
         tilemap.collaboratorNames = partial.collaboratorNames ? partial.collaboratorNames : tilemap.collaboratorNames;
