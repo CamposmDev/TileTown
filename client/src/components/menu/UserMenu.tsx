@@ -12,12 +12,12 @@ import { NavigateNext } from "@mui/icons-material"
  */
 const UserMenu = () => {
     
-    let editorBreadcrumb = 
-        <Breadcrumbs color="white" separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
-            <Link underline="none" color="white">Camposm</Link>
-            <Link underline="none" color="white">Tilesets</Link>
-            <Link underline="none" color="white">New Tile Set</Link>
-        </Breadcrumbs>
+    // let editorBreadcrumb = 
+    //     <Breadcrumbs color="white" separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
+    //         <Link underline="none" color="white">Camposm</Link>
+    //         <Link underline="none" color="white">Tilesets</Link>
+    //         <Link underline="none" color="white">New Tile Set</Link>
+    //     </Breadcrumbs>
 
 
     return (
@@ -34,9 +34,9 @@ const UserMenu = () => {
                         <RouterLink style={{ textDecoration: 'none', color: 'white' }} to='/feed'>TileTown</RouterLink>
                     </Typography>
             </Grid>
-            <Grid item flexGrow={1}>
+            {/* <Grid item flexGrow={1}>
                 {editorBreadcrumb}
-            </Grid>
+            </Grid> */}
             <CreateButton/>
             <AccountButton loggedIn={true}/>
         </Grid>
