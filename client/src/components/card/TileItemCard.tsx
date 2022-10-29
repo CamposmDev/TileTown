@@ -1,12 +1,10 @@
-import { Comment, Download, Share, Star, StarBorder, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
-import {AppBar, Box, Button, Card, CardActionArea, CardContent, Dialog, Divider, Fab, Grid, IconButton, ImageListItem, Slide, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
+import { Comment, Download, Share, StarBorder, ThumbUp, Visibility } from "@mui/icons-material"
+import {AppBar, Box, Button, Card, CardActionArea, Grid, CardContent, Dialog, IconButton, ImageListItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { MouseEventHandler, useState } from "react"
-import UserProfileBox from "../UserProfileBox"
 import { parseDateToStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import CommentCard from "./CommentCard"
 import './default.css'
-import UserProfileCard from "./UserProfileCard"
 import SocialBox from "./SocialBox"
 import TagCard from "./TagCard"
 
@@ -27,14 +25,14 @@ interface ModalProps {
     callback: MouseEventHandler<HTMLButtonElement>
 }
 
-const TilemapModal = (props: ModalProps) => {
+const TileItemModal = (props: ModalProps) => {
     return (
         <Dialog open={props.open} fullScreen onClose={props.callback}>
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
                     <Stack alignItems={'center'} direction='row' sx={{flexGrow: 1}}>
                         <IconButton size='large'>
-                            <Star sx={{color: 'gold'}} />
+                            <StarBorder sx={{color: 'gold'}} />
                         </IconButton>
                         <Typography variant="h6" component="div">
                             {props.tilemapProps.tilemapName}
@@ -106,7 +104,7 @@ const TilemapModal = (props: ModalProps) => {
 
 
 
-const TilemapCard = (props: Props) => {
+const TileItemCard = (props: Props) => {
     const [open, setOpen] = useState(false)
 
     const handleClose: MouseEventHandler<HTMLButtonElement> = (e) => setOpen(false)
@@ -137,9 +135,9 @@ const TilemapCard = (props: Props) => {
                     </ImageListItem>
                 </CardActionArea>
             </Card>
-            <TilemapModal tilemapProps={props} open={open} callback={handleClose}/>
+            <TileItemModal tilemapProps={props} open={open} callback={handleClose}/>
         </div>
     )
 }
 
-export default TilemapCard
+export default TileItemCard

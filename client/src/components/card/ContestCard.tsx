@@ -39,7 +39,7 @@ const ContestCard = (props: Props) => {
                                     {parseDateToStr(props.payload.startDate)}
                                 </Typography>
                                 <Typography variant='caption'>
-                                    <b>{props.payload.numOfParticipates}</b>&ensp;Participates
+                                    <b>{props.payload.numOfParticipates.toFixed(0)}</b>&ensp;Participates
                                 </Typography>
                             </Stack>
                         </Grid>

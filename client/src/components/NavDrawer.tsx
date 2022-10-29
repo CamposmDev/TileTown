@@ -34,28 +34,28 @@ export default function NavDrawer() {
               {initMenuItem('Home', '/feed')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilemaps', '/tilemaps')}
+            {initMenuItem('Tilemaps', '/search/tilemaps')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilesets', '/tilesets')}
+            {initMenuItem('Tilesets', '/search/tilesets')}
             </Grid>
             <Grid item>
               <Divider/>
             </Grid>
             <Grid item>
-            {initMenuItem('Friends', 'friends')}
+            {initMenuItem('Friends', '/friends')}
             </Grid>
             <Grid item>
-            {initMenuItem('Users', '/users')}
+            {initMenuItem('Users', '/search/users')}
             </Grid>
             <Grid item>
-            {initMenuItem('Communities', '/communities')}
+            {initMenuItem('Communities', '/search/communities')}
             </Grid>
             <Grid item>
-            {initMenuItem('Contests', '/contests')}
+            {initMenuItem('Contests', '/search/contests')}
             </Grid>
             <Grid item>
-            {initMenuItem('Forums', '/forums')}
+            {initMenuItem('Forums', '/search/forums')}
             </Grid>
           </Grid>
         </Box>

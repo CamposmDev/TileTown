@@ -4,7 +4,7 @@ import CommunityCard from "./card/CommunityCard"
 import ContestCard from "./card/ContestCard"
 import ForumPostCard from "./card/ForumPostCard"
 import UserProfileCard from "./card/UserProfileCard"
-import TilemapCard from "./card/TileItemCard"
+import TileItemCard from "./card/TileItemCard"
 
 const CardTester = () => {
     let startDate1 = new Date(2022, 9, 12, 0, 0)
@@ -52,7 +52,7 @@ const CardTester = () => {
             />
         </Grid>
         <Grid item>
-            <TilemapCard
+            <TileItemCard
                 preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/level5_1.png'
                 tilemapName='McBendorjee vs Robots Level 5-1'
                 author='Camposm'

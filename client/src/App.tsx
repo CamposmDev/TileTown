@@ -39,7 +39,7 @@ const App = () => {
         <Route path='/search/tilemaps' element={<SearchScreen cat={SearchCategory.Tilemaps}/>}/>
         <Route path='/search/tilesets' element={<SearchScreen cat={SearchCategory.Tilesets}/>}/>
         <Route path='/search/users' element={<SearchScreen cat={SearchCategory.Users}/>}/>
-        <Route path='/search/communties' element={<SearchScreen cat={SearchCategory.Communities}/>}/>
+        <Route path='/search/communities' element={<SearchScreen cat={SearchCategory.Communities}/>}/>
         <Route path='/search/contests' element={<SearchScreen cat={SearchCategory.Contests}/>}/>
         <Route path='/search/forums' element={<SearchScreen cat={SearchCategory.Forums}/>}/>
         <Route path='/cards' element={<CardTester/>}/>

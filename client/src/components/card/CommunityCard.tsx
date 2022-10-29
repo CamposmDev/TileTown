@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
 import { formatToSocialStr } from '../util/NumberUtils'
 
 interface Props {
@@ -29,8 +29,8 @@ const CommunityCard = (props: Props) => {
                             <Box/>
                         </Stack>
                     <Stack direction='column'>
-                        <Typography variant='caption'><b>{props.numOfTilemaps}</b>&ensp;Tilemaps</Typography>
-                        <Typography variant='caption'><b>{props.numOfTilesets}</b>&ensp;Tilesets</Typography>
+                        <Typography variant='caption'><b>{props.numOfTilemaps.toFixed(0)}</b>&ensp;Tilemaps</Typography>
+                        <Typography variant='caption'><b>{props.numOfTilesets.toFixed(0)}</b>&ensp;Tilesets</Typography>
                     </Stack>
                     
                 </CardContent>
