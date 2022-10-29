@@ -5,6 +5,8 @@ import { SplashScreen, LoginScreen, RegisterScreen, MainFeedScreen, AccountSetti
 import WelcomeMenu from './components/menu/WelcomeMenu';
 import UserMenu from './components/menu/UserMenu';
 import CardTester from './components/CardTester';
+import SearchScreen from './components/screen/search/SearchScreen';
+import { SearchCategory } from './components/util/Constants';
 
 /**
  * Pixel Editors 
@@ -27,11 +29,19 @@ const App = () => {
         {['/', '/login', '/register'].map((x,i) => 
           <Route path={x} element={<NavBar items={<WelcomeMenu/>}/>} key={i}/>
           )}
-        {['/feed', '/settings', '/create/tileset', '/create/tilemap'].map((x,i) =>
+        {['/feed', '/settings', '/create/tileset', '/create/tilemap', 
+        '/search/tilemaps', '/search/tilesets', '/search/users', '/search/communities', 
+        '/search/contests', '/search/forums'].map((x,i) =>
           <Route path={x} element={<NavBar items={<UserMenu/>} key={i}/>}/>
         )}
       </Routes>
       <Routes>
+        <Route path='/search/tilemaps' element={<SearchScreen cat={SearchCategory.Tilemaps}/>}/>
+        <Route path='/search/tilesets' element={<SearchScreen cat={SearchCategory.Tilesets}/>}/>
+        <Route path='/search/users' element={<SearchScreen cat={SearchCategory.Users}/>}/>
+        <Route path='/search/communties' element={<SearchScreen cat={SearchCategory.Communities}/>}/>
+        <Route path='/search/contests' element={<SearchScreen cat={SearchCategory.Contests}/>}/>
+        <Route path='/search/forums' element={<SearchScreen cat={SearchCategory.Forums}/>}/>
         <Route path='/cards' element={<CardTester/>}/>
         <Route path='/' element={<SplashScreen/>} />
         <Route path='/login' element={<LoginScreen/>} />

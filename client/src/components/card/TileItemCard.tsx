@@ -1,12 +1,12 @@
 import { Comment, Download, Share, Star, StarBorder, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import {AppBar, Box, Button, Card, CardActionArea, CardContent, Dialog, Divider, Fab, Grid, IconButton, ImageListItem, Slide, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { MouseEventHandler, useState } from "react"
-import ProfileBox from "../ProfileBox"
+import UserProfileBox from "../UserProfileBox"
 import { parseDateToStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import CommentCard from "./CommentCard"
 import './default.css'
-import ProfileCard from "./ProfileCard"
+import UserProfileCard from "./UserProfileCard"
 import SocialBox from "./SocialBox"
 import TagCard from "./TagCard"
 

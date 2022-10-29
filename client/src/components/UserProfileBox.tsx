@@ -35,7 +35,7 @@ interface Props {
     username: string,
 }
 
-const ProfileBox = (props: Props) => {
+const UserProfileBox = (props: Props) => {
     return (
         <Stack direction='row' alignItems='center' spacing={1}>
             <Avatar {...stringAvatar(props.firstName, props.lastName)}/>
@@ -44,4 +44,4 @@ const ProfileBox = (props: Props) => {
     )
 }
 
-export default ProfileBox
+export default UserProfileBox

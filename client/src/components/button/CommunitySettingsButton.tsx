@@ -1,7 +1,7 @@
 import { Edit, Settings } from "@mui/icons-material"
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import { useState } from "react"
-import ProfileCard from "../card/ProfileCard"
+import UserProfileCard from "../card/UserProfileCard"
 
 interface Props {
     title: string,
@@ -58,7 +58,7 @@ const CommunitySettingsButton = (props: Props) => {
                     <Typography>Moderators</Typography> 
                     <Grid sx={{height: 200, overflow: 'auto'}}>
                         {props.members.map((x,i) => 
-                            <Grid key={x.username + i} mt={0.5}><ProfileCard
+                            <Grid key={x.username + i} mt={0.5}><UserProfileCard
                                 firstName={x.firstName} 
                                 lastName={x.lastName}
                                 username={x.username}

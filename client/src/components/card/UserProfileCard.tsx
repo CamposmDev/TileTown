@@ -1,6 +1,6 @@
 import { MoreVert } from "@mui/icons-material";
 import { Box, Card, IconButton, Stack } from "@mui/material"
-import ProfileBox from "../ProfileBox";
+import UserProfileBox from "../UserProfileBox";
 
 
 interface Props {
@@ -9,11 +9,11 @@ interface Props {
     username: string,
 }
 
-const ProfileCard = (props: Props) => {
+const UserProfileCard = (props: Props) => {
     return (
         <Card sx={{p: 1}}>
             <Stack direction='row' alignItems='center' spacing={1}>
-                <ProfileBox 
+                <UserProfileBox 
                     firstName={props.firstName}
                     lastName={props.lastName}
                     username={props.username}
@@ -25,4 +25,4 @@ const ProfileCard = (props: Props) => {
     )
 }
 
-export default ProfileCard
+export default UserProfileCard

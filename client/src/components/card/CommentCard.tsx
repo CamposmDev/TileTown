@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
-import ProfileBox from "../ProfileBox"
+import UserProfileBox from "../UserProfileBox"
 
 const CommentCard = () => {
     const comment = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'
@@ -7,7 +7,7 @@ const CommentCard = () => {
         <Card sx={{mt: 1}}>
             <CardContent>
                 <Grid container alignItems={'center'}>
-                    <ProfileBox
+                    <UserProfileBox
                         firstName="John"
                         lastName="Doe"
                         username="TheBullDozer"

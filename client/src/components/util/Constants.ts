@@ -2,6 +2,16 @@ import Slide from '@mui/material/Slide'
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react'
 
+export enum SearchCategory {
+    Tilemaps = 'Tilemaps',
+    Tilesets = 'Tilesets',
+    Users = 'Users',
+    Communities = 'Communities',
+    Contests = 'Contests',
+    Forums = 'Forums'
+}
+
+
 // export const SLIDE_UP_TRANSITION = React.forwardRef(function Transition(props: any, ref: any) {
 //     return (<Slide direction="up" ref={ref} {...props} />);
 //   });

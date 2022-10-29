@@ -52,10 +52,10 @@ export default function NavDrawer() {
             {initMenuItem('Communities', '/communities')}
             </Grid>
             <Grid item>
-            {initMenuItem('Contest', '/contests')}
+            {initMenuItem('Contests', '/contests')}
             </Grid>
             <Grid item>
-            {initMenuItem('Forum', '/forums')}
+            {initMenuItem('Forums', '/forums')}
             </Grid>
           </Grid>
         </Box>

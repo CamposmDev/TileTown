@@ -5,7 +5,7 @@ import { parseDateToPostedStr } from '../util/DateUtils'
 import './default.css'
 import { useState } from "react"
 import CommentCard from "./CommentCard"
-import ProfileBox from "../ProfileBox"
+import UserProfileBox from "../UserProfileBox"
 
 interface Props {
     title: string,
@@ -42,7 +42,7 @@ const ForumPostCard = (props: Props) => {
                         <CardContent>
                             <Grid container alignItems={'center'} mb={1}>
                                 <Grid item>
-                                    <ProfileBox 
+                                    <UserProfileBox 
                                         firstName={props.author.firstName} 
                                         lastName={props.author.lastName} 
                                         username={props.author.username}

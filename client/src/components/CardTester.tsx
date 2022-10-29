@@ -3,7 +3,7 @@ import CommunitySettingsButton from "./button/CommunitySettingsButton"
 import CommunityCard from "./card/CommunityCard"
 import ContestCard from "./card/ContestCard"
 import ForumPostCard from "./card/ForumPostCard"
-import ProfileCard from "./card/ProfileCard"
+import UserProfileCard from "./card/UserProfileCard"
 import TilemapCard from "./card/TileItemCard"
 
 const CardTester = () => {
@@ -89,15 +89,15 @@ const CardTester = () => {
         </Grid>
         <Grid item> 
             <Stack direction='column' spacing={1}>
-                <ProfileCard
+                <UserProfileCard
                     firstName='Andrew' lastName='Ojeda'
                     username='H8TER$HAD3$'
                 />
-                <ProfileCard
+                <UserProfileCard
                     firstName='Jonathan' lastName='Lemus'
                     username='The Gamer'
                 />
-                <ProfileCard
+                <UserProfileCard
                     firstName='Kevin' lastName='Lemus'
                     username='xKevzy'
                 />
