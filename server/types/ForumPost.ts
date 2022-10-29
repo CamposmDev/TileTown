@@ -25,6 +25,9 @@ export default interface ForumPost {
     /** An array of User ids in the DBMS who have disliked the ForumPost */
     dislikes: string[],
 
+    /** An array of Comment ids in the DBMS */
+    comments: string[],
+
     /** A number that represents the number of views a froum post has */
     views: number
 

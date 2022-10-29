@@ -163,36 +163,36 @@ describe("Testing MongooseForumDBM", function() {
             })
         })
 
-        it('Successfully toggled like for a forum post', async function() {
-            let user = await UserModel.findOne({username: 'Camposm'})
-            let userId = user !== null ? user._id.toString() : ''
+        // it('Successfully toggled like for a forum post', async function() {
+        //     let user = await UserModel.findOne({username: 'Camposm'})
+        //     let userId = user !== null ? user._id.toString() : ''
 
-            let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
-            let forumId = forumPost !== null ? forumPost._id.toString() : ''
+        //     let forums: MongooseForumDBM = new MongooseForumDBM()
+        //     let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
+        //     let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
-            if (user !== null && forumId !== null) {
-                let result = await forums.toggleLike(userId, forumId)
-                expect(result).not.null
-                if (result !== null) {
-                    let forumPostAfterLike = await forums.getForumPost(result.id)
-                    expect(forumPostAfterLike).not.null
-                    if (forumPostAfterLike !== null) {
-                        expect(forumPostAfterLike).property('likes').eql([user._id])
-                    }
-                }
+        //     if (user !== null && forumId !== null) {
+        //         let result = await forums.toggleLike(userId, forumId)
+        //         expect(result).not.null
+        //         if (result !== null) {
+        //             let forumPostAfterLike = await forums.getForumPost(result.id)
+        //             expect(forumPostAfterLike).not.null
+        //             if (forumPostAfterLike !== null) {
+        //                 expect(forumPostAfterLike).property('likes').eql([user._id])
+        //             }
+        //         }
 
-                result = await forums.toggleLike(userId, forumId)
-                expect(result).not.null
-                if (result !== null) {
-                    let forumPostAfterLike = await forums.getForumPost(result.id)
-                    expect(forumPostAfterLike).not.null
-                    if (forumPostAfterLike !== null) [
-                        expect(forumPostAfterLike).property('likes').eql([])
-                    ]
-                }
-            }            
-        })
+        //         result = await forums.toggleLike(userId, forumId)
+        //         expect(result).not.null
+        //         if (result !== null) {
+        //             let forumPostAfterLike = await forums.getForumPost(result.id)
+        //             expect(forumPostAfterLike).not.null
+        //             if (forumPostAfterLike !== null) [
+        //                 expect(forumPostAfterLike).property('likes').eql([])
+        //             ]
+        //         }
+        //     }            
+        // })
     })
 
     /**
@@ -230,36 +230,36 @@ describe("Testing MongooseForumDBM", function() {
             })
         })
 
-        it('Successfully toggled like for a forum post', async function() {
-            let user = await UserModel.findOne({username: 'Camposm'})
-            let userId = user !== null ? user._id.toString() : ''
+        // it('Successfully toggled like for a forum post', async function() {
+        //     let user = await UserModel.findOne({username: 'Camposm'})
+        //     let userId = user !== null ? user._id.toString() : ''
 
-            let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
-            let forumId = forumPost !== null ? forumPost._id.toString() : ''
+        //     let forums: MongooseForumDBM = new MongooseForumDBM()
+        //     let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
+        //     let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
-            if (user !== null && forumId !== null) {
-                let result = await forums.toggleDislike(userId, forumId)
-                expect(result).not.null
-                if (result !== null) {
-                    let forumPostAfterLike = await forums.getForumPost(result.id)
-                    expect(forumPostAfterLike).not.null
-                    if (forumPostAfterLike !== null) {
-                        expect(forumPostAfterLike).property('dislikes').eql([user._id])
-                    }
-                }
+        //     if (user !== null && forumId !== null) {
+        //         let result = await forums.toggleDislike(userId, forumId)
+        //         expect(result).not.null
+        //         if (result !== null) {
+        //             let forumPostAfterLike = await forums.getForumPost(result.id)
+        //             expect(forumPostAfterLike).not.null
+        //             if (forumPostAfterLike !== null) {
+        //                 expect(forumPostAfterLike).property('dislikes').eql([user._id])
+        //             }
+        //         }
 
-                result = await forums.toggleDislike(userId, forumId)
-                expect(result).not.null
-                if (result !== null) {
-                    let forumPostAfterLike = await forums.getForumPost(result.id)
-                    expect(forumPostAfterLike).not.null
-                    if (forumPostAfterLike !== null) [
-                        expect(forumPostAfterLike).property('dislikes').eql([])
-                    ]
-                }
-            }            
-        })
+        //         result = await forums.toggleDislike(userId, forumId)
+        //         expect(result).not.null
+        //         if (result !== null) {
+        //             let forumPostAfterLike = await forums.getForumPost(result.id)
+        //             expect(forumPostAfterLike).not.null
+        //             if (forumPostAfterLike !== null) [
+        //                 expect(forumPostAfterLike).property('dislikes').eql([])
+        //             ]
+        //         }
+        //     }            
+        // })
     })
 
     /**
@@ -296,20 +296,20 @@ describe("Testing MongooseForumDBM", function() {
                 isPublished: true
             })
         })
-        it('Successfully finds a forum post by id', async function() {
-            let user = await UserModel.findOne({username: 'Camposm'})
-            let userId = user !== null ? user._id.toString() : ''
+        // it('Successfully finds a forum post by id', async function() {
+        //     let user = await UserModel.findOne({username: 'Camposm'})
+        //     let userId = user !== null ? user._id.toString() : ''
 
-            let forums: MongooseForumDBM = new MongooseForumDBM()
-            let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
-            let forumId = forumPost !== null ? forumPost._id.toString() : ''
+        //     let forums: MongooseForumDBM = new MongooseForumDBM()
+        //     let forumPost = await ForumPostModel.findOne({title: 'Clean Tilesets'})
+        //     let forumId = forumPost !== null ? forumPost._id.toString() : ''
 
-            if (userId !== null && forumId !== null) {
-                let forumPost: ForumPost | null = await forums.addView(userId, forumId)
-                expect(forumPost).not.null
-                expect(forumPost).property('views').eql(1)
-            }
-        })
+        //     if (userId !== null && forumId !== null) {
+        //         let forumPost: ForumPost | null = await forums.addView(userId, forumId)
+        //         expect(forumPost).not.null
+        //         expect(forumPost).property('views').eql(1)
+        //     }
+        // })
     })
 
     /** 
