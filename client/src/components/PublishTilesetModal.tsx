@@ -5,10 +5,11 @@ import Typography from '@mui/material/Typography';
 import { Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import SendIcon from '@mui/icons-material/Send';
 
 
 
-const ChangeUsernameModal = () => {
+const PublishTilesetModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
 
@@ -35,46 +36,32 @@ const ChangeUsernameModal = () => {
             <Box sx={style} textAlign='center'>
 
                 <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
-                  Really change your username?
+                  Are you sure you would like to publish the Campus Caverns Tileset?
                 </Typography>
-           
+        
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  We will create redirects for your tile maps and sets
-                </Typography>
-
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Rename will take a few minutes to complete
+                  Warning: Once a Tileset has been published, it cannot be unpublished. Your Tileset will be visible to the TileTown community. Other TileTown users will be able to copy, like, and comment on your tileset at will.
                 </Typography>
                 
-                <TextField
-                    variant='outlined'
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="New Username"
-                    name="username"
-                    autoComplete="username"
-                    autoFocus
-                />
+                
         
 
-                <Button
-                    type="submit"
+                <Button  
+                    startIcon={<SendIcon />}
                     variant="contained"
-                    sx={{ mt: 4 }}>
-                    Change my username
-                </Button>
+                >
+                    Publish
+                        </Button>
             </Box>
             
         </Modal>
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Change Username Modal</Button>
+            <Button onClick={() => setIsOpen(!isOpen)}>Publish Tileset Modal</Button>
             {ui}
         </>
     )
 }
 
-export default ChangeUsernameModal
+export default PublishTilesetModal
