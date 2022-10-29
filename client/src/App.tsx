@@ -7,6 +7,7 @@ import UserMenu from './components/menu/UserMenu';
 import CardTester from './components/CardTester';
 import SearchScreen from './components/screen/search/SearchScreen';
 import { SearchCategory } from './components/util/Constants';
+import ModalTester from './components/ModalTester';
 
 /**
  * Pixel Editors 
@@ -43,6 +44,7 @@ const App = () => {
         <Route path='/search/contests' element={<SearchScreen cat={SearchCategory.Contests}/>}/>
         <Route path='/search/forums' element={<SearchScreen cat={SearchCategory.Forums}/>}/>
         <Route path='/cards' element={<CardTester/>}/>
+        <Route path='/modals' element={<ModalTester/>}/>
         <Route path='/' element={<SplashScreen/>} />
         <Route path='/login' element={<LoginScreen/>} />
         <Route path='/register' element={<RegisterScreen/>} />

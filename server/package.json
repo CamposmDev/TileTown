@@ -1,0 +1,61 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "test:user:routes": "mocha -r ts-node/register tests/controllers/ExpressUserController.test.ts",
+    "test:community:routes": "mocha -r ts-node/register tests/controllers/ExpressCommunityController.test.ts",
+    "test:contest:routes": "mocha -r ts-node/register tests/controllers/ExpressContestController.test.ts",
+    "test:forum:routes": "mocha -r ts-node/register tests/controllers/ExpressForumController.test.ts",
+    "test:tilemap:routes": "mocha -r ts-node/register tests/controllers/ExpressTilemapController.test.ts",
+    "test:tileset:routes": "mocha -r ts-node/register tests/controllers/ExpressTilesetController.test.ts",
+    "test:user:dbm": "mocha -r ts-node/register tests/mongoose/MongooseUserDBM.test.ts",
+    "test:community:dbm": "mocha -r ts-node/register tests/mongoose/MongooseCommunityDBM.test.ts",
+    "test:contest:dbm": "mocha -r ts-node/register tests/mongoose/MongooseContestDBM.test.ts",
+    "test:forum:dbm": "mocha -r ts-node/register tests/mongoose/MongooseForumDBM.test.ts",
+    "test:tilemap:dbm": "mocha -r ts-node/register tests/mongoose/MongooseTilemapDBM.test.ts",
+    "test:tileset:dbm": "mocha -r ts-node/register tests/mongoose/MongooseTilesetDBM.test.ts",
+    "test": "mocha -r ts-node/register tests/**/*.test.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/chai": "^4.3.3",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.14",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/mocha": "^10.0.0",
+    "@types/multer": "^1.4.7",
+    "@types/npmlog": "^4.1.4",
+    "@types/supertest": "^2.0.12",
+    "chai": "^4.3.6",
+    "supertest": "^6.3.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4",
+    "mocha": "^10.1.0"
+  },
+  "dependencies": {
+    "axios": "^1.1.3",
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0",
+    "nodemon": "^2.0.20",
+    "npmlog": "^7.0.1",
+    "reflect-metadata": "^0.1.13",
+    "typescript-is": "^0.19.0"
+  }
+}
