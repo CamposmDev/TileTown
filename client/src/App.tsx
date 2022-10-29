@@ -15,6 +15,9 @@ import CardTester from './components/CardTester';
  * 
  * Color Picker
  * @see https://www.npmjs.com/package/material-ui-color-picker
+ * 
+ * Cool Carosel for Popular Items
+ * @see https://www.npmjs.com/package/react-material-ui-carousel
  */
 
 const App = () => {
