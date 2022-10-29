@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
-import TouchRipple from "@mui/material/ButtonBase/TouchRipple"
-import { parseDateToStr, calcTimeLeft } from '../../utils/DateUtils'
+import { parseDateToStr, calcTimeLeft } from '../util/DateUtils'
 
 interface Props {
     payload: {
@@ -32,7 +31,7 @@ const ContestCard = (props: Props) => {
                                 <Typography variant='caption'><b>By</b>:&ensp;{props.payload.ownerName}</Typography>
                             </Stack>
                             <Box flexGrow={1}/>
-                            <Stack direction='column' spacing={1}>
+                            <Stack direction='column'>
                                 <Typography variant='caption'>
                                     <b>Theme</b>:&ensp;{props.payload.contestTheme}
                                 </Typography>

@@ -1,12 +1,5 @@
-import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
-
-const formatMembers = (members: number): string => {
-    if (members >= 1_000_000_000_000) return (members / 1_000_000_000_000).toFixed(1) + 'T Members'
-    if (members >= 1_000_000_000) return (members / 1_000_000_000).toFixed(1) + 'B Members'
-    if (members >= 1_000_000) return (members / 1_000_000).toFixed(1) + 'M Members'
-    if (members >= 1000) return (members / 1000).toFixed(1) + 'K Members'
-    return members + ' Members'
-}
+import { Box, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { formatToSocialStr } from '../util/NumberUtils'
 
 interface Props {
     commName: string,
@@ -31,7 +24,7 @@ const CommunityCard = (props: Props) => {
                                 bgcolor: 'secondary.main',
                                 color: 'white'
                             }} children={
-                                <Typography variant='caption'>{formatMembers(props.numOfMembers)}</Typography>
+                                <Typography variant='caption'>{formatToSocialStr(props.numOfMembers, 'Members')}</Typography>
                             }/>
                             <Box/>
                         </Stack>

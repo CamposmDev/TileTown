@@ -9,7 +9,7 @@ interface Props {
     username: string,
 }
 
-const FriendCard = (props: Props) => {
+const ProfileCard = (props: Props) => {
     return (
         <Card sx={{p: 1}}>
             <Stack direction='row' alignItems='center' spacing={1}>
@@ -25,4 +25,4 @@ const FriendCard = (props: Props) => {
     )
 }
 
-export default FriendCard
+export default ProfileCard
