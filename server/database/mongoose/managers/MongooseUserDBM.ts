@@ -15,19 +15,19 @@ export default class MongooseUserDBM implements UserDBM {
         let user = await UserModel.findById({_id: userId});
         if (user === null) return null;
 
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
 
     async getUserByEmail(email: string): Promise<User | null> {
         let user = await UserModel.findOne({email: email});
         if (user === null) return null;
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
 
     async getUserByUsername(username: string): Promise<User | null> {
         let user = await UserModel.findOne({username: username});
         if (user === null) return null;
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
 
     async createUser(userpy: Partial<User>): Promise<User | null> {
@@ -50,7 +50,7 @@ export default class MongooseUserDBM implements UserDBM {
 
         if (user === null) return null;
 
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
 
     async updateUser(id: string, partial: Partial<User>): Promise<User | null> {
@@ -62,7 +62,7 @@ export default class MongooseUserDBM implements UserDBM {
         this.fillUserModel(user, partial);
         let savedUser = await user.save()
 
-        return this.fromUserSchema(savedUser);
+        return this.parseUser(savedUser);
     }
  
     async verifyUser(key: string): Promise<boolean> {
@@ -288,7 +288,7 @@ export default class MongooseUserDBM implements UserDBM {
         return false
     }
 
-    protected fromUserSchema(user: UserSchemaType & { _id: mongoose.Types.ObjectId}): User {
+    protected parseUser(user: UserSchemaType & { _id: mongoose.Types.ObjectId}): User {
         return {
             id: user._id.toString(),
             username: user.username,

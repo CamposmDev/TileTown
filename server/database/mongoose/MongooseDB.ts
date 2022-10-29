@@ -10,6 +10,7 @@ import {
     MongooseTilesetDBM,
     MongooseTilesetSocialDBM,
 } from "./managers";
+import MongooseTilemapSocialDBM from "./managers/MongooseTilemapSocialDBM";
 
 /**
  * A database manager that works with TileTown data in MongoDB using Mongoose.
@@ -33,6 +34,7 @@ export default class MongooseDB implements TileTownDB {
     protected _tilemaps: MongooseTilemapDBM;
     protected _tilesets: MongooseTilesetDBM;
     protected _tilesetSocials: MongooseTilesetSocialDBM;
+    protected _tilemapSocials: MongooseTilemapSocialDBM;
     protected _comments: MongooseCommentDBM;
 
     public constructor() {
@@ -43,6 +45,7 @@ export default class MongooseDB implements TileTownDB {
         this._tilemaps = new MongooseTilemapDBM();
         this._tilesets = new MongooseTilesetDBM();
         this._tilesetSocials = new MongooseTilesetSocialDBM();
+        this._tilemapSocials = new MongooseTilemapSocialDBM();
         this._comments = new MongooseCommentDBM();
         this._connected = false;
     }
@@ -75,5 +78,6 @@ export default class MongooseDB implements TileTownDB {
     get tilesets(): MongooseTilesetDBM { return this._tilesets; }
     get tilemaps(): MongooseTilemapDBM { return this._tilemaps; }
     get tilesetSocials(): MongooseTilesetSocialDBM { return this._tilesetSocials; }
+    get tilemapSocials(): MongooseTilemapSocialDBM { return this._tilemapSocials; }
     get comments(): MongooseCommentDBM { return this._comments; }
 }

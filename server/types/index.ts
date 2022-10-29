@@ -6,7 +6,7 @@ import Property from "./Properties";
 import Layer from "./Layer";
 import Tileset from "./Tileset";
 import Tilemap, { CollaboratorSettings, EditMode, Orientation, RenderOrder } from "./Tilemap";
-import TilemapSocialStatistics from "./TilemapSocialStatistics";
+import TilemapSocial from "./TilemapSocial";
 import TilesetSocial from "./TilesetSocial";
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 import { RGB, RGBA, HEX, Color, } from "./Color";
@@ -21,7 +21,7 @@ export {
     Layer,
     Tileset,
     Tilemap,
-    TilemapSocialStatistics,
+    TilemapSocial,
     TilesetSocial,
     SocialStatisticsPermissions,
     CollaboratorSettings,
