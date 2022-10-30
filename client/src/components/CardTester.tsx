@@ -60,7 +60,6 @@ const CardTester = () => {
                 views={23923092}
                 comments={39903}
                 likes={293020}
-                // tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380', 'mcbendorjee']}
                 tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
             />
         </Grid>

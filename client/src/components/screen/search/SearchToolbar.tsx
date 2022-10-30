@@ -1,6 +1,7 @@
 import { Search, Sort } from "@mui/icons-material"
 import { Grid, IconButton, InputAdornment, Menu, MenuItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { useState } from "react"
+import CreateForumPostModal from "../../modals/CreateForumPostModal"
 import { MENU_PAPER_PROPS, SearchCategory } from '../../util/Constants'
 
 interface Props {
@@ -32,6 +33,11 @@ const SearchToolbar = (props: Props) => {
         </Menu>
     )
 
+    let createBox = 
+        <Tooltip title='Create Post'>
+            <CreateForumPostModal/>
+        </Tooltip>
+
     return (
         <Toolbar sx={{boxShadow: 1, position: 'sticky'}}>
             <Grid container justifyContent='space-between'>
@@ -48,6 +54,7 @@ const SearchToolbar = (props: Props) => {
                     </Stack>
                 </Grid>
                 <Grid item alignItems='end'>
+                    {props.category === SearchCategory.Forums ? createBox : <></>}
                     <Tooltip title='Sort By'>
                         <IconButton onClick={handleMenuOpen} children={<Sort/>}/>
                     </Tooltip>

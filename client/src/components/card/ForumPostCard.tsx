@@ -37,7 +37,7 @@ const ForumPostCard = (props: Props) => {
                 </Toolbar>
             </AppBar>
             <Grid container p={1}>
-                <Grid container xs={6} pr={1}>
+                <Grid xs={6} pr={1}>
                     <Card>
                         <CardContent>
                             <Grid container alignItems={'center'} mb={1}>

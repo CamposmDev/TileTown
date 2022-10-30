@@ -1,4 +1,6 @@
 import { Avatar, Button, Divider, Grid, Stack, Typography } from "@mui/material"
+import ChangeEmailModal from "../../modals/ChangeEmailModal";
+import ChangeUsernameModal from "../../modals/ChangeUsernameModal";
 // import { useState } from "react"
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";
@@ -33,7 +35,7 @@ const AccountSettingsScreen = () => {
     const divider = <Divider sx={{mt: 1, mb: 1, ml: 50, mr: 50}} />
 
     const name = 'Michael Campos'
-    const size = 160
+    const size = 140
     return (
         <Grid container direction='column'>
             <Grid container direction='column' alignItems='center'>
@@ -42,8 +44,7 @@ const AccountSettingsScreen = () => {
                 </Grid>
                 <Grid item boxShadow={1} borderRadius={'50%'} textAlign='center' alignContent='center'>
                     <Avatar 
-                        src='https://avatars.githubusercontent.com/u/39308094?v=4' 
-                        sx={{bgcolor: stringToColor(name), fontSize: '2.5rem', width: size, height: size}}>
+                        sx={{bgcolor: stringToColor(name), fontSize: '32pt', width: size, height: size}}>
                             {stringAvatar(name)}
                     </Avatar>
                 </Grid>
@@ -54,9 +55,9 @@ const AccountSettingsScreen = () => {
                     </Stack>
                 </Grid>
             </Grid>
-            <EditUserPropertyForm title='Username' content='Your username is:' value={'Camposm'} />
+            <EditUserPropertyForm title='Username' content='Your username is:' value={'Camposm'} button={<ChangeUsernameModal/>}/>
             {divider}
-            <EditUserPropertyForm title='Email' content ='Your email is:' value='michael.campos@stonybrook.edu'/>
+            <EditUserPropertyForm title='Email' content ='Your email is:' value='michael.campos@stonybrook.edu' button={<ChangeEmailModal/>}/>
             {divider}
             <EditPasswordForm/>
             {divider}

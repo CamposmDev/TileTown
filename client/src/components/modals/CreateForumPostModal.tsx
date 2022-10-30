@@ -2,13 +2,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { ButtonGroup, ClickAwayListener, Grid, Grow, MenuList, Modal, Paper, Popper } from '@mui/material';
+import { ButtonGroup, ClickAwayListener, Grid, Grow, IconButton, MenuList, Modal, Paper, Popper } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
-import { ArrowDropDown } from '@mui/icons-material';
+import { ArrowDropDown, Create } from '@mui/icons-material';
 
 const options = ['Annonymous', 'Your username'];
 
@@ -188,7 +188,7 @@ const CreateForumPostModal = () => {
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Create Forum Post Modal</Button>
+            <IconButton onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
             {ui}
         </>
     )

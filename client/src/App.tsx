@@ -8,6 +8,8 @@ import CardTester from './components/CardTester';
 import SearchScreen from './components/screen/search/SearchScreen';
 import { SearchCategory } from './components/util/Constants';
 import ModalTester from './components/ModalTester';
+import UserProfileScreen from './components/screen/UserProfileScreen';
+import CommunityProfileScreen from './components/screen/CommunityProfileScreen';
 
 /**
  * Pixel Editors 
@@ -32,11 +34,13 @@ const App = () => {
           )}
         {['/feed', '/settings', '/create/tileset', '/create/tilemap', 
         '/search/tilemaps', '/search/tilesets', '/search/users', '/search/communities', 
-        '/search/contests', '/search/forums'].map((x,i) =>
+        '/search/contests', '/search/forums', '/profile', '/community/id'].map((x,i) =>
           <Route path={x} element={<NavBar items={<UserMenu/>} key={i}/>}/>
         )}
       </Routes>
       <Routes>
+        <Route path='/community/id' element={<CommunityProfileScreen/>}/>
+        <Route path='/profile' element={<UserProfileScreen/>}/>
         <Route path='/search/tilemaps' element={<SearchScreen cat={SearchCategory.Tilemaps}/>}/>
         <Route path='/search/tilesets' element={<SearchScreen cat={SearchCategory.Tilesets}/>}/>
         <Route path='/search/users' element={<SearchScreen cat={SearchCategory.Users}/>}/>

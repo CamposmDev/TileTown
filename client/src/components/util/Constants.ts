@@ -1,4 +1,3 @@
-import Slide from '@mui/material/Slide'
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react'
 
@@ -11,10 +10,18 @@ export enum SearchCategory {
     Forums = 'Forums'
 }
 
+// const Transition = React.forwardRef(function Transition(
+//     props: TransitionProps & {
+//       children: React.ReactElement;
+//     },
+//     ref: React.Ref<unknown>,
+//   ): JSX.Element {
+//     return (<Slide direction="up" ref={ref} {...props}/>);
+//   });
 
 // export const SLIDE_UP_TRANSITION = React.forwardRef(function Transition(props: any, ref: any) {
 //     return (<Slide direction="up" ref={ref} {...props} />);
-//   });
+// });
 
 // export const SLIDE_DOWN_TRANSITION = React.forwardRef(function Transition(props: any, ref: any) {
 //     return (<Slide direction="down" ref={ref} {...props} />);

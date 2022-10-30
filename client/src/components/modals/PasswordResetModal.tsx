@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
-import { Icon, Modal } from '@mui/material';
+import { Icon, Link, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
@@ -68,7 +68,7 @@ const PasswordResetModal = () => {
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Password Reset</Button>
+            <Link href='\\' variant='body2' onClick={() => setIsOpen(!isOpen)}>Forgot your password?</Link>
             {ui}
         </>
     )

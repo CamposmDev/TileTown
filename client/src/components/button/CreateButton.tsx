@@ -1,6 +1,8 @@
-import { Menu, MenuItem } from "@mui/material"
+import { Box, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import CreateCommunityModal from "../modals/CreateCommunityModal"
+import CreateContestModal from "../modals/CreateContestModal"
 
 const MENU_PAPER_PROPS = {
     elevation: 0,
@@ -50,9 +52,8 @@ const CreateButton = () => {
         >
             <MenuItem onClick={handleMenuClose} component={Link} to='/create/tilemap'>Tilemap</MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} to='/create/tileset'>Tileset</MenuItem>
-            {/** Community and Contest menu items when clicked should show a modal */}
-            <MenuItem onClick={handleMenuClose}>Community</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Contest</MenuItem>
+            <CreateCommunityModal/>
+            <CreateContestModal />
         </Menu>
     )
 

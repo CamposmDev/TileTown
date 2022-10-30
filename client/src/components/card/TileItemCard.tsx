@@ -17,6 +17,8 @@ interface Props {
     comments: number,
     likes: number,
     tags: string[]
+    width?: number
+    height?: number
 }
 
 interface ModalProps {
@@ -119,13 +121,37 @@ const TileItemCard = (props: Props) => {
                 </div>
             </div>
         </Tooltip>
+    if (props.width && props.height) {
+        return (
+            <div>
+                <Card onClick={() => setOpen(true)}>
+                    <CardActionArea >
+                        <ImageListItem>
+                            <img style={{
+                                width: props.width,
+                                height: props.width,
+                                objectFit: 'cover',
+                                objectPosition: 'center'
+                            }} src={props.preview} alt=''
+                            />
+                        {headerBox}
+                        <SocialBox 
+                            views={props.views} 
+                            comments={props.comments} 
+                            likes={props.likes} />
+                        </ImageListItem>
+                    </CardActionArea>
+                </Card>
+                <TileItemModal tilemapProps={props} open={open} callback={handleClose}/>
+            </div>
+        )
+    }
     return (
         <div>
             <Card onClick={() => setOpen(true)}>
                 <CardActionArea >
                     <ImageListItem>
                         <img id={'tile-preview'} src={props.preview} alt=''
-                            // src='https://camo.githubusercontent.com/cd6351505c5304f9cb3db2b1c598dccfb34361b6972789e21b4c998ad72435ff/687474703a2f2f692e696d6775722e636f6d2f464a614178534c2e706e67'
                         />
                     {headerBox}
                     <SocialBox 
