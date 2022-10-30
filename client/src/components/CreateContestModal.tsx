@@ -10,13 +10,14 @@ import Stack from '@mui/material/Stack';
 
 
 
+interface Props {
+    callback?: Function
+}
 
-
-const CreateContestModal = () => {
+const CreateContestModal = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
-    
-    
+        
     const style = {
         position: 'absolute',
         top: '50%',
@@ -112,7 +113,10 @@ const CreateContestModal = () => {
     )
     return (
         <>
-            <MenuItem onClick={() => setIsOpen(!isOpen)}>Create Contest Modal</MenuItem>
+            <MenuItem onClick={() => {
+                setIsOpen(!isOpen)
+            }}
+            >Create Contest</MenuItem>
             {ui}
         </>
     )

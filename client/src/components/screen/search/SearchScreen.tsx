@@ -13,12 +13,12 @@ interface Props {
 
 const SearchScreen = (props: Props) => {
     let items = 
-    <Grid>
-        <Grid item>
+    <Grid container spacing={1} justifyContent='center'>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is another post'}
@@ -26,11 +26,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is another other post'}
@@ -38,11 +38,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is a post'}
@@ -50,11 +50,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is a post'}
@@ -62,11 +62,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is another post'}
@@ -74,11 +74,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is another other post'}
@@ -86,11 +86,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is a post'}
@@ -98,11 +98,11 @@ const SearchScreen = (props: Props) => {
                 views={3490340}
             />
         </Grid>
-        <Grid item>
+        <Grid item flexGrow={1}>
             <ForumPostCard
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 comments={232}
-                desc={'This is a description post'}
+                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
                 dislikes={39034}
                 likes={39034}
                 title={'This is a post'}
