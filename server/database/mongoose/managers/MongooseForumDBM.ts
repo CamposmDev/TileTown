@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
-import { ForumPost, Comment } from "../../../types";
+import { ForumPost } from "../../../types";
 import { ForumDBM } from "../../interface";
-import { CommentModel, ForumPostModel, UserModel } from "../schemas";
+import { ForumPostModel } from "../schemas";
 import { ForumSchemaType } from "../types";
 
+/**
+ * @author Michael Campos, Peter Walsh
+ */
 export default class MongooseForumDBM implements ForumDBM {
 
     async getForumPost(forumPostId: string): Promise<ForumPost | null> {
