@@ -13,8 +13,11 @@ import Fade from '@mui/material/Fade';
 // import { useState, useContext } from 'react';
 // import AuthContext from '../context/auth'
 import Copyright from '../Copyright';
+import { useNavigate } from 'react-router';
+import PasswordResetModal from '../PasswordResetModal';
 
 const LoginScreen = () => {
+    let nav = useNavigate()
     let ui = (
         <Container component='main' maxWidth='xs'>
             <CssBaseline/>
@@ -53,7 +56,7 @@ const LoginScreen = () => {
                 />
                 <Grid container justifyContent='flex-end'>
                     <Grid item >
-                        <Link href='/' variant='body2'>Forgot your password?</Link>
+                        <PasswordResetModal/>
                     </Grid>
                 </Grid>
                 
@@ -62,6 +65,7 @@ const LoginScreen = () => {
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    onClick={() => nav('/feed')}
                 >
                     Login
                 </Button>

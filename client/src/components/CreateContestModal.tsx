@@ -40,7 +40,7 @@ const CreateContestModal = (props: Props) => {
             >
             <Box sx={style} textAlign='center'>
 
-                <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6">
                  Create Contest
                 </Typography>
         

@@ -13,7 +13,7 @@ interface Props {
 const UserProfileCard = (props: Props) => {
     let minimal = 
         <Card sx={{p: 1}}>
-                <Stack direction='row' alignItems='center' spacing={1}>
+                <Stack direction='row' alignItems='center'>
                     <UserProfileBox 
                         firstName={props.firstName}
                         lastName={props.lastName}

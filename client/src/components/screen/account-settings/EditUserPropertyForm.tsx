@@ -1,9 +1,11 @@
 import { Grid, Typography, Stack, Button } from "@mui/material"
+import ChangeEmailModal from "../../ChangeEmailModal"
 
 interface Props {
     title: string,
     content: string,
     value: string
+    button: JSX.Element
 }
 
 const EditUserPropertyForm = (props: Props) => {
@@ -13,7 +15,7 @@ const EditUserPropertyForm = (props: Props) => {
                 <Typography variant="body1"><b>{props.title}</b></Typography>
                 <Stack direction='row' alignItems='center'>
                     <Typography variant="body1" flexGrow={1}>{props.content}&ensp;<b>{props.value}</b></Typography>
-                    <Button>Change</Button>
+                    {props.button}
                 </Stack>
             </Stack>
         </Grid>

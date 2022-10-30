@@ -34,16 +34,16 @@ const ChangeUsernameModal = () => {
             >
             <Box sx={style} textAlign='center'>
 
-                <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6">
                   Really change your username?
                 </Typography>
            
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  We will create redirects for your tile maps and sets
+                <Typography id="modal-modal-title" variant="body1">
+                  We will create redirects for your tile maps and sets.
                 </Typography>
 
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Rename will take a few minutes to complete
+                <Typography id="modal-modal-title" variant="body1">
+                  Renaming will take a few minutes to complete.
                 </Typography>
                 
                 <TextField
@@ -71,7 +71,7 @@ const ChangeUsernameModal = () => {
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Change Username Modal</Button>
+            <Button onClick={() => setIsOpen(!isOpen)}>Change</Button>
             {ui}
         </>
     )
