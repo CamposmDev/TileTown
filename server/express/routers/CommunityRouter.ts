@@ -9,7 +9,7 @@ CommunityRouter.post('/', Auth.verifyJWT, CommunityController.createCommunity);
 CommunityRouter.put('/:id', Auth.verifyJWT, CommunityController.updateCommunityById);
 CommunityRouter.delete('/:id', Auth.verifyJWT, CommunityController.deleteCommunityById);
 
-CommunityRouter.put('join/:id', Auth.verifyJWT, CommunityController.joinCommunityById);
-CommunityRouter.put('leave/:id', Auth.verifyJWT, CommunityController.leaveCommunityById);
+CommunityRouter.put('/join/:id', Auth.verifyJWT, CommunityController.joinCommunityById);
+CommunityRouter.put('/leave/:id', Auth.verifyJWT, CommunityController.leaveCommunityById);
 
 export default CommunityRouter;

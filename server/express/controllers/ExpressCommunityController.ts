@@ -37,7 +37,7 @@ export default class CommunityController {
         }
 
         let existingCommunity = await db.communities.getCommunityByName(req.body.community.name);
-        if (!existingCommunity !== null) {
+        if (existingCommunity !== null) {
             return res.status(400).json({ message: `Community with name "${req.body.community.name}" already exists` });
         }
         let community = await db.communities.createCommunity({ owner: req.userId, ...req.body.community });
