@@ -1,8 +1,9 @@
-import { Grid } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
 import TileItemCard from "../../card/TileItemCard"
+import UserProfileCard from "../../card/UserProfileCard"
 import { SearchCategory } from "../../util/Constants"
 import SearchToolbar from "./SearchToolbar"
 
@@ -550,9 +551,19 @@ const SearchScreen = (props: Props) => {
         case SearchCategory.Users:
             items = <Grid container 
                 justifyContent={'center'}
+                alignItems={'center'}
                 spacing={1}
                 mt={1}>
-
+                {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
+                    <Grid item>
+                        <UserProfileCard
+                        firstName='Michael'
+                        lastName="Campos"
+                        username="Camposm"
+                        fancy={true}
+                    />
+                    </Grid>
+                )}
             </Grid>
             break
         case SearchCategory.Communities:

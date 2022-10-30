@@ -33,9 +33,18 @@ interface Props {
     firstName: string,
     lastName: string,
     username: string,
+    fancy?: boolean
 }
 
 const UserProfileBox = (props: Props) => {
+    if (props.fancy) {
+        return (
+            <Stack direction='column' alignItems='center' spacing={1}>
+                <Avatar style={{fontSize: '28pt', width: 100, height: 100}} {...stringAvatar(props.firstName, props.lastName)}/>
+                <Typography variant="h6" flexGrow={1}>{props.username}</Typography>
+            </Stack>
+        )
+    }
     return (
         <Stack direction='row' alignItems='center' spacing={1}>
             <Avatar {...stringAvatar(props.firstName, props.lastName)}/>
