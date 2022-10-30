@@ -19,6 +19,8 @@ export default interface UserDBM {
      * @return a user object with all information about the user or null
      */
     getUserById(userId: string): Promise<User | null>;
+    getUsersById(userIds: string[]): Promise<User[] | null>;
+
     getUserByEmail(email: string): Promise<User | null>;
     getUserByUsername(username: string): Promise<User | null>
 
@@ -162,7 +164,7 @@ export default interface UserDBM {
      * 
      * 
      */
-    joinCommunity(userId: string, communityId: string): Promise<string | null>;
+    // joinCommunity(userId: string, communityId: string): Promise<string | null>;
 
     /**
      * Removes a user with the given user id from a community with a given community id in the DBMS
@@ -179,7 +181,7 @@ export default interface UserDBM {
      * @param communityId 
      * @return if successful, true; false otherwise
      */
-    leaveCommunity(userId: string, communityId: string): Promise<boolean>
+    // leaveCommunity(userId: string, communityId: string): Promise<boolean>
     
     /**
      * Adds a user with the given user id to the contest with the given contest id in the DBMS.
