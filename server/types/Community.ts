@@ -17,7 +17,7 @@ export default interface Community {
     description: string,
 
     /** The number of members who are in the Community */
-    memberCount: number,
+    members: string[]
 
     /** The visibility of the Community */
     visibility: string
