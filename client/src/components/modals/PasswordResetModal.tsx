@@ -1,13 +1,15 @@
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import {GoMailRead} from 'react-icons/go';
+import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
-import { Icon, Modal } from '@mui/material';
+import { Icon, Link, Modal } from '@mui/material';
 import { useState } from 'react';
+import TextField from '@mui/material/TextField';
 
 
-const VerifyEmail = () => {
+
+const PasswordResetModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -34,21 +36,31 @@ const VerifyEmail = () => {
             >
             <Box sx={style} textAlign='center'>
                 <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
-                    <Icon ><GoMailRead /></Icon>
+                    <Icon ><LockIcon /></Icon>
                 </Avatar>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Verify your account
+                    Password Reset
                 </Typography>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Thank you Michael Campos!
+                    Enter your email for a password reset!
                 </Typography>
-                <Typography id="modal-modal-description">We just sent a verification link to your email. Click on it and get started on using TitleTown</Typography>
+                <TextField
+                    variant='outlined'
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                />
                 <Button
                     type="submit"
                     // fullWidth
                     variant="contained"
                     sx={{ mt: 4 }}>
-                    Resend Email
+                    Get New Password
                 </Button>
             </Box>
             
@@ -56,10 +68,10 @@ const VerifyEmail = () => {
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>VerifyEmail</Button>
+            <Link href='\\' variant='body2' onClick={() => setIsOpen(!isOpen)}>Forgot your password?</Link>
             {ui}
         </>
     )
 }
 
-export default VerifyEmail
+export default PasswordResetModal

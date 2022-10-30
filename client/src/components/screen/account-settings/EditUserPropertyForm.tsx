@@ -1,5 +1,5 @@
 import { Grid, Typography, Stack, Button } from "@mui/material"
-import ChangeEmailModal from "../../ChangeEmailModal"
+import ChangeEmailModal from "../../modals/ChangeEmailModal"
 
 interface Props {
     title: string,

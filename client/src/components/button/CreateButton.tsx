@@ -1,8 +1,8 @@
 import { Box, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import CreateCommunityModal from "../CreateCommunityModal"
-import CreateContestModal from "../CreateContestModal"
+import CreateCommunityModal from "../modals/CreateCommunityModal"
+import CreateContestModal from "../modals/CreateContestModal"
 
 const MENU_PAPER_PROPS = {
     elevation: 0,

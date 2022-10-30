@@ -1,7 +1,7 @@
 import { Search, Sort } from "@mui/icons-material"
 import { Grid, IconButton, InputAdornment, Menu, MenuItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { useState } from "react"
-import CreateForumPostModal from "../../CreateForumPostModal"
+import CreateForumPostModal from "../../modals/CreateForumPostModal"
 import { MENU_PAPER_PROPS, SearchCategory } from '../../util/Constants'
 
 interface Props {

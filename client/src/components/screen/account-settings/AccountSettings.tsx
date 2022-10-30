@@ -1,6 +1,6 @@
 import { Avatar, Button, Divider, Grid, Stack, Typography } from "@mui/material"
-import ChangeEmailModal from "../../ChangeEmailModal";
-import ChangeUsernameModal from "../../ChangeUsernameModal";
+import ChangeEmailModal from "../../modals/ChangeEmailModal";
+import ChangeUsernameModal from "../../modals/ChangeUsernameModal";
 // import { useState } from "react"
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";

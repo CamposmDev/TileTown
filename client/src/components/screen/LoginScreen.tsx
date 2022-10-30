@@ -14,7 +14,7 @@ import Fade from '@mui/material/Fade';
 // import AuthContext from '../context/auth'
 import Copyright from '../Copyright';
 import { useNavigate } from 'react-router';
-import PasswordResetModal from '../PasswordResetModal';
+import PasswordResetModal from '../modals/PasswordResetModal';
 
 const LoginScreen = () => {
     let nav = useNavigate()
