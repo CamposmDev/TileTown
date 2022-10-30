@@ -1,6 +1,8 @@
+import mongoose from 'mongoose';
 import { Community } from "../../../types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
-import { UserModel, CommunityModel } from "../schemas"
+import { CommunityModel } from "../schemas"
+import { CommunitySchemaType } from "../types";
 
 
 /**
@@ -9,37 +11,18 @@ import { UserModel, CommunityModel } from "../schemas"
 export default class MongooseCommunityDBM implements CommunityDBM {
 
     async getCommunityById(communityId: string): Promise<Community | null> {
-        let community: any = await CommunityModel.findById({_id: communityId});
-        return community !== null ? {
-            id: community._id.toString(),
-            owner: community.owner.toString(),
-            name: community.name,
-            description: community.description,
-            memberCount: community.memberCounter,
-            visibility: community.visibility
-        } : null
+        if (!mongoose.Types.ObjectId.isValid(communityId)) { return null; }
+        let community = await CommunityModel.findById(communityId);
+        if (community === null) return null;
+        return this.parseCommunity(community);
     }
-     async createCommunity(community: Partial<Community>): Promise<Community | null> {
-        /** 
-        * Check if the community name or the community owner not empty 
-        * If it is empty then return null
-        * */
-        if (!community.name || !community.owner) return null
-
-        /**
-         * Check if the community name valid
-         */
-        const validCommunityName = async (communityName: string): Promise<boolean> => {
-            const existCommunity = await CommunityModel.findOne({name: communityName})
-            return existCommunity ? false : true
-        }
-
-        let communityName = community.name
-        if(!(await validCommunityName(communityName))) {
-            console.log('not unique name')
-            return null
-        }
-    
+    async getCommunityByName(name: string): Promise<Community | null> {
+        let community = await CommunityModel.findOne({name: name});
+        if (community === null) return null;
+        return this.parseCommunity(community);
+    }
+    async createCommunity(community: Partial<Community>): Promise<Community | null> {
+        
         let comm = await CommunityModel.create({
             owner: community.owner,
             name: community.name,
@@ -47,68 +30,43 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             memberCounter: 1,
             visibility: community.visibility
         })
-        await comm.save()
-        return {
-            id: comm._id.toString(),
-            owner: comm.owner.toString(),
-            name: comm.name,
-            description: comm.description,
-            memberCount: comm.memberCounter,
-            visibility: comm.visibility
-        }
-    }
 
-   async updateCommunity(communityId: string, community: Partial<Community>): Promise<Community | null> {
-        let com: any = await CommunityModel.findById(communityId)
-        if (com !== null) {
-            if (community.owner !== null) com.owner = community.owner
-            if (community.name !== null) com.name = community.name
-            if (community.description !== null) com.description = community.description
-            if (community.memberCount !== null) com.memberCount = community.memberCount
-            if (community.visibility !== null) com.visibility = community.visibility
-            await com.save()
-            return {
-                id: com._id.toString(),
-                owner: com.owner.toString(),
-                name: com.name,
-                description: com.description,
-                memberCount: com.memberCounter,
-                visibility: com.visibility
-            }
-        }
-        return null
-    }
+        let savedCommunity = await comm.save()
 
-    async addCommunityMember(userId: string, communityId: string): Promise<string | null> {
+        return this.parseCommunity(savedCommunity);
+    }
+    async updateCommunity(communityId: string, partial: Partial<Community>): Promise<Community | null> {
+        if (!mongoose.Types.ObjectId.isValid(communityId)) { return null; }
+
         let community = await CommunityModel.findById(communityId);
-        let user = await UserModel.findById(userId);
+        if (community === null) { return null; }
 
-        if (community !== null && user !== null) {
-            community.memberCounter = community.memberCounter + 1
-            await community.save()
-            return community._id.toString()
-        }
-        return null
-
+        this.fillCommunity(community, partial);
+        let savedCommunity = await community.save();
+        return this.parseCommunity(savedCommunity);
     }
-     
-    async removeCommunityMember(userId: string, communityId: string): Promise<boolean> {
-        let community: any = await CommunityModel.findById(communityId)
-        let user = await UserModel.findById(userId)
-        if ((community !== null) && (user !== null)) {
-            community.memberCounter = community.memberCounter - 1
-            await community.save()
-            return true
-
-        }
-        return false
+    async deleteCommunityById(communityId: string): Promise<Community | null> {
+        if (!mongoose.Types.ObjectId.isValid(communityId)) { return null; }
+        let community = await CommunityModel.findByIdAndDelete(communityId);
+        if (community === null) { return null; }
+        return this.parseCommunity(community);
     }
-    async deleteCommunity(communityId: string): Promise<boolean> {
-        let community = await CommunityModel.findById(communityId)
-        if (community !== null) {
-            await community.delete()
-            return true
+
+    protected parseCommunity(community: CommunitySchemaType & { _id: mongoose.Types.ObjectId}): Community {
+        return {
+            id: community._id.toString(),
+            owner: community.owner.toString(),
+            name: community.name,
+            description: community.description,
+            members: community.members.map(id => id.toString()),
+            visibility: community.visibility
         }
-        return false
+    }
+    protected fillCommunity(community: CommunitySchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<Community>): void {
+        community.owner = partial.owner ? new mongoose.Types.ObjectId(partial.owner) : community.owner;
+        community.name = partial.name ? partial.name : community.name;
+        community.description = partial.description ? partial.description : community.description;
+        community.members = partial.members ? partial.members.map(id => new mongoose.Types.ObjectId(id)) : community.members;
+        community.visibility = partial.visibility ? partial.visibility : community.visibility;
     }
 }

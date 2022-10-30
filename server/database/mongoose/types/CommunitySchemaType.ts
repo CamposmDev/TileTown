@@ -9,6 +9,6 @@ export default interface CommunitySchemaType {
     owner: ObjectId,
     name: string,
     description: string,
-    memberCounter: number,
+    members: ObjectId[],
     visibility: string
 }
