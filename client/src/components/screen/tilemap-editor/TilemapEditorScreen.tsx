@@ -80,12 +80,12 @@ const TilemapEditorScreen = () => {
               }
             />
             <Tooltip
-              title="What is this Andrew?"
+              title="Space Fill"
               arrow
               children={<IconButton color="primary" children={<Square />} />}
             />
             <Tooltip
-              title="What is this Andrew?"
+              title="Space Select"
               arrow
               children={<IconButton color="primary" children={<SelectAll />} />}
             />
@@ -97,7 +97,7 @@ const TilemapEditorScreen = () => {
               }
             />
             <Tooltip
-              title="What is this Andrew?"
+              title="Same Tile Selector"
               arrow
               children={<IconButton color="primary" children={<Schema />} />}
             />
