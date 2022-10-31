@@ -34,12 +34,12 @@ const App = () => {
           )}
         {['/feed', '/settings', '/create/tileset', '/create/tilemap', 
         '/search/tilemaps', '/search/tilesets', '/search/users', '/search/communities', 
-        '/search/contests', '/search/forums', '/profile', '/community/id'].map((x,i) =>
+        '/search/contests', '/search/forums', '/profile', '/community/rpgs-done-right'].map((x,i) =>
           <Route path={x} element={<NavBar items={<UserMenu/>} key={i}/>}/>
         )}
       </Routes>
       <Routes>
-        <Route path='/community/id' element={<CommunityProfileScreen/>}/>
+        <Route path='/community/rpgs-done-right' element={<CommunityProfileScreen/>}/>
         <Route path='/profile' element={<UserProfileScreen/>}/>
         <Route path='/search/tilemaps' element={<SearchScreen cat={SearchCategory.Tilemaps}/>}/>
         <Route path='/search/tilesets' element={<SearchScreen cat={SearchCategory.Tilesets}/>}/>

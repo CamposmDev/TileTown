@@ -14,7 +14,7 @@ const CommunityCard = (props: Props) => {
     const nav = useNavigate()
     return (
         <Card onClick={() => {
-            nav('/community/id')
+            nav('/community/rpgs-done-right')
         }}>
             <CardActionArea>
                 <CardContent>

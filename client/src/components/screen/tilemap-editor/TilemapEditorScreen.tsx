@@ -27,6 +27,9 @@ import { FaEraser } from "react-icons/fa";
 import PropertyDrawer from "./PropertyDrawer";
 import LayerDrawer from "./LayerDrawer";
 import TilemapCanvas from "./TilemapCanvas";
+import DeleteTileItemButton from "../../button/DeleteTileItemButton";
+import PublishTilesetModal from "../../modals/PublishTilesetModal";
+import PublishTileItemButton from "../../button/PublishTileItemButton";
 
 const TilemapEditorScreen = () => {
   let timeLeft = "1:24";
@@ -104,12 +107,14 @@ const TilemapEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <Button startIcon={<Delete />} color="error">
+              <DeleteTileItemButton name={'this tilemap'}/>
+              <PublishTileItemButton name={'this tilemap'}/>
+              {/* <Button startIcon={<Delete />} color="error">
                 Delete
-              </Button>
-              <Button startIcon={<Publish />} color="primary">
+              </Button> */}
+              {/* <Button startIcon={<Publish />} color="primary">
                 Publish
-              </Button>
+              </Button> */}
             </Stack>
           </Grid>
         </Grid>
