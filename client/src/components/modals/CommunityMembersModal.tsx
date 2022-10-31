@@ -3,8 +3,10 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Typography from '@mui/material/Typography';
-import { Icon, Modal } from '@mui/material';
+import { Dialog, DialogContent, Grid, Icon, IconButton, Modal } from '@mui/material';
 import { useState } from 'react';
+import { Group } from '@mui/icons-material';
+import UserProfileCard from '../card/UserProfileCard';
 
 
 
@@ -26,26 +28,37 @@ const CommunityMembersModal = () => {
       };
 
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
             >
-            <Box sx={style} textAlign='center'>
+            <DialogContent>
+            <Box>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     RPGs Done Right Members
                 </Typography>
                 <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
                     <Icon ><PeopleAltIcon /></Icon>
                 </Avatar>
+                <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
+                {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
+                    <Grid item mt={1}>
+                        <UserProfileCard
+                        firstName='Michael'
+                        lastName="Campos"
+                        username="Camposm"
+                    />
+                    </Grid>
+                )}
+                </Grid>        
             </Box>
+            </DialogContent>
             
-        </Modal>
+        </Dialog>
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Community Members Modal</Button>
+            <IconButton onClick={() => setIsOpen(!isOpen)}><Group/></IconButton>
             {ui}
         </>
     )
