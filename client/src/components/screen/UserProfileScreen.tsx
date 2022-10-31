@@ -59,7 +59,6 @@ const UserProfileScreen = () => {
                         firstName={'Michael'}
                         lastName={'Campos'}
                         username={'Camposm'}
-                        size={'profile'}
                         />
                 </Box>
             </Stack>

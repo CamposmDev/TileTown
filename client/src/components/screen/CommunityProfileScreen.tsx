@@ -4,6 +4,8 @@ import { Stack } from "@mui/system"
 import Carousel from "react-material-ui-carousel"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import TileItemCard from "../card/TileItemCard"
+import CommunityContestsModal from "../modals/CommunityContestsModal"
+import CommunityMembersModal from "../modals/CommunityMembersModal"
 
 let tilemaps = [{
     preview: 'https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/level5_1.png',
@@ -79,8 +81,10 @@ const CommunityProfileScreen = () => {
                             <Typography variant='body1'>We don't like streets or dungeon masters.</Typography>
                         </Grid>
                     </Grid>
-                    <IconButton><EmojiEvents sx={{color: 'gold'}}/></IconButton>
-                    <IconButton><Group/></IconButton>
+                    <CommunityContestsModal/>
+                    <CommunityMembersModal/>
+                    {/* <IconButton><EmojiEvents sx={{color: 'gold'}}/></IconButton>
+                    <IconButton><Group/></IconButton> */}
                     <CommunitySettingsButton
                         title='RPGs Done Right'
                         desc="We don't like streets or dungeon or masters."
