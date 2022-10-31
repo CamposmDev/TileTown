@@ -3,8 +3,9 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Typography from '@mui/material/Typography';
-import { Icon, Modal } from '@mui/material';
+import { Dialog, DialogContent, Grid, Icon, IconButton, Modal, Stack } from '@mui/material';
 import { useState } from 'react';
+import ContestCard from '../card/ContestCard';
 
 
 
@@ -17,35 +18,51 @@ const CommunityContestsModal = () => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width: 350,
         bgcolor: 'background.paper',
         boxShadow: 1,
         p: 4,
-        borderRadius: 2
+        borderRadius: 1
 
       };
 
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
             >
-            <Box sx={style} textAlign='center'>
+            <DialogContent>
+            <Box>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     RPGs Done Right Contests
                 </Typography>
                 <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
                     <Icon ><EmojiEventsIcon /></Icon>
                 </Avatar>
+                <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
+                    {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                        <Grid item mt={1}>
+                            <ContestCard
+                                payload={{
+                                    contestName: 'A New Contest',
+                                    startDate: new Date(2022,10,31),
+                                    endDate: new Date(2022,11,5),
+                                    ownerName: 'Camposm',
+                                    contestTheme: 'A Theme',
+                                    numOfParticipates: (Math.random() * 100)
+                                }}
+                            />    
+                        </Grid>)}
+                </Grid>                
             </Box>
+            </DialogContent>
             
-        </Modal>
+            
+        </Dialog>
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Community Contests Modal</Button>
+            <IconButton onClick={() => setIsOpen(!isOpen)}><EmojiEventsIcon sx={{color: 'gold'}}/></IconButton>
             {ui}
         </>
     )

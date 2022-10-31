@@ -1,4 +1,5 @@
 import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
+import { useNavigate } from "react-router"
 import { formatToSocialStr } from '../util/NumberUtils'
 
 interface Props {
@@ -10,8 +11,11 @@ interface Props {
 }
 
 const CommunityCard = (props: Props) => {
+    const nav = useNavigate()
     return (
-        <Card>
+        <Card onClick={() => {
+            nav('/community/id')
+        }}>
             <CardActionArea>
                 <CardContent>
                         <Typography>{props.commName}</Typography>
