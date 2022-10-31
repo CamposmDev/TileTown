@@ -19,6 +19,8 @@ import {
 import { FaEraser } from "react-icons/fa";
 import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvas from "./TilesetCanvas";
+import DeleteTileItemButton from "../../button/DeleteTileItemButton";
+import PublishTileItemButton from "../../button/PublishTileItemButton";
 
 const TilesetEditorScreen = () => {
   return (
@@ -77,12 +79,14 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <Button startIcon={<Delete />} color="error">
+              <DeleteTileItemButton name='this tileset'/>
+              <PublishTileItemButton name='thistileset'/>
+              {/* <Button startIcon={<Delete />} color="error">
                 Delete
               </Button>
               <Button startIcon={<Publish />} color="primary">
                 Publish
-              </Button>
+              </Button> */}
             </Stack>
           </Grid>
         </Grid>
