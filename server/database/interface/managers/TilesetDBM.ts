@@ -7,6 +7,7 @@ import Comment from "../../../types/Comment";
 
 export default interface TilesetDBM {
     getTilesetById(tilesetId: string): Promise<Tileset | null>;
+    getTilesetsById(tilesetIds: string[]): Promise<Tileset[]>
     getTilesetByName(name: string): Promise<Tileset | null>;
 
     createTileset(userId: string,

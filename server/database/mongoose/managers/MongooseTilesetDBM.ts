@@ -1,16 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-import {
-  Tileset,
-  TilesetSocial,
-  SocialStatisticsPermissions,
-  Property,
-  SortBy,
-  Comment
-} from "../../../types";
+import { Tileset, SortBy } from "../../../types";
 import { TilesetDBM } from "../../interface";
-import { TilesetModel, CommentModel, UserModel, TilesetSocialModel } from "../schemas";
-import { TilesetSchemaType, TilesetSocialSchemaType, PropertySchemaType } from "../types";
+import { TilesetModel } from "../schemas";
+import { TilesetSchemaType, PropertySchemaType } from "../types";
 
 /**
  * The mongoose database manager for working with tilesets in tiletown
@@ -89,6 +82,12 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return this.parseTileset(tileset);     
     }
 
+    async getTilesetsById(tilesetIds: string[]): Promise<Tileset[]> {
+        if (!tilesetIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return []; }
+        let tilesets = await TilesetModel.find({_id: { $in: tilesetIds }});
+        return tilesets.map(tileset => this.parseTileset(tileset));
+    }
+
     async getTilesetByName(name: string): Promise<Tileset | null> {
         let tileset = await TilesetModel.findOne({name: name});
         if (tileset === null) { return null; }
@@ -122,7 +121,6 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         if (tileset === null) { return null; }
 
         this.fillTileset(tileset, partial);
-
         let savedTileset = await tileset.save();
 
         return this.parseTileset(savedTileset);
@@ -130,10 +128,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
 
     async deleteTilesetById(tilesetId: string): Promise<Tileset | null> {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) { return null; }
-
         let tileset = await TilesetModel.findOneAndDelete({ _id: tilesetId });
         if (tileset === null) { return null; }
-
         return this.parseTileset(tileset);
     }
 
