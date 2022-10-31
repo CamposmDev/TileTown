@@ -1,7 +1,6 @@
-import mongoose, { ObjectId } from 'mongoose';
-import { hash, compare } from "bcrypt";
+import mongoose from 'mongoose';
 import UserDBM from "../../interface/managers/UserDBM";
-import { UserModel, CommunityModel, ContestModel, TilemapModel, TilesetModel } from '../schemas'
+import { UserModel, ContestModel, TilemapModel, TilesetModel } from '../schemas'
 import { User } from "../../../types";
 import UserSchemaType from '../types/UserSchemaType';
 
@@ -80,56 +79,6 @@ export default class MongooseUserDBM implements UserDBM {
         } else {
             return false
         }
-    }
-
-    async updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null> {
-        let user = await UserModel.findById(userId)
-        if (user !== null) {
-            let currentPassword = user.password
-            let isOwner: boolean = await compare(oldPassword, currentPassword)
-            if (isOwner) {
-                const ROUNDS = 10
-                let passwordHash = await hash(newPassword, ROUNDS)
-                user.password = passwordHash.toString()
-                await user.save()
-                return passwordHash
-            }
-        }
-        return null
-    }
-
-    async updateEmail(userId: string, email: string): Promise<string | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
-            return null
-        }
-
-        let user = await UserModel.findById(userId)
-        let e = await UserModel.findOne({email: email});
-
-        if (user !== null && e === null) {
-            user.email = email
-            // TODO Send verfication email
-            user.isVerified = false
-            await user.save()
-            return email
-        }
-        return null
-    }
-
-    async updateUsername(userId: string, username: string): Promise<string | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
-            return null
-        }
-
-        let user = await UserModel.findById(userId)
-        let u = await UserModel.findOne({username: username});
-
-        if (user !== null && u === null) {
-            user.username = username
-            await user.save();
-            return username
-        }
-        return null
     }
 
     async addFriend(userId: string, friendId: string): Promise<string | null> {
@@ -263,6 +212,8 @@ export default class MongooseUserDBM implements UserDBM {
             lastName: user.lastName,
             password: user.password,
             imageURL: user.imageURL,
+            tilemaps: user.tilemaps.map((id: mongoose.Types.ObjectId) => id.toString()),
+            tilesets: user.tilesets.map((id: mongoose.Types.ObjectId) => id.toString()),
             favoriteTileMaps: user.favoriteTileMaps.map((id: mongoose.Types.ObjectId) => id.toString()),
             favoriteTileSets: user.favoriteTileSets.map((id: mongoose.Types.ObjectId) => id.toString()),
             friends: user.friends.map((id: mongoose.Types.ObjectId) => id.toString()),

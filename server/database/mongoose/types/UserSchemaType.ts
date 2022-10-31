@@ -26,6 +26,10 @@ export default interface UserSchemaType {
   /** A string URL to the user's profile picture */
   imageURL: string;
 
+  tilemaps: ObjectId[],
+
+  tilesets: ObjectId[],
+
   /** A list of tilemap ids in the DBMS the user has favorited */
   favoriteTileMaps: ObjectId[];
 
