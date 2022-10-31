@@ -18,7 +18,8 @@ export default interface ContestDBM {
      * 
      * @param contestId 
      */
-    getContest(contestId: string): Promise<Contest | null>;
+    getContestById(contestId: string): Promise<Contest | null>;
+    getContestByName(name: string): Promise<Contest | null>;
 
     /**
      * Creates a new contest in the DBMS based on the given partial Contest object.
@@ -73,7 +74,7 @@ export default interface ContestDBM {
      * @param role the new role of the user in the contest
      * @return if successful, the updated role of the user in the given contest; null otherwise
      */
-    updateModerator(contestId: string, userId: string, role: string): Promise<string | null>;
+    // updateModerator(contestId: string, userId: string, role: string): Promise<string | null>;
 
     /**
      * Deletes the contest with the given contest id in the DBMS.
@@ -86,5 +87,5 @@ export default interface ContestDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, true; false otherwise.
      */
-    deleteContest(contestId: string): Promise<boolean>;
+    deleteContest(contestId: string): Promise<Contest | null>;
 }

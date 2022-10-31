@@ -10,7 +10,7 @@ const CommunitySchema = new Schema<CommunitySchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
     description: { type: String, require: true},
-    memberCounter: { type: Number, require: true},
+    members: { type: [ObjectId], require: true },
     visibility: { type: String, require: true}
 });
 

@@ -48,46 +48,46 @@ import { Contest } from '../../types';
             await ContestModel.deleteMany() 
         });
 
-        it('It should create and return a new contest', async function() {
-            let contest: MongooseContestDBM = new MongooseContestDBM()
-            let user = await UserModel.create({
-                firstName: "Tuyen",
-                lastName: "Vo",
-                email: "tuyen.vo@stonybrook.edu",
-                username: "Emdoiqua",
-                password: "DummyPassword",
-                verifyKey: 'something?!',
-                isVerified: false,
-                favoriteTileMaps: [],
-                favoriteTileSets: [],
-                joinedContests: [],
-                joinedCommunities: [],
-                friends: [],
-                imageURL: " "
-            })
+        // it('It should create and return a new contest', async function() {
+        //     let contest: MongooseContestDBM = new MongooseContestDBM()
+        //     let user = await UserModel.create({
+        //         firstName: "Tuyen",
+        //         lastName: "Vo",
+        //         email: "tuyen.vo@stonybrook.edu",
+        //         username: "Emdoiqua",
+        //         password: "DummyPassword",
+        //         verifyKey: 'something?!',
+        //         isVerified: false,
+        //         favoriteTileMaps: [],
+        //         favoriteTileSets: [],
+        //         joinedContests: [],
+        //         joinedCommunities: [],
+        //         friends: [],
+        //         imageURL: " "
+        //     })
     
-            let partial: Partial<Contest> = {
-                "owner": user._id.toString(),
-                "name": "Vo",
-                "description": "My Contest Description",
-                "participates": [],
-                "isPublished": true
-            }
-            let con: Contest | null = await contest.createContest(partial)
-            expect(con).not.null
-            expect(con).property("owner", user._id.toString())
-            expect(con).property("name", "Vo")
-            expect(con).property("description", "My Contest Description")
-            expect(con).property("participates").to.have.length(0);
-            expect(con).to.have.property("startDate")
-            expect(con).to.have.property("endDate")
-            expect(con).property("isPublished", true)
+        //     let partial: Partial<Contest> = {
+        //         "owner": user._id.toString(),
+        //         "name": "Vo",
+        //         "description": "My Contest Description",
+        //         "participates": [],
+        //         "isPublished": true
+        //     }
+        //     let con: Contest | null = await contest.createContest(partial)
+        //     expect(con).not.null
+        //     expect(con).property("owner", user._id.toString())
+        //     expect(con).property("name", "Vo")
+        //     expect(con).property("description", "My Contest Description")
+        //     expect(con).property("participates").to.have.length(0);
+        //     expect(con).to.have.property("startDate")
+        //     expect(con).to.have.property("endDate")
+        //     expect(con).property("isPublished", true)
             
-            if (con !== null) {
-                let res = await ContestModel.findById(con.id)
-                expect(res).not.null;
-            }
-        });
+        //     if (con !== null) {
+        //         let res = await ContestModel.findById(con.id)
+        //         expect(res).not.null;
+        //     }
+        // });
         
     });
 

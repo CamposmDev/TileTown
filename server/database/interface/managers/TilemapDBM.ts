@@ -1,7 +1,6 @@
 import {
   Tilemap,
   CollaboratorSettings,
-  TilemapSocialStatistics,
   SocialStatisticsPermissions,
   Layer,
   Property,
@@ -26,7 +25,8 @@ export default interface TilemapDBM {
    * @param tilemapId the id of the tilemap to get
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  getTilemapById(tilemapId: string): Promise<Tilemap | string>;
+  getTilemapById(tilemapId: string): Promise<Tilemap | null>;
+  getTilemapByName(name: string): Promise<Tilemap | null>
 
   /**
    * Gets the partial data associated with Tilemaps that a specific user either owns or can edit.
@@ -60,10 +60,7 @@ export default interface TilemapDBM {
    * @param tilemap partial of Tilemap being created
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  createTilemap(
-    userId: string,
-    tilemap: Partial<Tilemap>
-  ): Promise<Tilemap | string>;
+  createTilemap(userId: string, tilemap: Partial<Tilemap>): Promise<Tilemap | null>;
 
   /**
    * Updates Tilemap in the DBMS from the Partial Tilemap
@@ -77,10 +74,7 @@ export default interface TilemapDBM {
    * @param tilemap partial of tilemap data to update
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  updateTilemapById(
-    tilemapId: string,
-    tilemap: Partial<Tilemap>
-  ): Promise<Tilemap | string>;
+  updateTilemapById(tilemapId: string, tilemap: Partial<Tilemap>): Promise<Tilemap | null>;
 
   /**
    * Deletes a Tilemap in the DBMS from it's id
@@ -93,7 +87,7 @@ export default interface TilemapDBM {
    * @param tilemapId id of tilemap to be deleted
    * @return a message notifying if tilemap was deleted
    */
-  deleteTilemapById(tilemapId: string): Promise<Partial<Tilemap> | string>;
+  deleteTilemapById(tilemapId: string): Promise<Tilemap | null>;
 
   // /**
   //  * Adds a new layer to a specific tilemap
@@ -307,25 +301,4 @@ export default interface TilemapDBM {
   //  */
   // removeTileset(tilemapId: string, index: number): Promise<[string] | string>;
 
-  addTilemapComment(payload: Comment): Promise<TilemapSocialStatistics | null>;
-
-  toggleLike(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
-
-  toggleDislike(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
-
-  addView(
-    userId: string,
-    socialId: string
-  ): Promise<TilemapSocialStatistics | null>;
-
-  updateTilemapPermissions(
-    socialId: string,
-    permissions: SocialStatisticsPermissions
-  ): Promise<TilemapSocialStatistics | null>;
 }

@@ -13,12 +13,12 @@ import path from "path";
  * gets passed in as an option when multer is initialized.
  */
 const storage: StorageEngine = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "./public/uploads/"));
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "./public/uploads/"));
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
 });
 
 /**
@@ -33,16 +33,12 @@ const storage: StorageEngine = multer.diskStorage({
  *      cb(null, false) - rejects the file
  *      cb(new Error(...)) - if an error occurs
  */
-const filter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: FileFilterCallback
-) => {
-  if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
+const filter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
 };
 
 /**

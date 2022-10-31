@@ -6,16 +6,18 @@ import { Grid, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 
 
+interface Props {
+    callback?: Function
+}
 
-
-const CreateCommunityModal = () => {
+const CreateContestModal = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
-    
-    
+        
     const style = {
         position: 'absolute',
         top: '50%',
@@ -38,8 +40,8 @@ const CreateCommunityModal = () => {
             >
             <Box sx={style} textAlign='center'>
 
-                <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
-                 Create Community
+                <Typography id="modal-modal-title" variant="h6">
+                 Create Contest
                 </Typography>
         
                 <TextField
@@ -68,13 +70,42 @@ const CreateCommunityModal = () => {
                     />
                 </Grid>
 
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            fullWidth
+                            id="theme"
+                            label="Theme"
+                            name="theme"
+                            autoComplete="theme"
+                            defaultValue="Any"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Stack component="form" noValidate spacing={3}>
+                            <TextField
+                                id="dueDate"
+                                label="Due Date"
+                                type="date"
+                                defaultValue="2022-12-31"
+                                sx={{ width: 220 }}
+                                InputLabelProps={{
+                                shrink: true,
+                                }}
+                            />
+                        </Stack>
+                    </Grid>
+
+
+                </Grid>
+
                 <Button
                     type="submit"
                     variant="contained"
                     sx={{ mt: 4 }}>
-                    Create Community
+                    Create Contest
                 </Button>
-
 
             </Box>
             
@@ -82,11 +113,14 @@ const CreateCommunityModal = () => {
     )
     return (
         <>
-            <MenuItem onClick={() => setIsOpen(!isOpen)}>Create Comunity</MenuItem>
+            <MenuItem onClick={() => {
+                setIsOpen(!isOpen)
+            }}
+            >Create Contest</MenuItem>
             {ui}
         </>
     )
 
 }
 
-export default CreateCommunityModal
+export default CreateContestModal

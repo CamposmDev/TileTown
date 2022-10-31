@@ -3,6 +3,7 @@ import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 // import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
+import UserProfileCard from './card/UserProfileCard'
 
 export default function NavDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -20,7 +21,7 @@ export default function NavDrawer() {
 
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-        <Box p={2} width='200px' role='presentation' textAlign='start'>
+        <Box p={2} width='225px' role='presentation' textAlign='start'>
           <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
               <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>
@@ -34,28 +35,97 @@ export default function NavDrawer() {
               {initMenuItem('Home', '/feed')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilemaps', '/tilemaps')}
+            {initMenuItem('Tilemaps', '/search/tilemaps')}
             </Grid>
             <Grid item>
-            {initMenuItem('Tilesets', '/tilesets')}
+            {initMenuItem('Tilesets', '/search/tilesets')}
             </Grid>
             <Grid item>
               <Divider/>
             </Grid>
             <Grid item>
-            {initMenuItem('Friends', 'friends')}
+            {initMenuItem('Users', '/search/users')}
             </Grid>
             <Grid item>
-            {initMenuItem('Users', '/users')}
+            {initMenuItem('Communities', '/search/communities')}
             </Grid>
             <Grid item>
-            {initMenuItem('Communities', '/communities')}
+            {initMenuItem('Contests', '/search/contests')}
             </Grid>
             <Grid item>
-            {initMenuItem('Contest', '/contests')}
+            {initMenuItem('Forums', '/search/forums')}
+            </Grid>
+          </Grid>
+          <Divider/>
+          <Typography mt={2} ml={2} pb={1}>Friends</Typography>
+          <Grid sx={{
+            overflow: 'auto',
+            height: '320px'
+          }}
+          container
+          spacing={1}>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
             </Grid>
             <Grid item>
-            {initMenuItem('Forum', '/forums')}
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
+            </Grid>
+            <Grid item>
+              <UserProfileCard
+                firstName='Andrew'
+                lastName='Ojeda'
+                username='H8TER$HADE$'
+              />
             </Grid>
           </Grid>
         </Box>

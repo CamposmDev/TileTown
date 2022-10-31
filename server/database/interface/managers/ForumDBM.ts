@@ -67,7 +67,7 @@ export default interface ForumDBM {
    * @param forumPostId the id of the forum post in the DBMS
    * @return if successful, the id of the forum post that was deleted in the DBMS
    */
-  deleteForumPost(forumPostId: string): Promise<string | null>;
+  deleteForumPost(forumPostId: string): Promise<ForumPost | null>;
 
   /**
    * Adds a like from the user with the given user id to the forum post with the given forum post id.
@@ -87,7 +87,7 @@ export default interface ForumDBM {
    * @return if successful, the ForumPost object with the data associated with the forum post in the
    * DBMS; null otherwise.
    */
-  toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null>;
+//   toggleLike(userId: string, forumPostId: string): Promise<ForumPost | null>;
 
   /**
    * Adds a dilike from the user with the given user id to the forum post with the given forum post id.
@@ -107,7 +107,7 @@ export default interface ForumDBM {
    * @return if successful, the ForumPost object with the data associated with the forum post in the
    * DBMS; null otherwise.
    */
-  toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null>;
+//   toggleDislike(userId: string, forumPostId: string): Promise<ForumPost | null>;
 
   /**
    * Adds a view from the user with the given user id to the forum post with the given forum post id.
@@ -125,7 +125,7 @@ export default interface ForumDBM {
    * @param forumPostId the id of the forum post in the DBMS
    * @return if successful, a new ForumPost object with the updated forum post data; null otherwise.
    */
-  addView(userId: string, forumPostId: string): Promise<ForumPost | null>;
+//   addView(userId: string, forumPostId: string): Promise<ForumPost | null>;
 
 
   /**
@@ -135,5 +135,5 @@ export default interface ForumDBM {
    * @param payload the data of the comment
    * @return if successful, 
    */
-  commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null>
+//   commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null>
 }

@@ -23,7 +23,6 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         if (social === null) { return null; }
         return this.parseSocial(social);
     }   
-
     async createTilesetSocial(tilesetId: string, partial: Partial<TilesetSocial>): Promise<TilesetSocial | null> {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) {
             return null;

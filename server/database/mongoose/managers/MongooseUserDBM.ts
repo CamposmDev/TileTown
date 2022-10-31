@@ -15,19 +15,23 @@ export default class MongooseUserDBM implements UserDBM {
         let user = await UserModel.findById({_id: userId});
         if (user === null) return null;
 
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
-
+    async getUsersById(userIds: string[]): Promise<User[] | null> {
+        if (!userIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return null; }
+        let users = await UserModel.find({_id: { $in: userIds }});
+        if (users === null) { return null; }
+        return users.map(user => this.parseUser(user));
+    }
     async getUserByEmail(email: string): Promise<User | null> {
         let user = await UserModel.findOne({email: email});
         if (user === null) return null;
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
-
     async getUserByUsername(username: string): Promise<User | null> {
         let user = await UserModel.findOne({username: username});
         if (user === null) return null;
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
 
     async createUser(userpy: Partial<User>): Promise<User | null> {
@@ -50,9 +54,8 @@ export default class MongooseUserDBM implements UserDBM {
 
         if (user === null) return null;
 
-        return this.fromUserSchema(user);
+        return this.parseUser(user);
     }
-
     async updateUser(id: string, partial: Partial<User>): Promise<User | null> {
         if (!mongoose.Types.ObjectId.isValid(id)) { return null; }
 
@@ -62,7 +65,7 @@ export default class MongooseUserDBM implements UserDBM {
         this.fillUserModel(user, partial);
         let savedUser = await user.save()
 
-        return this.fromUserSchema(savedUser);
+        return this.parseUser(savedUser);
     }
  
     async verifyUser(key: string): Promise<boolean> {
@@ -146,25 +149,6 @@ export default class MongooseUserDBM implements UserDBM {
         return null
     }
 
-    async joinCommunity(userId: string, communityId: string): Promise<string | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(communityId)) {
-            return null;
-        }
-
-        let user = await UserModel.findById(userId)
-        if (user !== null) {
-            let comm = await CommunityModel.findById(communityId)
-            if (comm !== null && comm.owner.toString() !== user._id.toString()) {
-                user.joinedCommunities.push(comm._id)
-                comm.memberCounter = comm.memberCounter + 1
-                await user.save()
-                await comm.save()
-                return communityId
-            }
-        }
-        return null
-    }
-
     async joinContest(userId: string, contestId: string): Promise<string | null> {
         if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(contestId)) {
             return null;
@@ -221,25 +205,7 @@ export default class MongooseUserDBM implements UserDBM {
         return true;
     }
     
-    async leaveCommunity(userId: string, communityId: string): Promise<boolean> {
-        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(communityId)) {
-            return false;
-        }
 
-        let user = await UserModel.findById(userId)
-        let comm = await CommunityModel.findById(communityId)
-
-        if ((user !== null) && (comm !== null)) {
-            let i = user.joinedCommunities.map(id => id.toString()).indexOf(comm._id.toString(), 0)
-            if (i > -1) {
-                user.joinedCommunities.splice(i, 1)
-                comm.memberCounter = comm.memberCounter - 1
-                await user.save()
-                return true;
-            }
-        }
-        return false
-    }
 
     async leaveContest(userId: string, contestId: string): Promise<boolean> {
         let user: any = await UserModel.findById(userId)
@@ -288,7 +254,7 @@ export default class MongooseUserDBM implements UserDBM {
         return false
     }
 
-    protected fromUserSchema(user: UserSchemaType & { _id: mongoose.Types.ObjectId}): User {
+    protected parseUser(user: UserSchemaType & { _id: mongoose.Types.ObjectId}): User {
         return {
             id: user._id.toString(),
             username: user.username,
@@ -306,7 +272,6 @@ export default class MongooseUserDBM implements UserDBM {
             joinedContests: user.joinedContests.map((id: mongoose.Types.ObjectId) => id.toString())
         }
     }
-
     protected fillUserModel(user: UserSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<User>): void {
         user.username = partial.username ? partial.username : user.username;
         user.email = partial.email ? partial.email : user.email;

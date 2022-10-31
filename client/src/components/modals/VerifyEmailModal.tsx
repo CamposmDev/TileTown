@@ -1,15 +1,15 @@
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import {GoMailRead} from 'react-icons/go';
 import Typography from '@mui/material/Typography';
-import { Modal } from '@mui/material';
+import { Icon, Modal } from '@mui/material';
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
 
 
-
-const ChangeUsernameModal = () => {
+const VerifyEmailModal = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
     const style = {
@@ -33,37 +33,22 @@ const ChangeUsernameModal = () => {
             aria-describedby="modal-modal-description"
             >
             <Box sx={style} textAlign='center'>
-
-                <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
-                  Really change your username?
-                </Typography>
-           
+                <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
+                    <Icon ><GoMailRead /></Icon>
+                </Avatar>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  We will create redirects for your tile maps and sets
+                    Verify your account
                 </Typography>
-
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Rename will take a few minutes to complete
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    Thank you Michael Campos!
                 </Typography>
-                
-                <TextField
-                    variant='outlined'
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="New Username"
-                    name="username"
-                    autoComplete="username"
-                    autoFocus
-                />
-        
-
+                <Typography id="modal-modal-description">We just sent a verification link to your email. Click on it and get started on using TitleTown</Typography>
                 <Button
                     type="submit"
+                    // fullWidth
                     variant="contained"
                     sx={{ mt: 4 }}>
-                    Change my username
+                    Resend Email
                 </Button>
             </Box>
             
@@ -71,10 +56,10 @@ const ChangeUsernameModal = () => {
     )
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>Change Username Modal</Button>
+            <Button onClick={() => setIsOpen(!isOpen)}>VerifyEmail</Button>
             {ui}
         </>
     )
 }
 
-export default ChangeUsernameModal
+export default VerifyEmailModal
