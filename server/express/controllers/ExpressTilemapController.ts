@@ -119,19 +119,17 @@ export default class TilemapController {
         // Try to create the new tilemap in the DBMS
         let tilemap = await db.tilemaps.createTilemap(req.userId, req.body.tilemap);
         if (tilemap === null) {
-            return res.status(500).json({message: "Server Error"});
+            return res.status(500).json({message: "Error creating a tilemap"});
         }
 
-        // const isTilemap = (response: string | Tilemap): response is Tilemap => {
-        //     return (response as Tilemap).id !== undefined;
-        // };
+        // Add the tilemaps id to the users tilemaps
+        user.tilemaps.push(tilemap.id);
 
-        // //check for error messages
-        // if (!isTilemap(response)) {
-        //     return res.status(400).json({
-        //         errorMessage: response,
-        //     });
-        // }
+        // Update the user
+        let updatedUser = await db.users.updateUser(req.userId, {tilemaps: user.tilemaps});
+        if (updatedUser === null) {
+            return res.status(500).json({messsage: "Error adding tilemap to users tilemaps"});
+        }
 
         return res.status(201).json({ message: "Creating tilemap!", tilemap: tilemap });
     }
