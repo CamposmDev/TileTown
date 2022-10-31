@@ -26,6 +26,7 @@ export default interface TilemapDBM {
    * @return a Tilemap object with all information about the Tilemap or null
    */
   getTilemapById(tilemapId: string): Promise<Tilemap | null>;
+  getTilemapsById(tilemapIds: string[]): Promise<Tilemap[]>;
   getTilemapByName(name: string): Promise<Tilemap | null>
 
   /**

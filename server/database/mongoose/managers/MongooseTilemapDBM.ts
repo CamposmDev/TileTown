@@ -33,6 +33,11 @@ export default class MongooseTilemapDBM implements TilemapDBM {
 
         return this.parseTilemap(tilemap);
     }
+    async getTilemapsById(tilemapIds: string[]): Promise<Tilemap[]> {
+        if (!tilemapIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return []; }
+        let tilemaps = await TilemapModel.find({_id: { $in: tilemapIds }});
+        return tilemaps.map(tilemap => this.parseTilemap(tilemap));
+    }
     async getTilemapByName(name: string): Promise<Tilemap | null> {
         let tilemap = await TilemapModel.findOne({ name: name });
         if (tilemap === null) return null;
@@ -40,16 +45,13 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     }
 
     //TODO Move sortBy to regex so it's done on database
-    async getTilemapPartials(
-        userName: string,
-        search: string,
-        sortBy: SortBy
-    ): Promise<Partial<Tilemap>[] | string> {
+    async getTilemapPartials(userName: string, search: string, sortBy: SortBy): Promise<Partial<Tilemap>[] | string> {
         const tilemaps = await TilemapModel.find({
             collaboratorNames: userName,
             name: new RegExp(search, "i"),
             isPublish: { $ne: true },
         });
+
         if (tilemaps == null) return "unable to get partials";
         let partials: Partial<Tilemap>[] = new Array();
         for (let map of tilemaps) {
@@ -207,4 +209,5 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         tilemap.isPublished = partial.isPublished ? partial.isPublished : tilemap.isPublished;
         tilemap.globalTileIDs = partial.globalTileIDs ? partial.globalTileIDs : tilemap.globalTileIDs;
     }
+    
 }
