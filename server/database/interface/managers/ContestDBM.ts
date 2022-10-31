@@ -19,6 +19,7 @@ export default interface ContestDBM {
      * @param contestId 
      */
     getContestById(contestId: string): Promise<Contest | null>;
+    getContestsById(contestIds: string[]): Promise<Contest[]>;
     getContestByName(name: string): Promise<Contest | null>;
 
     /**
