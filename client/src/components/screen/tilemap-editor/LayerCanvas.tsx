@@ -21,6 +21,12 @@ const LayerCanvas = (props: { layerIndex: number }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const tileHeight: number = 30;
+  const tileWidth: number = 32;
+  const columns: number = 17;
+  const rows: number = 6;
+  const imageHeight: number = tileHeight * rows;
+  const imageWidth: number = tileWidth * columns;
 
   useEffect(() => {
     const canvas: HTMLCanvasElement | null = canvasRef.current;
@@ -28,27 +34,17 @@ const LayerCanvas = (props: { layerIndex: number }) => {
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
       if (ctx) {
         contextRef.current = ctx;
-
-        // ctx.scale(10,10)
-        ctx.beginPath(); // Note the Non Null Assertio
-        ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, 16, 8);
-        // ctx.stroke();
-        ctx.fillStyle = "red";
-        ctx.fillRect(16, 0, 16, 8);
-        // ctx.stroke();
-        ctx.closePath();
-        ctx.lineCap = "square";
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "blue";
+        let tilesetImage: HTMLImageElement = new Image();
+        tilesetImage.src = "/testTilemap.png";
+        tilesetImage.onload = () => {
+          ctx.drawImage(tilesetImage, 0, 0, canvas.width, canvas.height);
+        };
       }
     }
   }, []);
 
   const startDrawing = ({ nativeEvent }: any) => {
     const { offsetX, offsetY } = nativeEvent;
-    console.log(offsetX);
-    console.log(offsetY);
     if (contextRef) {
       const context: any = contextRef.current;
       if (context) {

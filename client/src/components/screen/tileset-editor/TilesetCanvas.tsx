@@ -13,12 +13,15 @@ const TilesetCanvas = () => {
     y: number | null;
   }>({ x: null, y: null });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const imageHeight: number = 800;
-  const imageWidth: number = 800;
-  const tileHeight: number = 100;
-  const tileWidth: number = 100;
-  const canvasHeight: number = 400;
-  const canvasWidth: number = 400;
+
+  const tileHeight: number = 32;
+  const tileWidth: number = 32;
+  const columns: number = 17;
+  const rows: number = 6;
+  const imageHeight: number = tileHeight * rows;
+  const imageWidth: number = tileWidth * columns;
+  const canvasHeight: number = 800;
+  const canvasWidth: number = 800;
 
   useEffect(() => {
     if (gridCanvasRef.current) {
@@ -65,17 +68,6 @@ const TilesetCanvas = () => {
         tilesetImage.onload = () => {
           ctx.drawImage(tilesetImage, 0, 0, canvas.width, canvas.height);
         };
-        // ctx.beginPath(); // Note the Non Null Assertion
-        // ctx.fillStyle = "green";
-        // ctx.fillRect(0, 0, 16, 8);
-        // // ctx.stroke();
-        // ctx.fillStyle = "red";
-        // ctx.fillRect(16, 0, 16, 8);
-        // // ctx.stroke();
-        // ctx.closePath();
-        // ctx.lineCap = "square";
-        // ctx.lineWidth = 1;
-        // ctx.strokeStyle = "blue";
       }
     }
   }, []);
@@ -195,7 +187,7 @@ const TilesetCanvas = () => {
   };
 
   let root = (
-    <div id="tileset-canvas-wrapper">
+    <div>
       <canvas
         className="tileset-canvas"
         onMouseDown={startDrawing}
@@ -210,7 +202,7 @@ const TilesetCanvas = () => {
   );
 
   return (
-    <Grid item textAlign="center" p={1}>
+    <Grid id="tileset-canvas-wrapper" item textAlign="center" p={1}>
       {root}
     </Grid>
   );

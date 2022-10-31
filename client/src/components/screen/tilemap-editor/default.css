@@ -1,6 +1,6 @@
 #tilemap-canvas-wrapper {
-  height: 600px;
-  width: 600px;
+  height: 80vh;
+  width: 160vh;
   position: relative;
   left: 50%;
   transform: translate(-50%);

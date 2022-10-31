@@ -10,10 +10,12 @@ import LayerCanvas from "./LayerCanvas";
 const TilemapCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-  const imageHeight: number = 800;
-  const imageWidth: number = 800;
-  const tileHeight: number = 100;
-  const tileWidth: number = 100;
+  const tileHeight: number = 30;
+  const tileWidth: number = 32;
+  const columns: number = 30;
+  const rows: number = 13;
+  const imageHeight: number = tileHeight * rows;
+  const imageWidth: number = tileWidth * columns;
   const canvasHeight: number = 400;
   const canvasWidth: number = 400;
   let testLayer1: Partial<Layer> = {
@@ -63,31 +65,18 @@ const TilemapCanvas = () => {
         }
         ctx.strokeStyle = "#000000";
         ctx.stroke();
-        contextRef.current = ctx;
-        // ctx.scale(10,10)
-        ctx.beginPath(); // Note the Non Null Assertio
-        ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, 16, 8);
-        // ctx.stroke();
-        ctx.fillStyle = "red";
-        ctx.fillRect(16, 0, 16, 8);
-        // ctx.stroke();
-        ctx.closePath();
-        ctx.lineCap = "square";
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "blue";
       }
     }
   }, []);
 
   let root = (
     <div id="tilemap-canvas-wrapper">
-      <canvas className="tilemap-canvas" ref={canvasRef}>
-        Please use a browser that supports canvas
-      </canvas>
       {testLayers.map((layers, index) => (
         <LayerCanvas layerIndex={index}></LayerCanvas>
       ))}
+      <canvas className="tilemap-canvas" ref={canvasRef}>
+        Please use a browser that supports canvas
+      </canvas>
     </div>
   );
   return (
