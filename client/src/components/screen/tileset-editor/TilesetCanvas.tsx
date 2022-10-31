@@ -47,6 +47,7 @@ const TilesetCanvas = () => {
         }
         ctx.strokeStyle = "#000000";
         ctx.stroke();
+        ctx.closePath();
       }
     }
     if (canvasRef.current) {
@@ -55,17 +56,26 @@ const TilesetCanvas = () => {
       canvas.width = canvasWidth;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
       if (ctx) {
-        ctx.beginPath(); // Note the Non Null Assertion
-        ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, 16, 8);
-        // ctx.stroke();
-        ctx.fillStyle = "red";
-        ctx.fillRect(16, 0, 16, 8);
-        // ctx.stroke();
-        ctx.closePath();
-        ctx.lineCap = "square";
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "blue";
+        const rectHeight = canvas.height;
+        const rectWidth = canvas.width;
+        const scaleY = rectHeight / imageHeight;
+        const scaleX = rectWidth / imageWidth;
+        let tilesetImage: HTMLImageElement = new Image();
+        tilesetImage.src = "/leve1and2tileset.png";
+        tilesetImage.onload = () => {
+          ctx.drawImage(tilesetImage, 0, 0, canvas.width, canvas.height);
+        };
+        // ctx.beginPath(); // Note the Non Null Assertion
+        // ctx.fillStyle = "green";
+        // ctx.fillRect(0, 0, 16, 8);
+        // // ctx.stroke();
+        // ctx.fillStyle = "red";
+        // ctx.fillRect(16, 0, 16, 8);
+        // // ctx.stroke();
+        // ctx.closePath();
+        // ctx.lineCap = "square";
+        // ctx.lineWidth = 1;
+        // ctx.strokeStyle = "blue";
       }
     }
   }, []);
@@ -101,16 +111,29 @@ const TilesetCanvas = () => {
   };
 
   const draw = ({ nativeEvent }: any) => {
-    if (isDrawing) {
-      if (contextRef.current && canvasRef.current) {
-        const canvas: HTMLCanvasElement = canvasRef.current;
-        const canvasCoords: { x: number; y: number } =
-          screenToCanvasCoordinates(nativeEvent, canvas);
+    if (contextRef.current && canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const context: CanvasRenderingContext2D = contextRef.current;
+      const canvasCoords: { x: number; y: number } = screenToCanvasCoordinates(
+        nativeEvent,
+        canvas
+      );
+      if (isDrawing) {
         if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
-          const context: CanvasRenderingContext2D = contextRef.current;
           context.lineTo(canvasCoords.x, canvasCoords.y);
           context.stroke();
+          return;
         }
+        setIsDrawing(false);
+        context.closePath();
+        return;
+      }
+      if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
+        context.beginPath();
+        context.moveTo(canvasCoords.x, canvasCoords.y);
+        context.lineTo(canvasCoords.x, canvasCoords.y);
+        context.stroke();
+        setIsDrawing(true);
       }
     }
   };
@@ -168,22 +191,20 @@ const TilesetCanvas = () => {
       const endY = currentTile.y + scaledTileHeight;
       return x < endX && y < endY && x > currentTile.x && y > currentTile.y;
     }
-    return true;
+    return false;
   };
 
   let root = (
-    <div>
-      <canvas className="tileset-canvas" ref={gridCanvasRef}>
-        Your browser sucks!
-      </canvas>
+    <div id="tileset-canvas-wrapper">
       <canvas
         className="tileset-canvas"
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
         ref={canvasRef}
-      >
-        Your browser sucks!
+      ></canvas>
+      <canvas className="tileset-canvas--no-input" ref={gridCanvasRef}>
+        Please user a browser that supports HTML Canvas
       </canvas>
     </div>
   );

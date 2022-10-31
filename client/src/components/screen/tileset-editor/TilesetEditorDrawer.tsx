@@ -49,6 +49,32 @@ const TilesetEditorDrawer = () => {
         <Divider />
         <Stack direction="row" alignItems="center" spacing={1}>
           <TextField
+            label="Columns"
+            fullWidth
+            size="small"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">tiles</InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            label="Rows"
+            fullWidth
+            size="small"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">tiles</InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+        <Grid container alignItems="center" pt={2}>
+          <Typography>Tile Size</Typography>
+        </Grid>
+        <Divider />
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <TextField
             label="Width"
             fullWidth
             size="small"
@@ -76,36 +102,16 @@ const TilesetEditorDrawer = () => {
         <Stack direction="column" alignItems="flex-start" spacing={1}>
           <Stack direction="row" alignItems="flex-start" spacing={1}>
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox defaultChecked={true} />}
               labelPlacement="start"
               label="Enabled"
             />
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox defaultChecked={true} />}
               labelPlacement="start"
               label="Restrict To Tile"
             />
           </Stack>
-          <TextField
-            label="Width"
-            fullWidth
-            size="small"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">px</InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            label="Height"
-            fullWidth
-            size="small"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">px</InputAdornment>
-              ),
-            }}
-          />
 
           <TextField label="Line Size" fullWidth size="small" />
           <TextField label="Line Color" fullWidth size="small" />
