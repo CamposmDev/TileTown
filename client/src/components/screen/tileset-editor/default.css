@@ -1,9 +1,21 @@
-.tileset-canvas {
+#tileset-canvas-wrapper {
+  height: 600px;
+  width: 600px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+[class^="tileset-canvas"] {
   max-width: 80%;
   height: 80%;
   image-rendering: crisp-edges;
   border: 1px solid black;
   position: absolute;
-  top: 20%;
-  left: 33%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.tileset-canvas--no-input {
+  pointer-events: none;
 }
