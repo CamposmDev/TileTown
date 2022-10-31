@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import UserDBM from "../../interface/managers/UserDBM";
-import { UserModel, ContestModel, TilemapModel, TilesetModel } from '../schemas'
+import { UserModel, TilemapModel, TilesetModel } from '../schemas'
 import { User } from "../../../types";
 import UserSchemaType from '../types/UserSchemaType';
 
@@ -67,19 +67,7 @@ export default class MongooseUserDBM implements UserDBM {
         return this.parseUser(savedUser);
     }
  
-    async verifyUser(key: string): Promise<boolean> {
-        /**
-         * Acquire user by their verify key and update isVerified to true
-         */
-        let x = await UserModel.findOne({verifyKey: key});
-        if (x) {
-            x.isVerified = true
-            await x.save();
-            return (x.isVerified = true)
-        } else {
-            return false
-        }
-    }
+    
 
     async addFriend(userId: string, friendId: string): Promise<string | null> {
         if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(friendId)) {
@@ -98,37 +86,8 @@ export default class MongooseUserDBM implements UserDBM {
         return null
     }
 
-    async joinContest(userId: string, contestId: string): Promise<string | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(contestId)) {
-            return null;
-        }
+ 
 
-        let user = await UserModel.findById(userId)
-        let contest = await ContestModel.findById(contestId)
-        if ((user !== null) && (contest !== null)) {
-            user.joinedContests.push(contest._id)
-            await user.save()
-            contest.participates.push(user._id)
-            await contest.save()
-            return contestId
-        }
-        return null
-    }
-
-    async favoriteTilemap(userId: string, tilemapId: string): Promise<string | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(tilemapId)) {
-            return null;
-        }
-
-        let user = await UserModel.findById(userId)
-        let tilemap = await TilemapModel.findById(tilemapId)
-        if ((user !== null) && (tilemap !== null)) {
-            user.favoriteTileMaps.push(tilemap._id)
-            await user.save()
-            return tilemap._id.toString()
-        }
-        return null
-    }
 
     async favoriteTileset(userId: string, tilesetId: string): Promise<string | null> {
         if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(tilesetId)) {
@@ -155,39 +114,6 @@ export default class MongooseUserDBM implements UserDBM {
     }
     
 
-
-    async leaveContest(userId: string, contestId: string): Promise<boolean> {
-        let user: any = await UserModel.findById(userId)
-        let contest = await ContestModel.findById(contestId)
-        if ((user !== null) && (contest !== null)) {
-            let i = user.joinedContests.indexOf(contest._id, 0)
-            if (i > -1) {
-                user.joinedContests.splice(i, 1)
-                user.save()
-            }
-            let j = contest.participates.indexOf(user._id, 0)
-            if (j > -1) {
-                contest.participates.splice(j, 1)
-                contest.save()
-            }
-            return true
-        }
-        return false
-    }
-
-    async unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean> {
-        let user: any = await UserModel.findById(userId)
-        let tilemap = await TilemapModel.findById(tilemapId)
-        if ((user !== null) && (tilemap !== null)) {
-            let i = user.favoriteTileMaps.indexOf(tilemap._id, 0)
-            if (i > -1) {
-                user.favoriteTileMaps.splice(i, 1)
-                user.save()
-            }
-            return true
-        }
-        return false
-    }
 
     async unfavoriteTileset(userId: string, tilesetId: string): Promise<boolean> {
         let user: any = await UserModel.findById(userId)
@@ -237,5 +163,7 @@ export default class MongooseUserDBM implements UserDBM {
         user.friends = partial.friends ? partial.friends.map((id: string) => new mongoose.Types.ObjectId(id)) : user.friends;
         user.joinedCommunities = partial.joinedCommunities ? partial.joinedCommunities.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedCommunities;
         user.joinedContests = partial.joinedContests ? partial.joinedContests.map((id: string) => new mongoose.Types.ObjectId(id)) : user.joinedContests;
+        user.tilemaps = partial.tilemaps ? partial.tilemaps.map((id: string) => new mongoose.Types.ObjectId(id)) : user.tilemaps;
+        user.tilesets = partial.tilesets ? partial.tilesets.map((id: string) => new mongoose.Types.ObjectId(id)) : user.tilesets;
     }
 }

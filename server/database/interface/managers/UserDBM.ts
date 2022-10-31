@@ -67,7 +67,7 @@ export default interface UserDBM {
      * @param key the verification key
      * @return true if a users account was verified successfully; false otherwise.
      */
-    verifyUser(key: string): Promise<boolean>;
+    // verifyUser(key: string): Promise<User | null>;
 
     updateUser(id: string, user: Partial<User>): Promise<User | null>
 
@@ -199,7 +199,7 @@ export default interface UserDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, the id of the contest the user was added to in the DBMS; null otherwise.
      */
-    joinContest(userId: string, contestId: string): Promise<string | null>;
+    // joinContest(userId: string, contestId: string): Promise<string | null>;
 
     /**
      * Removes a user given a user id from a contest given a contest id in the DBMS
@@ -214,7 +214,7 @@ export default interface UserDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, true; false otherwise
      */
-    leaveContest(userId: string, contestId: string): Promise<boolean>
+    // leaveContest(userId: string, contestId: string): Promise<boolean>
 
     /**
      * Adds a tilemap with the given tilemap id in the  favorited tilemaps field of the user with the given user id in the DBMS. 
@@ -232,7 +232,7 @@ export default interface UserDBM {
      * @param tilemapId the id of the tilemap in the DBMS
      * @return if successful, the id of the tilemap added to the user's favorited tilemaps; null otherwise.
      */
-    favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
+    // favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
 
     /**
      * Removes a tilemap of a given tilemap id from the user's favorite tilemaps field given a user id in the DBMS
@@ -248,7 +248,7 @@ export default interface UserDBM {
      * @param tilemapId the id of the tilemap in the DBMS
      * @return if successful, true; false otherwise 
      */
-    unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean>
+    // unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean>
 
     /**
      * Adds a tileset with the given id to the favorited tilesets of the user with the given user id in a DBMS. 

@@ -44,6 +44,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         return this.parseTilemap(tilemap);
     }
 
+
     //TODO Move sortBy to regex so it's done on database
     async getTilemapPartials(userName: string, search: string, sortBy: SortBy): Promise<Partial<Tilemap>[] | string> {
         const tilemaps = await TilemapModel.find({
@@ -185,7 +186,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
             renderOrder: <RenderOrder>tilemap.renderOrder,
             tilesets: tilemap.tilesets.map((x) => x.toString()),
             isPublished: tilemap.isPublished,
-            globalTileIDs: tilemap.globalTileIDs,
+            globalTileIDs: tilemap.globalTileIDs
         }
     }
     protected fillTilemapModel(tilemap: TilemapSchemaType & { _id: mongoose.Types.ObjectId }, partial: Partial<Tilemap>): void {

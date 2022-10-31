@@ -179,12 +179,6 @@ export default class TilemapController {
         if (!req.body.tilemap) {
             return res.status(400).json({message: "Missing tilemap data in body"});
         }
-        // The partial tilemap
-        let partialTilemap: Partial<Tilemap> = req.body.tilemap;
-        // Check to see if a tilemap partial was provided and if it was formatted properly
-        if (!partialTilemap || !is<Partial<Tilemap>>(partialTilemap)) {
-            return res.status(400).json({message: "no tilemap data provided"});
-        }
 
         // Verify the user exists in the database
         let user = await db.users.getUserById(req.userId);
@@ -198,8 +192,8 @@ export default class TilemapController {
         }
 
         // If collaborators are specificed - verify they all exist in the database
-        if (partialTilemap.collaborators) {
-            for (let colab of partialTilemap.collaborators) {
+        if (tilemap.collaborators) {
+            for (let colab of tilemap.collaborators) {
                 let user = await db.users.getUserById(colab);
                 if (user === null) {
                     return res.status(404).json({message: "One of the collaborators does not exist"});
@@ -208,8 +202,8 @@ export default class TilemapController {
         }
 
         // If tilemaps are specificed - verify they all exist in the database
-        if (partialTilemap.tilesets) {
-            for (let tileset of partialTilemap.tilesets) {
+        if (tilemap.tilesets) {
+            for (let tileset of tilemap.tilesets) {
                 let user = await db.tilesets.getTilesetById(tileset);
                 if (user === null) {
                     return res.status(404).json({message: "One of the tilesets does not exist"});
@@ -218,7 +212,7 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, partialTilemap);
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, tilemap);
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }
@@ -226,6 +220,73 @@ export default class TilemapController {
         return res.status(200).json({ message: "Updating a tilemap!", tilemap: tilemap});
     }
 
+    public async favoriteTilemapById(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing tilemap id" });
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
+        if (tilemap === null) {
+            return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
+        }
+
+        let tilemapIndex = user.favoriteTileMaps.indexOf(tilemap.id);
+        if (tilemapIndex > -1) {
+            return res.status(400).json({ message: `User ${user.id} has already favorited tilemap ${tilemap.id}`});
+        }
+
+        user.favoriteTileMaps.push(tilemap.id);
+
+        let updatedUser = await db.users.updateUser(user.id, {favoriteTileMaps: user.favoriteTileMaps});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: "Failed to add tilemap to users favorited tilemaps"});
+        }
+
+        return res.status(200).json({ message: "Favorited a tilemap!", user: updatedUser });
+    }
+    public async unfavoriteTilemapById(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing tilemap id" });
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
+        if (tilemap === null) {
+            return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
+        }
+
+        let tilemapIndex = user.favoriteTileMaps.indexOf(tilemap.id);
+        if (tilemapIndex === -1) {
+            return res.status(400).json({ message: `User ${user.id} has already unfavorited tilemap ${tilemap.id}`});
+        }
+
+        user.favoriteTileMaps.splice(tilemapIndex, 1);
+
+        let updatedUser = await db.users.updateUser(user.id, {favoriteTileMaps: user.favoriteTileMaps});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: "Failed to add tilemap to users favorited tilemaps"});
+        }
+        return res.status(200).json({ message: "Favorited a tilemap!", user: updatedUser });
+    }
 
     public async getTilemapSocialById(req: Request, res: Response): Promise<Response> {
         // Check for bad request

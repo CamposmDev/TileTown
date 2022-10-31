@@ -255,27 +255,27 @@ describe("Testing MongooseUserDBM", function() {
             })
         });
 
-        it("Successfully verifies a user", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
+        // it("Successfully verifies a user", async function() {
+        //     let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let verified: boolean = await users.verifyUser("verificationkey");
-            expect(verified).true;
+        //     let verified: boolean = await users.verifyUser("verificationkey");
+        //     expect(verified).true;
 
-            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            verified = user !== null ? user.isVerified : false;
-            expect(verified).true;
-        });
+        //     let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+        //     verified = user !== null ? user.isVerified : false;
+        //     expect(verified).true;
+        // });
 
-        it("Fails to verify a user - no user with matching key", async function() {
-            let users: MongooseUserDBM = new MongooseUserDBM();
+        // it("Fails to verify a user - no user with matching key", async function() {
+        //     let users: MongooseUserDBM = new MongooseUserDBM();
 
-            let verified: boolean = await users.verifyUser("verificionkey");
-            expect(verified).false;
+        //     let verified: boolean = await users.verifyUser("verificionkey");
+        //     expect(verified).false;
 
-            let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
-            verified = user !== null ? user.isVerified : false;
-            expect(verified).false;
-        });
+        //     let user = await UserModel.findOne({email: "peter.t.walsh@stonybrook.edu"});
+        //     verified = user !== null ? user.isVerified : false;
+        //     expect(verified).false;
+        // });
     });
                
     describe("updatePassword", function() {

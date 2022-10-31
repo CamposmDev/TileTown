@@ -28,7 +28,7 @@ export default class UserController {
         res.status(200).json({message: `Found user with id '${id}'!`, user: user});
         return;
     }
-    
+
     public async getUserContests(req: Request, res: Response): Promise<Response> {
         if (!req || !res) {
             return res.status(400).json({message: "Bad Request"});
@@ -88,21 +88,21 @@ export default class UserController {
     }
     public async getUserTilesets(req: Request, res: Response): Promise<Response> {
         if (!res || !req) {
-            return res.status(400)
+            return res.status(400).json({message: "Bad Request"});
         }
         if (!req.userId) {
-            return res.status(404)
+            return res.status(404).json({message: "Missing user id"});
         }
 
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
             return res.status(404).json({message: `User ${req.userId} not found`});
         }
-        let tilesets = await db.tilemaps.getTilemapsById(user.tilesets);
+        let tilesets = await db.tilesets.getTilesetsById(user.tilesets);
         if (tilesets.length === 0) {
-            return res.status(404).json({message: "No tilemaps found"});
+            return res.status(404).json({message: "No tilesets found"});
         }
-        return res.status(200).json({message: "Got user tilemaps", tilemaps: tilesets});
+        return res.status(200).json({message: "Got user tilesets", tilemaps: tilesets});
     }
 
     public async createUser(req: Request, res: Response): Promise<void> {

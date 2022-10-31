@@ -25,8 +25,6 @@ export default class MongooseContestDBM implements ContestDBM {
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
-
-
     async createContest(partial: Partial<Contest> & {owner: string, name: string}): Promise<Contest | null> {
         if (!mongoose.Types.ObjectId.isValid(partial.owner)) { return null; }
 
@@ -61,7 +59,7 @@ export default class MongooseContestDBM implements ContestDBM {
         return this.parseContest(contest);
     }
 
-    
+
     protected parseContest(contest: ContestSchemaType & { _id: mongoose.Types.ObjectId}): Contest { 
         return {
             id: contest._id.toString(),

@@ -36,6 +36,11 @@ export default class CommunityController {
             return res.status(400).json({ message: "Missing community name" });
         }
 
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+
         let existingCommunity = await db.communities.getCommunityByName(req.body.community.name);
         if (existingCommunity !== null) {
             return res.status(400).json({ message: `Community with name "${req.body.community.name}" already exists` });
@@ -43,6 +48,18 @@ export default class CommunityController {
         let community = await db.communities.createCommunity({ owner: req.userId, ...req.body.community });
         if (community === null) {
             return res.status(500).json({ message: "Server Error. Failed to create community" });
+        }
+
+        user.joinedCommunities.push(community.id);
+        community.members.push(user.id);
+
+        let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: "Error updating users joined communities"});
+        }
+        let updatedCommunity = await db.communities.updateCommunity(updatedUser.id, {members: community.members});
+        if (updatedCommunity === null) {
+            return res.status(500).json({ message: "Error updating communities members"});
         }
 
         return res.status(201).json({ message: "Community created!", community: community })
