@@ -89,7 +89,7 @@ export default interface UserDBM {
      * @param newPassword the user's updated hashed password
      * @return the user's new hashed password if the user's password was updated successfully; null otherwise
      */
-    updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null>;
+    // updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null>;
 
     /**
      * Updates the email address of the user with the given user id in a DBMS to the given email address.
@@ -107,7 +107,7 @@ export default interface UserDBM {
      * @param email the email address to update the user's email address to
      * @return if successful, the user's updated email address in the DBMS; null otherwise
      */
-    updateEmail(userId: string, email: string): Promise<string | null>;
+    // updateEmail(userId: string, email: string): Promise<string | null>;
 
     /**
      * Updates the username of the user with the given user id in a DBMS to the given username. 
@@ -125,7 +125,7 @@ export default interface UserDBM {
      * @param username the user's new username 
      * @return if successful, the user's updated username in the DBMS; null otherwise.
      */
-    updateUsername(userId: string, username: string): Promise<string | null>;
+    // updateUsername(userId: string, username: string): Promise<string | null>;
 
     /**
      * Adds a user with the given friend id as a friend of of a user with the given user id in a DBMS.
