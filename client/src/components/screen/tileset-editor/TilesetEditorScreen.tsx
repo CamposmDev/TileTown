@@ -80,7 +80,7 @@ const TilesetEditorScreen = () => {
           <Grid item>
             <Stack direction={"row"} spacing={1}>
               <DeleteTileItemButton name='this tileset'/>
-              <PublishTileItemButton name='thistileset'/>
+              <PublishTileItemButton name='this tileset'/>
               {/* <Button startIcon={<Delete />} color="error">
                 Delete
               </Button>
