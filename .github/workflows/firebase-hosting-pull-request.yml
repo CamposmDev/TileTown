@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: | 
-          npm --prefix client ci
+          npm --prefix client install
           npm --prefix client run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
