@@ -15,6 +15,11 @@ export default class MongooseContestDBM implements ContestDBM {
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
+    async getContestsById(contestIds: string[]): Promise<Contest[]> {
+        if (!contestIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return []; }
+        let contests = await ContestModel.find({_id: { $in: contestIds }});
+        return contests.map(contest=> this.parseContest(contest));
+    }
     async getContestByName(name: string): Promise<Contest | null> {
         let contest = await ContestModel.findOne({name: name});
         if (contest === null) { return null; }
@@ -53,6 +58,7 @@ export default class MongooseContestDBM implements ContestDBM {
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
+
 
     protected parseContest(contest: ContestSchemaType & { _id: mongoose.Types.ObjectId}): Contest { 
         return {

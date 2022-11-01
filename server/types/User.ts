@@ -24,6 +24,10 @@ export default interface User {
     /** A string URL to the user's profile picture */
     imageURL: string
 
+    tilemaps: string[];
+
+    tilesets: string[];
+
     /** A list of tilemap ids in the DBMS the user has favorited */
     favoriteTileMaps: string[],
 

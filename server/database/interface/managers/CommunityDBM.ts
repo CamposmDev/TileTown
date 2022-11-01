@@ -21,6 +21,8 @@ export default interface CommunityDBM {
   getCommunityById(communityId: string): Promise<Community | null>;
   getCommunityByName(name: string): Promise<Community | null>
 
+  getCommunitiesById(communityIds: string[]): Promise<Community[]>;
+
   /**
    * Creates in a new community in the DBMS according to the given partial Community object.
    *

@@ -67,7 +67,7 @@ export default interface UserDBM {
      * @param key the verification key
      * @return true if a users account was verified successfully; false otherwise.
      */
-    verifyUser(key: string): Promise<boolean>;
+    // verifyUser(key: string): Promise<User | null>;
 
     updateUser(id: string, user: Partial<User>): Promise<User | null>
 
@@ -89,7 +89,7 @@ export default interface UserDBM {
      * @param newPassword the user's updated hashed password
      * @return the user's new hashed password if the user's password was updated successfully; null otherwise
      */
-    updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null>;
+    // updatePassword(userId: string, oldPassword: string, newPassword: string): Promise<string | null>;
 
     /**
      * Updates the email address of the user with the given user id in a DBMS to the given email address.
@@ -107,7 +107,7 @@ export default interface UserDBM {
      * @param email the email address to update the user's email address to
      * @return if successful, the user's updated email address in the DBMS; null otherwise
      */
-    updateEmail(userId: string, email: string): Promise<string | null>;
+    // updateEmail(userId: string, email: string): Promise<string | null>;
 
     /**
      * Updates the username of the user with the given user id in a DBMS to the given username. 
@@ -125,7 +125,7 @@ export default interface UserDBM {
      * @param username the user's new username 
      * @return if successful, the user's updated username in the DBMS; null otherwise.
      */
-    updateUsername(userId: string, username: string): Promise<string | null>;
+    // updateUsername(userId: string, username: string): Promise<string | null>;
 
     /**
      * Adds a user with the given friend id as a friend of of a user with the given user id in a DBMS.
@@ -199,7 +199,7 @@ export default interface UserDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, the id of the contest the user was added to in the DBMS; null otherwise.
      */
-    joinContest(userId: string, contestId: string): Promise<string | null>;
+    // joinContest(userId: string, contestId: string): Promise<string | null>;
 
     /**
      * Removes a user given a user id from a contest given a contest id in the DBMS
@@ -214,7 +214,7 @@ export default interface UserDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, true; false otherwise
      */
-    leaveContest(userId: string, contestId: string): Promise<boolean>
+    // leaveContest(userId: string, contestId: string): Promise<boolean>
 
     /**
      * Adds a tilemap with the given tilemap id in the  favorited tilemaps field of the user with the given user id in the DBMS. 
@@ -232,7 +232,7 @@ export default interface UserDBM {
      * @param tilemapId the id of the tilemap in the DBMS
      * @return if successful, the id of the tilemap added to the user's favorited tilemaps; null otherwise.
      */
-    favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
+    // favoriteTilemap(userId: string, tilemapId: string): Promise<string | null>;
 
     /**
      * Removes a tilemap of a given tilemap id from the user's favorite tilemaps field given a user id in the DBMS
@@ -248,7 +248,7 @@ export default interface UserDBM {
      * @param tilemapId the id of the tilemap in the DBMS
      * @return if successful, true; false otherwise 
      */
-    unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean>
+    // unfavoriteTilemap(userId: string, tilemapId: string): Promise<boolean>
 
     /**
      * Adds a tileset with the given id to the favorited tilesets of the user with the given user id in a DBMS. 
