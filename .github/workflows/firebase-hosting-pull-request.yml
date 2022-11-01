@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: | 
-          npm  --prefix client install
-          npm CI="" --prefix client run build
+      - run: npm --prefix client install
+      - run: npm --prefix client CI="" run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
