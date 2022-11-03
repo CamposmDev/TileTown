@@ -14,6 +14,9 @@ export default class AxiosUserApi  {
     async login(payload: LoginReq): Promise<AxiosResponse<LoginRes>> {
         return AxiosApi.post<LoginRes, AxiosResponse<LoginRes>, LoginReq>("/api/user/login", payload);
     }
+    async getLoggedIn(): Promise<AxiosResponse<{user: User, message: string}>> {
+        return AxiosApi.get<{user: User, message: string}>("")
+    }
     async logout(): Promise<AxiosResponse<LogoutRes>> {
         return AxiosApi.post<LogoutRes, AxiosResponse<LogoutRes>, LogoutReq>("/api/user/logout");
     }

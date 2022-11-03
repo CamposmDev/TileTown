@@ -9,12 +9,14 @@ export type AuthAction =
 | ChangeEmail
 | DisplayErrorModal
 | ClearErrorModal
+| GetLoggedIn
 
 
 export enum AuthActionType {
     registerUser = "REGISTER",
     loginUser = "LOGIN_USER",
     logoutUser = "LOGOUT_USER",
+    getLoggedIn = "GET_LOGGED_IN",
 
     changeUsername = "CHANGE_USERNAME",
     changePassword = "CHANGE_PASSWORD",
@@ -24,6 +26,13 @@ export enum AuthActionType {
     clearError = "CLEAR_ERROR"
 }
 
+export type GetLoggedIn = {
+    type: AuthActionType.getLoggedIn,
+    payload: {
+        message: string,
+        user: User
+    }
+}
 
 export type RegisterUser = {
     type: AuthActionType.registerUser,
