@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../../database';
-import { ForumPost } from '../../types';
+import { ForumPost } from '@types';
 
 export default class ForumController {
 

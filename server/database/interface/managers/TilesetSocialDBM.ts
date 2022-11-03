@@ -1,4 +1,4 @@
-import TilesetSocial from "../../../types/TilesetSocial";
+import { TilesetSocial } from "@types";
 
 export default interface TilesetSocialDBM {
 

@@ -6,7 +6,7 @@ import { expect } from "chai";
 import { UserModel } from "../../database/mongoose/schemas";
 import { TilesetModel } from "../../database/mongoose/schemas";
 import { Auth } from "../../express/middleware";
-import { Tileset } from "../../types";
+import { Tileset } from "@types";
 import { TilesetSchemaType } from "../../database/mongoose/types";
 import mongoose from "mongoose";
 

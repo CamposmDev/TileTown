@@ -13,7 +13,7 @@ import {
     EditMode,
     Orientation,
     RenderOrder,
-} from "../../../types";
+} from "@types";
 
 import { TilemapModel, UserModel, CommentModel, TilemapSocialModel } from "../schemas";
 import { TilemapDBM } from "../../interface";

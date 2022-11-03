@@ -6,7 +6,7 @@ import { app } from '../../express';
 
 import { UserModel } from "../../database/mongoose/schemas";
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
+import { User } from "@types";
 import dotenv from "dotenv";
 import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
 import { CommunityModel } from '../../database/mongoose/schemas';
