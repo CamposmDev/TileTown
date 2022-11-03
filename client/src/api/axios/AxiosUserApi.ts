@@ -20,11 +20,9 @@ export default class AxiosUserApi  {
     async delete(): Promise<AxiosResponse<DeleteRes>> {
         return AxiosApi.delete<DeleteRes, AxiosResponse<DeleteRes>, DeleteReq>("/api/user");
     }
-
     async tilemaps(): Promise<AxiosResponse<GetTilemapsRes>> {
         return AxiosApi.get<GetTilemapsRes, AxiosResponse<GetTilemapsRes>, GetTilemapsReq>("/api/user/tilemaps");
     }
-
 }
 
 

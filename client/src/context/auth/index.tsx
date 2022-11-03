@@ -1,12 +1,31 @@
+import { User } from "@types";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { AuthStore, AuthState } from "./AuthStore";
 
+const DefaultUser = {
+    id: "",
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    imageURL: "",
+    tilemaps: [],
+    tilesets: [],
+    favoriteTileMaps: [],
+    favoriteTileSets: [],
+    friends: [],
+    isVerified: false,
+    verifyKey: "",
+    joinedCommunities: [],
+    joinedContests: []
+}
 
 /** 
  * The auth context 
  */
-const AuthContext = createContext<AuthStore>(new AuthStore({email: "", username: ""}, () => {}, () => {}))
+const AuthContext = createContext<AuthStore>(new AuthStore({usr: DefaultUser, msg: ""}, () => {}, () => {}));
 
 /**
  * The auth context provider. 
@@ -14,7 +33,7 @@ const AuthContext = createContext<AuthStore>(new AuthStore({email: "", username:
 function AuthContextProvider(props: Record<string, any>) {
 
     // The state of the auth context
-    const [auth, setAuth] = useState<AuthState>({email: "", username: ""});
+    const [auth, setAuth] = useState<AuthState>({usr: DefaultUser, msg: ""});
 
     // The navigation for the auth context???
     const nav = useNavigate();

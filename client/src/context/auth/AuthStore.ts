@@ -1,23 +1,19 @@
+import { User } from '@types';
 import { NavigateFunction } from 'react-router';
+import { UserApi } from "../../api/";
+
+import { 
+    AuthActionType, AuthAction, RegisterUser, LoginUser, 
+    LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
+    DisplayErrorModal, ClearErrorModal
+} from "./AuthAction"; 
 
 /**
  * The type of the AuthStore's state variable. For now it just has some dummy data I used to test if it worked
  */
 export interface AuthState {
-    username: string;
-    email: string;
-}
-
-/**
- * The types of actions/events the auth store needs to handle.
- */
-export enum AuthActionType {
-    SET_LOGGED_IN = "SET_LOGGED_IN",
-    REGISTER_USER = "REGISTER",
-    LOGIN_USER = "LOGIN_USER",
-    LOGOUT_USER = "LOGOUT_USER",
-    DISPLAY_ERROR_MESSAGE = "DISPLAY_ERROR_MESSAGE",
-    CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE"
+    usr: User | null,
+    msg: string | null
 }
 
 /**
@@ -26,24 +22,46 @@ export enum AuthActionType {
  */
 export class AuthStore {
 
-    private readonly _state: AuthState;
-    private readonly setAuth: (auth: AuthState) => void;
+    private readonly _auth: AuthState;
+    private readonly _setAuth: (auth: AuthState) => void;
     private readonly nav: NavigateFunction;
 
     constructor(auth: AuthState, setAuth: (state: AuthState) => void, nav: NavigateFunction) {
-        this._state = auth;
-        this.setAuth = setAuth;
+        this._auth = auth;
+        this._setAuth = setAuth;
         this.nav = nav;
     }
 
-    public get state(): AuthState { return this._state; }
+    public get auth(): AuthState { return this._auth; }
+    public get setAuth(): (auth: AuthState) => void { return this._setAuth; }
 
-    public async loginUser(): Promise<void> { 
-        this.handleAction(AuthActionType.LOGIN_USER, {});
+    public async loginUser(email: string, password: string): Promise<void> { 
+        let res = UserApi.login({email: email, password: password});
+        res.then((res) => {
+            if (res.status === 200 && res.data.user) {
+                this.handleAction({
+                    type: AuthActionType.loginUser,
+                    payload: {
+                        user: res.data.user,
+                        message: res.data.message
+                    }
+                })
+            }
+        });
     }
 
     public async logoutUser(): Promise<void> { 
-        this.handleAction(AuthActionType.LOGOUT_USER, {});
+        let res = UserApi.logout();
+        res.then((res) => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: AuthActionType.logoutUser,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        });
     }
 
     public async getLoggedIn(): Promise<void> { 
@@ -51,7 +69,7 @@ export class AuthStore {
     }
 
     public async registerUser(data: Record<string, any>): Promise<void> { 
-        this.handleAction(AuthActionType.REGISTER_USER, {});
+        
     }
 
     /**
@@ -59,22 +77,38 @@ export class AuthStore {
      * @param action the type of the action
      * @param payload the data associated with the action
      */
-    protected handleAction(action: AuthActionType, payload: Record<string, any>): void {
-        switch(action) {
-            case AuthActionType.REGISTER_USER: {
-                this.handleRegisterUser(payload);
+    protected handleAction(action: AuthAction): void {
+        switch(action.type) {
+            case AuthActionType.registerUser: {
+                this.handleRegisterUser(action);
                 break;
             }
-            case AuthActionType.LOGIN_USER: {
-                this.handleLoginUser(payload);
+            case AuthActionType.loginUser: {
+                this.handleLoginUser(action);
                 break;
             }
-            case AuthActionType.LOGOUT_USER: {
-                this.handleLogoutUser(payload);
+            case AuthActionType.logoutUser: {
+                this.handleLogoutUser(action);
                 break;
             }
-            case AuthActionType.SET_LOGGED_IN: {
-                this.handleSetLogin(payload);
+            case AuthActionType.changePassword: {
+                this.handleChangePassword(action);
+                break;
+            }
+            case AuthActionType.changeUsername: {
+                this.handleChangeUsername(action);
+                break;
+            }
+            case AuthActionType.changeEmail: {
+                this.handleChangeEmail(action);
+                break;
+            }
+            case AuthActionType.displayError: {
+                this.handleDisplayError(action);
+                break;
+            }
+            case AuthActionType.clearError: {
+                this.handleClearError(action);
                 break;
             }
             default: { 
@@ -83,26 +117,48 @@ export class AuthStore {
         }
     }
 
-    protected handleRegisterUser(payload: Record<string, any>): void {
+    protected handleRegisterUser(action: RegisterUser): void {
         this.setAuth({
-            email: "peter.t.walsh@stonybrook.edu",
-            username: "peteylumpkins"
+            usr: null,
+            msg: action.payload.message
         });
     }
-
-    protected handleLoginUser(payload: Record<string, any>): void {
+    protected handleLoginUser(action: LoginUser): void {
         this.setAuth({
-            email: "peteylumpkins@gmail.com", 
-            username: "peter"
+            usr: action.payload.user,
+            msg: action.payload.message
+        })
+    }
+    protected handleLogoutUser(action: LogoutUser): void {
+        this.setAuth({
+            usr: null, 
+            msg: action.payload.message
         });
     }
-
-    protected handleLogoutUser(payload: Record<string, any>): void {
+    protected handleChangePassword(action: ChangePassword): void {
         this.setAuth({
-            email: "dummy@example.com", 
-            username: "dummy user name or something?"
+            usr: this._auth.usr, 
+            msg: action.payload.message
         });
-    }
+    };
+    protected handleChangeUsername(action: ChangeUsername): void {
+        if (this._auth.usr !== null) {
+            this.setAuth({
+                usr: {...this._auth.usr, username: action.payload.username}, 
+                msg: action.payload.message
+            });
+        }
+    };
+    protected handleChangeEmail(action: ChangeEmail): void {
+        if (this._auth.usr !== null) {
+            this._setAuth({
+                usr: {...this._auth.usr, email: action.payload.email},
+                msg: action.payload.message
+            });
+        }
+    };
+    protected handleDisplayError(payload: DisplayErrorModal): void {
 
-    protected handleSetLogin(payload: Record<string, any>): void {}
+    }
+    protected handleClearError(payload: ClearErrorModal): void {}
 }
