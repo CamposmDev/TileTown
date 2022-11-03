@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+        "@types": ["../@types"],
+        "@responses/*": ["../@responses/*"],
+        "@requests/*": ["../@requests/*"]
+    },
     "target": "es6",
     "lib": [
       "es6",
@@ -23,5 +29,5 @@
   },
   "include": [
     "src"
-  ],
+, "../@requests", "../@responses"  ]
 }
