@@ -1,4 +1,4 @@
-import { TilemapSocial } from "../../../types";
+import { TilemapSocial } from "@types";
 
 export default interface TilemapSocialDBM {
 

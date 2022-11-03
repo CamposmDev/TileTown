@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { db } from "../../database";
-import { SortBy, Tilemap } from "../../types";
+import { SortBy, Tilemap } from "@types";
 import { is } from "typescript-is";
 
 export default class TilemapController {
@@ -57,11 +57,11 @@ export default class TilemapController {
         const sortBy: SortBy = req.body.sortBy;
 
         //check to see if body has a sort by string and if it was formatted as a SortBy
-        if (!sortBy || !is<SortBy>(SortBy)) {
-            return res.status(400).json({
-                errorMessage: "No sortBy string provided",
-            });
-        }
+        // if (!sortBy || !is<SortBy>(SortBy)) {
+        //     return res.status(400).json({
+        //         errorMessage: "No sortBy string provided",
+        //     });
+        // }
 
         const response: Partial<Tilemap>[] | string =
             await db.tilemaps.getTilemapPartials(userId, search, sortBy);

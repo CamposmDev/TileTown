@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import Tileset from "../../../types/Tileset";
-import { TilesetSocial, SocialStatisticsPermissions } from "../../../types";
+import { Tileset, TilesetSocial } from "@types";
 import TilesetSocialDBM from "../../interface/managers/TilesetSocialDBM";
 import { TilesetSocialModel } from "../schemas/TilesetSocialModel";
 import TilesetSocialSchemaType from "../types/TilesetSocialSchemaType";

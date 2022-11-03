@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { log } from 'npmlog';
-import { User } from '../../types';
+import { User } from '@types';
 import { db } from '../../database';
 import { HashingUtils } from "../../util";
 import { Auth } from '../middleware';
@@ -27,6 +27,20 @@ export default class UserController {
         /** Otherwise return all the data about the user back to the client */
         res.status(200).json({message: `Found user with id '${id}'!`, user: user});
         return;
+    }
+    public async getLoggedIn(req: Request, res: Response): Promise<Response> {
+        if (!req || !res) {
+            return res.status(400).json({message: "Bad request"});
+        }
+        if (req.userId) {
+            return res.status(400).json({message: "Missign user id"});
+        }
+
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({message: "No user found"});
+        }
+        return res.status(200).json({message: "User is logged in"})
     }
 
     public async getUserContests(req: Request, res: Response): Promise<Response> {

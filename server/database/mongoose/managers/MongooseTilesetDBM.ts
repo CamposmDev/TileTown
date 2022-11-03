@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { Tileset, SortBy } from "../../../types";
+import { Tileset, SortBy } from "@types";
 import { TilesetDBM } from "../../interface";
 import { TilesetModel } from "../schemas";
 import { TilesetSchemaType, PropertySchemaType } from "../types";
@@ -40,32 +40,32 @@ export default class MongooseTilesetDBM implements TilesetDBM {
                 }
                 //TODO Figure out a better workaround this type checking
                 //Possibly move to controller or database query
-                switch (sortBy) {
-                    case SortBy.Newest: {
-                        partials.sort(function (a, b) {
-                            if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
-                            if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
-                            if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
-                            let aDate: any = new Date(<string>a.lastSaveDate?.toString());
-                            let bDate: any = new Date(<string>b.lastSaveDate?.toString());
-                            return <any>bDate - <any>aDate;
-                        });
-                        break;
-                    }
-                    case SortBy.Oldest: {
-                        partials.sort(function (a, b) {
-                            if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
-                            if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
-                            if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
-                            let aDate: any = new Date(<string>a.lastSaveDate?.toString());
-                            let bDate: any = new Date(<string>b.lastSaveDate?.toString());
-                            return <any>aDate - <any>bDate;
-                        });
-                        break;
-                    }
-                    default:
-                        break;
-                }
+                // switch (sortBy) {
+                //     case SortBy.Newest: {
+                //         partials.sort(function (a, b) {
+                //             if (a.lastSaveDate === null && b.lastSaveDate !== null) return -1;
+                //             if (b.lastSaveDate === null && a.lastSaveDate !== null) return 1;
+                //             if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+                //             let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+                //             let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+                //             return <any>bDate - <any>aDate;
+                //         });
+                //         break;
+                //     }
+                //     case SortBy.Oldest: {
+                //         partials.sort(function (a, b) {
+                //             if (a.lastSaveDate === null && b.lastSaveDate !== null) return 1;
+                //             if (b.lastSaveDate === null && a.lastSaveDate !== null) return -1;
+                //             if (a.lastSaveDate === null && b.lastSaveDate === null) return 0;
+                //             let aDate: any = new Date(<string>a.lastSaveDate?.toString());
+                //             let bDate: any = new Date(<string>b.lastSaveDate?.toString());
+                //             return <any>aDate - <any>bDate;
+                //         });
+                //         break;
+                //     }
+                //     default:
+                //         break;
+                // }
                 return partials;
             }
         );

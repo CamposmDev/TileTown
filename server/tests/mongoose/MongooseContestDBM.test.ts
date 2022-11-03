@@ -4,7 +4,7 @@ import mongoose, { mongo } from 'mongoose';
 
 import { UserModel, ContestModel } from '../../database/mongoose/schemas/';
 import { MongooseContestDBM } from '../../database/mongoose/managers';
-import { Contest } from '../../types';
+// import { Contest } from '../../../types/index';
 
 /** 
  * A mocha testing suite for the MongooseCommunityDBM. I have linked the official documentation below.

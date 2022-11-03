@@ -21,8 +21,11 @@ import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvas from "./TilesetCanvas";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
+import { useContext } from "react";
+import { TilesetEditContext } from "../../../context/tilesetEditor";
 
 const TilesetEditorScreen = () => {
+  const edit = useContext(TilesetEditContext);
   return (
     <Grid alignItems="center">
       <Toolbar sx={{ boxShadow: 1 }} variant="dense">
@@ -79,8 +82,8 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name='this tileset'/>
-              <PublishTileItemButton name='this tileset'/>
+              <DeleteTileItemButton name="this tileset" />
+              <PublishTileItemButton name="this tileset" />
               {/* <Button startIcon={<Delete />} color="error">
                 Delete
               </Button>

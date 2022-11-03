@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import CommentDBM from "../../interface/managers/CommentDBM";
-import { Comment } from "../../../types";
+import { Comment } from "@types";
 import { CommentModel } from '../schemas';
 import { CommentSchemaType } from '../types/index';
 

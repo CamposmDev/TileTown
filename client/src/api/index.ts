@@ -1,6 +1,7 @@
 import { Http } from "@mui/icons-material";
 import axios from "axios";
 import { pid } from "process";
+import AxiosUserApi from "./axios/AxiosUserApi";
 axios.defaults.withCredentials = true
 
 const api = axios.create({
@@ -16,6 +17,9 @@ const apis = {
     loginUser,
     logoutUser
 }
+
+const UserApi = new AxiosUserApi();
+export { UserApi }
 
 
 export default apis

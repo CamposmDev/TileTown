@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { is } from "typescript-is";
 import { db } from "../../database";
-import { SortBy, Tileset } from "../../types";
+import { SortBy, Tileset } from "@types";
 
 
 export default class TilesetController {
@@ -160,11 +160,11 @@ export default class TilesetController {
         const sortBy: SortBy = req.body.sortBy;
 
         //check to see if body has a sort by string and if it was formatted as a SortBy
-        if (!sortBy || !is<SortBy>(SortBy)) {
-            return res.status(400).json({
-                errorMessage: "No sortBy string provided",
-            });
-        }
+        // if (!sortBy || !is<SortBy>(SortBy)) {
+        //     return res.status(400).json({
+        //         errorMessage: "No sortBy string provided",
+        //     });
+        // }
 
         const response: [Partial<Tileset>] | string =
             await db.tilesets.getTilesetPartials(userId, search, sortBy);

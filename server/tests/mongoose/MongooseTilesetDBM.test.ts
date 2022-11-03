@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import { TilesetModel, UserModel } from "../../database/mongoose/schemas";
 import { MongooseTilesetDBM } from "../../database/mongoose/managers";
-import { Tileset } from '../../types';
+import { Tileset } from '@types';
 import { TilesetSchemaType } from '../../database/mongoose/types';
 
 

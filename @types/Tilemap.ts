@@ -1,6 +1,5 @@
 import Property from "./Properties";
 import Layer from "./Layer";
-import Tileset from "./Tileset";
 import { Color } from "./Color";
 
 export type Orientation =

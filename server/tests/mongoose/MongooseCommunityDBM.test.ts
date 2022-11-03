@@ -7,10 +7,8 @@ import { UserModel } from "../../database/mongoose/schemas"
 import { CommunityModel } from '../../database/mongoose/schemas';
 import { MongooseCommunityDBM } from '../../database/mongoose/managers';
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
 import dotenv from "dotenv";
 import UserSchemaType from '../../database/mongoose/types/UserSchemaType';
-import { Community } from '../../types';
 
 
 /** 

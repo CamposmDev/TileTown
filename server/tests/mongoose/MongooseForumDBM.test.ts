@@ -4,10 +4,10 @@ import mongoose from 'mongoose';
 
 import { UserModel, ForumPostModel } from '../../database/mongoose/schemas';
 import MongooseUserDBM from "../../database/mongoose/managers/MongooseUserDBM";
-import User from "../../types/User";
+import { User }  from "@types";
 import dotenv from "dotenv";
 import { MongooseForumDBM } from '../../database/mongoose/managers';
-import { ForumPost } from '../../types';
+import { ForumPost } from '@types';
 
 /** Config the env variables */
 dotenv.config()
