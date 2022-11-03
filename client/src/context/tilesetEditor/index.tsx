@@ -1,10 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  TilesetEditorState,
   TilesetEditControl,
   TilesetEditorModalType,
-  TilesetEditorState,
-} from "@types";
+} from "./TilesetEditTypes";
 import { TilesetEditStore } from "./TilesetEditStore";
 
 /**

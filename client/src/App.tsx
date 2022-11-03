@@ -18,9 +18,7 @@ import { SearchCategory } from "./components/util/Constants";
 import ModalTester from "./components/ModalTester";
 import UserProfileScreen from "./components/screen/UserProfileScreen";
 import CommunityProfileScreen from "./components/screen/CommunityProfileScreen";
-import TilesetEditorStoreContext, {
-  TilesetEditorStoreContextProvider,
-} from "./context/tilesetEditor";
+import { TilesetEditContextProvider } from "./context/tilesetEditor";
 
 import { AuthContextProvider } from "./context/auth";
 
@@ -107,9 +105,9 @@ const App = () => {
           <Route
             path="/create/tileset"
             element={
-              <TilesetEditorStoreContextProvider>
+              <TilesetEditContextProvider>
                 <TilesetEditorScreen />
-              </TilesetEditorStoreContextProvider>
+              </TilesetEditContextProvider>
             }
           />
           <Route path="/create/tilemap" element={<TilemapEditorScreen />} />

@@ -8,7 +8,7 @@ import {
   TilesetEditorModalType,
   TilesetEditorActionType,
   TilesetEditorAction,
-} from "@types";
+} from "./TilesetEditTypes";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
