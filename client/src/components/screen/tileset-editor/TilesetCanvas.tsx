@@ -157,6 +157,8 @@ const TilesetCanvas = () => {
         canvas
       );
       context.beginPath();
+      context.strokeStyle = penColor;
+      context.lineWidth = penSize;
       context.moveTo(canvasCoords.x, canvasCoords.y);
       context.lineTo(canvasCoords.x, canvasCoords.y);
       setIsDrawing(true);
