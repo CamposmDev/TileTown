@@ -25,7 +25,7 @@ const DefaultUser = {
 /** 
  * The auth context 
  */
-const AuthContext = createContext<AuthStore>(new AuthStore({usr: DefaultUser, msg: ""}, () => {}, () => {}));
+const AuthContext = createContext<AuthStore>(new AuthStore({usr: DefaultUser, msg: "", loggedIn: false}, () => {}, () => {}));
 
 /**
  * The auth context provider. 
@@ -33,7 +33,7 @@ const AuthContext = createContext<AuthStore>(new AuthStore({usr: DefaultUser, ms
 function AuthContextProvider(props: Record<string, any>) {
 
     // The state of the auth context
-    const [auth, setAuth] = useState<AuthState>({usr: DefaultUser, msg: ""});
+    const [auth, setAuth] = useState<AuthState>({usr: DefaultUser, msg: "", loggedIn: false});
 
     // The navigation for the auth context???
     const nav = useNavigate();
