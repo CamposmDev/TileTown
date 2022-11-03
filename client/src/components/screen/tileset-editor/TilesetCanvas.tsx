@@ -55,7 +55,7 @@ const TilesetCanvas = () => {
         const scaleX = rectWidth / imageWidth;
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
-        contextRef.current = ctx;
+        gridContextRef.current = ctx;
 
         //draw vertical lines of grid
         if (gridEnabled) {
@@ -88,6 +88,7 @@ const TilesetCanvas = () => {
         const rectWidth = canvas.width;
         const scaleY = rectHeight / imageHeight;
         const scaleX = rectWidth / imageWidth;
+        contextRef.current = ctx;
         let tilesetImage: HTMLImageElement = new Image();
         tilesetImage.src = "/leve1and2tileset.png";
         tilesetImage.onload = () => {
@@ -98,19 +99,25 @@ const TilesetCanvas = () => {
   }, []);
 
   const onMouseDown = ({ nativeEvent }: any) => {
-    switch (currentEditControl) {
-      case TilesetEditControl.draw: {
-        startDrawing({ nativeEvent });
-        break;
+    if (contextRef.current) {
+      const context: CanvasRenderingContext2D = contextRef.current;
+      switch (currentEditControl) {
+        case TilesetEditControl.draw: {
+          context.globalCompositeOperation = "source-over";
+          startDrawing({ nativeEvent });
+          break;
+        }
+        case TilesetEditControl.erase: {
+          context.globalCompositeOperation = "destination-out";
+          startDrawing({ nativeEvent });
+          break;
+        }
+        case TilesetEditControl.fill: {
+          break;
+        }
+        default:
+          break;
       }
-      case TilesetEditControl.erase: {
-        break;
-      }
-      case TilesetEditControl.fill: {
-        break;
-      }
-      default:
-        break;
     }
   };
 
@@ -121,6 +128,7 @@ const TilesetCanvas = () => {
         break;
       }
       case TilesetEditControl.erase: {
+        draw({ nativeEvent });
         break;
       }
       case TilesetEditControl.fill: {
@@ -138,6 +146,7 @@ const TilesetCanvas = () => {
         break;
       }
       case TilesetEditControl.erase: {
+        finishDrawing();
         break;
       }
       case TilesetEditControl.fill: {
