@@ -1,18 +1,37 @@
 import { Grid } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import { TilesetEditContext } from "../../../context/tilesetEditor";
+import {
+  TilesetEditControl,
+  Color,
+} from "src/context/tilesetEditor/TilesetEditTypes";
 import "./default.css";
 
 const TilesetCanvas = () => {
+  //tileset edit store context
+  const edit = useContext(TilesetEditContext);
+
+  //canvas refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
-  const [restrictToGrid, setRestrictToGrd] = useState<boolean>(true);
+
+  //canvas state variables
+  // const [restrictToTile, setRestrictToTile] = useState<boolean>(true);
   const [currentTile, setCurrentTile] = useState<{
     x: number | null;
     y: number | null;
   }>({ x: null, y: null });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+
+  const currentEditControl = edit.state.currentEditControl;
+  const penColor = edit.state.penColor;
+  const penSize = edit.state.penSize;
+  const restrictToTile = edit.state.restrictToTile;
+  const gridEnabled = edit.state.gridEnabled;
+  const gridColor = edit.state.gridColor;
+  const gridSize = edit.state.gridSize;
 
   const tileHeight: number = 32;
   const tileWidth: number = 32;
@@ -39,18 +58,24 @@ const TilesetCanvas = () => {
         contextRef.current = ctx;
 
         //draw vertical lines of grid
-        for (let i = scaledTileHeight; i < rectHeight; i += scaledTileHeight) {
-          ctx.moveTo(0, i);
-          ctx.lineTo(rectWidth, i);
+        if (gridEnabled) {
+          for (
+            let i = scaledTileHeight;
+            i < rectHeight;
+            i += scaledTileHeight
+          ) {
+            ctx.moveTo(0, i);
+            ctx.lineTo(rectWidth, i);
+          }
+          //draw horizontal lines of grid
+          for (let i = scaledTileWidth; i < rectWidth; i += scaledTileWidth) {
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, rectHeight);
+          }
+          ctx.strokeStyle = gridColor;
+          ctx.stroke();
+          ctx.closePath();
         }
-        //draw horizontal lines of grid
-        for (let i = scaledTileWidth; i < rectWidth; i += scaledTileWidth) {
-          ctx.moveTo(i, 0);
-          ctx.lineTo(i, rectHeight);
-        }
-        ctx.strokeStyle = "#000000";
-        ctx.stroke();
-        ctx.closePath();
       }
     }
     if (canvasRef.current) {
@@ -71,6 +96,57 @@ const TilesetCanvas = () => {
       }
     }
   }, []);
+
+  const onMouseDown = ({ nativeEvent }: any) => {
+    switch (currentEditControl) {
+      case TilesetEditControl.draw: {
+        startDrawing({ nativeEvent });
+        break;
+      }
+      case TilesetEditControl.erase: {
+        break;
+      }
+      case TilesetEditControl.fill: {
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const onMouseMove = ({ nativeEvent }: any) => {
+    switch (currentEditControl) {
+      case TilesetEditControl.draw: {
+        draw({ nativeEvent });
+        break;
+      }
+      case TilesetEditControl.erase: {
+        break;
+      }
+      case TilesetEditControl.fill: {
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const onMouseUp = ({ nativeEvent }: any) => {
+    switch (currentEditControl) {
+      case TilesetEditControl.draw: {
+        finishDrawing();
+        break;
+      }
+      case TilesetEditControl.erase: {
+        break;
+      }
+      case TilesetEditControl.fill: {
+        break;
+      }
+      default:
+        break;
+    }
+  };
 
   const startDrawing = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {
@@ -120,7 +196,7 @@ const TilesetCanvas = () => {
         context.closePath();
         return;
       }
-      if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
+      if (withinCurrentTile(canvasCoords.x, canvasCoords.y) && restrictToTile) {
         context.beginPath();
         context.moveTo(canvasCoords.x, canvasCoords.y);
         context.lineTo(canvasCoords.x, canvasCoords.y);
@@ -153,7 +229,7 @@ const TilesetCanvas = () => {
     x: number,
     y: number
   ): { x: number | null; y: number | null } => {
-    if (restrictToGrid) {
+    if (restrictToTile) {
       const scaleY = canvasHeight / imageHeight;
       const scaleX = canvasWidth / imageWidth;
       const scaledTileHeight = tileHeight * scaleY;
@@ -174,6 +250,7 @@ const TilesetCanvas = () => {
    *          true if it is or if there is no current tile
    */
   const withinCurrentTile = (x: number, y: number): boolean => {
+    if (!restrictToTile) return true;
     if (currentTile.x !== null && currentTile.y !== null) {
       const scaleY = canvasHeight / imageHeight;
       const scaleX = canvasWidth / imageWidth;
@@ -190,9 +267,9 @@ const TilesetCanvas = () => {
     <div>
       <canvas
         className="tileset-canvas"
-        onMouseDown={startDrawing}
-        onMouseUp={finishDrawing}
-        onMouseMove={draw}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
         ref={canvasRef}
       ></canvas>
       <canvas className="tileset-canvas--no-input" ref={gridCanvasRef}>
