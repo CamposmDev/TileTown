@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 */
 
 // THIS IS THE CONTEXT WE'LL USE TO SHARE OUR STORE
-export const TilesetEditorStoreContext = createContext({});
+export const TilesetEditorStoreContext =
+  createContext<ITilesetEditorStore | null>(null);
 
 /**String of type of property**/
 export type Type = "string" | "float" | "int" | "bool" | "color" | "object";
@@ -130,7 +131,7 @@ interface ITilesetEditorStore {
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
 // const tps = new jsTPS();
 
-function TilesetEditorStoreContextProvider() {
+function TilesetEditorStoreContextProvider(props: any) {
   // THESE ARE ALL THE THINGS OUR TILESET STORE WILL MANAGE
   const [store, setStore] = useState<ITilesetEditorStore>({
     tileSet: {
@@ -467,11 +468,7 @@ function TilesetEditorStoreContextProvider() {
   };
 
   return (
-    <TilesetEditorStoreContext.Provider
-      value={{
-        store,
-      }}
-    >
+    <TilesetEditorStoreContext.Provider value={store}>
       {}
     </TilesetEditorStoreContext.Provider>
   );
