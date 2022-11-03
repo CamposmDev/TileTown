@@ -10,6 +10,8 @@ import { SearchCategory } from './components/util/Constants';
 import ModalTester from './components/ModalTester';
 import UserProfileScreen from './components/screen/UserProfileScreen';
 import CommunityProfileScreen from './components/screen/CommunityProfileScreen';
+import { createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 
 /**
  * Pixel Editors 
@@ -23,10 +25,27 @@ import CommunityProfileScreen from './components/screen/CommunityProfileScreen';
  * 
  * Cool Carosel for Popular Items
  * @see https://www.npmjs.com/package/react-material-ui-carousel
+ * 
+ * Upload Button
+ * @see https://mui.com/material-ui/react-button/#upload-button
+ * 
  */
+
+ const darkTheme = createTheme({
+  palette: {
+    // background: {
+    //   paper: 'darkgray',
+    //   default: 'skyblue'
+
+    // },
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline/>
     <BrowserRouter>
       <Routes>
         {['/', '/login', '/register'].map((x,i) => 
@@ -50,14 +69,19 @@ const App = () => {
         <Route path='/cards' element={<CardTester/>}/>
         <Route path='/modals' element={<ModalTester/>}/>
         <Route path='/' element={<SplashScreen/>} />
-        <Route path='/login' element={<LoginScreen/>} />
+        <Route path='/login' element={
+                          <LoginScreen/>
+        } />
         <Route path='/register' element={<RegisterScreen/>} />
-        <Route path='/feed' element={<MainFeedScreen />} />
+        <Route path='/feed' element={
+        <MainFeedScreen />
+      } />
         <Route path='/settings' element={<AccountSettingsScreen/>}/>
         <Route path='/create/tileset' element={<TilesetEditorScreen/>}/>
         <Route path='/create/tilemap' element={<TilemapEditorScreen/>}/>
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

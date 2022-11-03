@@ -8,6 +8,35 @@ interface Props {
     loggedIn: boolean
 }
 
+function stringToColor(string: string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
+  
+function stringAvatar(firstName: string, lastName: string) {
+    return {
+        sx: {
+        bgcolor: stringToColor(firstName + ' ' + lastName),
+        },
+        children: `${firstName[0]}${lastName[0]}`,
+    };
+}
+
 const MENU_PAPER_PROPS = {
     elevation: 0,
     sx: {
@@ -99,22 +128,19 @@ const AccountButton = ({loggedIn}: Props) => {
     )
 
     const profile = loggedIn ? (
-        <Avatar sx={{bgcolor: 'primary.main', fontSize: '1.5rem', width: 40, height: 40}}>MC</Avatar>
+        <Avatar {...stringAvatar('Michael', 'Campos')}/>
     ) : (
-        <Avatar sx={{bgcolor: 'primary.main'}} ></Avatar>
+        <Avatar onClick={handleMenuOpen} sx={{bgcolor: 'primary.main'}}/>
     )
 
     return (
-        <Grid borderRadius={'50%'} boxShadow={1}>
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Box>
                 <IconButton
-                    size="large"
+                    sx={{border: 'none'}}
                     onClick={handleMenuOpen}
-                    color="inherit"
                 >{profile}</IconButton>
                 {menu}
-            </Box>
-        </Grid>
+        </Box>
     )
 }
 
