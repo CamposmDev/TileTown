@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import UserDBM from "../../interface/managers/UserDBM";
-import { UserModel, TilemapModel, TilesetModel } from '../schemas'
-import { User } from "../../../types";
+import { UserModel, TilesetModel } from '../schemas'
+import { User } from "@types";
 import UserSchemaType from '../types/UserSchemaType';
 
 export default class MongooseUserDBM implements UserDBM {

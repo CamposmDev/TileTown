@@ -22,6 +22,8 @@ import TilesetEditorStoreContext, {
   TilesetEditorStoreContextProvider,
 } from "./context/tilesetEditor";
 
+import { AuthContextProvider } from "./context/auth";
+
 /**
  * Pixel Editors
  * @see https://github.com/alekspopovic/pixel-art-drawing-editor
@@ -39,78 +41,80 @@ import TilesetEditorStoreContext, {
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        {["/", "/login", "/register"].map((x, i) => (
+      <AuthContextProvider>
+        <Routes>
+          {["/", "/login", "/register"].map((x, i) => (
+            <Route
+              path={x}
+              element={<NavBar items={<WelcomeMenu />} />}
+              key={i}
+            />
+          ))}
+          {[
+            "/feed",
+            "/settings",
+            "/create/tileset",
+            "/create/tilemap",
+            "/search/tilemaps",
+            "/search/tilesets",
+            "/search/users",
+            "/search/communities",
+            "/search/contests",
+            "/search/forums",
+            "/profile",
+            "/community/rpgs-done-right",
+          ].map((x, i) => (
+            <Route path={x} element={<NavBar items={<UserMenu />} key={i} />} />
+          ))}
+        </Routes>
+        <Routes>
           <Route
-            path={x}
-            element={<NavBar items={<WelcomeMenu />} />}
-            key={i}
+            path="/community/rpgs-done-right"
+            element={<CommunityProfileScreen />}
           />
-        ))}
-        {[
-          "/feed",
-          "/settings",
-          "/create/tileset",
-          "/create/tilemap",
-          "/search/tilemaps",
-          "/search/tilesets",
-          "/search/users",
-          "/search/communities",
-          "/search/contests",
-          "/search/forums",
-          "/profile",
-          "/community/rpgs-done-right",
-        ].map((x, i) => (
-          <Route path={x} element={<NavBar items={<UserMenu />} key={i} />} />
-        ))}
-      </Routes>
-      <Routes>
-        <Route
-          path="/community/rpgs-done-right"
-          element={<CommunityProfileScreen />}
-        />
-        <Route path="/profile" element={<UserProfileScreen />} />
-        <Route
-          path="/search/tilemaps"
-          element={<SearchScreen cat={SearchCategory.Tilemaps} />}
-        />
-        <Route
-          path="/search/tilesets"
-          element={<SearchScreen cat={SearchCategory.Tilesets} />}
-        />
-        <Route
-          path="/search/users"
-          element={<SearchScreen cat={SearchCategory.Users} />}
-        />
-        <Route
-          path="/search/communities"
-          element={<SearchScreen cat={SearchCategory.Communities} />}
-        />
-        <Route
-          path="/search/contests"
-          element={<SearchScreen cat={SearchCategory.Contests} />}
-        />
-        <Route
-          path="/search/forums"
-          element={<SearchScreen cat={SearchCategory.Forums} />}
-        />
-        <Route path="/cards" element={<CardTester />} />
-        <Route path="/modals" element={<ModalTester />} />
-        <Route path="/" element={<SplashScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/register" element={<RegisterScreen />} />
-        <Route path="/feed" element={<MainFeedScreen />} />
-        <Route path="/settings" element={<AccountSettingsScreen />} />
-        <Route
-          path="/create/tileset"
-          element={
-            <TilesetEditorStoreContextProvider>
-              <TilesetEditorScreen />
-            </TilesetEditorStoreContextProvider>
-          }
-        />
-        <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
-      </Routes>
+          <Route path="/profile" element={<UserProfileScreen />} />
+          <Route
+            path="/search/tilemaps"
+            element={<SearchScreen cat={SearchCategory.Tilemaps} />}
+          />
+          <Route
+            path="/search/tilesets"
+            element={<SearchScreen cat={SearchCategory.Tilesets} />}
+          />
+          <Route
+            path="/search/users"
+            element={<SearchScreen cat={SearchCategory.Users} />}
+          />
+          <Route
+            path="/search/communities"
+            element={<SearchScreen cat={SearchCategory.Communities} />}
+          />
+          <Route
+            path="/search/contests"
+            element={<SearchScreen cat={SearchCategory.Contests} />}
+          />
+          <Route
+            path="/search/forums"
+            element={<SearchScreen cat={SearchCategory.Forums} />}
+          />
+          <Route path="/cards" element={<CardTester />} />
+          <Route path="/modals" element={<ModalTester />} />
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/register" element={<RegisterScreen />} />
+          <Route path="/feed" element={<MainFeedScreen />} />
+          <Route path="/settings" element={<AccountSettingsScreen />} />
+          <Route
+            path="/create/tileset"
+            element={
+              <TilesetEditorStoreContextProvider>
+                <TilesetEditorScreen />
+              </TilesetEditorStoreContextProvider>
+            }
+          />
+          <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
+        </Routes>
+      </AuthContextProvider>
     </BrowserRouter>
   );
 };

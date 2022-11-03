@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from "../../database";
-import { Contest } from '../../types';
+import { Contest } from '@types';
 
 
 export default class ContestController {

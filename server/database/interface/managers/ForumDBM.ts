@@ -1,5 +1,4 @@
-import { ForumPost } from "../../../types";
-import Comment from "../../../types/Comment";
+import { ForumPost } from "@types";
 
 /**
  * An interface defining a set of methods to work with TileTown forum posts in an arbitrary DBMS.

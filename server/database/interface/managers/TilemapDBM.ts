@@ -4,8 +4,7 @@ import {
   SocialStatisticsPermissions,
   Layer,
   Property,
-} from "../../../types";
-import Comment from "../../../types/Comment";
+} from "@types";
 
 /**
  * An interface defining a set of methods to work with TileTown Tilemaps and Tilemap social statistics in an arbitrary DBMS.

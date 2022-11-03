@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ForumPost } from "../../../types";
+import { ForumPost } from "@types";
 import { ForumDBM } from "../../interface";
 import { ForumPostModel } from "../schemas";
 import { ForumSchemaType } from "../types";

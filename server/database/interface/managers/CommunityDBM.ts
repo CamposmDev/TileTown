@@ -1,4 +1,4 @@
-import { Community } from "../../../types";
+import { Community } from "@types";
 
 /**
  * An interface defining a set of methods to work with TileTown communities in an arbitrary DBMS.

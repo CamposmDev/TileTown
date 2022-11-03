@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../../database';
-import { Community } from '../../types';
+import { Community } from '@types';
 
 export default class CommunityController {
 

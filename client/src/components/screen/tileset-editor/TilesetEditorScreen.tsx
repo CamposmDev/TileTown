@@ -22,11 +22,10 @@ import TilesetCanvas from "./TilesetCanvas";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
 import { useContext } from "react";
-import { TilesetEditorStoreContextProvider } from "../../../context/tilesetEditor";
-import { TilesetEditorStoreContext } from "../../../context/tilesetEditor";
+import { TilesetEditContext } from "../../../context/tilesetEditor";
 
 const TilesetEditorScreen = () => {
-  const edit = useContext(TilesetEditorStoreContext);
+  const edit = useContext(TilesetEditContext);
   return (
     <Grid alignItems="center">
       <Toolbar sx={{ boxShadow: 1 }} variant="dense">

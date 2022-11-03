@@ -1,4 +1,4 @@
-import { User } from '../../../types';
+import { User } from '@types';
 
 /**
  * An interface defining a set of methods to work with TileTown users in an arbitrary DBMS. 

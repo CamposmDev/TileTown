@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Contest } from "../../../types";
+import { Contest } from "@types";
 import { ContestDBM } from "../../interface";
 import { ContestModel } from '../schemas';
 import { ContestSchemaType } from '../types/index';

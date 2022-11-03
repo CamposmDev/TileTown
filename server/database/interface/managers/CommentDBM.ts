@@ -1,4 +1,4 @@
-import { Comment } from "../../../types";
+import { Comment } from "@types";
 
 export default interface CommentDBM {
     getCommentById(comments: string): Promise<Comment | null>;

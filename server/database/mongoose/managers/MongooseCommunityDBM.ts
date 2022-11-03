@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Community } from "../../../types";
+import { Community } from "@types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import { CommunityModel } from "../schemas"
 import { CommunitySchemaType } from "../types";

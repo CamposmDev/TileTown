@@ -2,8 +2,7 @@ import {
     Tileset,
     TilesetSocial,
     SortBy,
-} from "../../../types";
-import Comment from "../../../types/Comment";
+} from "@types";
 
 export default interface TilesetDBM {
     getTilesetById(tilesetId: string): Promise<Tileset | null>;
