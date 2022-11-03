@@ -23,9 +23,42 @@ import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
 import { useContext } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
+import {
+  TilesetEditControl,
+  Color,
+} from "src/context/tilesetEditor/TilesetEditTypes";
 
 const TilesetEditorScreen = () => {
   const edit = useContext(TilesetEditContext);
+
+  //set the color of the selected mode
+  const unselectedColor = "#FFFFFF";
+  const selectedColor = "#ADD8E6";
+  const currentEditControl = edit.state.currentEditControl;
+  let drawColor: Color = unselectedColor;
+  let eraseColor: Color = unselectedColor;
+  let fillColor: Color = unselectedColor;
+  switch (currentEditControl) {
+    case TilesetEditControl.draw: {
+      drawColor = selectedColor;
+      break;
+    }
+    case TilesetEditControl.erase: {
+      eraseColor = selectedColor;
+      break;
+    }
+    case TilesetEditControl.fill: {
+      fillColor = selectedColor;
+      break;
+    }
+    default:
+      break;
+  }
+
+  const setEditControl = (editControl: TilesetEditControl) => {
+    edit.updateEditControl(editControl);
+  };
+
   return (
     <Grid alignItems="center">
       <Toolbar sx={{ boxShadow: 1 }} variant="dense">
@@ -58,7 +91,8 @@ const TilesetEditorScreen = () => {
               children={
                 <IconButton
                   color="primary"
-                  onDoubleClick={() => console.log("double clicked")}
+                  sx={{ bgcolor: drawColor }}
+                  onClick={() => setEditControl(TilesetEditControl.draw)}
                   children={<Edit />}
                 />
               }
@@ -67,7 +101,11 @@ const TilesetEditorScreen = () => {
               title="Eraser"
               arrow
               children={
-                <IconButton color="primary">
+                <IconButton
+                  color="primary"
+                  sx={{ bgcolor: eraseColor }}
+                  onClick={() => setEditControl(TilesetEditControl.erase)}
+                >
                   <FaEraser></FaEraser>
                 </IconButton>
               }
@@ -76,7 +114,12 @@ const TilesetEditorScreen = () => {
               title="Fill"
               arrow
               children={
-                <IconButton color="primary" children={<FormatColorFill />} />
+                <IconButton
+                  color="primary"
+                  sx={{ bgcolor: fillColor }}
+                  onClick={() => setEditControl(TilesetEditControl.fill)}
+                  children={<FormatColorFill />}
+                />
               }
             />
           </Grid>
