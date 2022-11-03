@@ -1,3 +1,5 @@
+import { createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import NavBar from "./components/NavBar";
@@ -19,7 +21,6 @@ import ModalTester from "./components/ModalTester";
 import UserProfileScreen from "./components/screen/UserProfileScreen";
 import CommunityProfileScreen from "./components/screen/CommunityProfileScreen";
 import { TilesetEditContextProvider } from "./context/tilesetEditor";
-
 import { AuthContextProvider } from "./context/auth";
 
 /**
@@ -34,10 +35,27 @@ import { AuthContextProvider } from "./context/auth";
  *
  * Cool Carosel for Popular Items
  * @see https://www.npmjs.com/package/react-material-ui-carousel
+ * 
+ * Upload Button
+ * @see https://mui.com/material-ui/react-button/#upload-button
+ * 
  */
+
+ const darkTheme = createTheme({
+  palette: {
+    // background: {
+    //   paper: 'darkgray',
+    //   default: 'skyblue'
+
+    // },
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   return (
+    // <ThemeProvider theme={darkTheme}>
+      // <CssBaseline/>
     <BrowserRouter>
       <AuthContextProvider>
         <Routes>
@@ -114,6 +132,7 @@ const App = () => {
         </Routes>
       </AuthContextProvider>
     </BrowserRouter>
+    // </ThemeProvider>
   );
 };
 
