@@ -44,8 +44,8 @@ import { ThemeProvider } from '@emotion/react';
 
 const App = () => {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline/>
+    // <ThemeProvider theme={darkTheme}>
+      // <CssBaseline/>
     <BrowserRouter>
       <Routes>
         {['/', '/login', '/register'].map((x,i) => 
@@ -81,7 +81,7 @@ const App = () => {
         <Route path='/create/tilemap' element={<TilemapEditorScreen/>}/>
       </Routes>
     </BrowserRouter>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 }
 

@@ -21,8 +21,8 @@ const CreateCommunityModal = () => {
             onClose={handleClose}
         >
             <DialogTitle>Create Community</DialogTitle>
-            <DialogContentText></DialogContentText>
             <DialogContent>
+                <DialogContentText></DialogContentText>
                 <TextField
                     required
                     fullWidth
