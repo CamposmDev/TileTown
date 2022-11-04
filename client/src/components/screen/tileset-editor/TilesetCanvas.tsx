@@ -131,8 +131,9 @@ const TilesetCanvas = () => {
           break;
         }
         case TilesetEditControl.fill: {
-          console.log(parseInt("0xf0ff8fff").toString(16));
-          floodFill(context, canvas, { nativeEvent }, 4043280383);
+          console.log(parseInt("#F0D101FF").toString(16));
+          console.log(parseInt("0xff01d1f0").toString(16));
+          floodFill(context, canvas, { nativeEvent }, ColorToDec(penColor));
           break;
         }
         default:

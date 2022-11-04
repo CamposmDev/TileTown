@@ -114,22 +114,21 @@ export function RGBToHex(color: string): string {
   return "#" + r + g + b;
 }
 
+/**Reverse the bytes of the hex color, add alpha value and convert to decimal*/
 export function HexToDec(color: string): number {
-  let decString = "";
-  for (let i = 1; i < color.length; i = i + 2) {
-    let hexByte = "0x" + color[i] + color[i + 1];
+  let decString = "0xFF";
+  for (let i = color.length - 1; i > 0; i = i - 2) {
+    let hexByte = color[i - 1] + color[i];
     console.log(hexByte);
-    decString += parseInt(hexByte).toString();
+    decString += hexByte;
   }
-  //add max alpha value
-  decString += "255";
+
   console.log(decString);
-  console.log(parseInt("0xFF0000FF"));
-  console.log(parseInt(color.replace("#", "0x") + "FF").toString(16));
   console.log(parseInt(decString).toString(16));
   return parseInt(decString);
 }
 
+/**Converts RGB and HEX colors to decimal that canvas can read*/
 export function ColorToDec(color: string): number {
   if (isRGB(color)) return HexToDec(RGBToHex(color));
   if (isHex(color)) return HexToDec(color);
