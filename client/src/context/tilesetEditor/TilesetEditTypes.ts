@@ -1,3 +1,5 @@
+import { ConstructionOutlined } from "@mui/icons-material";
+
 /**String of type of property**/
 export type Type = "string" | "float" | "int" | "bool" | "color" | "object";
 
@@ -61,9 +63,78 @@ export interface Tileset {
 }
 
 export type RGB = `rgb(${number}, ${number}, ${number})`;
-export type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
 export type HEX = `#${string}`;
-export type Color = RGB | RGBA | HEX;
+export type Color = RGB | HEX;
+
+export function isColor(color: string): boolean {
+  if (!isRGB(color)) return isHex(color);
+  return true;
+}
+
+export function isRGB(color: string): boolean {
+  if (!(color.substring(0, 4) === "rgb(")) return false;
+  const RGBNumsSubString = color.substring(
+    color.indexOf("(") + 1,
+    color.length - 1
+  );
+  const RGBNums = RGBNumsSubString.split(",");
+  if (RGBNums.length > 3) return false;
+  for (let i = 0; i < RGBNums.length; i++) {
+    let num = Number(RGBNums[i]);
+    if (isNaN(num)) return false;
+    if (num > 255 || num < 0) return false;
+  }
+  return true;
+}
+
+export function isHex(color: string): boolean {
+  if (color[0] !== "#") return false;
+  for (let i = 1; i < color.length; i++) {
+    if (isNaN(Number(color[i]))) {
+      if (color.charCodeAt(i) > 70 || color.charCodeAt(i) < 65) return false;
+    }
+  }
+  return true;
+}
+
+export function RGBToHex(color: string): string {
+  const RGBNumsSubString = color.substring(
+    color.indexOf("(") + 1,
+    color.length - 1
+  );
+  const RGBNums = RGBNumsSubString.split(",");
+  let r = (+RGBNums[0]).toString(16);
+  let g = (+RGBNums[1]).toString(16);
+  let b = (+RGBNums[2]).toString(16);
+
+  if (r.length == 1) r = "0" + r;
+  if (g.length == 1) g = "0" + g;
+  if (b.length == 1) b = "0" + b;
+
+  return "#" + r + g + b;
+}
+
+export function HexToDec(color: string): number {
+  let decString = "";
+  for (let i = 1; i < color.length; i = i + 2) {
+    let hexByte = "0x" + color[i] + color[i + 1];
+    console.log(hexByte);
+    decString += parseInt(hexByte).toString();
+  }
+  //add max alpha value
+  decString += "255";
+  console.log(decString);
+  console.log(parseInt("0xFF0000FF"));
+  console.log(parseInt(color.replace("#", "0x") + "FF").toString(16));
+  console.log(parseInt(decString).toString(16));
+  return parseInt(decString);
+}
+
+export function ColorToDec(color: string): number {
+  if (isRGB(color)) return HexToDec(RGBToHex(color));
+  if (isHex(color)) return HexToDec(color);
+  return -1;
+}
 
 /**determines which editing tool the user is using for tileset*/
 export enum TilesetEditControl {
