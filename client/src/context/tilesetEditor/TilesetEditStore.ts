@@ -1,3 +1,4 @@
+import { ThirteenMp } from "@mui/icons-material";
 import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
 import {
@@ -37,11 +38,14 @@ export class TilesetEditStore {
     const newTileset: Tileset = {
       id: "",
       columns: 0,
+      rows: 0,
       createDate: new Date(),
       lastSaveDate: new Date(),
       image: "",
       imageHeight: 0,
       imageWidth: 0,
+      tileHeight: 0,
+      tileWidth: 0,
       margin: 0,
       name: name,
       owner: "",
@@ -56,7 +60,8 @@ export class TilesetEditStore {
     });
   }
 
-  public async updateTileset(tileset: Tileset): Promise<void> {
+  public async updateTileset(tileset: Partial<Tileset>): Promise<void> {
+    console.log(tileset);
     this.handleAction({
       type: TilesetEditorActionType.UPDATE_TILESET,
       payload: {
@@ -196,9 +201,37 @@ export class TilesetEditStore {
     });
   }
 
-  protected handleUpdateTileset(tileset: Tileset): void {
+  protected handleUpdateTileset(tileset: Partial<Tileset>): void {
+    const updatedTileset: Tileset = {
+      id: this._state.tileset.id,
+      columns: tileset.columns ? tileset.columns : this._state.tileset.columns,
+      rows: tileset.rows ? tileset.rows : this._state.tileset.rows,
+      createDate: this._state.tileset.createDate,
+      lastSaveDate: this._state.tileset.lastSaveDate,
+      image: this._state.tileset.image,
+      imageHeight: tileset.imageHeight
+        ? tileset.imageHeight
+        : this._state.tileset.imageHeight,
+      imageWidth: tileset.imageWidth
+        ? tileset.imageWidth
+        : this._state.tileset.imageWidth,
+      tileHeight: tileset.tileHeight
+        ? tileset.tileHeight
+        : this._state.tileset.tileHeight,
+      tileWidth: tileset.tileWidth
+        ? tileset.tileWidth
+        : this._state.tileset.imageWidth,
+      margin: tileset.margin ? tileset.margin : this._state.tileset.margin,
+      name: tileset.name ? tileset.name : this._state.tileset.name,
+      owner: this._state.tileset.owner,
+      properties: tileset.properties
+        ? tileset.properties
+        : this._state.tileset.properties,
+      isPublished: false,
+    };
+
     this.setEdit({
-      tileset,
+      tileset: updatedTileset,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,

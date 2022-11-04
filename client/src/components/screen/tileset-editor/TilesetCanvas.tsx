@@ -120,7 +120,6 @@ const TilesetCanvas = () => {
       const canvas: HTMLCanvasElement | null = canvasRef.current;
       switch (currentEditControl) {
         case TilesetEditControl.draw: {
-          console.log("yeet");
           context.globalCompositeOperation = "source-over";
           startDrawing({ nativeEvent });
           break;
@@ -131,8 +130,6 @@ const TilesetCanvas = () => {
           break;
         }
         case TilesetEditControl.fill: {
-          console.log(parseInt("#F0D101FF").toString(16));
-          console.log(parseInt("0xff01d1f0").toString(16));
           floodFill(context, canvas, { nativeEvent }, ColorToDec(penColor));
           break;
         }
@@ -275,7 +272,6 @@ const TilesetCanvas = () => {
       height: imageData.height,
       data: new Uint32Array(imageData.data.buffer),
     };
-    console.log(imageData.data.buffer);
 
     // get the color we're filling
     const targetColor = getPixel(pixelData, x, y);
@@ -390,6 +386,8 @@ const TilesetCanvas = () => {
       // put the data back
       ctx.putImageData(imageData, 0, 0);
     }
+    console.log(currentTile);
+    setCurrentTile({ x: null, y: null });
   };
 
   const screenToCanvasCoordinates = (

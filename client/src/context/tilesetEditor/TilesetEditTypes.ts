@@ -31,6 +31,9 @@ export interface Tileset {
   /** The number of tile columns in the tileset */
   columns: number;
 
+  /**The number of tile rows in the tileset */
+  rows: number;
+
   /** Date When tileset is first created */
   createDate: Date;
 
@@ -45,6 +48,12 @@ export interface Tileset {
 
   /** The width of the TileSet (in tiles) */
   imageWidth: number;
+
+  /** The height of the tiles in pixels */
+  tileHeight: number;
+
+  /** The width of the tiles in pixels */
+  tileWidth: number;
 
   /** The margin of the TileSap (in tiles) */
   margin: number;
@@ -202,7 +211,7 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.UPDATE_TILESET;
-      payload: { tileset: Tileset };
+      payload: { tileset: Partial<Tileset> };
     }
   | {
       type: TilesetEditorActionType.SAVE_TILESET;
