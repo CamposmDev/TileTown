@@ -1,12 +1,10 @@
 import { AxiosResponse } from 'axios';
 
 import { User, Tilemap } from "@types";
-import { LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq } from "@requests/user";
-import { LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes } from "@responses/user";
+import { LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq, UpdateEmailReq, UpdatePasswordReq } from "@requests/user";
+import { LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes, UpdateEmailRes, UpdatePasswordRes } from "@responses/user";
 
 import AxiosApi from './AxiosApi';
-import UpdateEmailReq from '@requests/user/UpdateEmailReq';
-import UpdateEmailRes from '@responses/user/UpdateEmailRes';
 
 export default class AxiosUserApi  {
     
@@ -33,6 +31,9 @@ export default class AxiosUserApi  {
     }
     async updateEmail(payload: UpdateEmailReq): Promise<AxiosResponse> {
         return AxiosApi.put<UpdateEmailRes, AxiosResponse<UpdateEmailRes>, UpdateEmailReq>('/user/email', payload)
+    }
+    async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
+        return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
     }
 }
 

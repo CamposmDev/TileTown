@@ -210,6 +210,62 @@ export class AuthStore {
         })
     }
 
+    public async changePassword(oldPassword: string | undefined, newPassword: string | undefined): Promise<void> {
+        let res = UserApi.updatePassword({
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changePassword,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async deleteAccount(): Promise<void> {
+        let res = UserApi.delete()
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.nav('/')
+                this.handleAction({
+                    type: AuthActionType.logoutUser,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
     public clearError(): void {
         this.handleAction({
             type: AuthActionType.clearError

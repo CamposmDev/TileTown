@@ -177,7 +177,11 @@ export default class UserController {
             return;
         }
 
-        res.status(201).json({message: "User created successfully!", user: user});
+        let token: string = Auth.signJWT<string>(user.id)
+
+        res.status(201).
+            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000)}).
+            json({message: "User created successfully!", user: user});
         return;
     }
 
@@ -247,11 +251,6 @@ export default class UserController {
             return;
         }
 
-        if (req.body.newPassword.length < 12) {
-            res.status(400).json({message: "New password must be at least 12 characters long"});
-            return;
-        }
-
         // Try and get the user with the user id
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
@@ -263,6 +262,11 @@ export default class UserController {
         let match = await HashingUtils.compare(req.body.oldPassword, user.password);
         if (!match) {
             res.status(400).json({message: "Current password does not match the users current password on record"});
+            return;
+        }
+
+        if (req.body.newPassword.length < 12) {
+            res.status(400).json({message: "New password must be at least 12 characters long"});
             return;
         }
 

@@ -9,6 +9,7 @@ import ChangeUsernameModal from "../../modals/ChangeUsernameModal";
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";
 import { useNavigate } from "react-router";
+import DeleteAccountButton from "./DeleteAccountButton";
 
 const AccountSettingsScreen = () => {
     const auth = useContext(AuthContext)
@@ -60,11 +61,7 @@ const AccountSettingsScreen = () => {
                     <EditPasswordForm/>
                     <Divider sx={{mt: 1, mb: 1}}/>
                 </Grid>
-                <Button
-                    variant='outlined'
-                    color='error'
-                >Delete Account</Button>
-                
+                <DeleteAccountButton/>
             </Box>
         </Container>
     )
