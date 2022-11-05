@@ -19,6 +19,11 @@ const AccountButton = () => {
         setAnchorEl(null)
     }
 
+    const handleLogout = () => {
+        auth.logoutUser()
+        handleMenuClose()
+    }
+
     const handleGuest = () => {
         navigate('/home')
         // auth.loginAsGuest()
@@ -35,7 +40,7 @@ const AccountButton = () => {
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}>
+            <MenuItem onClick={handleLogout}>
                 <ListItemIcon><Logout/></ListItemIcon>
                 <ListItemText>Logout</ListItemText>
             </MenuItem>

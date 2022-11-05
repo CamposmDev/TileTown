@@ -99,6 +99,7 @@ export class AuthStore {
         let res = UserApi.logout();
         res.then((res) => {
             if (res.status === 200) {
+                this.nav('/')
                 this.handleAction({
                     type: AuthActionType.logoutUser,
                     payload: {
