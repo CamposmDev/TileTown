@@ -1,17 +1,12 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { ButtonGroup, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, Grow, IconButton, InputLabel, MenuList, Modal, Paper, Popper, Select, SelectChangeEvent } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
-import Stack from '@mui/material/Stack';
 import * as React from 'react';
-import { ArrowDropDown, Create } from '@mui/icons-material';
+import { Create } from '@mui/icons-material';
 import { AuthContext } from 'src/context/auth';
-
-// const options = ['Annonymous', 'Your username'];
 
 const CreateForumPostModal = () => {
     const auth = React.useContext(AuthContext)

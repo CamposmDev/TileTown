@@ -1,6 +1,7 @@
 import { Comment, Download, Share, StarBorder, ThumbUp, Visibility } from "@mui/icons-material"
 import {AppBar, Box, Button, Card, CardActionArea, Grid, CardContent, Dialog, IconButton, ImageListItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
-import { MouseEventHandler, useState } from "react"
+import { MouseEventHandler, useContext, useState } from "react"
+import { AuthContext } from "src/context/auth"
 import { parseDateToStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import CommentCard from "./CommentCard"
@@ -28,6 +29,7 @@ interface ModalProps {
 }
 
 const TileItemModal = (props: ModalProps) => {
+    const auth = useContext(AuthContext)
     return (
         <Dialog open={props.open} fullScreen onClose={props.callback}>
             <AppBar sx={{ position: 'relative' }}>
@@ -69,11 +71,11 @@ const TileItemModal = (props: ModalProps) => {
                                 </Box>
                                 <Stack spacing={1}>
                                     <Stack direction='row' sx={{alignItems: 'center'}}>
-                                        <IconButton disabled><Visibility  sx={{transform: 'scale(1.25)', color: 'black'}}/></IconButton>
+                                        <IconButton disabled><Visibility  sx={{transform: 'scale(1.25)'}}/></IconButton>
                                         <Typography>{formatToSocialStr(props.tilemapProps.views)}</Typography>
                                     </Stack>
                                     <Stack direction='row' sx={{alignItems: 'center'}}>
-                                        <IconButton disabled><Comment sx={{transform: 'scale(1.25)', color: 'black'}}/></IconButton>
+                                        <IconButton disabled><Comment sx={{transform: 'scale(1.25)'}}/></IconButton>
                                         <Typography>{formatToSocialStr(props.tilemapProps.comments)}</Typography>
                                     </Stack>
                                     <Stack direction='row' sx={{alignItems: 'center'}}>
@@ -89,7 +91,7 @@ const TileItemModal = (props: ModalProps) => {
                         <Button startIcon={<Share/>}  size='small' variant='contained'>Share</Button>
                     </Grid>
                     <Grid container mt={1}>
-                        <TextField label='Comment' fullWidth/>
+                        {auth.isGuest() ? <div/> : <TextField label='Comment' fullWidth/>}
                         <Grid item flexGrow={1} mt={1}>
                             <CommentCard/>
                             <CommentCard/>
