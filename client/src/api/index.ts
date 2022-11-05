@@ -5,7 +5,7 @@ import AxiosUserApi from "./axios/AxiosUserApi";
 axios.defaults.withCredentials = true
 
 const api = axios.create({
-    baseURL: 'http://209.151.152.149:80/api'
+    baseURL: 'http://localhost:3000/'
 })
 
 export const registerUser = (payload: object) => api.post('/', payload)

@@ -1,5 +1,8 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
+import { useContext, useEffect } from "react"
 import Carousel from "react-material-ui-carousel"
+import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
 import CommunityCard from "../card/CommunityCard"
 import ContestCard from "../card/ContestCard"
 import TileItemCard from "../card/TileItemCard"
@@ -66,10 +69,16 @@ let tilesets = [{
         tags: ['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']
 }]
 
-const MainFeedScreen = () => {
+const HomeScreen = () => {
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (!auth.isLoggedIn()) navigate('/')
+    }, [])
+
     const SIZE = 512
     return (
-        <Grid spacing={1}>
+        <Grid container spacing={1}>
             <Grid container m={1} justifyContent='space-evenly'>
                 
                 <Grid item>
@@ -157,4 +166,4 @@ const MainFeedScreen = () => {
     )
 }
 
-export default MainFeedScreen
+export default HomeScreen

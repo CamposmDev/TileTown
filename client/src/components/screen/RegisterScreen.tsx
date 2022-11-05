@@ -13,29 +13,51 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // import { GlobalStoreContext } from '../context/store'
 // import ErrorModal from './modal/ErrorModal'
 import Box from '@mui/material/Box'
-import { Fade } from '@mui/material';
+import { ButtonGroup, Fade } from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from 'src/context/auth';
 
 const RegisterScreen = () => {
+    const auth = useContext(AuthContext)
+    console.log(' am i logged in ? ' + auth.isLoggedIn())
+    const handleSubmit = (e: any) => {
+        e.preventDefault()
+        console.log('I AM ALIVE')
+        const formData = new FormData(e.currentTarget)
+        let firstName = formData.get('firstName')?.toString()
+        let lastName = formData.get('lastName')?.toString()
+        let email = formData.get('email')?.toString()
+        let username = formData.get('username')?.toString()
+        let password = formData.get('password')?.toString()
+        if (firstName && lastName && email && username && password) {
+            let payload = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                username: username,
+                password: password
+            }
+            console.log(payload)
+            auth.registerUser(payload)
+        }
+    }
     let ui =
         <Container component="main" maxWidth="xs">
             {/* <ErrorModal showAlert={showAlert} errMsg={errMsg} handleCloseDialog={handleCloseDialog} /> */}
             <CssBaseline />
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Create New Account
                 </Typography>
-                <Box component="form" noValidate 
-                    // onSubmit={(handleSubmit)} 
+                <Box component="form" noValidate onSubmit={(handleSubmit)} 
                     sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>

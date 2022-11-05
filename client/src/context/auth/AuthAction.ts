@@ -88,10 +88,7 @@ export type DisplayErrorModal = {
 }
 
 export type ClearErrorModal = {
-    type: AuthActionType.clearError,
-    payload: {
-        message: string
-    }
+    type: AuthActionType.clearError
 }
 
 

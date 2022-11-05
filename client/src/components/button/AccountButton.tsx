@@ -1,12 +1,9 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom';
 import { Avatar, Box, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
 import { Logout, Hail, Person, Settings, PersonAdd } from "@mui/icons-material";
-
-interface Props {
-    loggedIn: boolean
-}
+import { AuthContext } from "src/context/auth";
 
 function stringToColor(string: string) {
     let hash = 0;
@@ -40,31 +37,32 @@ function stringAvatar(firstName: string, lastName: string) {
 const MENU_PAPER_PROPS = {
     elevation: 0,
     sx: {
-        overflow: 'visible',
-        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-        mt: 1.5,
-        '& .MuiAvatar-root': {
-            width: 32,
-            height: 32,
-            ml: -0.5,
-            mr: 1,
-        },
-        '&:before': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            right: 27,
-            width: 10,
-            height: 10,
-            bgcolor: 'background.paper',
-            transform: 'translateY(-50%) rotate(45deg)',
-            zIndex: 0,
-        },
-    },
-}
+      overflow: 'visible',
+      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+      mt: 1.5,
+      '& .MuiAvatar-root': {
+        width: 32,
+        height: 32,
+        ml: -0.5,
+        mr: 1,
+      },
+      '&:before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        top: 0,
+        right: 14,
+        width: 10,
+        height: 10,
+        bgcolor: 'background.paper',
+        transform: 'translateY(-50%) rotate(45deg)',
+        zIndex: 0,
+      },
+    }
+  }
 
-const AccountButton = ({loggedIn}: Props) => {
+const AccountButton = () => {
+    const auth = useContext(AuthContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
     const open = Boolean(anchorEl)
@@ -76,7 +74,7 @@ const AccountButton = ({loggedIn}: Props) => {
     }
 
     const handleGuest = () => {
-        navigate('/feed')
+        navigate('/home')
         // auth.loginAsGuest()
         handleMenuClose()
     }
@@ -123,14 +121,14 @@ const AccountButton = ({loggedIn}: Props) => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            {loggedIn ? loggedInItems : loggedOutItems}
+            {auth.isLoggedIn() ? loggedInItems : loggedOutItems}
         </Menu>
     )
 
-    const profile = loggedIn ? (
+    const profile = auth.isLoggedIn() ? (
         <Avatar {...stringAvatar('Michael', 'Campos')}/>
     ) : (
-        <Avatar onClick={handleMenuOpen} sx={{bgcolor: 'primary.main'}}/>
+        <Avatar sx={{bgcolor: 'primary.main'}}/>
     )
 
     return (
