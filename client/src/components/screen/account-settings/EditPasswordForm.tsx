@@ -1,25 +1,39 @@
 import { Stack, Typography, Button, TextField, Box } from "@mui/material"
+import React, { useContext } from "react"
 import PasswordField from "src/components/PasswordField"
+import { AuthContext } from "src/context/auth"
 
 const EditPasswordForm = () => {
+    const auth = useContext(AuthContext)
+    const changePassword = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        console.log('fire!')
+        const formData = new FormData(e.currentTarget)
+        let oldPassword = formData.get('old-password')?.toString()
+        let newPassword = formData.get('new-password')?.toString()
+        auth.changePassword(oldPassword, newPassword)
+    }
     return (
-        <Stack direction='column' spacing={1}>
+        <Stack direction='column' component='form' onSubmit={changePassword}>
             <Typography><b>{'Password'}</b></Typography>
-            <Stack direction='row' alignItems='center'>
+            <Stack direction='row'>
                 <Stack direction='row' spacing={1} flexGrow={1}>
                     <TextField
+                        name='old-password'
                         label='Old Password'
                         fullWidth
                         size='small'
+                        type={'password'}
                     />
                     <PasswordField
+                        name='new-password'
                         label='New Password'
                         fullWidth
                         size='small'
                     />
                     <Box flexGrow={1}/>
                 </Stack>
-                <Button>Change</Button>
+                <Button type="submit">Change</Button>
             </Stack>
         </Stack>
     )
