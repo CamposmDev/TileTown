@@ -1,5 +1,6 @@
 import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material"
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
@@ -41,6 +42,11 @@ interface TabPanelProps {
 
 const UserProfileScreen = () => {
     const auth = useContext(AuthContext)
+    const nav = useNavigate()
+    useEffect(() => {
+        if (!auth.isLoggedIn()) nav('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const [value, setValue] = useState(0)
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue)
