@@ -126,35 +126,35 @@ export default class UserController {
         }
 
         if (!req.body.firstName) { 
-            res.status(400).json({message: "User missing required field 'firstName'"}); 
+            res.status(400).json({message: "User missing required field 'first name'"}); 
             return;
         }
         if (!req.body.lastName) {
-            res.status(400).json({message: "User missing required field 'lastName'"}); 
-            return;
-        }
-        if (!req.body.username) {
-            res.status(400).json({messag: "User missing required field 'username'"});
-            return;
-        }
-        if (!req.body.password) {
-            res.status(400).json({messag: "User missing required field 'password'"});
+            res.status(400).json({message: "User missing required field 'last name'"}); 
             return;
         }
         if (!req.body.email) {
-            res.status(400).json({messag: "User missing required field 'email'"});
+            res.status(400).json({message: "User missing required field 'email'"});
+            return;
+        }
+        if (!req.body.username) {
+            res.status(400).json({message: "User missing required field 'username'"});
+            return;
+        }
+        if (!req.body.password) {
+            res.status(400).json({message: "User missing required field 'password'"});
             return;
         }
 
         let existingEmail = await db.users.getUserByEmail(req.body.email);
         if (existingEmail !== null) {
-            res.status(400).json({message: `User with email '${existingEmail}' already exists`});
+            res.status(400).json({message: `User with email '${req.body.email}' already exists`});
             return;
         }
 
         let existingUsername = await db.users.getUserByUsername(req.body.username);
         if (existingUsername !== null) {
-            res.status(400).json({messsage: `User with username '${req.body.username}' already exists`});
+            res.status(400).json({message: `User with username '${req.body.username}' already exists`});
             return;
         }
 
