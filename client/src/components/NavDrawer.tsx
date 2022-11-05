@@ -32,7 +32,7 @@ export default function NavDrawer() {
           <Divider/>
           <Grid mt={2} container direction={'column'} justifyContent={'flex-end'} spacing={1} >
             <Grid item >
-              {initMenuItem('Home', '/feed')}
+              {initMenuItem('Home', '/home')}
             </Grid>
             <Grid item>
             {initMenuItem('Tilemaps', '/search/tilemaps')}

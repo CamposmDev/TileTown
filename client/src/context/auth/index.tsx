@@ -42,7 +42,8 @@ function AuthContextProvider(props: Record<string, any>) {
     const Auth = new AuthStore(auth, setAuth, nav);
 
     // When the context gets created -> try to log the user in...?
-    useEffect(() => { Auth.getLoggedIn() });
+    // TODO
+    // useEffect(() => { Auth.getLoggedIn() });
 
     return (
         <AuthContext.Provider value={Auth}>

@@ -38,7 +38,7 @@ const UserMenu = () => {
                 {editorBreadcrumb}
             </Grid> */}
             <CreateButton/>
-            <AccountButton loggedIn={true}/>
+            <AccountButton />
         </Grid>
     )
 }

@@ -1,40 +1,13 @@
 import { Avatar, Button, Divider, Grid, Stack, Typography } from "@mui/material"
+import { stringAvatar } from "src/components/util/Constants";
 import ChangeEmailModal from "../../modals/ChangeEmailModal";
 import ChangeUsernameModal from "../../modals/ChangeUsernameModal";
-// import { useState } from "react"
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";
 
 const AccountSettingsScreen = () => {
-    // const [hasPicture, setHasPicture] = useState(false)
-
-    const stringToColor = (string: string) => {
-        let hash = 0;
-        let i;
-      
-        /* eslint-disable no-bitwise */
-        for (i = 0; i < string.length; i += 1) {
-          hash = string.charCodeAt(i) + ((hash << 5) - hash);
-        }
-      
-        let color = '#';
-      
-        for (i = 0; i < 3; i += 1) {
-          const value = (hash >> (i * 8)) & 0xff;
-          color += `00${value.toString(16)}`.slice(-2);
-        }
-        /* eslint-enable no-bitwise */
-      
-        return color;
-      }
-
-    const stringAvatar = (name: string) => {
-        return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
-    }
 
     const divider = <Divider sx={{mt: 1, mb: 1, ml: 50, mr: 50}} />
-
-    const name = 'Michael Campos'
     const size = 140
     return (
         <Grid container direction='column'>
@@ -43,10 +16,7 @@ const AccountSettingsScreen = () => {
                     <Typography variant='h5'>Account Settings</Typography>
                 </Grid>
                 <Grid item boxShadow={1} borderRadius={'50%'} textAlign='center' alignContent='center'>
-                    <Avatar 
-                        sx={{bgcolor: stringToColor(name), fontSize: '32pt', width: size, height: size}}>
-                            {stringAvatar(name)}
-                    </Avatar>
+                    <Avatar {...stringAvatar('Michael', 'Campos')} sx={{fontSize: '32pt', width: size, height: size}}/>
                 </Grid>
                 <Grid item mt={1}>
                     <Stack direction='row' spacing={1}>

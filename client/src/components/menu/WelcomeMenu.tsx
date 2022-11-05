@@ -19,7 +19,7 @@ const WelcomeMenu = () => {
                         <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>TileTown</Link>
                     </Typography>
             </Grid>
-            <AccountButton loggedIn={false}/>
+            <AccountButton />
         </Grid>
     )
 }

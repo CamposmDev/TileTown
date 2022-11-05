@@ -1,5 +1,3 @@
-// import { useState, useContext } from 'react';
-// import AuthContext from '../context/auth'
 import Copyright from '../Copyright'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -10,32 +8,49 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-// import { GlobalStoreContext } from '../context/store'
-// import ErrorModal from './modal/ErrorModal'
 import Box from '@mui/material/Box'
 import { Fade } from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from 'src/context/auth';
+import ErrorSnack from '../modals/ErrorSnack';
+import PasswordField from '../PasswordField';
 
 const RegisterScreen = () => {
+    const auth = useContext(AuthContext)
+    const handleSubmit = (e: any) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        let firstName = formData.get('firstName')?.toString()
+        let lastName = formData.get('lastName')?.toString()
+        let email = formData.get('email')?.toString()
+        let username = formData.get('username')?.toString()
+        let password = formData.get('password')?.toString()
+        let payload = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            username: username,
+            password: password
+        }
+        auth.registerUser(payload)
+    }
     let ui =
         <Container component="main" maxWidth="xs">
-            {/* <ErrorModal showAlert={showAlert} errMsg={errMsg} handleCloseDialog={handleCloseDialog} /> */}
+            <ErrorSnack />
             <CssBaseline />
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Create New Account
                 </Typography>
-                <Box component="form" noValidate 
-                    // onSubmit={(handleSubmit)} 
+                <Box component="form" noValidate onSubmit={(handleSubmit)} 
                     sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
@@ -80,24 +95,13 @@ const RegisterScreen = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
+                            <PasswordField
                                 required
                                 fullWidth
                                 name="password"
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="new-password"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name="passwordVerify"
-                                label="Re-enter Password"
-                                type="password"
-                                id="passwordVerify"
                                 autoComplete="new-password"
                             />
                         </Grid>

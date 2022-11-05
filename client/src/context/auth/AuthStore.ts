@@ -1,4 +1,5 @@
 import { User } from '@types';
+import axios from 'axios';
 import { NavigateFunction } from 'react-router';
 import { UserApi } from "../../api/";
 
@@ -14,7 +15,7 @@ import {
 export interface AuthState {
     usr: User | null,
     loggedIn: boolean,
-    msg: string | null
+    msg: string
 }
 
 /**
@@ -36,10 +37,27 @@ export class AuthStore {
     public get auth(): AuthState { return this._auth; }
     public get setAuth(): (auth: AuthState) => void { return this._setAuth; }
 
-    public async loginUser(email: string, password: string): Promise<void> { 
+    public isLoggedIn(): boolean {
+        return this._auth.loggedIn
+    }
+
+    public getMsg(): string {
+        return this._auth.msg
+    }
+
+    public isMsg(): boolean {
+        return this._auth.msg ? true : false
+    }
+
+    public getUsr(): User | null {
+        return this._auth.usr
+    }
+
+    public async loginUser(email: string | undefined, password: string | undefined): Promise<void> { 
         let res = UserApi.login({email: email, password: password});
         res.then((res) => {
             if (res.status === 200 && res.data.user) {
+                this.nav('/home')
                 this.handleAction({
                     type: AuthActionType.loginUser,
                     payload: {
@@ -48,7 +66,16 @@ export class AuthStore {
                     }
                 })
             }
-        });
+        }).catch(e => {
+            if (e.response.status === 400) {
+                this.handleAction({
+                    type: AuthActionType.displayError,
+                    payload: {
+                        message: e.response.data.message
+                    }
+                })
+            }
+        })
     }
     public async logoutUser(): Promise<void> { 
         let res = UserApi.logout();
@@ -71,18 +98,19 @@ export class AuthStore {
                 this.handleAction({
                     type: AuthActionType.getLoggedIn,
                     payload: {
-                        message: res.data.message,
-                        user: res.data.user
+                        user: res.data.user,
+                        message: res.data.message
                     }
                 });
             }
         })
     }
 
-    public async registerUser(data: {firstName: string, lastName: string, username: string, password: string, email: string}): Promise<void> { 
+    public async registerUser(data: {firstName: string | undefined, lastName: string | undefined, username: string | undefined, password: string | undefined, email: string | undefined}): Promise<void> { 
         let res = UserApi.register(data);
         res.then((res) => {
-            if (res.status === 200 && res.data.user) {
+            if (res.status === 201 && res.data.user) {
+                this.nav('/home')
                 this.handleAction({
                     type: AuthActionType.registerUser,
                     payload: { 
@@ -91,7 +119,24 @@ export class AuthStore {
                     }
                 });
             }
-        });
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public clearError(): void {
+        this.handleAction({
+            type: AuthActionType.clearError
+        })
     }
 
     /**
@@ -129,6 +174,14 @@ export class AuthStore {
                 this.handleChangeEmail(action);
                 break;
             }
+            case AuthActionType.displayError: {
+                this.handleDisplayError(action);
+                break;
+            }
+            case AuthActionType.clearError: {
+                this.handleClearError(action);
+                break;
+            }
             default: { 
                 throw new Error(`Unhandled action with type ${action} caught in auth reducer`);
             }
@@ -144,9 +197,9 @@ export class AuthStore {
     }
     protected handleRegisterUser(action: RegisterUser): void {
         this.setAuth({
-            usr: null,
+            usr: action.payload.user,
             msg: action.payload.message,
-            loggedIn: this._auth.loggedIn,
+            loggedIn: true
         });
     }
     protected handleLoginUser(action: LoginUser): void {
@@ -188,4 +241,18 @@ export class AuthStore {
             });
         }
     };
+    protected handleDisplayError(action: DisplayErrorModal): void {
+        this.setAuth({
+            usr: this._auth.usr,
+            msg: action.payload.message,
+            loggedIn: this._auth.loggedIn
+        })
+    }
+    protected handleClearError(action: ClearErrorModal): void {
+        this.setAuth({
+            usr: this._auth.usr,
+            msg: '',
+            loggedIn: this._auth.loggedIn
+        })
+    }
 }
