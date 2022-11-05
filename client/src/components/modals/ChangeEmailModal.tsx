@@ -20,7 +20,7 @@ const ChangeEmailModal = () => {
             <DialogTitle>Really change your email?</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Renaming will take a few minutes to complete
+                    Renaming may take a few minutes to complete
                 </DialogContentText>
                 <TextField
                         variant='outlined'

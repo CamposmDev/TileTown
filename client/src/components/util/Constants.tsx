@@ -69,7 +69,7 @@ export function stringAvatar(firstName: string, lastName: string) {
     }
     return {
         sx: {
-        bgcolor: stringToColor(firstName + ' ' + lastName),
+            bgcolor: stringToColor(firstName + ' ' + lastName),
         },
         children: `${firstName[0]}${lastName[0]}`,
     };

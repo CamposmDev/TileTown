@@ -4,10 +4,10 @@ import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
 
 /**
- * 
- * @returns SnackBar as Error Feedback
+ * Reports messages received from the server
+ * @returns SnackBar
  */
-const ErrorSnack = () => {
+const NotificationSnack = () => {
     const auth = useContext(AuthContext)
     return (
         <div>
@@ -18,10 +18,10 @@ const ErrorSnack = () => {
                 autoHideDuration={5000}
                 onClose={() => auth.clearError()}
             >
-                <Alert severity='error'>{auth.getMsg()}</Alert>
+                <Alert severity={auth.isLoggedIn() ? 'success' : 'error'}>{auth.getMsg()}</Alert>
             </Snackbar>
         </div>
     );
 }
 
-export default ErrorSnack
+export default NotificationSnack

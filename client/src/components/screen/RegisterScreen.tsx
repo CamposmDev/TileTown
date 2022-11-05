@@ -12,7 +12,7 @@ import Box from '@mui/material/Box'
 import { Fade } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
-import ErrorSnack from '../modals/ErrorSnack';
+import NotificationSnack from '../modals/NotificationSnack';
 import PasswordField from '../PasswordField';
 
 const RegisterScreen = () => {
@@ -36,7 +36,6 @@ const RegisterScreen = () => {
     }
     let ui =
         <Container component="main" maxWidth="xs">
-            <ErrorSnack />
             <CssBaseline />
             <Box sx={{
                 marginTop: 8,

@@ -16,10 +16,11 @@ import {
   CommunityProfileScreen
 } from "./components/screen"
 import { SearchCategory } from "./components/util/Constants";
-import { TilesetEditContextProvider } from "src/context/tilesetEditor";
 import { AuthContextProvider } from "./context/auth";
+import { TilesetEditContextProvider } from './context/tilesetEditor';
 import CardTester from './components/CardTester';
 import ModalTester from './components/ModalTester';
+import NotificationSnack from './components/modals/NotificationSnack';
 
 /**
  * Pixel Editors
@@ -82,6 +83,7 @@ const App = () => {
               <Route path="/cards" element={<CardTester />} />
               <Route path="/modals" element={<ModalTester />} />
             </Routes>
+            <NotificationSnack/>
         </AuthContextProvider>
       </ThemeProvider>
     </BrowserRouter>

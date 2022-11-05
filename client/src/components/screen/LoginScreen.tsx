@@ -13,7 +13,7 @@ import PasswordResetModal from '../modals/PasswordResetModal';
 import { AuthContext } from 'src/context/auth';
 import { useContext } from 'react';
 import { Login } from '@mui/icons-material';
-import ErrorSnack from '../modals/ErrorSnack';
+import NotificationSnack from '../modals/NotificationSnack';
 import PasswordField from '../PasswordField';
 
 const LoginScreen = () => {
@@ -28,7 +28,6 @@ const LoginScreen = () => {
 
     let ui = (
         <Container component='main' maxWidth='xs'>
-            <ErrorSnack />
             <CssBaseline/>
             <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

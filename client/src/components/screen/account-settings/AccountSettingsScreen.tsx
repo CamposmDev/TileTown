@@ -1,45 +1,71 @@
-import { Avatar, Button, Divider, Grid, Stack, Typography } from "@mui/material"
-import { stringAvatar } from "src/components/util/Constants";
+import { Avatar, Box, Button, Container, CssBaseline, Divider, Grid, Stack, Typography } from "@mui/material"
+import { useContext, useEffect } from "react";
+import NotificationSnack from "src/components/modals/NotificationSnack";
+import { User } from "@types";
+import { stringAvatar } from "../../../components/util/Constants";
+import { AuthContext } from "../../../context/auth";
 import ChangeEmailModal from "../../modals/ChangeEmailModal";
 import ChangeUsernameModal from "../../modals/ChangeUsernameModal";
 import EditPasswordForm from "./EditPasswordForm";
 import EditUserPropertyForm from "./EditUserPropertyForm";
+import { useNavigate } from "react-router";
 
 const AccountSettingsScreen = () => {
+    const auth = useContext(AuthContext)
+    const nav = useNavigate()
+    useEffect(() => {
+        if (!auth.isLoggedIn()) nav('/')
+    }, [])
 
-    const divider = <Divider sx={{mt: 1, mb: 1, ml: 50, mr: 50}} />
-    const size = 140
+    const handleUpload = () => {
+        throw new Error('Not Implemented Yet')
+    }
+
+    const removePicture = () => {
+        throw new Error('Not Implemented Yet')
+    }
+
+    const SIZE = 128
+    let user: User | null = auth.getUsr()
     return (
-        <Grid container direction='column'>
-            <Grid container direction='column' alignItems='center'>
-                <Grid item mt={2}>
-                    <Typography variant='h5'>Account Settings</Typography>
+        <Container>
+            <NotificationSnack/>
+            <CssBaseline/>
+            <Box sx={{display: 'flex', flexDirection: 'column', mt: 1, alignItems: 'center'}}>
+                <Typography variant='h5' mb={1}>Account Settings</Typography>
+                <Avatar 
+                    {...user ? stringAvatar(user.firstName, user.lastName) : null}
+                    style={{fontSize: '32pt', width: SIZE, height: SIZE}}
+                />
+                <Stack mt={1} mb={1} spacing={1} direction='row'>
+                    <Button variant='outlined' onClick={handleUpload} >Upload</Button>
+                    <Button variant='outlined' onClick={removePicture}>Remove</Button>
+                </Stack>
+                <Grid>
+                    <EditUserPropertyForm
+                        title='Username' 
+                        content='Your username is:' 
+                        value={user ? user.username : 'How did you get here?'} 
+                        button={<ChangeUsernameModal/>}
+                    />
+                    <Divider sx={{mt: 1, mb: 1}}/>
+                    <EditUserPropertyForm 
+                        title='Email' 
+                        content ='Your email is:' 
+                        value={user ? user.email : 'How did you get here?'}
+                        button={<ChangeEmailModal/>}
+                    />
+                    <Divider sx={{mt: 1, mb: 1}}/>
+                    <EditPasswordForm/>
+                    <Divider sx={{mt: 1, mb: 1}}/>
                 </Grid>
-                <Grid item boxShadow={1} borderRadius={'50%'} textAlign='center' alignContent='center'>
-                    <Avatar {...stringAvatar('Michael', 'Campos')} sx={{fontSize: '32pt', width: size, height: size}}/>
-                </Grid>
-                <Grid item mt={1}>
-                    <Stack direction='row' spacing={1}>
-                        <Button variant='outlined'>Upload</Button>
-                        <Button variant='outlined'>Remove</Button>
-                    </Stack>
-                </Grid>
-            </Grid>
-            <EditUserPropertyForm title='Username' content='Your username is:' value={'Camposm'} button={<ChangeUsernameModal/>}/>
-            {divider}
-            <EditUserPropertyForm title='Email' content ='Your email is:' value='michael.campos@stonybrook.edu' button={<ChangeEmailModal/>}/>
-            {divider}
-            <EditPasswordForm/>
-            {divider}
-            <Grid item container direction='column' alignItems='center'>
-                <Grid item>
-                    <Button
-                        variant='outlined'
-                        color='error'
-                    >Delete Account</Button>
-                </Grid>
-            </Grid>
-        </Grid>
+                <Button
+                    variant='outlined'
+                    color='error'
+                >Delete Account</Button>
+                
+            </Box>
+        </Container>
     )
 }
 

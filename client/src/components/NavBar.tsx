@@ -2,7 +2,7 @@ import { ReactElement, useContext } from 'react'
 import Box from '@mui/material/Box'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { AuthContext } from 'src/context/auth'
+import { AuthContext } from '../context/auth'
 import UserMenu from './menu/UserMenu'
 import WelcomeMenu from './menu/WelcomeMenu'
 
