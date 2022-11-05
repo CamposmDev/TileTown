@@ -1,4 +1,4 @@
-import { Box, Menu, MenuItem } from "@mui/material"
+import { Box, Menu, MenuItem, MenuItemProps } from "@mui/material"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import CreateCommunityModal from "../modals/CreateCommunityModal"
@@ -31,7 +31,7 @@ const MENU_PAPER_PROPS = {
     },
 }
 
-const CreateButton = () => {
+const CreateButton = (props: MenuItemProps) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
 
@@ -59,7 +59,7 @@ const CreateButton = () => {
 
     return (
         <>
-            <MenuItem sx={{mr: 2, fontSize: 20}} onClick={handleMenuOpen}>Create</MenuItem>
+            <MenuItem {...props} sx={{mr: 2, fontSize: 20}} onClick={handleMenuOpen}>Create</MenuItem>
             {menu}
         </>
     )

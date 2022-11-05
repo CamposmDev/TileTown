@@ -4,7 +4,8 @@ import { MsgType } from "./AuthStore";
 export type AuthAction = 
 | RegisterUser 
 | LoginUser 
-| LogoutUser 
+| LogoutUser
+| LoginAsGuest
 | ChangeUsername
 | ChangePassword
 | ChangeEmail
@@ -18,6 +19,8 @@ export enum AuthActionType {
     loginUser = "LOGIN_USER",
     logoutUser = "LOGOUT_USER",
     getLoggedIn = "GET_LOGGED_IN",
+
+    loginAsGuest = 'LOGIN_AS_GUEST',
 
     changeUsername = "CHANGE_USERNAME",
     changePassword = "CHANGE_PASSWORD",
@@ -53,6 +56,13 @@ export type LoginUser = {
 
 export type LogoutUser = {
     type: AuthActionType.logoutUser,
+    payload: {
+        message: string
+    }
+}
+
+export type LoginAsGuest = {
+    type: AuthActionType.loginAsGuest,
     payload: {
         message: string
     }

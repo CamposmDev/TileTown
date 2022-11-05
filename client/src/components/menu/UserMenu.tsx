@@ -1,9 +1,10 @@
-import { Breadcrumbs, Grid, Typography, Link } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
+import { useContext } from "react"
 import { Link as RouterLink } from "react-router-dom"
+import { AuthContext } from "src/context/auth"
 import AccountButton from "../button/AccountButton"
 import CreateButton from "../button/CreateButton"
 import NavDrawer from "../NavDrawer"
-import { NavigateNext } from "@mui/icons-material"
 
 /**
  * Represents the toolbar's items of a logged in user
@@ -11,7 +12,7 @@ import { NavigateNext } from "@mui/icons-material"
  * @author Michael Campos
  */
 const UserMenu = () => {
-    
+    const auth = useContext(AuthContext)
     // let editorBreadcrumb = 
     //     <Breadcrumbs color="white" separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
     //         <Link underline="none" color="white">Camposm</Link>
@@ -31,13 +32,13 @@ const UserMenu = () => {
                     noWrap
                     component='div'
                     >
-                        <RouterLink style={{ textDecoration: 'none', color: 'white' }} to='/feed'>TileTown</RouterLink>
+                        <RouterLink style={{ textDecoration: 'none', color: 'white' }} to='/home'>TileTown</RouterLink>
                     </Typography>
             </Grid>
             {/* <Grid item flexGrow={1}>
                 {editorBreadcrumb}
             </Grid> */}
-            <CreateButton/>
+            <CreateButton disabled={auth.isGuest()} />
             <AccountButton />
         </Grid>
     )

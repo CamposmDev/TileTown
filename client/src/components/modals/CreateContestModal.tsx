@@ -1,8 +1,5 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Modal } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
@@ -16,8 +13,34 @@ interface Props {
 
 const CreateContestModal = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
-    const handleClose = () => setIsOpen(false);
+    const handleClose = () => {
+        setContest({name: '', desc: ''})
+        setIsOpen(false);
+    }
+    const [contest, setContest] = useState({
+        name: '',
+        desc: ''
+    })
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setContest({
+            name: e.target.value,
+            desc: contest.desc
+        })
+    }
+    const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setContest({
+            name: contest.name,
+            desc: e.target.value
+        })
+    }
+    const handleCreate = () => {
+        throw new Error('Not Yet Implemented')
+    }
 
+    let btDisabled = true
+    if (contest.name && contest.desc) {
+        btDisabled = false
+    }
     let ui = (
         <Dialog 
             open={isOpen} 
@@ -26,6 +49,7 @@ const CreateContestModal = (props: Props) => {
             <DialogTitle>Create Contest</DialogTitle>
                 <DialogContent>
                 <TextField
+                    onChange={handleNameChange}
                     variant='outlined'
                     margin='dense'
                     required
@@ -34,6 +58,7 @@ const CreateContestModal = (props: Props) => {
                     autoFocus
                 />
                 <TextField
+                    onChange={handleDescChange}
                     variant='outlined'
                     margin='dense'
                     required
@@ -66,12 +91,12 @@ const CreateContestModal = (props: Props) => {
                             />
                         </Stack>
                     </Grid>
-
-
                 </Grid>
                 </DialogContent>
             <DialogActions>
                 <Button
+                    disabled={btDisabled}
+                    onClick={handleCreate}
                     type="submit">
                     Create Contest
                 </Button>

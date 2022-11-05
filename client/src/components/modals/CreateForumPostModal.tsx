@@ -9,10 +9,12 @@ import {  MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 import { ArrowDropDown, Create } from '@mui/icons-material';
+import { AuthContext } from 'src/context/auth';
 
 const options = ['Annonymous', 'Your username'];
 
 const CreateForumPostModal = () => {
+    const auth = React.useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false)
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -188,7 +190,7 @@ const CreateForumPostModal = () => {
     )
     return (
         <>
-            <IconButton onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
             {ui}
         </>
     )

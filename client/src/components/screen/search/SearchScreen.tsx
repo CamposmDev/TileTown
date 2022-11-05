@@ -1,4 +1,7 @@
-import { Button, Grid } from "@mui/material"
+import { Grid } from "@mui/material"
+import { useContext, useEffect } from "react"
+import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
@@ -12,6 +15,12 @@ interface Props {
 }
 
 const SearchScreen = (props: Props) => {
+    const auth = useContext(AuthContext)
+    const nav = useNavigate()
+    useEffect(() => {
+        if (!auth.isLoggedIn()) nav('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     let items = 
     <Grid container spacing={1} justifyContent='center'>
         <Grid item flexGrow={1}>
@@ -554,7 +563,7 @@ const SearchScreen = (props: Props) => {
                 alignItems={'center'}
                 spacing={1}
                 mt={1}>
-                {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
+                {[1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <UserProfileCard
                         firstName='Michael'

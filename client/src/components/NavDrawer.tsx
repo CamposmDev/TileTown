@@ -21,7 +21,7 @@ export default function NavDrawer() {
 
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-        <Box p={2} width='225px' role='presentation' textAlign='start'>
+        <Box p={2} width='256px' role='presentation' textAlign='start'>
           <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
               <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>

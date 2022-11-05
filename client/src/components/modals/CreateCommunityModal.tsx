@@ -1,19 +1,40 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Modal, Stack } from '@mui/material';
-import { useState } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
 
 
-
-
-
 const CreateCommunityModal = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const handleClose = () => setIsOpen(false);
+    const handleClose = () => {
+        setComm({name: '', desc: ''})
+        setIsOpen(false)
+    }
+    const [comm, setComm] = useState({
+        name: '',
+        desc: ''
+    })
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setComm({
+            name: e.target.value,
+            desc: comm.desc
+        })
+    }
+    const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setComm({
+            name: comm.name,
+            desc: e.target.value
+        })
+    }
+    const handleCreate = () => {
+        throw new Error('Not Yet Implemented')
+    }
+
+    let btDisabled = true
+    if (comm.name && comm.desc) {
+        btDisabled = false
+    }
 
     let ui = (
         <Dialog 
@@ -28,6 +49,8 @@ const CreateCommunityModal = () => {
                     fullWidth
                     label="Name"
                     autoFocus
+                    margin='dense'
+                    onChange={handleNameChange}
                 />
                 <TextField
                     required
@@ -35,10 +58,14 @@ const CreateCommunityModal = () => {
                     label="Description"
                     multiline
                     rows={5}
+                    margin='dense'
+                    onChange={handleDescChange}
                 />
             </DialogContent>
             <DialogActions>
-            <Button
+                <Button
+                    onClick={handleCreate}
+                    disabled={btDisabled}
                     type="submit"
                     sx={{ mt: 4 }}>
                     Create Community
@@ -48,7 +75,7 @@ const CreateCommunityModal = () => {
     )
     return (
         <>
-            <MenuItem onClick={() => setIsOpen(!isOpen)}>Create Comunity</MenuItem>
+            <MenuItem onClick={() => setIsOpen(true)}>Create Community</MenuItem>
             {ui}
         </>
     )

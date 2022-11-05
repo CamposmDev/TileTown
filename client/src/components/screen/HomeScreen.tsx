@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { useContext, useEffect } from "react"
 import Carousel from "react-material-ui-carousel"
 import { useNavigate } from "react-router"
@@ -74,7 +74,10 @@ const HomeScreen = () => {
     const navigate = useNavigate()
     useEffect(() => {
         if (!auth.isLoggedIn()) navigate('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    console.log(auth.isGuest())
 
     const SIZE = 512
     return (

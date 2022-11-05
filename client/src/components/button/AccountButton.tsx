@@ -25,18 +25,17 @@ const AccountButton = () => {
     }
 
     const handleGuest = () => {
-        navigate('/home')
-        // auth.loginAsGuest()
+        auth.loginAsGuest()
         handleMenuClose()
     }
 
     const loggedInItems = (
         <Box>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/profile'}>
+            <MenuItem disabled={auth.isGuest()} onClick={handleMenuClose} component={Link} to={'/profile'}>
                 <ListItemIcon><Person/></ListItemIcon>
                 <ListItemText>Your Profile</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'}>
+            <MenuItem disabled={auth.isGuest()} onClick={handleMenuClose} component={Link} to={'/settings'}>
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText>Settings</ListItemText>
             </MenuItem>

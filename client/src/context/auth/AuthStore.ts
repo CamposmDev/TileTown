@@ -1,4 +1,3 @@
-import { AlignVerticalBottomRounded } from '@mui/icons-material';
 import { AlertColor } from '@mui/material';
 import { User } from '@types';
 import axios from 'axios';
@@ -8,7 +7,7 @@ import { UserApi } from "../../api/";
 import { 
     AuthActionType, AuthAction, RegisterUser, LoginUser, 
     LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
-    DisplayErrorModal, ClearErrorModal, GetLoggedIn
+    DisplayErrorModal, ClearErrorModal, GetLoggedIn, LoginAsGuest
 } from "./AuthAction"; 
 
 /**
@@ -54,6 +53,10 @@ export class AuthStore {
         return this._auth.loggedIn
     }
 
+    public isGuest(): boolean {
+        return (this._auth.usr === null) && (this._auth.loggedIn)
+    }
+
     public getMsg(): string {
         return this._auth.msg
     }
@@ -95,7 +98,18 @@ export class AuthStore {
             }
         })
     }
-    public async logoutUser(): Promise<void> { 
+
+    public async logoutUser(): Promise<void> {
+        if (this.isGuest()) {
+            this.nav('/')
+            this.handleAction({
+                type: AuthActionType.logoutUser,
+                payload: {
+                    message: 'Guest successfully logged out!'
+                }
+            })
+            return
+        }
         let res = UserApi.logout();
         res.then((res) => {
             if (res.status === 200) {
@@ -149,6 +163,16 @@ export class AuthStore {
                         }
                     })
                 }
+            }
+        })
+    }
+
+    public async loginAsGuest(): Promise<void> {
+        this.nav('/home')
+        this.handleAction({
+            type: AuthActionType.loginAsGuest,
+            payload: {
+                message: 'Guest successfully logged in!',
             }
         })
     }
@@ -296,6 +320,10 @@ export class AuthStore {
                 this.handleLogoutUser(action);
                 break;
             }
+            case AuthActionType.loginAsGuest: {
+                this.handleLoginAsGuest(action)
+                break;
+            }
             case AuthActionType.changePassword: {
                 this.handleChangePassword(action);
                 break;
@@ -353,6 +381,14 @@ export class AuthStore {
             msg: action.payload.message,
             loggedIn: false
         });
+    }
+    protected handleLoginAsGuest(action: LoginAsGuest): void {
+        this.setAuth({
+            msgType: MsgType.success,
+            usr: null,
+            msg: action.payload.message,
+            loggedIn: true
+        })
     }
     protected handleChangePassword(action: ChangePassword): void {
         this.setAuth({
