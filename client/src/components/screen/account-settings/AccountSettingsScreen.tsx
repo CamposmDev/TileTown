@@ -15,6 +15,7 @@ const AccountSettingsScreen = () => {
     const nav = useNavigate()
     useEffect(() => {
         if (!auth.isLoggedIn()) nav('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleUpload = () => {

@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography, Button, TextField, Box } from "@mui/material"
+import { Stack, Typography, Button, TextField, Box } from "@mui/material"
 import PasswordField from "src/components/PasswordField"
 
 const EditPasswordForm = () => {

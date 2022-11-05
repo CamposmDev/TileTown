@@ -18,7 +18,7 @@ const NotificationSnack = () => {
                 autoHideDuration={5000}
                 onClose={() => auth.clearError()}
             >
-                <Alert severity={auth.isLoggedIn() ? 'success' : 'error'}>{auth.getMsg()}</Alert>
+                <Alert severity={auth.getMsgType()}>{auth.getMsg()}</Alert>
             </Snackbar>
         </div>
     );

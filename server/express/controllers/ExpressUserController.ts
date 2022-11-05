@@ -299,7 +299,7 @@ export default class UserController {
             if (existingEmail.id === req.userId) {
                 res.status(400).json({message: `User is already registered to this email address`});
             } else {
-                res.status(400).json({message: `User with email ${req.body.email} already registered to another user`});
+                res.status(400).json({message: `User with email '${req.body.email}' already registered to another user`});
             }
             return;
         }
@@ -337,7 +337,7 @@ export default class UserController {
         // Check to make sure a user with the new username doesn't already exists
         let existingUser = await db.users.getUserByUsername(req.body.username);
         if (existingUser !== null) {
-            res.status(400).json({message: `User with username ${req.body.username} already exists`});
+            res.status(400).json({message: `User with username '${req.body.username}' already exists`});
             return;
         }
 

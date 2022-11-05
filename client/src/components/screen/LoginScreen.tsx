@@ -13,7 +13,6 @@ import PasswordResetModal from '../modals/PasswordResetModal';
 import { AuthContext } from 'src/context/auth';
 import { useContext } from 'react';
 import { Login } from '@mui/icons-material';
-import NotificationSnack from '../modals/NotificationSnack';
 import PasswordField from '../PasswordField';
 
 const LoginScreen = () => {

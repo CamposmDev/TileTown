@@ -1,4 +1,5 @@
 import { User } from "@types";
+import { MsgType } from "./AuthStore";
 
 export type AuthAction = 
 | RegisterUser 
@@ -83,6 +84,7 @@ export type ChangeEmail = {
 export type DisplayErrorModal = {
     type: AuthActionType.displayError,
     payload: {
+        messageType: MsgType,
         message: string
     }
 }

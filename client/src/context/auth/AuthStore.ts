@@ -1,3 +1,5 @@
+import { AlignVerticalBottomRounded } from '@mui/icons-material';
+import { AlertColor } from '@mui/material';
 import { User } from '@types';
 import axios from 'axios';
 import { NavigateFunction } from 'react-router';
@@ -10,11 +12,22 @@ import {
 } from "./AuthAction"; 
 
 /**
+ * The type of message that is received from the server
+ */
+export enum MsgType {
+    success = 'success',
+    info = 'info',
+    warning = 'warning',
+    error = 'error'
+}
+
+/**
  * The type of the AuthStore's state variable. For now it just has some dummy data I used to test if it worked
  */
 export interface AuthState {
     usr: User | null,
     loggedIn: boolean,
+    msgType: MsgType
     msg: string
 }
 
@@ -45,6 +58,10 @@ export class AuthStore {
         return this._auth.msg
     }
 
+    public getMsgType(): AlertColor {
+        return this._auth.msgType
+    }
+
     public isMsg(): boolean {
         return this._auth.msg ? true : false
     }
@@ -71,6 +88,7 @@ export class AuthStore {
                 this.handleAction({
                     type: AuthActionType.displayError,
                     payload: {
+                        messageType: MsgType.error,
                         message: e.response.data.message
                     }
                 })
@@ -125,6 +143,65 @@ export class AuthStore {
                     this.handleAction({
                         type: AuthActionType.displayError,
                         payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async changeUsername(username: string | undefined): Promise<void> {
+        let res = UserApi.updateUsername({
+            username: username
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changeUsername,
+                    payload: {
+                        message: res.data.message,
+                        username: res.data.username
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async changeEmail(email: string | undefined): Promise<void> {
+        let res = UserApi.updateEmail({
+            email: email
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changeEmail,
+                    payload: {
+                        message: res.data.message,
+                        email: res.data.email
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
                             message: e.response.data.message
                         }
                     })
@@ -190,6 +267,7 @@ export class AuthStore {
 
     protected handleGetLoggedIn(action: GetLoggedIn): void {
         this._setAuth({
+            msgType: MsgType.success,
             msg: action.payload.message,
             usr: action.payload.user,
             loggedIn: true
@@ -197,6 +275,7 @@ export class AuthStore {
     }
     protected handleRegisterUser(action: RegisterUser): void {
         this.setAuth({
+            msgType: MsgType.success,
             usr: action.payload.user,
             msg: action.payload.message,
             loggedIn: true
@@ -204,6 +283,7 @@ export class AuthStore {
     }
     protected handleLoginUser(action: LoginUser): void {
         this.setAuth({
+            msgType: MsgType.success,
             usr: action.payload.user,
             msg: action.payload.message,
             loggedIn: true
@@ -211,6 +291,7 @@ export class AuthStore {
     }
     protected handleLogoutUser(action: LogoutUser): void {
         this.setAuth({
+            msgType: MsgType.success,
             usr: null, 
             msg: action.payload.message,
             loggedIn: false
@@ -218,6 +299,7 @@ export class AuthStore {
     }
     protected handleChangePassword(action: ChangePassword): void {
         this.setAuth({
+            msgType: MsgType.success,
             usr: this._auth.usr, 
             msg: action.payload.message,
             loggedIn: this._auth.loggedIn
@@ -226,6 +308,7 @@ export class AuthStore {
     protected handleChangeUsername(action: ChangeUsername): void {
         if (this._auth.usr !== null) {
             this.setAuth({
+                msgType: MsgType.success,
                 usr: {...this._auth.usr, username: action.payload.username}, 
                 msg: action.payload.message,
                 loggedIn: this._auth.loggedIn
@@ -235,6 +318,7 @@ export class AuthStore {
     protected handleChangeEmail(action: ChangeEmail): void {
         if (this._auth.usr !== null) {
             this._setAuth({
+                msgType: MsgType.success,
                 usr: {...this._auth.usr, email: action.payload.email},
                 msg: action.payload.message,
                 loggedIn: this._auth.loggedIn
@@ -243,6 +327,7 @@ export class AuthStore {
     };
     protected handleDisplayError(action: DisplayErrorModal): void {
         this.setAuth({
+            msgType: action.payload.messageType,
             usr: this._auth.usr,
             msg: action.payload.message,
             loggedIn: this._auth.loggedIn
@@ -250,6 +335,7 @@ export class AuthStore {
     }
     protected handleClearError(action: ClearErrorModal): void {
         this.setAuth({
+            msgType: this._auth.msgType,
             usr: this._auth.usr,
             msg: '',
             loggedIn: this._auth.loggedIn

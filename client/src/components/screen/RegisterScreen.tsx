@@ -12,7 +12,6 @@ import Box from '@mui/material/Box'
 import { Fade } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
-import NotificationSnack from '../modals/NotificationSnack';
 import PasswordField from '../PasswordField';
 
 const RegisterScreen = () => {

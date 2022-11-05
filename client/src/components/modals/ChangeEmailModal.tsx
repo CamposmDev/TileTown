@@ -1,16 +1,24 @@
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@mui/material';
-import { useState } from 'react';
+import { Box, Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
+import { AuthContext } from '../../context/auth';
 
 
 
 const ChangeEmailModal = () => {
+    const auth = useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
+
+    const changeEmail = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        let email: string | undefined = formData.get('email')?.toString()
+        auth.changeEmail(email)
+        handleClose()
+    }
 
     let ui = (
         <Dialog 
@@ -18,11 +26,12 @@ const ChangeEmailModal = () => {
             onClose={handleClose}
             >
             <DialogTitle>Really change your email?</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Renaming may take a few minutes to complete
-                </DialogContentText>
-                <TextField
+            <Box component={'form'} onSubmit={changeEmail}>
+                <DialogContent>
+                    <DialogContentText>
+                        Renaming may take a few minutes to complete
+                    </DialogContentText>
+                    <TextField
                         variant='outlined'
                         margin="normal"
                         required
@@ -33,14 +42,8 @@ const ChangeEmailModal = () => {
                         autoComplete="email"
                         autoFocus
                     />
-                
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    type="submit">
-                    Change my email
-                </Button>
-            </DialogActions>
+                </DialogContent>
+            </Box>
         </Dialog>
     )
     return (
