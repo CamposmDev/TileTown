@@ -11,25 +11,20 @@ import Fade from '@mui/material/Fade';
 import Copyright from '../Copyright';
 import PasswordResetModal from '../modals/PasswordResetModal';
 import { AuthContext } from 'src/context/auth';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Login } from '@mui/icons-material';
 import ErrorSnack from '../modals/ErrorSnack';
 import PasswordField from '../PasswordField';
 
 const LoginScreen = () => {
     const auth = useContext(AuthContext)
-    const [showPassword, setShowPassword] = useState(false)
-    const handleShowPassword = () => setShowPassword(!showPassword)
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        console.log('submitting')
         const formData = new FormData(e.currentTarget)
         let email = formData.get('email')?.toString()
         let password = formData.get('password')?.toString()
         auth.loginUser(email, password)
     }
-
-    console.log('message=' + auth.getMsg())
 
     let ui = (
         <Container component='main' maxWidth='xs'>

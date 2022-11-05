@@ -1,5 +1,5 @@
 import { User } from '@types';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { NavigateFunction } from 'react-router';
 import { UserApi } from "../../api/";
 
@@ -49,6 +49,10 @@ export class AuthStore {
         return this._auth.msg ? true : false
     }
 
+    public getUsr(): User | null {
+        return this._auth.usr
+    }
+
     public async loginUser(email: string | undefined, password: string | undefined): Promise<void> { 
         let res = UserApi.login({email: email, password: password});
         res.then((res) => {
@@ -64,7 +68,6 @@ export class AuthStore {
             }
         }).catch(e => {
             if (e.response.status === 400) {
-                console.log(e.response.data.message)
                 this.handleAction({
                     type: AuthActionType.displayError,
                     payload: {
@@ -108,7 +111,6 @@ export class AuthStore {
         res.then((res) => {
             if (res.status === 201 && res.data.user) {
                 this.nav('/home')
-                console.log('data.message=' + res.data.message)
                 this.handleAction({
                     type: AuthActionType.registerUser,
                     payload: { 
@@ -120,7 +122,6 @@ export class AuthStore {
         }).catch(e => {
             if (axios.isAxiosError(e)) {
                 if (e.response && e.response.status === 400) {
-                    console.log(e.response.data.message)
                     this.handleAction({
                         type: AuthActionType.displayError,
                         payload: {
@@ -195,8 +196,6 @@ export class AuthStore {
         });
     }
     protected handleRegisterUser(action: RegisterUser): void {
-        console.log('registered user')
-        console.log(action)
         this.setAuth({
             usr: action.payload.user,
             msg: action.payload.message,
@@ -204,8 +203,6 @@ export class AuthStore {
         });
     }
     protected handleLoginUser(action: LoginUser): void {
-        console.log('logged in user')
-        console.log(action)
         this.setAuth({
             usr: action.payload.user,
             msg: action.payload.message,

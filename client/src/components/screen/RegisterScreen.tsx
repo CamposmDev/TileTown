@@ -8,7 +8,6 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-// import { GlobalStoreContext } from '../context/store'
 import Box from '@mui/material/Box'
 import { Fade } from '@mui/material';
 import { useContext } from 'react';
@@ -20,7 +19,6 @@ const RegisterScreen = () => {
     const auth = useContext(AuthContext)
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        console.log('I AM ALIVE')
         const formData = new FormData(e.currentTarget)
         let firstName = formData.get('firstName')?.toString()
         let lastName = formData.get('lastName')?.toString()
@@ -34,7 +32,6 @@ const RegisterScreen = () => {
             username: username,
             password: password
         }
-        console.log(payload)
         auth.registerUser(payload)
     }
     let ui =
