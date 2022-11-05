@@ -188,11 +188,11 @@ export default class UserController {
         }
 
         if (!req.body.email) {
-            res.status(400).json({message: "Missig required field 'email'"});
+            res.status(400).json({message: "Missing required field 'email'"});
             return;
         }
         if (!req.body.password) {
-            res.status(400).json({message: "Missig required field 'password'"});
+            res.status(400).json({message: "Missing required field 'password'"});
             return;
         }
 
