@@ -4,6 +4,7 @@ import ExpressContestController from './ExpressContestController';
 import ExpressCommunityController from './ExpressCommunityController';
 import ExpressTilemapController from './ExpressTilemapController';
 import ExpressTilesetController from './ExpressTilesetController';
+import ExpressQueryController from './ExpressQueryController';
 
 
 const UserController: ExpressUserController = new ExpressUserController();
@@ -12,6 +13,7 @@ const ContestController: ExpressContestController = new ExpressContestController
 const CommunityController: ExpressCommunityController = new ExpressCommunityController();
 const TilemapController: ExpressTilemapController = new ExpressTilemapController();
 const TilesetController: ExpressTilesetController = new ExpressTilesetController();
+const QueryController: ExpressQueryController = new ExpressQueryController();
 
 
 export { 
@@ -20,5 +22,6 @@ export {
     ContestController,
     CommunityController,
     TilemapController,
-    TilesetController
+    TilesetController,
+    QueryController
 }

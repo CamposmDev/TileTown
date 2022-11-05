@@ -24,6 +24,7 @@ import TilesetEditorState, {
   TilesetEditorActionType,
   TilesetEditorAction,
 } from "./TilesetEditTypes";
+import { TilemapSocialQuery, TilemapSocialSortBy, TilemapSocialOrder  } from "./TilemapSocialQuery";
 
 export type {
   EditMode,
@@ -49,6 +50,7 @@ export type {
   Type,
   TilesetEditorState,
   TilesetEditorAction,
+  TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy
 };
 
 export {

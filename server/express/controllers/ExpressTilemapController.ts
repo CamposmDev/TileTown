@@ -220,6 +220,49 @@ export default class TilemapController {
         return res.status(200).json({ message: "Updating a tilemap!", tilemap: tilemap});
     }
 
+    public async publishTilemap(req: Request, res: Response): Promise<Response> {
+        // Check for bad request and missing parameters 
+        if (!req || !res || !req.params || !req.body) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id" });
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing tileset id" });
+        }
+        if (!req.body.social) {
+            return res.status(400).json({ message: "Missing social in body" });
+        }
+
+        // Check tilemap exists
+        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
+        if (tilemap === null) {
+            return res.status(404).json({ message: `Tilemap with id ${req.params.id} not found` });
+        }
+
+        // Check if social data already exists for this tilemap
+        let existingSocial = await db.tilemapSocials.getTilemapSocialByTilemapId(tilemap.id);
+        if (existingSocial !== null) {
+            return res.status(400).json({ message: `Tilemap with id ${tilemap.id} has already been published!` });
+        }
+
+        // Check the user/owner exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(400).json({ message: `User does not exist`});
+        }
+
+        // Create the social data
+        let social = await db.tilemapSocials.createTilemapSocial(tilemap.id, {...req.body.social, name: tilemap.name, owner: user.id, ownerName: user.username});
+        if (social === null) {
+            return res.status(500).json({ message: `Server Error. Error publishing tilemap with id ${tilemap.id}` });
+        }
+
+        return res.status(200).json({ message: "Tilemap published!", social: social });
+
+    }
+
     public async favoriteTilemapById(req: Request, res: Response): Promise<Response> {
         if (!req || !res || !req.params) {
             return res.status(400).json({ message: "Bad Request" });

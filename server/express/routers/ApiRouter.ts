@@ -6,6 +6,7 @@ import UserRouter from './UserRouter';
 import CommunityRouter from './CommunityRouter';
 import TilemapRouter from './TilemapRouter';
 import TilesetRouter from './TilesetRouter';
+import QueryRouter from './QueryRouter';
 
 
 /** The main Router object for the TileTown API */
@@ -17,5 +18,6 @@ router.use('/forum', ForumRouter);
 router.use('/community', CommunityRouter);
 router.use('/tileset', TilesetRouter);
 router.use('/tilemap', TilemapRouter);
+router.use('/query', QueryRouter);
 
 export default router;

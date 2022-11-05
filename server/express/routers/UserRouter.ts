@@ -5,10 +5,6 @@ import { Auth } from "../middleware";
 const UserRouter: Router = Router();
 
 UserRouter.get('/verify/:id', UserController.verifyUser);
-UserRouter.get('/:id/tilemaps', Auth.verifyJWT, UserController.getUserTilemaps);
-UserRouter.get('/:id/tilesets', Auth.verifyJWT, UserController.getUserTilesets);
-UserRouter.get('/:id/communities', Auth.verifyJWT, UserController.getUserCommunities);
-UserRouter.get('/:id/contests', Auth.verifyJWT, UserController.getUserContests);
 UserRouter.get('/:id', Auth.verifyJWT, UserController.getUserById);
 UserRouter.get('/', Auth.verifyJWT, UserController.getLoggedIn);
 

@@ -1,8 +1,8 @@
-import { TilemapSocial } from "@types";
+import { TilemapSocial, TilemapSocialQuery } from "@types";
 
 export default interface TilemapSocialDBM {
 
-    getTilemapSocialByTilesetId(tilesetId: string): Promise<TilemapSocial | null>;
+    getTilemapSocialByTilemapId(tilesetId: string): Promise<TilemapSocial | null>;
 
     getTilemapSocialById(socialId: string): Promise<TilemapSocial | null>
 
@@ -10,4 +10,5 @@ export default interface TilemapSocialDBM {
 
     updateTilemapSocial(tilemapId: string, partial: Partial<TilemapSocial>): Promise<TilemapSocial | null>;
 
+    getTilemapSocials(query: TilemapSocialQuery): Promise<TilemapSocial[]>
 }
