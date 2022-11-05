@@ -1,4 +1,5 @@
 import { Grid, Stack, Typography, Button, TextField } from "@mui/material"
+import PasswordField from "src/components/PasswordField"
 
 const EditPasswordForm = () => {
     return (
@@ -12,7 +13,7 @@ const EditPasswordForm = () => {
                             fullWidth
                             size='small'
                         />
-                        <TextField
+                        <PasswordField
                             label='New Password'
                             fullWidth
                             size='small'

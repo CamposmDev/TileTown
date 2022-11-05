@@ -6,12 +6,6 @@ import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
 
-interface Props {
-    firstName: string,
-    lastName: string,
-    username: string
-}
-
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
