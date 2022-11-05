@@ -243,11 +243,11 @@ export default class UserController {
             return;
         }
         if (!req.body.oldPassword) {
-            res.status(400).json({message: "Missing field `oldPassword`"});
+            res.status(400).json({message: "Missing field `old password`"});
             return;
         }
         if (!req.body.newPassword) {
-            res.status(400).json({message: "Missing field `newPassword`"});
+            res.status(400).json({message: "Missing field `new password`"});
             return;
         }
 
@@ -267,6 +267,11 @@ export default class UserController {
 
         if (req.body.newPassword.length < 12) {
             res.status(400).json({message: "New password must be at least 12 characters long"});
+            return;
+        }
+
+        if (req.body.oldPassword.localeCompare(req.body.newPassword) === 0) {
+            res.status(400).json({message: "New password is same as old password"});
             return;
         }
 
