@@ -1,5 +1,3 @@
-// import { useState, useContext } from 'react';
-// import AuthContext from '../context/auth'
 import Copyright from '../Copyright'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -11,15 +9,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // import { GlobalStoreContext } from '../context/store'
-// import ErrorModal from './modal/ErrorModal'
 import Box from '@mui/material/Box'
 import { ButtonGroup, Fade } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
+import ErrorSnack from '../modals/ErrorSnack';
+import PasswordField from '../PasswordField';
 
 const RegisterScreen = () => {
     const auth = useContext(AuthContext)
-    console.log(' am i logged in ? ' + auth.isLoggedIn())
     const handleSubmit = (e: any) => {
         e.preventDefault()
         console.log('I AM ALIVE')
@@ -29,21 +27,19 @@ const RegisterScreen = () => {
         let email = formData.get('email')?.toString()
         let username = formData.get('username')?.toString()
         let password = formData.get('password')?.toString()
-        if (firstName && lastName && email && username && password) {
-            let payload = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                username: username,
-                password: password
-            }
-            console.log(payload)
-            auth.registerUser(payload)
+        let payload = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            username: username,
+            password: password
         }
+        console.log(payload)
+        auth.registerUser(payload)
     }
     let ui =
         <Container component="main" maxWidth="xs">
-            {/* <ErrorModal showAlert={showAlert} errMsg={errMsg} handleCloseDialog={handleCloseDialog} /> */}
+            <ErrorSnack show={auth.isMsg()} message={auth.getMsg()} handleClose={() => auth.clearError()}/>
             <CssBaseline />
             <Box sx={{
                 marginTop: 8,
@@ -102,24 +98,13 @@ const RegisterScreen = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
+                            <PasswordField
                                 required
                                 fullWidth
                                 name="password"
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="new-password"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name="passwordVerify"
-                                label="Re-enter Password"
-                                type="password"
-                                id="passwordVerify"
                                 autoComplete="new-password"
                             />
                         </Grid>

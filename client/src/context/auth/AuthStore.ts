@@ -1,4 +1,5 @@
 import { User } from '@types';
+import axios, { AxiosError } from 'axios';
 import { NavigateFunction } from 'react-router';
 import { UserApi } from "../../api/";
 
@@ -102,7 +103,7 @@ export class AuthStore {
         })
     }
 
-    public async registerUser(data: {firstName: string, lastName: string, username: string, password: string, email: string}): Promise<void> { 
+    public async registerUser(data: {firstName: string | undefined, lastName: string | undefined, username: string | undefined, password: string | undefined, email: string | undefined}): Promise<void> { 
         let res = UserApi.register(data);
         res.then((res) => {
             if (res.status === 201 && res.data.user) {
@@ -116,7 +117,19 @@ export class AuthStore {
                     }
                 });
             }
-        });
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    console.log(e.response.data.message)
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
     }
 
     public clearError(): void {
