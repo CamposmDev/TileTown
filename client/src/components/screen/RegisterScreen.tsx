@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // import { GlobalStoreContext } from '../context/store'
 import Box from '@mui/material/Box'
-import { ButtonGroup, Fade } from '@mui/material';
+import { Fade } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
 import ErrorSnack from '../modals/ErrorSnack';
@@ -39,7 +39,7 @@ const RegisterScreen = () => {
     }
     let ui =
         <Container component="main" maxWidth="xs">
-            <ErrorSnack show={auth.isMsg()} message={auth.getMsg()} handleClose={() => auth.clearError()}/>
+            <ErrorSnack />
             <CssBaseline />
             <Box sx={{
                 marginTop: 8,

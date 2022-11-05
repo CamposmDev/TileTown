@@ -1,25 +1,27 @@
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { Alert, Snackbar } from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from 'src/context/auth';
 
-interface Props {
-    show: boolean,
-    message: string,
-    handleClose: Function
-}
-
-export default function ErrorSnack(props: Props) {
+/**
+ * 
+ * @returns SnackBar as Error Feedback
+ */
+const ErrorSnack = () => {
+    const auth = useContext(AuthContext)
     return (
         <div>
             <Snackbar
-                open={props.show}
+                open={auth.isMsg()}
                 TransitionComponent={SLIDE_DOWN_TRANSITION}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                 autoHideDuration={5000}
-                onClose={() => props.handleClose()}
-                message={props.message}
+                onClose={() => auth.clearError()}
             >
-                <Alert severity='error'>{props.message}</Alert>
+                <Alert severity='error'>{auth.getMsg()}</Alert>
             </Snackbar>
         </div>
     );
 }
+
+export default ErrorSnack

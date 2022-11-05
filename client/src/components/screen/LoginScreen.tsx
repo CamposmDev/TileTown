@@ -12,8 +12,7 @@ import Copyright from '../Copyright';
 import PasswordResetModal from '../modals/PasswordResetModal';
 import { AuthContext } from 'src/context/auth';
 import { useContext, useState } from 'react';
-import { IconButton, InputAdornment } from '@mui/material';
-import { Login, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Login } from '@mui/icons-material';
 import ErrorSnack from '../modals/ErrorSnack';
 import PasswordField from '../PasswordField';
 
@@ -34,7 +33,7 @@ const LoginScreen = () => {
 
     let ui = (
         <Container component='main' maxWidth='xs'>
-            <ErrorSnack show={auth.isMsg()} message={auth.getMsg()} handleClose={() => auth.clearError()}/>
+            <ErrorSnack />
             <CssBaseline/>
             <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
