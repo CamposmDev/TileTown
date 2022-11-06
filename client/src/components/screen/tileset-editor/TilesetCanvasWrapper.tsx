@@ -59,8 +59,6 @@ const TilesetCanvasWrapper = () => {
   const zoom: number = edit.state.zoom;
   const canvasHeight: number = tileHeight * 50 * zoom;
   const canvasWidth: number = tileWidth * 50 * zoom;
-  const canvasImage: HTMLImageElement = new Image();
-
   useEffect(() => {}, []);
 
   return (

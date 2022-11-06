@@ -278,7 +278,7 @@ export class TilesetEditStore {
         : this._state.tileset.tileHeight,
       tileWidth: tileset.tileWidth
         ? tileset.tileWidth
-        : this._state.tileset.imageWidth,
+        : this._state.tileset.tileWidth,
       margin: tileset.margin ? tileset.margin : this._state.tileset.margin,
       name: tileset.name ? tileset.name : this._state.tileset.name,
       owner: this._state.tileset.owner,

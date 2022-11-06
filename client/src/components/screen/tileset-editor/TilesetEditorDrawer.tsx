@@ -106,7 +106,7 @@ const TilesetEditorDrawer = () => {
   const handleUpdateTileHeight = (event: any): void => {
     let text = event.target.value;
     if (isNaN(text)) {
-      setTileHeight(edit.state.tileset.rows);
+      setTileHeight(edit.state.tileset.tileHeight);
       return;
     }
     edit.updateTileset({
