@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { TilemapSocial, TilemapSocialQuery } from "@types";
-import TilemapSocialDBM from "../../interface/managers/TilemapSocialDBM";
+import { TilemapSocialDBM }  from "../../interface";
 import { TilemapSocialSchemaType } from "../types";
 import { TilemapSocialModel } from "../schemas";
 

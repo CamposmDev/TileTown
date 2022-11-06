@@ -24,7 +24,17 @@ import TilesetEditorState, {
   TilesetEditorActionType,
   TilesetEditorAction,
 } from "./TilesetEditTypes";
-import { TilemapSocialQuery, TilemapSocialSortBy, TilemapSocialOrder  } from "./TilemapSocialQuery";
+import { 
+    TilemapSocialQuery, 
+    TilemapSocialSortBy, 
+    TilemapSocialOrder  
+} from "./TilemapSocialQuery";
+
+import { 
+    TilesetSocialQuery, 
+    TilesetSocialSortBy, 
+    TilesetSocialOrder
+} from "./TilesetSocialQuery"
 
 export type {
   EditMode,
@@ -50,7 +60,9 @@ export type {
   Type,
   TilesetEditorState,
   TilesetEditorAction,
-  TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy
+  TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy,
+  TilesetSocialQuery, TilesetSocialOrder, TilesetSocialSortBy
+
 };
 
 export {

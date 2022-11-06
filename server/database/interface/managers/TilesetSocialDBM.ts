@@ -1,4 +1,4 @@
-import { TilesetSocial } from "@types";
+import { TilesetSocial, TilesetSocialQuery } from "@types";
 
 export default interface TilesetSocialDBM {
 
@@ -10,4 +10,6 @@ export default interface TilesetSocialDBM {
 
     updateTilesetSocial(tilesetId: string, partial: Partial<TilesetSocial>): Promise<TilesetSocial | null>;
 
+    getTilesetSocials(query: TilesetSocialQuery): Promise<TilesetSocial[]>
+    
 }

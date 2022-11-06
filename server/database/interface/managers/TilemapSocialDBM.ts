@@ -11,4 +11,5 @@ export default interface TilemapSocialDBM {
     updateTilemapSocial(tilemapId: string, partial: Partial<TilemapSocial>): Promise<TilemapSocial | null>;
 
     getTilemapSocials(query: TilemapSocialQuery): Promise<TilemapSocial[]>
+    
 }

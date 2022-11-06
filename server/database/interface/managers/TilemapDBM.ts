@@ -1,16 +1,9 @@
-import {
-  Tilemap,
-  CollaboratorSettings,
-  SocialStatisticsPermissions,
-  Layer,
-  Property,
-} from "@types";
+import { Tilemap } from "@types";
 
 /**
  * An interface defining a set of methods to work with TileTown Tilemaps and Tilemap social statistics in an arbitrary DBMS.
  * @author Peter Walsh, Andrew Ojeda
  */
-
 export default interface TilemapDBM {
   /**
    * Gets the data associated with a Tilemap with the given id in a DBMS.

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Tileset, TilesetSocial } from "@types";
+import { Tileset, TilesetSocial, TilesetSocialQuery } from "@types";
 import TilesetSocialDBM from "../../interface/managers/TilesetSocialDBM";
 import { TilesetSocialModel } from "../schemas/TilesetSocialModel";
 import TilesetSocialSchemaType from "../types/TilesetSocialSchemaType";
@@ -54,6 +54,50 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         this.fillSocial(social, partial);
         let savedSocial = await social.save();
         return this.parseSocial(savedSocial);
+    }
+
+    async getTilesetSocials(query: TilesetSocialQuery): Promise<TilesetSocial[]> {
+
+        let sort;
+        switch(query.sortby) {
+            case "published": { 
+                sort = { publishDate: query.order }
+                break;
+            }
+            case "likes": {
+                sort = { likes: query.order }
+                break;
+            }
+            case "dislikes": {
+                sort = { dislikes: query.order }
+                break;
+            }
+            case "views": {
+                sort = { views: query.order }
+                break;
+            }
+            default: {
+                sort = { publishDate: query.order }
+                break;
+            }
+        }
+        
+
+        let socials;
+        
+        if (query.tags.length !== 0) {
+            socials = await TilesetSocialModel.find({$and: [
+                { name: new RegExp(`^${query.name}`, "i") },
+                { tags: {$elemMatch : { $in: query.tags } }},
+                ]}).sort(sort);
+        } else {
+            socials = await TilesetSocialModel.find({$and: [
+                { name: new RegExp(`^${query.name}`, "i") }
+                ]}
+            ).sort(sort);
+        }
+
+        return socials.map(s => this.parseSocial(s));
     }
 
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {

@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy } from "@types";
+import { TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy, TilesetSocialSortBy, TilesetSocialQuery, TilesetSocialOrder } from "@types";
 import { db } from "../../database";
 
 export default class ExpressQueryController {
@@ -85,21 +85,23 @@ export default class ExpressQueryController {
         if (!req || !res || !req.query) {
             return res.status(400).json({message: "Bad Request"});
         }
-        let params = SocialQueryParser.parse(req.query);
+        let params = TilemapSocialQueryParser.parse(req.query);
         let socials = await db.tilemapSocials.getTilemapSocials(params);
-        return res.status(200).json({messagee: "Success", params: params, socials: socials});
+        return res.status(200).json({message: "Success", params: params, socials: socials});
     }
-
     public async getTilesetSocials(req: Request, res: Response): Promise<Response> {
-        if (!req || !res) {
+        if (!req || !res || !req.query) {
             return res.status(400).json({message: "Bad Request"});
         }
-        return res;
+        let params = TilesetSocialQueryParser.parse(req.query);
+        let socials = await db.tilesetSocials.getTilesetSocials(params);
+        return res.status(200).json({message: "Success", params: params, socials: socials});
     }
 
 }
 
-class SocialQueryParser {
+class TilemapSocialQueryParser {
+
     public static parse(params: Record<string, any>): TilemapSocialQuery {
         if (params === null || params === undefined) {
             return { sortby: "published", order: -1, tags: [], name: "" };
@@ -132,6 +134,43 @@ class SocialQueryParser {
     }
     protected static parseSocialTagsParam(tags: string): string[] {
         if (tags === null || tags === undefined) return [];
-        return tags.split(" ");
+        return tags.trim().split(" ");
+    }
+}
+
+class TilesetSocialQueryParser {
+    public static parse(params: Record<string, any>): TilesetSocialQuery {
+        if (params === null || params === undefined) {
+            return { sortby: "published", order: -1, tags: [], name: "" };
+        }
+
+        return {
+            sortby: this.parseSocialSortByParam(params.sortby),
+            order: this.parseSocialOrderParam(params.order),
+            tags: this.parseSocialTagsParam(params.tags),
+            name: params.name ? params.name : ""
+        }
+    }
+    protected static parseSocialSortByParam(sortby: string): TilesetSocialSortBy {
+        if (sortby === null || sortby === undefined) return "published";
+        switch(sortby.toLowerCase()) { 
+            case "likes": return "likes";
+            case "dislikes": return "dislikes";
+            case "views": return "views";
+            case "published": return "published";
+            default: return "published";
+        }
+    }
+    protected static parseSocialOrderParam(order: string): TilesetSocialOrder {
+        if (order === null || order === undefined || !parseInt(order)) return -1;
+        switch(parseInt(order)) {
+            case 1: return 1;
+            case -1: return -1;
+            default: return -1;
+        }
+    }
+    protected static parseSocialTagsParam(tags: string): string[] {
+        if (tags === null || tags === undefined) return [];
+        return tags.trim().split(" ");
     }
 }
