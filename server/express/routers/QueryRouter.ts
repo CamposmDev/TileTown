@@ -9,7 +9,6 @@ router.get('/socials/tilesets', QueryController.getTilesetSocials);
 router.get('/tilemaps', Auth.verifyJWT, QueryController.getUserTilemaps);
 router.get('/tilesets', Auth.verifyJWT, QueryController.getUserTilesets);
 
-
 router.get('/communities', QueryController.getCommunities);
 router.get('/contests', QueryController.getContests);
 router.get('/users', QueryController.getUsers)
