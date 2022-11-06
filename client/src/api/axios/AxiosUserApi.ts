@@ -23,9 +23,6 @@ export default class AxiosUserApi  {
     async delete(): Promise<AxiosResponse<DeleteRes>> {
         return AxiosApi.delete<DeleteRes, AxiosResponse<DeleteRes>, DeleteReq>("/user");
     }
-    async tilemaps(): Promise<AxiosResponse<GetTilemapsRes>> {
-        return AxiosApi.get<GetTilemapsRes, AxiosResponse<GetTilemapsRes>, GetTilemapsReq>("/user/tilemaps");
-    }
     async updateUsername(payload: UpdateUsernameReq): Promise<AxiosResponse> {
         return AxiosApi.put<UpdateUsernameRes, AxiosResponse<UpdateUsernameRes>, UpdateUsernameReq>('/user/username', payload)
     }
