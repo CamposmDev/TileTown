@@ -187,7 +187,7 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateZoom = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1) {
       return;
     }
     edit.updateZoom(text);
