@@ -29,19 +29,19 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
 
         let social = await TilesetSocialModel.create({
             tileSet: tilesetId,
-            name: "",
-            owner: new mongoose.Types.ObjectId(),
-            ownerName: "TBD",
-            tags: [],
-            description: "",
-            communities: [],
+            name: partial.name ? partial.name : "Tileset name",
+            owner: partial.owner ? partial.owner : new mongoose.Types.ObjectId(),
+            ownerName: partial.ownerName ? partial.ownerName : "Owner",
+            tags: partial.tags ? partial.tags : [],
+            description: partial.description ? partial.description : "Description",
+            communities: partial.communities ? partial.communities : [],
             likes: [],
             dislikes: [],
             views: 0, 
-            permissions: [],
+            permissions: partial.permissions ? partial.permissions : [],
             comments: [],
             publishDate: new Date(Date.now()),
-            imageURL: ""
+            imageURL: partial.imageURL ? partial.imageURL : "missing-image-url"
         });
 
         let savedSocial = await social.save();
@@ -49,13 +49,10 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
     }
     async updateTilesetSocial(socialId: string, partial: Partial<Tileset>): Promise<TilesetSocial | null> {
         if (!mongoose.Types.ObjectId.isValid(socialId)) return null;
-
         let social = await TilesetSocialModel.findById(socialId);
         if (social === null) return null;
-
         this.fillSocial(social, partial);
         let savedSocial = await social.save();
-
         return this.parseSocial(savedSocial);
     }
 

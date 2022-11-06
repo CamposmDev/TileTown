@@ -1,36 +1,21 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 import {
-    Tilemap,
-    CollaboratorSettings,
-    TilemapSocial,
-    SocialStatisticsPermissions,
-    Layer,
-    Property,
-    SortBy,
-    Color,
-    Comment,
-    EditMode,
-    Orientation,
-    RenderOrder,
+    Tilemap, CollaboratorSettings, Property,
+    SortBy, Color, Orientation, RenderOrder,
 } from "@types";
 
-import { TilemapModel, UserModel, CommentModel, TilemapSocialModel } from "../schemas";
+import { TilemapModel } from "../schemas";
 import { TilemapDBM } from "../../interface";
-import {
-    TilemapSchemaType,
- } from "../types";
+import { TilemapSchemaType } from "../types";
 
-const ObjectId = mongoose.Types.ObjectId;
 
 export default class MongooseTilemapDBM implements TilemapDBM {
 
     async getTilemapById(tilemapId: string): Promise<Tilemap | null> {
         if (!mongoose.Types.ObjectId.isValid(tilemapId)) return null;
-
         let tilemap = await TilemapModel.findById(tilemapId);
         if (tilemap === null) return null;
-
         return this.parseTilemap(tilemap);
     }
     async getTilemapsById(tilemapIds: string[]): Promise<Tilemap[]> {

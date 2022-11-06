@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
-import { TilemapSocial } from "@types";
+import { TilemapSocial, TilemapSocialQuery } from "@types";
 import TilemapSocialDBM from "../../interface/managers/TilemapSocialDBM";
 import { TilemapSocialSchemaType } from "../types";
 import { TilemapSocialModel } from "../schemas";
 
 export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
 
-    async getTilemapSocialByTilesetId(tilemapId: string): Promise<TilemapSocial | null> {
+    async getTilemapSocialByTilemapId(tilemapId: string): Promise<TilemapSocial | null> {
         if (!mongoose.Types.ObjectId.isValid(tilemapId)) { 
             return null;
         }
@@ -29,20 +29,20 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         let social = await TilemapSocialModel.create({
             tileMap: tilemapId,
             name: partial.name,
-            owner: "",
-            ownerName: "",
-            collaborators: [],
-            collaboratorNames: [],
-            tags: [],
-            description: "",
-            communities: [],
+            owner: partial.owner,
+            ownerName: partial.ownerName,
+            collaborators: partial.collaborators ? partial.collaborators : [],
+            collaboratorNames: partial.collaboratorNames ? partial.collaboratorNames : [],
+            tags: partial.tags ? partial.tags : [],
+            description: partial.description ? partial.description : "Description",
+            communities: partial.communities ? partial.communities : [],
             likes: [],
             dislikes: [],
             views: 0,
-            permissions: [],
+            permissions: partial.permissions ? partial.permissions : [],
             comments: [],
             publishDate: new Date(Date.now()),
-            imageURL: "",
+            imageURL: partial.imageURL ? partial.imageURL : "",
         });
         let savedSocial = await social.save();
         return this.parseSocial(savedSocial);
@@ -57,6 +57,51 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         this.fillSocial(social, partial);
         let savedSocial = await social.save();
         return this.parseSocial(savedSocial);
+    }
+
+    async getTilemapSocials(query: TilemapSocialQuery): Promise<TilemapSocial[]> {
+
+        let sort;
+        switch(query.sortby) {
+            case "published": { 
+                sort = { publishDate: query.order }
+                break;
+            }
+            case "likes": {
+                sort = { likes: query.order }
+                break;
+            }
+            case "dislikes": {
+                sort = { dislikes: query.order }
+                break;
+            }
+            case "views": {
+                sort = { views: query.order }
+                break;
+            }
+            default: {
+                sort = { publishDate: query.order }
+                break;
+            }
+        }
+        
+
+        let socials;
+        console.log(sort);
+        
+        if (query.tags.length !== 0) {
+            socials = await TilemapSocialModel.find({$and: [
+                { name: new RegExp(`^${query.name}`, "i") },
+                { tags: {$elemMatch : { $in: query.tags } }},
+                ]}).sort(sort);
+        } else {
+            socials = await TilemapSocialModel.find({$and: [
+                { name: new RegExp(`^${query.name}`, "i") }
+                ]}
+            ).sort(sort);
+        }
+
+        return socials.map(s => this.parseSocial(s));
     }
 
     protected parseSocial(social: TilemapSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilemapSocial {
