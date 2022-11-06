@@ -1,6 +1,15 @@
 #tileset-canvas-wrapper {
-  height: 100vh;
-  width: 200vh;
+  /* height: 100vh;
+  width: 200vh; */
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+#overflow-wrapper {
+  max-width: 90vh;
+  max-height: 90vh;
+  width: fit-content;
+  height: fit-content;
   position: relative;
   left: 50%;
   transform: translate(-50%);

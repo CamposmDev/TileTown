@@ -41,6 +41,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
       modalType: TilesetEditorModalType.close,
       isSaved: true,
       firstRender: true,
+      zoom: 1,
     },
     () => {},
     () => {}
@@ -81,6 +82,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     modalType: TilesetEditorModalType.close,
     isSaved: true,
     firstRender: true,
+    zoom: 1,
   });
 
   // The navigation for the auth context???

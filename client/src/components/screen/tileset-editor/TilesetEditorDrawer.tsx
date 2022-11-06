@@ -33,6 +33,7 @@ const TilesetEditorDrawer = () => {
   const [tileWidth, setTileWidth] = useState(edit.state.tileset.tileWidth);
   const [penColor, setPenColor] = useState<Color>(edit.state.penColor);
   const [penSize, setPenSize] = useState(edit.state.penSize);
+  const zoom = edit.state.zoom;
 
   const handleMenuOpen = () => setIsDrawerOpen(true);
 
@@ -178,6 +179,20 @@ const TilesetEditorDrawer = () => {
     setPenColor(event.target.value);
   };
 
+  const handleZoomKeyPress = (event: any): void => {
+    if (event.code === "Enter") {
+      handleUpdateZoom(event);
+    }
+  };
+
+  const handleUpdateZoom = (event: any): void => {
+    let text = event.target.value;
+    if (isNaN(text)) {
+      return;
+    }
+    edit.updateZoom(text);
+  };
+
   const drawer = (
     <Drawer
       anchor="left"
@@ -277,6 +292,26 @@ const TilesetEditorDrawer = () => {
             }}
           />
         </Stack>
+        <Grid container alignItems="center" pt={2}>
+          <Typography>Zoom</Typography>
+        </Grid>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <TextField
+            label="Zoom"
+            fullWidth
+            size="small"
+            onBlur={handleUpdateZoom}
+            onKeyPress={handleZoomKeyPress}
+            onChange={handleUpdateZoom}
+            defaultValue={edit.state.zoom}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">px</InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+        <Divider />
         <Grid container alignItems="center" pt={2}>
           <Typography>Grid</Typography>
         </Grid>

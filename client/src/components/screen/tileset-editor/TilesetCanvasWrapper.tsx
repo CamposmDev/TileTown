@@ -56,16 +56,25 @@ const TilesetCanvasWrapper = () => {
   const rows = edit.state.tileset.rows;
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
-  const canvasHeight: number = 800;
-  const canvasWidth: number = 800;
+  const zoom: number = edit.state.zoom;
+  const canvasHeight: number = tileHeight * 50 * zoom;
+  const canvasWidth: number = tileWidth * 50 * zoom;
   const canvasImage: HTMLImageElement = new Image();
 
   useEffect(() => {}, []);
 
   return (
-    <Grid id="tileset-canvas-wrapper" item textAlign="center" p={1}>
-      <TilesetCanvas></TilesetCanvas>
-      <GridCanvas></GridCanvas>
+    <Grid id="overflow-wrapper">
+      <Grid
+        id="tileset-canvas-wrapper"
+        sx={{ width: canvasWidth, height: canvasHeight }}
+        item
+        textAlign="center"
+        p={1}
+      >
+        <TilesetCanvas></TilesetCanvas>
+        <GridCanvas></GridCanvas>
+      </Grid>
     </Grid>
   );
 };
