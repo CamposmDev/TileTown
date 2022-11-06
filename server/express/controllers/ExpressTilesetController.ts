@@ -229,7 +229,7 @@ export default class TilesetController {
         }
 
         // Check if social data already exists for this tileset
-        let existingSocial = await db.tilesetSocials.getTilesetSocialByTilesetId(tileset.id);
+        let existingSocial = await db.tilesetSocials.getTilesetSocialByTilesetId(req.params.id);
         if (existingSocial !== null) {
             return res.status(400).json({ message: `Social data already exists for tileset with id ${tileset.id}` });
         }
