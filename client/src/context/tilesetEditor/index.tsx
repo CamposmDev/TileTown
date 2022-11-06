@@ -15,15 +15,15 @@ const TilesetEditContext = createContext<TilesetEditStore>(
     {
       tileset: {
         id: "",
-        columns: 0,
-        rows: 0,
+        columns: 12,
+        rows: 12,
         createDate: new Date(),
         lastSaveDate: new Date(),
-        image: "",
-        imageHeight: 0,
-        imageWidth: 0,
-        tileHeight: 0,
-        tileWidth: 0,
+        image: "/leve1and2tileset.png",
+        imageHeight: 120,
+        imageWidth: 120,
+        tileHeight: 10,
+        tileWidth: 10,
         margin: 0,
         name: "",
         owner: "",
@@ -40,6 +40,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
       gridColor: "#000001",
       modalType: TilesetEditorModalType.close,
       isSaved: true,
+      firstRender: true,
     },
     () => {},
     () => {}
@@ -54,15 +55,15 @@ function TilesetEditContextProvider(props: Record<string, any>) {
   const [edit, setEdit] = useState<TilesetEditorState>({
     tileset: {
       id: "",
-      columns: 0,
-      rows: 0,
+      columns: 12,
+      rows: 12,
       createDate: new Date(),
       lastSaveDate: new Date(),
-      image: "",
-      imageHeight: 0,
-      imageWidth: 0,
-      tileHeight: 0,
-      tileWidth: 0,
+      image: "/leve1and2tileset.png",
+      imageHeight: 120,
+      imageWidth: 120,
+      tileHeight: 10,
+      tileWidth: 10,
       margin: 0,
       name: "",
       owner: "",
@@ -79,6 +80,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     gridColor: "#000000",
     modalType: TilesetEditorModalType.close,
     isSaved: true,
+    firstRender: true,
   });
 
   // The navigation for the auth context???

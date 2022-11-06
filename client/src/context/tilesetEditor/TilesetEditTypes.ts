@@ -176,6 +176,7 @@ export interface TilesetEditorState {
   gridColor: Color;
   modalType: TilesetEditorModalType;
   isSaved: boolean;
+  firstRender: boolean;
 }
 
 /**
@@ -193,6 +194,7 @@ export enum TilesetEditorActionType {
   UPDATE_COLORS = "UPDATE_COLORS",
   OPEN_MODAL = "OPEN_MODAL",
   CLOSE_MODAL = "CLOSE_MODAL",
+  TOGGLE_FIRST_RENDER = "TOGGLE_FIRST_RENDER",
 }
 
 /**action type and payload pairs*/
@@ -239,5 +241,9 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.CLOSE_MODAL;
+      payload: {};
+    }
+  | {
+      type: TilesetEditorActionType.TOGGLE_FIRST_RENDER;
       payload: {};
     };

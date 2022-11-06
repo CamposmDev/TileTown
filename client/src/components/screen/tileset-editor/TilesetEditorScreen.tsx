@@ -18,7 +18,7 @@ import {
 } from "@mui/icons-material";
 import { FaEraser } from "react-icons/fa";
 import TilesetEditorDrawer from "./TilesetEditorDrawer";
-import TilesetCanvas from "./TilesetCanvas";
+import TilesetCanvasWrapper from "./TilesetCanvasWrapper";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
 import { useContext } from "react";
@@ -137,7 +137,7 @@ const TilesetEditorScreen = () => {
           </Grid>
         </Grid>
       </Toolbar>
-      <TilesetCanvas />
+      <TilesetCanvasWrapper />
     </Grid>
   );
 };

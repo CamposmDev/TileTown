@@ -37,15 +37,15 @@ export class TilesetEditStore {
   public async createTileset(name: string): Promise<void> {
     const newTileset: Tileset = {
       id: "",
-      columns: 0,
-      rows: 0,
+      columns: 12,
+      rows: 12,
       createDate: new Date(),
       lastSaveDate: new Date(),
       image: "",
-      imageHeight: 0,
-      imageWidth: 0,
-      tileHeight: 0,
-      tileWidth: 0,
+      imageHeight: 120,
+      imageWidth: 120,
+      tileHeight: 10,
+      tileWidth: 10,
       margin: 0,
       name: name,
       owner: "",
@@ -129,6 +129,13 @@ export class TilesetEditStore {
     });
   }
 
+  public async toggleFirstRender(): Promise<void> {
+    this.handleAction({
+      type: TilesetEditorActionType.TOGGLE_FIRST_RENDER,
+      payload: {},
+    });
+  }
+
   /**
    * This is the reducer function for the auth store.
    * @param action the type of the action
@@ -177,12 +184,32 @@ export class TilesetEditStore {
         this.handleCloseModal();
         break;
       }
+      case TilesetEditorActionType.TOGGLE_FIRST_RENDER: {
+        this.handleToggleFirstRender();
+        break;
+      }
       default: {
         throw new Error(
           `Unhandled action with type ${action} caught in auth reducer`
         );
       }
     }
+  }
+  protected handleToggleFirstRender(): void {
+    this.setEdit({
+      tileset: this._state.tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: this._state.isSaved,
+      firstRender: !this._state.firstRender,
+    });
   }
 
   protected handleCreateNewTileset(tileset: Tileset): void {
@@ -198,6 +225,7 @@ export class TilesetEditStore {
       gridColor: "#000000",
       modalType: TilesetEditorModalType.close,
       isSaved: true,
+      firstRender: true,
     });
   }
 
@@ -242,6 +270,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -258,6 +287,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -274,6 +304,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -290,6 +321,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
   protected handleUpdateColors(colors: [Color]): void {
@@ -305,6 +337,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -325,6 +358,7 @@ export class TilesetEditStore {
       gridColor: payload.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -341,6 +375,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
   protected handleCloseModal(): void {
@@ -356,6 +391,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 
@@ -372,6 +408,7 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType,
       isSaved: false,
+      firstRender: this._state.firstRender,
     });
   }
 }

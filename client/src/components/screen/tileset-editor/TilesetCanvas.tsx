@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
 import {
@@ -30,6 +30,7 @@ const TilesetCanvas = () => {
   const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
+  // const [gridEnabled, setGridEnabled] = useState(edit.state.gridEnabled);
 
   //canvas state variables
   // const [restrictToTile, setRestrictToTile] = useState<boolean>(true);
@@ -43,57 +44,23 @@ const TilesetCanvas = () => {
   const penColor = edit.state.penColor;
   const penSize = edit.state.penSize;
   const restrictToTile = edit.state.restrictToTile;
-  const gridEnabled = edit.state.gridEnabled;
   const gridColor = edit.state.gridColor;
+  const gridEnabled = edit.state.gridEnabled;
   const gridSize = edit.state.gridSize;
 
-  const tileHeight: number = 32;
-  const tileWidth: number = 32;
-  const columns: number = 17;
-  const rows: number = 6;
+  const tileHeight = edit.state.tileset.tileHeight;
+  const tileWidth = edit.state.tileset.tileWidth;
+  const columns = edit.state.tileset.columns;
+  const rows = edit.state.tileset.rows;
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
+  const canvasImage: HTMLImageElement = new Image();
 
   useEffect(() => {
-    if (gridCanvasRef.current) {
-      const canvas: HTMLCanvasElement = gridCanvasRef.current;
-      canvas.height = canvasHeight;
-      canvas.width = canvasWidth;
-      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d", {
-        willReadFrequently: true,
-      });
-      if (ctx) {
-        const rectHeight = canvas.height;
-        const rectWidth = canvas.width;
-        const scaleY = rectHeight / imageHeight;
-        const scaleX = rectWidth / imageWidth;
-        const scaledTileHeight = tileHeight * scaleY;
-        const scaledTileWidth = tileWidth * scaleX;
-        gridContextRef.current = ctx;
+    console.log("rerender canvas");
 
-        //draw vertical lines of grid
-        if (gridEnabled) {
-          for (
-            let i = scaledTileHeight;
-            i < rectHeight;
-            i += scaledTileHeight
-          ) {
-            ctx.moveTo(0, i);
-            ctx.lineTo(rectWidth, i);
-          }
-          //draw horizontal lines of grid
-          for (let i = scaledTileWidth; i < rectWidth; i += scaledTileWidth) {
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i, rectHeight);
-          }
-          ctx.strokeStyle = gridColor;
-          ctx.stroke();
-          ctx.closePath();
-        }
-      }
-    }
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
       canvas.height = canvasHeight;
@@ -102,13 +69,10 @@ const TilesetCanvas = () => {
       if (ctx) {
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
-        const scaleY = rectHeight / imageHeight;
-        const scaleX = rectWidth / imageWidth;
         contextRef.current = ctx;
-        let tilesetImage: HTMLImageElement = new Image();
-        tilesetImage.src = "/leve1and2tileset.png";
-        tilesetImage.onload = () => {
-          ctx.drawImage(tilesetImage, 0, 0, canvas.width, canvas.height);
+        canvasImage.src = "/leve1and2tileset.png";
+        canvasImage.onload = () => {
+          ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
         };
       }
     }
@@ -178,7 +142,7 @@ const TilesetCanvas = () => {
   const startDrawing = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {
       const context: CanvasRenderingContext2D = contextRef.current;
-      const canvas: HTMLCanvasElement | null = canvasRef.current;
+      const canvas: HTMLCanvasElement = canvasRef.current;
       const canvasCoords: { x: number; y: number } = screenToCanvasCoordinates(
         nativeEvent,
         canvas
@@ -199,12 +163,16 @@ const TilesetCanvas = () => {
   };
 
   const finishDrawing = () => {
-    if (contextRef.current) {
-      const context: CanvasRenderingContext2D = contextRef.current;
-      context.closePath();
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      if (contextRef.current) {
+        const context: CanvasRenderingContext2D = contextRef.current;
+        context.closePath();
+      }
+      setIsDrawing(false);
+      setCurrentTile({ x: null, y: null });
+      updateImage(canvas, canvasImage);
     }
-    setIsDrawing(false);
-    setCurrentTile({ x: null, y: null });
   };
 
   const draw = ({ nativeEvent }: any) => {
@@ -219,10 +187,12 @@ const TilesetCanvas = () => {
         if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
           context.lineTo(canvasCoords.x, canvasCoords.y);
           context.stroke();
+          // updateImage(canvas, canvasImage);
           return;
         }
         setIsDrawing(false);
         context.closePath();
+        updateImage(canvas, canvasImage);
         return;
       }
       if (withinCurrentTile(canvasCoords.x, canvasCoords.y) && restrictToTile) {
@@ -386,8 +356,9 @@ const TilesetCanvas = () => {
       // put the data back
       ctx.putImageData(imageData, 0, 0);
     }
-    console.log(currentTile);
+
     setCurrentTile({ x: null, y: null });
+    updateImage(canvas, canvasImage);
   };
 
   const screenToCanvasCoordinates = (
@@ -447,6 +418,16 @@ const TilesetCanvas = () => {
     return false;
   };
 
+  const updateImage = (
+    canvas: HTMLCanvasElement,
+    canvasImage: HTMLImageElement
+  ): void => {
+    // const imgData = canvas
+    //   .toDataURL()
+    //   .replace(/^data:image\/(png|jpg);base64,/, "");
+    // localStorage.setItem("imgData", imgData);
+  };
+
   let root = (
     <div>
       <canvas
@@ -456,17 +437,10 @@ const TilesetCanvas = () => {
         onMouseMove={onMouseMove}
         ref={canvasRef}
       ></canvas>
-      <canvas className="tileset-canvas--no-input" ref={gridCanvasRef}>
-        Please user a browser that supports HTML Canvas
-      </canvas>
     </div>
   );
 
-  return (
-    <Grid id="tileset-canvas-wrapper" item textAlign="center" p={1}>
-      {root}
-    </Grid>
-  );
+  return <Box>{root};</Box>;
 };
 
 export default TilesetCanvas;
