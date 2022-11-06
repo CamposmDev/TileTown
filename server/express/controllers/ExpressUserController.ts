@@ -32,7 +32,7 @@ export default class UserController {
         if (!req || !res) {
             return res.status(400).json({message: "Bad request"});
         }
-        if (req.userId) {
+        if (!req.userId) {
             return res.status(400).json({message: "Missign user id"});
         }
 
@@ -40,83 +40,7 @@ export default class UserController {
         if (user === null) {
             return res.status(404).json({message: "No user found"});
         }
-        return res.status(200).json({message: "User is logged in"})
-    }
-
-    public async getUserContests(req: Request, res: Response): Promise<Response> {
-        if (!req || !res) {
-            return res.status(400).json({message: "Bad Request"});
-        }
-        if (!req.userId) {
-            return res.status(400).json({message: "Missing user id"});
-        }
-
-        let user = await db.users.getUserById(req.userId);
-        if (user === null) {
-            return res.status(404).json({message: `User with id "${req.userId}" not found`});
-        }
-
-        let contests = await db.contests.getContestsById(user.joinedContests);
-        if (contests.length === 0) {
-            return res.status(404).json({message: "Contests not found"});
-        }
-        return res.status(200).json({message: "Got user contests", contests: contests});
-    }
-    public async getUserCommunities(req: Request, res: Response): Promise<Response> {
-        if (!req || !res) {
-            return res.status(400).json({message: "Bad Request"});
-        }
-        if (!req.userId) {
-            return res.status(400).json({message: "Missing user id"});
-        }
-
-        let user = await db.users.getUserById(req.userId);
-        if (user === null) {
-            return res.status(404).json({message: "User not found"});
-        }
-
-        let communities = await db.communities.getCommunitiesById(user.joinedCommunities);
-        if (communities.length === 0) {
-            return res.status(404).json({message: "Communities not found"});
-        }
-
-        return res.status(200).json({message: "Got user communities!", communites: communities});
-    }
-    public async getUserTilemaps(req: Request, res: Response): Promise<Response> {
-        if (!res || !req) {
-            return res.status(400)
-        }
-        if (!req.userId) {
-            return res.status(404)
-        }
-
-        let user = await db.users.getUserById(req.userId);
-        if (user === null) {
-            return res.status(404).json({message: `User ${req.userId} not found`});
-        }
-        let tilemaps = await db.tilemaps.getTilemapsById(user.tilemaps);
-        if (tilemaps.length === 0) {
-            return res.status(404).json({message: "No tilemaps found"});
-        }
-        return res.status(200).json({message: "Got user tilemaps", tilemaps: tilemaps});
-    }
-    public async getUserTilesets(req: Request, res: Response): Promise<Response> {
-        if (!res || !req) {
-            return res.status(400).json({message: "Bad Request"});
-        }
-        if (!req.userId) {
-            return res.status(404).json({message: "Missing user id"});
-        }
-
-        let user = await db.users.getUserById(req.userId);
-        if (user === null) {
-            return res.status(404).json({message: `User ${req.userId} not found`});
-        }
-        let tilesets = await db.tilesets.getTilesetsById(user.tilesets);
-        if (tilesets.length === 0) {
-            return res.status(404).json({message: "No tilesets found"});
-        }
-        return res.status(200).json({message: "Got user tilesets", tilemaps: tilesets});
+        return res.status(200).json({message: "User is logged in", user: user});
     }
 
     public async createUser(req: Request, res: Response): Promise<void> {
