@@ -22,7 +22,9 @@ export default interface UserDBM {
     getUsersById(userIds: string[]): Promise<User[] | null>;
 
     getUserByEmail(email: string): Promise<User | null>;
-    getUserByUsername(username: string): Promise<User | null>
+
+    getUserByUsername(username: string): Promise<User | null>;
+    getUsersByUsername(username: string): Promise<User[]>;
 
     /**
      * Creates a new user in the DBMS from the a partial User object. 

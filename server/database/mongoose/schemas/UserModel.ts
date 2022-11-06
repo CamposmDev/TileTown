@@ -22,6 +22,7 @@ const UserSchema = new Schema<UserSchemaType>({
     password: { type: String, required: true },
     verifyKey: { type: String, required: true },
     isVerified: { type: Boolean, required: true },
+    
     tilemaps: { type: [ObjectId], required: true, default: []},
     tilesets: { type: [ObjectId], required: true, default: []},
     favoriteTileMaps: { type: [ObjectId], required: true },

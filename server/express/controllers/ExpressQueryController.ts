@@ -1,5 +1,8 @@
 import { Response, Request } from "express";
-import { TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy, TilesetSocialSortBy, TilesetSocialQuery, TilesetSocialOrder } from "@types";
+import { 
+    TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy, 
+    TilesetSocialSortBy, TilesetSocialQuery, TilesetSocialOrder 
+} from "@types";
 import { db } from "../../database";
 
 export default class ExpressQueryController {
@@ -80,6 +83,41 @@ export default class ExpressQueryController {
         return res.status(200).json({message: "Got user tilesets", tilemaps: tilesets});
     }
 
+    public async getContests(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.query) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        let name = req.query.name ? req.query.name.toString() : "";
+        let contests = await db.contests.getContestsByName(name);
+        if (contests.length === 0) {
+            return res.status(404).json({message: `No contests found with name ${name}`});
+        }
+        return res.status(200).json({message: "Got contests!", contests: contests});
+    }
+
+    public async getCommunities(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.query) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        let name = req.query.name ? req.query.name.toString() : "";
+        let communities = await db.communities.getCommunitiesByName(name);
+        if (communities.length === 0) {
+            return res.status(404).json({message: `No communites found with name ${name}`});
+        }
+        return res.status(200).json({message: `Communites found!`, communities: communities});
+    }
+
+    public async getUsers(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.query) {
+            return res.status(400).json({message: "Bad Request"});
+        }
+        let uname = req.query.username ? req.query.username.toString() : "";
+        let users = await db.users.getUsersByUsername(uname);
+        if (users.length === 0) {
+            return res.status(404).json({message: `No users found with username ${uname}`});
+        }
+        return res.status(200).json({message: "Got users!", users: users});
+    }
 
     public async getTilemapSocials(req: Request, res: Response): Promise<Response> {
         if (!req || !res || !req.query) {

@@ -21,6 +21,7 @@ export default interface ContestDBM {
     getContestById(contestId: string): Promise<Contest | null>;
     getContestsById(contestIds: string[]): Promise<Contest[]>;
     getContestByName(name: string): Promise<Contest | null>;
+    getContestsByName(name: string): Promise<Contest[]>
 
     /**
      * Creates a new contest in the DBMS based on the given partial Contest object.

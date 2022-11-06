@@ -26,6 +26,10 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         let communities = await CommunityModel.find({_id: { $in: communityIds }});
         return communities.map(community => this.parseCommunity(community));
     }
+    async getCommunitiesByName(name: string): Promise<Community[]> {
+        let communities = await CommunityModel.find({name: new RegExp(`^${name}`, `i`)});
+        return communities.map(community => this.parseCommunity(community));
+    }
 
     async createCommunity(community: Partial<Community>): Promise<Community | null> {
         

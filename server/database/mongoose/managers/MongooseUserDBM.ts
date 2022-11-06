@@ -32,6 +32,10 @@ export default class MongooseUserDBM implements UserDBM {
         if (user === null) return null;
         return this.parseUser(user);
     }
+    async getUsersByUsername(username: string): Promise<User[]> {
+        let users = await UserModel.find({username: new RegExp(`^${username}`, `i`)});
+        return users.map(user => this.parseUser(user));
+    }
 
     async createUser(userpy: Partial<User>): Promise<User | null> {
         
