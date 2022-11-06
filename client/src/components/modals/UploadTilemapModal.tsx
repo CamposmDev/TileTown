@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { ButtonGroup, ClickAwayListener, Grid, Grow, InputAdornment, MenuList, Modal, Paper, Popper } from '@mui/material';
+import { ButtonGroup, ClickAwayListener, Dialog, DialogActions, DialogTitle, Grid, Grow, InputAdornment, MenuList, Modal, Paper, Popper } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
@@ -41,51 +41,28 @@ const UploadTilemapModal = () => {
     };
     const handleClose = () => setIsOpen(false);
 
-    
-    
-    
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
-
-      };
-
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             >
-            <Box sx={style} textAlign='center'>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                 Upload Tilemap
-                </Typography>
-
-                <Grid>
+            <DialogTitle>Upload Tilemap</DialogTitle>
+            <Box textAlign='center'>
+                <Grid mr={2} ml={2}>
                     <TextField
-                        variant='outlined'
-                        margin="normal"
+                        margin="dense"
                         required
                         fullWidth
-                        id="name"
                         label="Tilemap Name"
                         name="Tilemap Name"
                         autoFocus
                     />
                     <TextField
-                        variant='outlined'
-                        margin="normal"
+                        margin="dense"
                         required
                         fullWidth
-                        id="width"
                         label="Width"
                         name="width"
                         autoComplete="width"
@@ -93,10 +70,9 @@ const UploadTilemapModal = () => {
                     />
                     <TextField
                         variant='outlined'
-                        margin="normal"
+                        margin="dense"
                         required
                         fullWidth
-                        id="height"
                         label="Height"
                         name="height"
                         autoComplete="height"
@@ -104,11 +80,9 @@ const UploadTilemapModal = () => {
                     />
                     <Stack direction='row' alignItems={"center"} spacing={1}>
                         <TextField
-                            variant='outlined'
-                            margin="normal"
+                            margin="dense"
                             required
                             fullWidth
-                            id="source"
                             label="Source"
                             name="source"
                             autoComplete="source"
@@ -121,27 +95,11 @@ const UploadTilemapModal = () => {
                         <Button variant="contained">Browser</Button>
                     </Stack>
                 </Grid>
-                
-                <Grid container direction='column' alignItems='center' mt={1}>
-                    <Stack direction='row' spacing={1}>
-                        <Button  
-                            startIcon={<UploadIcon />}
-                            variant="contained"
-                        >
-                            Upload
-                        </Button>
-                        <Button
-                             style={{  
-                               backgroundColor: "#808080",
-                            }} 
-                            variant="contained"
-                            >
-                            Cancel
-                        </Button>
-                    </Stack>
-                </Grid>
             </Box>
-        </Modal>
+            <DialogActions>
+                <Button startIcon={<UploadIcon />}>Upload</Button>
+            </DialogActions>
+        </Dialog>
     )
     return (
         <>

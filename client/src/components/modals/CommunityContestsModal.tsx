@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Dialog, DialogContent, Grid, Icon, IconButton, Modal, Stack } from '@mui/material';
 import { useState } from 'react';
 import ContestCard from '../card/ContestCard';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 
@@ -30,6 +31,7 @@ const CommunityContestsModal = () => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
             >
             <DialogContent>
             <Box>

@@ -2,6 +2,7 @@ import { Settings } from "@mui/icons-material"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import UserProfileCard from "../card/UserProfileCard"
+import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
 interface Props {
     title: string,
@@ -45,7 +46,7 @@ const CommunitySettingsButton = (props: Props) => {
         </FormControl>
 
     const modal = 
-        <Dialog open={modalOpen} onClose={handleModalClose}>
+        <Dialog open={modalOpen} onClose={handleModalClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <DialogTitle>Community Settings</DialogTitle>
             <DialogContent>
                 <Grid container alignItems={'center'}>
@@ -77,31 +78,6 @@ const CommunitySettingsButton = (props: Props) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                {/* <Grid container>
-                    <Grid container item>
-                        <TextField fullWidth value={title} onChange={handleTitleChange} label='Community Name' margin='dense'/>
-                    </Grid>
-                    <Grid container item>
-                        <TextField fullWidth value={desc} onChange={handleDescChange} label='Description' margin='dense'/>
-                    </Grid>
-                    <Grid item mt={1} justifyContent='center'>
-                        <Typography>Moderators</Typography> 
-                        <Grid item sx={{height: 256, overflow: 'auto'}}>
-                            {props.members.map((x,i) => 
-                            <Grid key={x.username + i} mt={0.5}>
-                                <UserProfileCard
-                                    firstName={x.firstName} 
-                                    lastName={x.lastName}
-                                    username={x.username}
-                                />
-                            </Grid>)}
-                        </Grid>
-                    </Grid>
-                    <Grid container item mt={3}>{visSelector}</Grid>
-                    <Grid container item mt={1} justifyContent='center'>
-                        <Button variant='outlined' color='error'>Delete Community</Button>
-                    </Grid>
-                </Grid> */}
             </DialogContent>
             <DialogActions> 
                 <Button>Save Changes</Button>

@@ -76,9 +76,6 @@ const HomeScreen = () => {
         if (!auth.isLoggedIn()) navigate('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    console.log(auth.isGuest())
-
     const SIZE = 512
     return (
         <Grid container spacing={1}>

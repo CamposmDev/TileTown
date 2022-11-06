@@ -7,7 +7,10 @@ import { Icon, Modal } from '@mui/material';
 import { useState } from 'react';
 
 
-
+/**
+ * @deprecated
+ * @returns 
+ */
 const UserContestsModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);

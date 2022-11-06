@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 
@@ -45,6 +46,7 @@ const CreateContestModal = (props: Props) => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
             <DialogTitle>Create Contest</DialogTitle>
                 <DialogContent>

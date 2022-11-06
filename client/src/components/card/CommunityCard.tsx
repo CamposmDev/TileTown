@@ -17,11 +17,11 @@ const CommunityCard = (props: Props) => {
             nav('/community/rpgs-done-right')
         }}>
             <CardActionArea>
-                <CardContent>
+            <CardContent>
                         <Typography>{props.commName}</Typography>
                         <Typography variant='caption'>{props.commDesc}</Typography>
                         <Stack direction='row'>
-                            <Box sx={{
+                            <Card sx={{
                                 borderRadius: 3,
                                 paddingInline: 1,
                                 boxShadow: 1,
@@ -30,7 +30,7 @@ const CommunityCard = (props: Props) => {
                             }} children={
                                 <Typography variant='caption'>{formatToSocialStr(props.numOfMembers, 'Members')}</Typography>
                             }/>
-                            <Box/>
+                            <Card/>
                         </Stack>
                     <Stack direction='column'>
                         <Typography variant='caption'><b>{props.numOfTilemaps.toFixed(0)}</b>&ensp;Tilemaps</Typography>

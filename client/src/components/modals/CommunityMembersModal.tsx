@@ -7,6 +7,7 @@ import { Dialog, DialogContent, Grid, Icon, IconButton, Modal } from '@mui/mater
 import { useState } from 'react';
 import { Group } from '@mui/icons-material';
 import UserProfileCard from '../card/UserProfileCard';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 
@@ -31,6 +32,7 @@ const CommunityMembersModal = () => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
             >
             <DialogContent>
             <Box>

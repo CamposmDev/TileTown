@@ -3,6 +3,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 const CreateCommunityModal = () => {
@@ -40,6 +41,7 @@ const CreateCommunityModal = () => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
             <DialogTitle>Create Community</DialogTitle>
             <DialogContent>

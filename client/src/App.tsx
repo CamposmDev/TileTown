@@ -42,10 +42,6 @@ import NotificationSnack from './components/modals/NotificationSnack';
 
  const darkTheme = createTheme({
   palette: {
-    // background: {
-    //   paper: 'darkgray',
-    //   default: 'skyblue'
-    // },
     mode: 'dark',
   },
 });

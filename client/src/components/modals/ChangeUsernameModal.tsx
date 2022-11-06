@@ -3,6 +3,7 @@ import { Box, Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui
 import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { AuthContext } from '../../context/auth';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 const ChangeUsernameModal = () => {
     const auth = useContext(AuthContext)
@@ -21,6 +22,7 @@ const ChangeUsernameModal = () => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
             <DialogTitle>Really change your username?</DialogTitle>
             <Box component={'form'} onSubmit={changeUsername}>

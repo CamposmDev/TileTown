@@ -4,7 +4,7 @@ import { Box, Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui
 import { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { AuthContext } from '../../context/auth';
-
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 const ChangeEmailModal = () => {
@@ -24,6 +24,7 @@ const ChangeEmailModal = () => {
         <Dialog 
             open={isOpen} 
             onClose={handleClose}
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
             >
             <DialogTitle>Really change your email?</DialogTitle>
             <Box component={'form'} onSubmit={changeEmail}>

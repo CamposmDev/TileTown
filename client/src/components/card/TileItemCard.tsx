@@ -2,6 +2,7 @@ import { Comment, Download, Share, StarBorder, ThumbUp, Visibility } from "@mui/
 import {AppBar, Box, Button, Card, CardActionArea, Grid, CardContent, Dialog, IconButton, ImageListItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { MouseEventHandler, useContext, useState } from "react"
 import { AuthContext } from "src/context/auth"
+import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { parseDateToStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import CommentCard from "./CommentCard"
@@ -31,7 +32,7 @@ interface ModalProps {
 const TileItemModal = (props: ModalProps) => {
     const auth = useContext(AuthContext)
     return (
-        <Dialog open={props.open} fullScreen onClose={props.callback}>
+        <Dialog open={props.open} fullScreen onClose={props.callback} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
                     <Stack alignItems={'center'} direction='row' sx={{flexGrow: 1}}>
