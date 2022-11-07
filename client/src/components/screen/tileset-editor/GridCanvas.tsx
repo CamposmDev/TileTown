@@ -1,27 +1,9 @@
 import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
-import {
-  TilesetEditControl,
-  Color,
-  ColorToDec,
-  HexToDec,
-} from "src/context/tilesetEditor/TilesetEditTypes";
 import "./default.css";
 
 const GridCanvas = () => {
-  /**color data of all the pixels of an image
-   * https://stackoverflow.com/questions/2106995/how-can-i-perform-flood-fill-with-html-canvas/56221940#56221940
-   */
-  type PixelData = {
-    /**width of the image */
-    width: number;
-    /**height of the image */
-    height: number;
-    /**Array of all the pixel data of the image*/
-    data: Uint32Array;
-  };
-
   //tileset edit store context
   const edit = useContext(TilesetEditContext);
 
@@ -37,11 +19,11 @@ const GridCanvas = () => {
   const tileWidth = edit.state.tileset.tileWidth;
   const columns = edit.state.tileset.columns;
   const rows = edit.state.tileset.rows;
+  const zoom: number = edit.state.zoom;
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
-  const canvasImage: HTMLImageElement = new Image();
 
   const drawGrid = (
     ctx: CanvasRenderingContext2D,
@@ -68,6 +50,7 @@ const GridCanvas = () => {
       }
       ctx.strokeStyle = gridColor;
       ctx.stroke();
+      ctx.scale(zoom, zoom);
       ctx.closePath();
     }
   };
