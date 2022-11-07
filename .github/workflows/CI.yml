@@ -12,7 +12,7 @@ jobs:
   # First, we check that the project compiles/builds successfully
   Compile:
     # The type of machine we want our tests to run on - in this, the latest version of linux ubuntu
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps: 
 
       # Checkout the branch we want to run 
@@ -27,7 +27,7 @@ jobs:
   # Next, check if the unit tests are passing
   Test: 
     # Specify the operating system
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     # This is how we require that Test runs only if Compile is successful
     needs: Compile
