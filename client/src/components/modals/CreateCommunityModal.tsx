@@ -1,88 +1,83 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Grid, Modal } from '@mui/material';
-import { useState } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
-
-
-
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 const CreateCommunityModal = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const handleClose = () => setIsOpen(false);
-    
-    
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
+    const handleClose = () => {
+        setComm({name: '', desc: ''})
+        setIsOpen(false)
+    }
+    const [comm, setComm] = useState({
+        name: '',
+        desc: ''
+    })
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setComm({
+            name: e.target.value,
+            desc: comm.desc
+        })
+    }
+    const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setComm({
+            name: comm.name,
+            desc: e.target.value
+        })
+    }
+    const handleCreate = () => {
+        throw new Error('Not Yet Implemented')
+    }
 
-      };
+    let btDisabled = true
+    if (comm.name && comm.desc) {
+        btDisabled = false
+    }
 
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            >
-            <Box sx={style} textAlign='center'>
-
-                <Typography id="modal-modal-title" variant="h6">
-                 Create Community
-                </Typography>
-        
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
+        >
+            <DialogTitle>Create Community</DialogTitle>
+            <DialogContent>
+                <DialogContentText></DialogContentText>
                 <TextField
-                    variant='outlined'
-                    margin="normal"
                     required
                     fullWidth
-                    id="name"
                     label="Name"
-                    name="name"
-                    autoComplete="name"
                     autoFocus
+                    margin='dense'
+                    onChange={handleNameChange}
                 />
-                <Grid >
-                    <TextField
-                        variant='outlined'
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="discription"
-                        label="Discription"
-                        name="discription"
-                        autoFocus
-                        multiline
-                        rows={7}
-                    />
-                </Grid>
-
+                <TextField
+                    required
+                    fullWidth
+                    label="Description"
+                    multiline
+                    rows={5}
+                    margin='dense'
+                    onChange={handleDescChange}
+                />
+            </DialogContent>
+            <DialogActions>
                 <Button
+                    onClick={handleCreate}
+                    disabled={btDisabled}
                     type="submit"
-                    variant="contained"
                     sx={{ mt: 4 }}>
                     Create Community
                 </Button>
-
-
-            </Box>
-            
-        </Modal>
+            </DialogActions>
+        </Dialog>
     )
     return (
         <>
-            <MenuItem onClick={() => setIsOpen(!isOpen)}>Create Comunity</MenuItem>
+            <MenuItem onClick={() => setIsOpen(true)}>Create Community</MenuItem>
             {ui}
         </>
     )

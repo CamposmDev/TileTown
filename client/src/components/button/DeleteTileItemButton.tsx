@@ -1,6 +1,7 @@
 import { Delete } from "@mui/icons-material"
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material"
 import { useState } from "react"
+import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
 interface Props {
     name: string
@@ -13,7 +14,7 @@ const DeleteTileItemButton = (props: Props) => {
     const handleClose = () => setOpen(false)
 
     const modal = (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogContent>
                 <Typography>{'Are you sure you want to delete ' + props.name + '?'}</Typography>

@@ -3,9 +3,10 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
-import { Icon, Link, Modal } from '@mui/material';
+import { Dialog, Icon, Link, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
 
 
@@ -14,63 +15,40 @@ const PasswordResetModal = () => {
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
-
-      };
-
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            >
-            <Box sx={style} textAlign='center'>
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
+        >
+            <Box textAlign='center' mt={2} ml={2} mr={2}>   
                 <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
-                    <Icon ><LockIcon /></Icon>
+                    <Icon><LockIcon/></Icon>
                 </Avatar>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography variant="h6" component="h2">
                     Password Reset
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Enter your email for a password reset!
+                <Typography sx={{ mt: 1 }}>
+                    Enter your email for a password reset
                 </Typography>
                 <TextField
-                    variant='outlined'
-                    margin="normal"
+                    margin="dense"
                     required
                     fullWidth
-                    id="email"
                     label="Email"
                     name="email"
                     autoComplete="email"
                     autoFocus
                 />
-                <Button
-                    type="submit"
-                    // fullWidth
-                    variant="contained"
-                    sx={{ mt: 4 }}>
-                    Get New Password
-                </Button>
+                <Button sx={{ mt: 1, mb: 1 }}>Get New Password</Button>
             </Box>
-            
-        </Modal>
+        </Dialog>
     )
     return (
-        <>
+        <div>
             <Link href='\\' variant='body2' onClick={() => setIsOpen(!isOpen)}>Forgot your password?</Link>
             {ui}
-        </>
+        </div>
     )
 }
 

@@ -1,3 +1,5 @@
+import { createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import NavBar from "./components/NavBar";
@@ -5,22 +7,20 @@ import {
   SplashScreen,
   LoginScreen,
   RegisterScreen,
-  MainFeedScreen,
+  HomeScreen,
+  SearchScreen,
   AccountSettingsScreen,
   TilesetEditorScreen,
   TilemapEditorScreen,
-} from "./components/screen";
-import WelcomeMenu from "./components/menu/WelcomeMenu";
-import UserMenu from "./components/menu/UserMenu";
-import CardTester from "./components/CardTester";
-import SearchScreen from "./components/screen/search/SearchScreen";
+  UserProfileScreen,
+  CommunityProfileScreen
+} from "./components/screen"
 import { SearchCategory } from "./components/util/Constants";
-import ModalTester from "./components/ModalTester";
-import UserProfileScreen from "./components/screen/UserProfileScreen";
-import CommunityProfileScreen from "./components/screen/CommunityProfileScreen";
-import { TilesetEditContextProvider } from "./context/tilesetEditor";
-
 import { AuthContextProvider } from "./context/auth";
+import { TilesetEditContextProvider } from './context/tilesetEditor';
+import CardTester from './components/CardTester';
+import ModalTester from './components/ModalTester';
+import NotificationSnack from './components/modals/NotificationSnack';
 
 /**
  * Pixel Editors
@@ -34,85 +34,54 @@ import { AuthContextProvider } from "./context/auth";
  *
  * Cool Carosel for Popular Items
  * @see https://www.npmjs.com/package/react-material-ui-carousel
+ * 
+ * Upload Button
+ * @see https://mui.com/material-ui/react-button/#upload-button
+ * 
  */
+
+ const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthContextProvider>
-        <Routes>
-          {["/", "/login", "/register"].map((x, i) => (
-            <Route
-              path={x}
-              element={<NavBar items={<WelcomeMenu />} />}
-              key={i}
-            />
-          ))}
-          {[
-            "/feed",
-            "/settings",
-            "/create/tileset",
-            "/create/tilemap",
-            "/search/tilemaps",
-            "/search/tilesets",
-            "/search/users",
-            "/search/communities",
-            "/search/contests",
-            "/search/forums",
-            "/profile",
-            "/community/rpgs-done-right",
-          ].map((x, i) => (
-            <Route path={x} element={<NavBar items={<UserMenu />} key={i} />} />
-          ))}
-        </Routes>
-        <Routes>
-          <Route
-            path="/community/rpgs-done-right"
-            element={<CommunityProfileScreen />}
-          />
-          <Route path="/profile" element={<UserProfileScreen />} />
-          <Route
-            path="/search/tilemaps"
-            element={<SearchScreen cat={SearchCategory.Tilemaps} />}
-          />
-          <Route
-            path="/search/tilesets"
-            element={<SearchScreen cat={SearchCategory.Tilesets} />}
-          />
-          <Route
-            path="/search/users"
-            element={<SearchScreen cat={SearchCategory.Users} />}
-          />
-          <Route
-            path="/search/communities"
-            element={<SearchScreen cat={SearchCategory.Communities} />}
-          />
-          <Route
-            path="/search/contests"
-            element={<SearchScreen cat={SearchCategory.Contests} />}
-          />
-          <Route
-            path="/search/forums"
-            element={<SearchScreen cat={SearchCategory.Forums} />}
-          />
-          <Route path="/cards" element={<CardTester />} />
-          <Route path="/modals" element={<ModalTester />} />
-          <Route path="/" element={<SplashScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/feed" element={<MainFeedScreen />} />
-          <Route path="/settings" element={<AccountSettingsScreen />} />
-          <Route
-            path="/create/tileset"
-            element={
-              <TilesetEditContextProvider>
-                <TilesetEditorScreen />
-              </TilesetEditContextProvider>
-            }
-          />
-          <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
-        </Routes>
-      </AuthContextProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline/>
+        <AuthContextProvider key={'auth-context-provider'}>
+            <NavBar/>
+            <Routes>
+              <Route path="/" element={<SplashScreen />}/>
+              <Route path="/login" element={<LoginScreen />} />
+              <Route path="/register" element={<RegisterScreen />} />
+              <Route path="/home" element={<HomeScreen />} />
+              <Route path="/settings" element={<AccountSettingsScreen />} />
+              <Route path="/community/rpgs-done-right" element={<CommunityProfileScreen />}/>
+              <Route path="/profile" element={<UserProfileScreen />} />
+              <Route path="/search/tilemaps" element={<SearchScreen cat={SearchCategory.Tilemaps} />}/>
+              <Route path="/search/tilesets" element={<SearchScreen cat={SearchCategory.Tilesets} />}/>
+              <Route path="/search/users" element={<SearchScreen cat={SearchCategory.Users} />}/>
+              <Route path="/search/communities" element={<SearchScreen cat={SearchCategory.Communities} />}/>
+              <Route path="/search/contests" element={<SearchScreen cat={SearchCategory.Contests} />}/>
+              <Route path="/search/forums" element={<SearchScreen cat={SearchCategory.Forums} />}/>
+              <Route
+                path="/create/tileset"
+                element={
+                  <TilesetEditContextProvider>
+                    <TilesetEditorScreen />
+                  </TilesetEditContextProvider>
+                }
+              />
+              <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
+              <Route path="/cards" element={<CardTester />} />
+              <Route path="/modals" element={<ModalTester />} />
+            </Routes>
+            <NotificationSnack/>
+        </AuthContextProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };

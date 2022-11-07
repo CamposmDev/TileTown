@@ -1,7 +1,8 @@
-import { Edit, Settings } from "@mui/icons-material"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
+import { Settings } from "@mui/icons-material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import UserProfileCard from "../card/UserProfileCard"
+import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
 interface Props {
     title: string,
@@ -32,55 +33,55 @@ const CommunitySettingsButton = (props: Props) => {
     const handleModalClose = () => setModalOpen(false)
 
     const visSelector = 
-        <FormControl fullWidth>
+        <FormControl fullWidth margin="dense">
             <InputLabel>Visibility</InputLabel>
                 <Select
                     value={vis}
                     label="Visibility"
                     onChange={handleChange}
                 >
-                <MenuItem value={'Public'}>Public</MenuItem>
-                <MenuItem value={'Private'}>Private</MenuItem>
-            </Select>
+                    <MenuItem value={'Public'}>Public</MenuItem>
+                    <MenuItem value={'Private'}>Private</MenuItem>
+                </Select>
         </FormControl>
 
     const modal = 
-        <Dialog open={modalOpen} onClose={handleModalClose}>
+        <Dialog open={modalOpen} onClose={handleModalClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <DialogTitle>Community Settings</DialogTitle>
-            <Grid p={1}>
-                <Grid item mt={1}>
-                    <TextField fullWidth value={title} onChange={handleTitleChange} label='Community Name'/>
-                </Grid>
-                <Grid item mt={1}>
-                    <TextField fullWidth value={desc} onChange={handleDescChange} label='Description'/>
-                </Grid>
-                <Grid item mt={1}>
-                    <Typography>Moderators</Typography> 
-                    <Grid sx={{height: 200, overflow: 'auto'}}>
-                        {props.members.map((x,i) => 
-                            <Grid key={x.username + i} mt={0.5}><UserProfileCard
-                                firstName={x.firstName} 
-                                lastName={x.lastName}
-                                username={x.username}
-                            /></Grid>)}
+            <DialogContent>
+                <Grid container alignItems={'center'}>
+                    <Grid mr={1} width={256}>
+                        <Grid>
+                            <TextField fullWidth value={title} onChange={handleTitleChange} label='Community Name' margin='dense'/>
+                        </Grid>
+                        <Grid>
+                            <TextField fullWidth value={desc} onChange={handleDescChange} label='Description' margin='dense'/>
+                        </Grid>
+                        <Grid>
+                            {visSelector}
+                        </Grid>
+                        <Grid>
+                            <Button fullWidth variant='outlined' color='error'>Delete Community</Button>
+                        </Grid>
+                    </Grid>
+                    <Grid>
+                        <Typography>Moderators</Typography> 
+                        <Grid item sx={{height: 253, overflow: 'auto'}}>
+                            {props.members.map((x,i) => 
+                            <Grid key={x.username + i} mt={0.5}>
+                                <UserProfileCard
+                                    firstName={x.firstName} 
+                                    lastName={x.lastName}
+                                    username={x.username}
+                                />
+                            </Grid>)}
+                        </Grid>
                     </Grid>
                 </Grid>
-                <Grid item mt={2}>{visSelector}</Grid>
-                <Grid item mt={1}>
-                    <Stack>
-                        <Button variant='contained' color='error'>Delete Community</Button>
-                    </Stack>
-                </Grid>
-            </Grid>
-            <DialogContent>
-                <DialogActions> 
-                    <Stack direction='row' spacing={1}>
-                    <Button variant='contained' onClick={handleModalClose} color='error'>Discard Changes</Button>
-                    <Button variant='contained'>Save Changes</Button>
-                    </Stack>
-                    
-                </DialogActions>
             </DialogContent>
+            <DialogActions> 
+                <Button>Save Changes</Button>
+            </DialogActions>
         </Dialog>
 
     return (

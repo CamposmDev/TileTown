@@ -2,38 +2,28 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Modal } from '@mui/material';
+import { Dialog, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 
 
-
+/**
+ * @deprecated
+ * @returns 
+ */
 const PublishTilesetModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
-
-      };
-
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             >
-            <Box sx={style} textAlign='center'>
+            <Box textAlign='center'>
 
                 <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="h6" component="h2">
                   Are you sure you would like to publish the Campus Caverns Tileset?
@@ -54,7 +44,7 @@ const PublishTilesetModal = () => {
                         </Button>
             </Box>
             
-        </Modal>
+        </Dialog>
     )
     return (
         <>

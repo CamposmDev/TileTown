@@ -1,41 +1,14 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom';
-import { Avatar, Box, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
+import { Avatar, Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
 import { Logout, Hail, Person, Settings, PersonAdd } from "@mui/icons-material";
+import { AuthContext } from "src/context/auth";
+import { MENU_PAPER_PROPS, stringAvatar } from "../util/Constants";
+import { User } from '@types'
 
-interface Props {
-    loggedIn: boolean
-}
-
-const MENU_PAPER_PROPS = {
-    elevation: 0,
-    sx: {
-        overflow: 'visible',
-        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-        mt: 1.5,
-        '& .MuiAvatar-root': {
-            width: 32,
-            height: 32,
-            ml: -0.5,
-            mr: 1,
-        },
-        '&:before': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            right: 27,
-            width: 10,
-            height: 10,
-            bgcolor: 'background.paper',
-            transform: 'translateY(-50%) rotate(45deg)',
-            zIndex: 0,
-        },
-    },
-}
-
-const AccountButton = ({loggedIn}: Props) => {
+const AccountButton = () => {
+    const auth = useContext(AuthContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
     const open = Boolean(anchorEl)
@@ -46,23 +19,27 @@ const AccountButton = ({loggedIn}: Props) => {
         setAnchorEl(null)
     }
 
+    const handleLogout = () => {
+        auth.logoutUser()
+        handleMenuClose()
+    }
+
     const handleGuest = () => {
-        navigate('/feed')
-        // auth.loginAsGuest()
+        auth.loginAsGuest()
         handleMenuClose()
     }
 
     const loggedInItems = (
         <Box>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/profile'}>
+            <MenuItem disabled={auth.isGuest()} onClick={handleMenuClose} component={Link} to={'/profile'}>
                 <ListItemIcon><Person/></ListItemIcon>
                 <ListItemText>Your Profile</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/settings'}>
+            <MenuItem disabled={auth.isGuest()} onClick={handleMenuClose} component={Link} to={'/settings'}>
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to={'/login'}>
+            <MenuItem onClick={handleLogout}>
                 <ListItemIcon><Logout/></ListItemIcon>
                 <ListItemText>Logout</ListItemText>
             </MenuItem>
@@ -85,6 +62,7 @@ const AccountButton = ({loggedIn}: Props) => {
             </MenuItem>
         </Box>
     )
+
     const menu = (
         <Menu
             anchorEl={anchorEl}
@@ -94,27 +72,27 @@ const AccountButton = ({loggedIn}: Props) => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            {loggedIn ? loggedInItems : loggedOutItems}
+            {auth.isLoggedIn() ? loggedInItems : loggedOutItems}
         </Menu>
     )
 
-    const profile = loggedIn ? (
-        <Avatar sx={{bgcolor: 'primary.main', fontSize: '1.5rem', width: 40, height: 40}}>MC</Avatar>
+    let usr: User | null = auth.getUsr()
+
+
+    const profile = auth.isLoggedIn() && usr ? (
+        <Avatar {...stringAvatar(usr.firstName, usr.lastName)}/>
     ) : (
-        <Avatar sx={{bgcolor: 'primary.main'}} ></Avatar>
+        <Avatar sx={{bgcolor: 'primary.main'}}/>
     )
 
     return (
-        <Grid borderRadius={'50%'} boxShadow={1}>
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Box>
                 <IconButton
-                    size="large"
+                    sx={{border: 'none'}}
                     onClick={handleMenuOpen}
-                    color="inherit"
                 >{profile}</IconButton>
                 {menu}
-            </Box>
-        </Grid>
+        </Box>
     )
 }
 

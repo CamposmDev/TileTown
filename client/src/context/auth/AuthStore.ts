@@ -1,23 +1,33 @@
+import { AlertColor } from '@mui/material';
+import { User } from '@types';
+import axios from 'axios';
 import { NavigateFunction } from 'react-router';
+import { UserApi } from "../../api/";
+
+import { 
+    AuthActionType, AuthAction, RegisterUser, LoginUser, 
+    LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
+    DisplayErrorModal, ClearErrorModal, GetLoggedIn, LoginAsGuest
+} from "./AuthAction"; 
+
+/**
+ * The type of message that is received from the server
+ */
+export enum MsgType {
+    success = 'success',
+    info = 'info',
+    warning = 'warning',
+    error = 'error'
+}
 
 /**
  * The type of the AuthStore's state variable. For now it just has some dummy data I used to test if it worked
  */
 export interface AuthState {
-    username: string;
-    email: string;
-}
-
-/**
- * The types of actions/events the auth store needs to handle.
- */
-export enum AuthActionType {
-    SET_LOGGED_IN = "SET_LOGGED_IN",
-    REGISTER_USER = "REGISTER",
-    LOGIN_USER = "LOGIN_USER",
-    LOGOUT_USER = "LOGOUT_USER",
-    DISPLAY_ERROR_MESSAGE = "DISPLAY_ERROR_MESSAGE",
-    CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE"
+    usr: User | null,
+    loggedIn: boolean,
+    msgType: MsgType
+    msg: string
 }
 
 /**
@@ -26,32 +36,265 @@ export enum AuthActionType {
  */
 export class AuthStore {
 
-    private readonly _state: AuthState;
-    private readonly setAuth: (auth: AuthState) => void;
+    private readonly _auth: AuthState;
+    private readonly _setAuth: (auth: AuthState) => void;
     private readonly nav: NavigateFunction;
 
     constructor(auth: AuthState, setAuth: (state: AuthState) => void, nav: NavigateFunction) {
-        this._state = auth;
-        this.setAuth = setAuth;
+        this._auth = auth;
+        this._setAuth = setAuth;
         this.nav = nav;
     }
 
-    public get state(): AuthState { return this._state; }
+    public get auth(): AuthState { return this._auth; }
+    public get setAuth(): (auth: AuthState) => void { return this._setAuth; }
 
-    public async loginUser(): Promise<void> { 
-        this.handleAction(AuthActionType.LOGIN_USER, {});
+    public isLoggedIn(): boolean {
+        return this._auth.loggedIn
     }
 
-    public async logoutUser(): Promise<void> { 
-        this.handleAction(AuthActionType.LOGOUT_USER, {});
+    public isGuest(): boolean {
+        return (this._auth.usr === null) && (this._auth.loggedIn)
+    }
+
+    public getMsg(): string {
+        return this._auth.msg
+    }
+
+    public getMsgType(): AlertColor {
+        return this._auth.msgType
+    }
+
+    public isMsg(): boolean {
+        return this._auth.msg ? true : false
+    }
+
+    public getUsr(): User | null {
+        return this._auth.usr
+    }
+
+    public async loginUser(email: string | undefined, password: string | undefined): Promise<void> { 
+        let res = UserApi.login({email: email, password: password});
+        res.then((res) => {
+            if (res.status === 200 && res.data.user) {
+                this.nav('/home')
+                this.handleAction({
+                    type: AuthActionType.loginUser,
+                    payload: {
+                        user: res.data.user,
+                        message: res.data.message
+                    }
+                })
+            }
+        }).catch(e => {
+            if (e.response.status === 400) {
+                this.handleAction({
+                    type: AuthActionType.displayError,
+                    payload: {
+                        messageType: MsgType.error,
+                        message: e.response.data.message
+                    }
+                })
+            }
+        })
+    }
+
+    public async logoutUser(): Promise<void> {
+        if (this.isGuest()) {
+            this.nav('/')
+            this.handleAction({
+                type: AuthActionType.logoutUser,
+                payload: {
+                    message: 'Guest successfully logged out!'
+                }
+            })
+            return
+        }
+        let res = UserApi.logout();
+        res.then((res) => {
+            if (res.status === 200) {
+                this.nav('/')
+                this.handleAction({
+                    type: AuthActionType.logoutUser,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        });
     }
 
     public async getLoggedIn(): Promise<void> { 
-        
+        let res = UserApi.getLoggedIn()
+        res.then((res) => {
+            if (res.status === 200 && res.data.user) {
+                this.handleAction({
+                    type: AuthActionType.getLoggedIn,
+                    payload: {
+                        user: res.data.user,
+                        message: res.data.message
+                    }
+                });
+            }
+        })
     }
 
-    public async registerUser(data: Record<string, any>): Promise<void> { 
-        this.handleAction(AuthActionType.REGISTER_USER, {});
+    public async registerUser(data: {firstName: string | undefined, lastName: string | undefined, username: string | undefined, password: string | undefined, email: string | undefined}): Promise<void> { 
+        let res = UserApi.register(data);
+        res.then((res) => {
+            if (res.status === 201 && res.data.user) {
+                this.nav('/home')
+                this.handleAction({
+                    type: AuthActionType.registerUser,
+                    payload: { 
+                        user: res.data.user,
+                        message: res.data.message
+                    }
+                });
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async loginAsGuest(): Promise<void> {
+        this.nav('/home')
+        this.handleAction({
+            type: AuthActionType.loginAsGuest,
+            payload: {
+                message: 'Guest successfully logged in!',
+            }
+        })
+    }
+
+    public async changeUsername(username: string | undefined): Promise<void> {
+        let res = UserApi.updateUsername({
+            username: username
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changeUsername,
+                    payload: {
+                        message: res.data.message,
+                        username: res.data.username
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async changeEmail(email: string | undefined): Promise<void> {
+        let res = UserApi.updateEmail({
+            email: email
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changeEmail,
+                    payload: {
+                        message: res.data.message,
+                        email: res.data.email
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async changePassword(oldPassword: string | undefined, newPassword: string | undefined): Promise<void> {
+        let res = UserApi.updatePassword({
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+        })
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.handleAction({
+                    type: AuthActionType.changePassword,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status === 400) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public async deleteAccount(): Promise<void> {
+        let res = UserApi.delete()
+        res.then((res) => {
+            if (res.status === 200 && res.data) {
+                this.nav('/')
+                this.handleAction({
+                    type: AuthActionType.logoutUser,
+                    payload: {
+                        message: res.data.message
+                    }
+                })
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response && e.response.status) {
+                    this.handleAction({
+                        type: AuthActionType.displayError,
+                        payload: {
+                            messageType: MsgType.error,
+                            message: e.response.data.message
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    public clearError(): void {
+        this.handleAction({
+            type: AuthActionType.clearError
+        })
     }
 
     /**
@@ -59,22 +302,46 @@ export class AuthStore {
      * @param action the type of the action
      * @param payload the data associated with the action
      */
-    protected handleAction(action: AuthActionType, payload: Record<string, any>): void {
-        switch(action) {
-            case AuthActionType.REGISTER_USER: {
-                this.handleRegisterUser(payload);
+    protected handleAction(action: AuthAction): void {
+        switch(action.type) {
+            case AuthActionType.getLoggedIn: {
+                this.handleGetLoggedIn(action);
                 break;
             }
-            case AuthActionType.LOGIN_USER: {
-                this.handleLoginUser(payload);
+            case AuthActionType.registerUser: {
+                this.handleRegisterUser(action);
                 break;
             }
-            case AuthActionType.LOGOUT_USER: {
-                this.handleLogoutUser(payload);
+            case AuthActionType.loginUser: {
+                this.handleLoginUser(action);
                 break;
             }
-            case AuthActionType.SET_LOGGED_IN: {
-                this.handleSetLogin(payload);
+            case AuthActionType.logoutUser: {
+                this.handleLogoutUser(action);
+                break;
+            }
+            case AuthActionType.loginAsGuest: {
+                this.handleLoginAsGuest(action)
+                break;
+            }
+            case AuthActionType.changePassword: {
+                this.handleChangePassword(action);
+                break;
+            }
+            case AuthActionType.changeUsername: {
+                this.handleChangeUsername(action);
+                break;
+            }
+            case AuthActionType.changeEmail: {
+                this.handleChangeEmail(action);
+                break;
+            }
+            case AuthActionType.displayError: {
+                this.handleDisplayError(action);
+                break;
+            }
+            case AuthActionType.clearError: {
+                this.handleClearError(action);
                 break;
             }
             default: { 
@@ -83,26 +350,88 @@ export class AuthStore {
         }
     }
 
-    protected handleRegisterUser(payload: Record<string, any>): void {
-        this.setAuth({
-            email: "peter.t.walsh@stonybrook.edu",
-            username: "peteylumpkins"
+    protected handleGetLoggedIn(action: GetLoggedIn): void {
+        this._setAuth({
+            msgType: MsgType.success,
+            msg: action.payload.message,
+            usr: action.payload.user,
+            loggedIn: true
         });
     }
-
-    protected handleLoginUser(payload: Record<string, any>): void {
+    protected handleRegisterUser(action: RegisterUser): void {
         this.setAuth({
-            email: "peteylumpkins@gmail.com", 
-            username: "peter"
+            msgType: MsgType.success,
+            usr: action.payload.user,
+            msg: action.payload.message,
+            loggedIn: true
         });
     }
-
-    protected handleLogoutUser(payload: Record<string, any>): void {
+    protected handleLoginUser(action: LoginUser): void {
         this.setAuth({
-            email: "dummy@example.com", 
-            username: "dummy user name or something?"
+            msgType: MsgType.success,
+            usr: action.payload.user,
+            msg: action.payload.message,
+            loggedIn: true
+        })
+    }
+    protected handleLogoutUser(action: LogoutUser): void {
+        this.setAuth({
+            msgType: MsgType.success,
+            usr: null, 
+            msg: action.payload.message,
+            loggedIn: false
         });
     }
-
-    protected handleSetLogin(payload: Record<string, any>): void {}
+    protected handleLoginAsGuest(action: LoginAsGuest): void {
+        this.setAuth({
+            msgType: MsgType.success,
+            usr: null,
+            msg: action.payload.message,
+            loggedIn: true
+        })
+    }
+    protected handleChangePassword(action: ChangePassword): void {
+        this.setAuth({
+            msgType: MsgType.success,
+            usr: this._auth.usr, 
+            msg: action.payload.message,
+            loggedIn: this._auth.loggedIn
+        });
+    };
+    protected handleChangeUsername(action: ChangeUsername): void {
+        if (this._auth.usr !== null) {
+            this.setAuth({
+                msgType: MsgType.success,
+                usr: {...this._auth.usr, username: action.payload.username}, 
+                msg: action.payload.message,
+                loggedIn: this._auth.loggedIn
+            });
+        }
+    };
+    protected handleChangeEmail(action: ChangeEmail): void {
+        if (this._auth.usr !== null) {
+            this._setAuth({
+                msgType: MsgType.success,
+                usr: {...this._auth.usr, email: action.payload.email},
+                msg: action.payload.message,
+                loggedIn: this._auth.loggedIn
+            });
+        }
+    };
+    protected handleDisplayError(action: DisplayErrorModal): void {
+        this.setAuth({
+            msgType: action.payload.messageType,
+            usr: this._auth.usr,
+            msg: action.payload.message,
+            loggedIn: this._auth.loggedIn
+        })
+    }
+    protected handleClearError(action: ClearErrorModal): void {
+        this.setAuth({
+            msgType: this._auth.msgType,
+            usr: this._auth.usr,
+            msg: '',
+            loggedIn: this._auth.loggedIn
+        })
+    }
 }

@@ -1,16 +1,11 @@
-import { ArrowDropDown, MoreVert } from "@mui/icons-material";
-import { Avatar, Box, Button, Grid, IconButton, Stack, Tab, Tabs, Toolbar, Typography } from "@mui/material"
-import { useState } from "react";
+import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { AuthContext } from "src/context/auth";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
-
-interface Props {
-    firstName: string,
-    lastName: string,
-    username: string
-}
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -46,20 +41,31 @@ interface TabPanelProps {
   }
 
 const UserProfileScreen = () => {
+    const auth = useContext(AuthContext)
+    const nav = useNavigate()
+    useEffect(() => {
+        if (!auth.isLoggedIn()) nav('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const [value, setValue] = useState(0)
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue)
     }
 
+    let user = auth.getUsr()
+    let profile = <div/>
+    if (user) {
+        profile = <UserProfileBox
+            firstName={user.firstName}
+            lastName={user.lastName}
+            username={user.username}
+        />
+    }
     return (
         <Box>
             <Stack direction='row' justifyItems='center'>
-                <Box mt={1}>
-                    <UserProfileBox
-                        firstName={'Michael'}
-                        lastName={'Campos'}
-                        username={'Camposm'}
-                        />
+                <Box mt={1} mb={1}>
+                    {profile}
                 </Box>
             </Stack>
             <Grid item container>

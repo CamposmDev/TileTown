@@ -1,87 +1,39 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { ButtonGroup, ClickAwayListener, Grid, Grow, IconButton, MenuList, Modal, Paper, Popper } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
-import Stack from '@mui/material/Stack';
 import * as React from 'react';
-import { ArrowDropDown, Create } from '@mui/icons-material';
-
-const options = ['Annonymous', 'Your username'];
+import { Create } from '@mui/icons-material';
+import { AuthContext } from 'src/context/auth';
 
 const CreateForumPostModal = () => {
+    const auth = React.useContext(AuthContext)
     const [isOpen, setIsOpen] = useState(false)
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLDivElement>(null);
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [author, setAuthor] = useState('Annonymous')
 
-    const handleClick = () => {
-        console.info(`You clicked ${options[selectedIndex]}`);
-    };
-
-    const handleMenuItemClick = (
-        event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-        index: number,
-    ) => {
-        setSelectedIndex(index);
-        setOpen(false);
-    };
-
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
-    };
-
-    const handeCloseButton = (event: Event) => {
-        if (
-        anchorRef.current &&
-        anchorRef.current.contains(event.target as HTMLElement)
-        ) {
-        return;
-        }
-
-        setOpen(false);
-    };
+    const handleChange = (event: SelectChangeEvent) => {
+        setAuthor(event.target.value as string)
+    }
     const handleClose = () => setIsOpen(false);
-  
-    
-    
-    
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
-
-      };
-
+    const handlePost = () => {
+        throw new Error("Not Yet Implemented")
+        handleClose()
+    }
     let ui = (
-        <Modal 
+        <Dialog 
             open={isOpen} 
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            >
-            <Box sx={style} textAlign='center'>
-
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                 Create a Post
-                </Typography>
-        
-                <Grid >
+        >
+            <DialogTitle>Create Post</DialogTitle>
+            <DialogContent>
+                <Box>
                     <TextField
                         variant='outlined'
-                        margin="normal"
+                        margin="dense"
                         required
                         fullWidth
-                        id="forumTitle"
                         label="Title"
                         name="forumTitle"
                         autoComplete="forumTitle"
@@ -89,106 +41,36 @@ const CreateForumPostModal = () => {
                     />
                     <TextField
                         variant='outlined'
-                        margin="normal"
+                        margin="dense"
                         required
                         fullWidth
-                        id="question"
                         label="Write your question here"
                         name="question"
                         autoFocus
                         multiline
                         rows={7}
                     />
-                </Grid>
-                <Grid container direction='column' alignItems='center'>
-                    <Stack direction='row' alignItems={'center'} spacing={1} mb={1}>
-                        <Typography sx={{fontWeight: 'bold'}} id="modal-modal-title" variant="body1">
-                            Show my name as
-                        </Typography>
-                        <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-                            <Button onClick={handleClick} sx={{textTransform: 'none'}}>{options[selectedIndex]}</Button>
-                                <Button
-                                size="small"
-                                aria-controls={open ? 'split-button-menu' : undefined}
-                                aria-expanded={open ? 'true' : undefined}
-                                aria-label="select merge strategy"
-                                aria-haspopup="menu"
-                                onClick={handleToggle}
-                                >
-                                <ArrowDropDown />
-                            </Button>
-                        </ButtonGroup>
-                        <Popper
-                            sx={{
-                            zIndex: 1,
-                            }}
-                            open={open}
-                            anchorEl={anchorRef.current}
-                            role={undefined}
-                            transition
-                            disablePortal
+                    <FormControl margin='dense' fullWidth>
+                    <InputLabel>Show my name as</InputLabel>
+                        <Select
+                            label='Show my name as'
+                            value={author}
+                            onChange={handleChange}
                         >
-                            {({ TransitionProps, placement }) => (
-                            <Grow
-                                {...TransitionProps}
-                                style={{
-                                transformOrigin:
-                                    placement === 'bottom' ? 'center top' : 'center bottom',
-                                }}
-                            >
-                                <Paper>
-                                <ClickAwayListener onClickAway={handeCloseButton}>
-                                    <MenuList id="split-button-menu" autoFocusItem>
-                                    {options.map((option, index) => (
-                                        <MenuItem
-                                        key={option}
-                                        disabled={index === 2}
-                                        selected={index === selectedIndex}
-                                        onClick={(event) => handleMenuItemClick(event, index)}
-                                        >
-                                        {option}
-                                        </MenuItem>
-                                    ))}
-                                    </MenuList>
-                                </ClickAwayListener>
-                                </Paper>
-                            </Grow>
-                            )}
-                        </Popper>
-                    </Stack>
-                </Grid>
-
-                <Grid container direction='column' alignItems='center'>
-                    <Stack direction='row' spacing={1}>
-                        <Button
-                            variant="contained"
-                        >
-                            Post
-                        </Button>
-                        <Button
-                             style={{  
-                               backgroundColor: "#808080",
-                            }} 
-                            variant="contained"
-                            >
-                            Cancel
-                        </Button>
-                    </Stack>
-                </Grid>
-
-
-                
-
-
-               
-
-            </Box>
-            
-        </Modal>
+                            <MenuItem value={'Annonymous'}>Annonymous</MenuItem>
+                            <MenuItem value={'Your username'}>Your username</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handlePost}>Post</Button>
+            </DialogActions>
+        </Dialog>
     )
     return (
         <>
-            <IconButton onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
             {ui}
         </>
     )
