@@ -52,4 +52,4 @@ jobs:
         
       - name: SSH into Host
         run: |
-          ssh root@${{ secrets.SSH_HOST }} "ls"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls"
