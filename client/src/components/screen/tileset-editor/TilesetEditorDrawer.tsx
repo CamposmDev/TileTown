@@ -295,6 +295,7 @@ const TilesetEditorDrawer = () => {
         <Grid container alignItems="center" pt={2}>
           <Typography>Zoom</Typography>
         </Grid>
+        <Divider />
         <Stack direction="row" alignItems="center" spacing={1}>
           <TextField
             label="Zoom"
@@ -311,7 +312,7 @@ const TilesetEditorDrawer = () => {
             }}
           />
         </Stack>
-        <Divider />
+
         <Grid container alignItems="center" pt={2}>
           <Typography>Grid</Typography>
         </Grid>

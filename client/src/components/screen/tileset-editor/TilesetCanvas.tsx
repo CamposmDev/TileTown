@@ -30,14 +30,7 @@ const TilesetCanvas = () => {
   const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
-  // const [gridEnabled, setGridEnabled] = useState(edit.state.gridEnabled);
 
-  //canvas state variables
-  // const [restrictToTile, setRestrictToTile] = useState<boolean>(true);
-  // const [currentTile, setCurrentTile] = useState<{
-  //   x: number | null;
-  //   y: number | null;
-  // }>({ x: null, y: null });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
   const currentEditControl = edit.state.currentEditControl;
