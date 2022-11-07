@@ -342,4 +342,27 @@ export default class UserController {
         return;
     }
 
+    public async updateUserProfile(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({ message: "Bad request" });
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id" });
+        }
+        if (!req.file) {
+            return res.status(400).json({ message: "Missing file data" });
+        }
+
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        let updatedUser = await db.users.updateUser(user.id, {imageURL: req.file.filename});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: "Error updating user's profile picture"});
+        }
+
+        return res.status(200).json({message: "Updated user profile picture!", user: updatedUser});
+    }
 }

@@ -44,5 +44,5 @@ const filter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback)
 /**
  * The Multer object
  */
-const upload: Multer = multer({ storage: storage, fileFilter: filter });
-export default upload;
+const Upload: Multer = multer({ storage: storage, fileFilter: filter });
+export { Upload };
