@@ -25,20 +25,31 @@ jobs:
           npm --prefix server run build
           
   # Next, check if the unit tests are passing
-  Test: 
+  # Test: 
     # Specify the operating system
-    runs-on: self-hosted
+    # runs-on: self-hosted
     
     # This is how we require that Test runs only if Compile is successful
-    needs: Compile
+    # needs: Compile
 
-    steps:
+    # steps:
 
       # Checkout the branch
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
 
       # Run the unit tests
-      - name: Unit Tests
+      # - name: Unit Tests
+        # run: |
+          # npm --prefix server install 
+          # npm --prefix server run test
+  Deploy:
+    
+    runs-on: self-hosted
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        
+      - name: SSH into Host
         run: |
-          npm --prefix server install 
-          npm --prefix server run test
+          ssh root@${{ secrets.SSH_HOST }} "ls"
