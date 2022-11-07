@@ -143,6 +143,18 @@ export class TilesetEditStore {
     });
   }
 
+  public async updateCurrentTile(currentTile: {
+    x: number | null;
+    y: number | null;
+  }): Promise<void> {
+    console.log("updateCurrentTile");
+    console.log(currentTile);
+    this.handleAction({
+      type: TilesetEditorActionType.UPDATE_CURRENT_TILE,
+      payload: { currentTile },
+    });
+  }
+
   /**
    * This is the reducer function for the auth store.
    * @param action the type of the action
@@ -199,12 +211,39 @@ export class TilesetEditStore {
         this.handleUpdateZoom(payload.zoom);
         break;
       }
+      case TilesetEditorActionType.UPDATE_CURRENT_TILE: {
+        this.handleUpdateCurrentTile(payload);
+        break;
+      }
       default: {
         throw new Error(
           `Unhandled action with type ${action} caught in auth reducer`
         );
       }
     }
+  }
+  protected handleUpdateCurrentTile(payload: {
+    currentTile: { x: number | null; y: number | null };
+  }): void {
+    this.setEdit({
+      tileset: this._state.tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: this._state.isSaved,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: payload.currentTile,
+    });
+    console.log(payload.currentTile);
+    console.log("within store");
+    console.log(this._state.currentTile);
   }
   protected handleUpdateZoom(zoom: number): void {
     this.setEdit({
@@ -221,6 +260,7 @@ export class TilesetEditStore {
       isSaved: this._state.isSaved,
       firstRender: this._state.firstRender,
       zoom,
+      currentTile: this._state.currentTile,
     });
   }
   protected handleToggleFirstRender(): void {
@@ -238,6 +278,7 @@ export class TilesetEditStore {
       isSaved: this._state.isSaved,
       firstRender: !this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -256,6 +297,7 @@ export class TilesetEditStore {
       isSaved: true,
       firstRender: true,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -302,6 +344,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -320,6 +363,7 @@ export class TilesetEditStore {
       isSaved: true,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -338,6 +382,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -356,6 +401,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
   protected handleUpdateColors(colors: [Color]): void {
@@ -373,6 +419,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -395,6 +442,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -413,6 +461,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
   protected handleCloseModal(): void {
@@ -430,6 +479,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -448,6 +498,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 }

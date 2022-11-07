@@ -42,6 +42,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
       isSaved: true,
       firstRender: true,
       zoom: 1,
+      currentTile: { x: null, y: null },
     },
     () => {},
     () => {}
@@ -83,6 +84,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     isSaved: true,
     firstRender: true,
     zoom: 1,
+    currentTile: { x: null, y: null },
   });
 
   // The navigation for the auth context???

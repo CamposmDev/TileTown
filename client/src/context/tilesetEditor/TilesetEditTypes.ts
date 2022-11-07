@@ -178,6 +178,7 @@ export interface TilesetEditorState {
   isSaved: boolean;
   firstRender: boolean;
   zoom: number;
+  currentTile: { x: number | null; y: number | null };
 }
 
 /**
@@ -197,6 +198,7 @@ export enum TilesetEditorActionType {
   CLOSE_MODAL = "CLOSE_MODAL",
   TOGGLE_FIRST_RENDER = "TOGGLE_FIRST_RENDER",
   UPDATE_ZOOM = "UPDATE_ZOOM",
+  UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
 }
 
 /**action type and payload pairs*/
@@ -252,4 +254,8 @@ export type TilesetEditorAction =
   | {
       type: TilesetEditorActionType.UPDATE_ZOOM;
       payload: { zoom: number };
+    }
+  | {
+      type: TilesetEditorActionType.UPDATE_CURRENT_TILE;
+      payload: { currentTile: { x: number | null; y: number | null } };
     };

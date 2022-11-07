@@ -34,19 +34,17 @@ const TilesetCanvas = () => {
 
   //canvas state variables
   // const [restrictToTile, setRestrictToTile] = useState<boolean>(true);
-  const [currentTile, setCurrentTile] = useState<{
-    x: number | null;
-    y: number | null;
-  }>({ x: null, y: null });
+  // const [currentTile, setCurrentTile] = useState<{
+  //   x: number | null;
+  //   y: number | null;
+  // }>({ x: null, y: null });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
   const currentEditControl = edit.state.currentEditControl;
   const penColor = edit.state.penColor;
   const penSize = edit.state.penSize;
   const restrictToTile = edit.state.restrictToTile;
-  const gridColor = edit.state.gridColor;
-  const gridEnabled = edit.state.gridEnabled;
-  const gridSize = edit.state.gridSize;
+  const currentTile = edit.state.currentTile;
 
   const tileHeight = edit.state.tileset.tileHeight;
   const tileWidth = edit.state.tileset.tileWidth;
@@ -59,8 +57,7 @@ const TilesetCanvas = () => {
   const canvasImage: HTMLImageElement = new Image();
 
   useEffect(() => {
-    console.log("rerender canvas");
-
+    console.log("render canvas");
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
       canvas.height = canvasHeight;
@@ -154,11 +151,7 @@ const TilesetCanvas = () => {
       context.lineTo(canvasCoords.x, canvasCoords.y);
       setIsDrawing(true);
       let updateTile = calcCurrentTile(canvasCoords.x, canvasCoords.y);
-      setCurrentTile((currentTile) => ({
-        ...currentTile,
-        x: updateTile.x,
-        y: updateTile.y,
-      }));
+      edit.updateCurrentTile(updateTile);
     }
   };
 
@@ -170,7 +163,7 @@ const TilesetCanvas = () => {
         context.closePath();
       }
       setIsDrawing(false);
-      setCurrentTile({ x: null, y: null });
+      edit.updateCurrentTile({ x: null, y: null });
       updateImage(canvas, canvasImage);
     }
   };
@@ -184,7 +177,7 @@ const TilesetCanvas = () => {
         canvas
       );
       if (isDrawing) {
-        if (withinCurrentTile(canvasCoords.x, canvasCoords.y)) {
+        if (withinCurrentTile(canvasCoords.x, canvasCoords.y, currentTile)) {
           context.lineTo(canvasCoords.x, canvasCoords.y);
           context.stroke();
           // updateImage(canvas, canvasImage);
@@ -195,7 +188,10 @@ const TilesetCanvas = () => {
         updateImage(canvas, canvasImage);
         return;
       }
-      if (withinCurrentTile(canvasCoords.x, canvasCoords.y) && restrictToTile) {
+      if (
+        withinCurrentTile(canvasCoords.x, canvasCoords.y, currentTile) &&
+        restrictToTile
+      ) {
         context.beginPath();
         context.moveTo(canvasCoords.x, canvasCoords.y);
         context.lineTo(canvasCoords.x, canvasCoords.y);
@@ -208,7 +204,13 @@ const TilesetCanvas = () => {
   /**Get color of pixel
    * https://stackoverflow.com/questions/2106995/how-can-i-perform-flood-fill-with-html-canvas/56221940#56221940
    */
-  const getPixel = (pixelData: PixelData, x: number, y: number): number => {
+  const getPixel = (
+    pixelData: PixelData,
+    x: number,
+    y: number,
+    currentFillTile: { x: number | null; y: number | null }
+  ): number => {
+    if (!withinCurrentTile(x, y, currentFillTile)) return -1;
     if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
       return -1; // impossible color
     } else {
@@ -230,6 +232,8 @@ const TilesetCanvas = () => {
       nativeEvent,
       canvas
     );
+    const currentFillTile = calcCurrentTile(canvasCoords.x, canvasCoords.y);
+
     const x = Math.floor(canvasCoords.x);
     const y = Math.floor(canvasCoords.y);
     // read the pixels in the canvas
@@ -244,7 +248,8 @@ const TilesetCanvas = () => {
     };
 
     // get the color we're filling
-    const targetColor = getPixel(pixelData, x, y);
+    const targetColor = getPixel(pixelData, x, y, currentFillTile);
+    if (targetColor === -1) throw new Error("target color is -1");
 
     // check we are actually filling a different color
     if (targetColor !== fillColor) {
@@ -274,7 +279,7 @@ const TilesetCanvas = () => {
         let start: number | undefined;
         let x;
         for (x = left; x < right; ++x) {
-          const color = getPixel(pixelData, x, y);
+          const color = getPixel(pixelData, x, y, currentFillTile);
           if (color === targetColor) {
             if (!inSpan) {
               inSpan = true;
@@ -319,7 +324,7 @@ const TilesetCanvas = () => {
           l = left;
           for (;;) {
             --l;
-            const color = getPixel(pixelData, l, y);
+            const color = getPixel(pixelData, l, y, currentFillTile);
             if (color !== targetColor) {
               break;
             }
@@ -329,7 +334,7 @@ const TilesetCanvas = () => {
           let r = right;
           for (;;) {
             ++r;
-            const color = getPixel(pixelData, r, y);
+            const color = getPixel(pixelData, r, y, currentFillTile);
             if (color !== targetColor) {
               break;
             }
@@ -357,7 +362,7 @@ const TilesetCanvas = () => {
       ctx.putImageData(imageData, 0, 0);
     }
 
-    setCurrentTile({ x: null, y: null });
+    edit.updateCurrentTile({ x: null, y: null });
     updateImage(canvas, canvasImage);
   };
 
@@ -404,7 +409,11 @@ const TilesetCanvas = () => {
    * @returns returns false if mouse is outside of current tile
    *          true if it is or if there is no current tile
    */
-  const withinCurrentTile = (x: number, y: number): boolean => {
+  const withinCurrentTile = (
+    x: number,
+    y: number,
+    currentTile: { x: number | null; y: number | null }
+  ): boolean => {
     if (!restrictToTile) return true;
     if (currentTile.x !== null && currentTile.y !== null) {
       const scaleY = canvasHeight / imageHeight;
