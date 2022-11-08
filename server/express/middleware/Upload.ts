@@ -14,7 +14,9 @@ import path from "path";
  */
 const storage: StorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
+
         cb(null, path.join(__dirname, "images"));
+
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -44,5 +46,5 @@ const filter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback)
 /**
  * The Multer object
  */
-const upload: Multer = multer({ storage: storage, fileFilter: filter });
-export default upload;
+const Upload: Multer = multer({ storage: storage, fileFilter: filter });
+export { Upload };

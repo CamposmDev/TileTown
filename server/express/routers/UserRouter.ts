@@ -17,6 +17,7 @@ UserRouter.put('/profile', Auth.verifyJWT, Upload.single("file"), UserController
 UserRouter.put('/username', Auth.verifyJWT, UserController.updateUserUsername);
 UserRouter.put('/password', Auth.verifyJWT, UserController.updateUserPassword);
 UserRouter.put('/email', Auth.verifyJWT, UserController.updateUserEmail);
+UserRouter.put('/profile', Auth.verifyJWT, Upload.single("file"), UserController.updateUserProfile);
 
 UserRouter.delete('/', Auth.verifyJWT, UserController.deleteUserById);
 

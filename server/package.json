@@ -7,6 +7,7 @@
   },
   "scripts": {
     "build": "npx tsc",
+    "start": "nodemon build/server/index.js",
     "test:user:routes": "mocha -r ts-node/register tests/controllers/ExpressUserController.test.ts",
     "test:community:routes": "mocha -r ts-node/register tests/controllers/ExpressCommunityController.test.ts",
     "test:contest:routes": "mocha -r ts-node/register tests/controllers/ExpressContestController.test.ts",
