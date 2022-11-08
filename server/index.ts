@@ -12,7 +12,7 @@ const mongo: string = process.env.MONGO_URI || 'mongodb+srv://Admin:BxXqBUDuPWvo
 // This serves the client application from "localhost:3000" - all the backend routes are at "localhost:3000/api"
 app.use(express.static(path.join(__dirname, 'client')));
 app.use((req, res, next) => {
-    return res.redirect(path.join(__dirname, 'client'));
+    return res.redirect("/");
 });
 
 // Connect to the database and start the express server
