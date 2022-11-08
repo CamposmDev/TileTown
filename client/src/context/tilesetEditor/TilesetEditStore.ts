@@ -1,3 +1,4 @@
+import { ThirteenMp } from "@mui/icons-material";
 import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
 import {
@@ -36,12 +37,15 @@ export class TilesetEditStore {
   public async createTileset(name: string): Promise<void> {
     const newTileset: Tileset = {
       id: "",
-      columns: 0,
+      columns: 12,
+      rows: 12,
       createDate: new Date(),
       lastSaveDate: new Date(),
       image: "",
-      imageHeight: 0,
-      imageWidth: 0,
+      imageHeight: 120,
+      imageWidth: 120,
+      tileHeight: 10,
+      tileWidth: 10,
       margin: 0,
       name: name,
       owner: "",
@@ -56,7 +60,8 @@ export class TilesetEditStore {
     });
   }
 
-  public async updateTileset(tileset: Tileset): Promise<void> {
+  public async updateTileset(tileset: Partial<Tileset>): Promise<void> {
+    console.log(tileset);
     this.handleAction({
       type: TilesetEditorActionType.UPDATE_TILESET,
       payload: {
@@ -124,6 +129,32 @@ export class TilesetEditStore {
     });
   }
 
+  public async toggleFirstRender(): Promise<void> {
+    this.handleAction({
+      type: TilesetEditorActionType.TOGGLE_FIRST_RENDER,
+      payload: {},
+    });
+  }
+
+  public async updateZoom(zoom: number): Promise<void> {
+    this.handleAction({
+      type: TilesetEditorActionType.UPDATE_ZOOM,
+      payload: { zoom },
+    });
+  }
+
+  public async updateCurrentTile(currentTile: {
+    x: number | null;
+    y: number | null;
+  }): Promise<void> {
+    console.log("updateCurrentTile");
+    console.log(currentTile);
+    this.handleAction({
+      type: TilesetEditorActionType.UPDATE_CURRENT_TILE,
+      payload: { currentTile },
+    });
+  }
+
   /**
    * This is the reducer function for the auth store.
    * @param action the type of the action
@@ -172,12 +203,83 @@ export class TilesetEditStore {
         this.handleCloseModal();
         break;
       }
+      case TilesetEditorActionType.TOGGLE_FIRST_RENDER: {
+        this.handleToggleFirstRender();
+        break;
+      }
+      case TilesetEditorActionType.UPDATE_ZOOM: {
+        this.handleUpdateZoom(payload.zoom);
+        break;
+      }
+      case TilesetEditorActionType.UPDATE_CURRENT_TILE: {
+        this.handleUpdateCurrentTile(payload);
+        break;
+      }
       default: {
         throw new Error(
           `Unhandled action with type ${action} caught in auth reducer`
         );
       }
     }
+  }
+  protected handleUpdateCurrentTile(payload: {
+    currentTile: { x: number | null; y: number | null };
+  }): void {
+    this.setEdit({
+      tileset: this._state.tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: this._state.isSaved,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: payload.currentTile,
+    });
+    console.log(payload.currentTile);
+    console.log("within store");
+    console.log(this._state.currentTile);
+  }
+  protected handleUpdateZoom(zoom: number): void {
+    this.setEdit({
+      tileset: this._state.tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: this._state.isSaved,
+      firstRender: this._state.firstRender,
+      zoom,
+      currentTile: this._state.currentTile,
+    });
+  }
+  protected handleToggleFirstRender(): void {
+    this.setEdit({
+      tileset: this._state.tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: this._state.isSaved,
+      firstRender: !this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
+    });
   }
 
   protected handleCreateNewTileset(tileset: Tileset): void {
@@ -193,12 +295,43 @@ export class TilesetEditStore {
       gridColor: "#000000",
       modalType: TilesetEditorModalType.close,
       isSaved: true,
+      firstRender: true,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
-  protected handleUpdateTileset(tileset: Tileset): void {
+  protected handleUpdateTileset(tileset: Partial<Tileset>): void {
+    const updatedTileset: Tileset = {
+      id: this._state.tileset.id,
+      columns: tileset.columns ? tileset.columns : this._state.tileset.columns,
+      rows: tileset.rows ? tileset.rows : this._state.tileset.rows,
+      createDate: this._state.tileset.createDate,
+      lastSaveDate: this._state.tileset.lastSaveDate,
+      image: this._state.tileset.image,
+      imageHeight: tileset.imageHeight
+        ? tileset.imageHeight
+        : this._state.tileset.imageHeight,
+      imageWidth: tileset.imageWidth
+        ? tileset.imageWidth
+        : this._state.tileset.imageWidth,
+      tileHeight: tileset.tileHeight
+        ? tileset.tileHeight
+        : this._state.tileset.tileHeight,
+      tileWidth: tileset.tileWidth
+        ? tileset.tileWidth
+        : this._state.tileset.tileWidth,
+      margin: tileset.margin ? tileset.margin : this._state.tileset.margin,
+      name: tileset.name ? tileset.name : this._state.tileset.name,
+      owner: this._state.tileset.owner,
+      properties: tileset.properties
+        ? tileset.properties
+        : this._state.tileset.properties,
+      isPublished: false,
+    };
+
     this.setEdit({
-      tileset,
+      tileset: updatedTileset,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -209,6 +342,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -224,7 +360,10 @@ export class TilesetEditStore {
       gridSize: this._state.gridSize,
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
-      isSaved: false,
+      isSaved: true,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -241,6 +380,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -257,6 +399,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
   protected handleUpdateColors(colors: [Color]): void {
@@ -272,6 +417,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -292,6 +440,9 @@ export class TilesetEditStore {
       gridColor: payload.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -308,6 +459,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
   protected handleCloseModal(): void {
@@ -323,6 +477,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 
@@ -339,6 +496,9 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType,
       isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
     });
   }
 }
