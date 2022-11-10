@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from 'path';
 import express from 'express';
 
+
 // Set up enviorment configuration
 dotenv.config();
 const port: string = process.env.PORT || '3000';
@@ -22,3 +23,4 @@ app.listen(port, () => {
     console.log(`Server started on port ${port}...`);
     console.log(process.env);
 });
+

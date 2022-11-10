@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { log } from 'npmlog';
+
 import { User } from '@types';
 import { db } from '../../database';
 import { HashingUtils } from "../../util";
 import { Auth } from '../middleware';
+import { Mailer } from '../../util/mail';
 
 export default class UserController {
 
@@ -101,11 +102,15 @@ export default class UserController {
             return;
         }
 
-        let token: string = Auth.signJWT<string>(user.id)
 
-        res.status(201).
-            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
-            json({ message: "User created successfully!", user: user });
+        Mailer.sendMail({
+            to: user.email, 
+            from: "tiletown123@gmail.com", 
+            subject: "Testing", 
+            text: "This is a test email verification...?"
+        });
+
+        res.status(201).json({ message: "User created successfully!", user: user });
         return;
     }
 
