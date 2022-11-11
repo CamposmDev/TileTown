@@ -21,4 +21,4 @@ jobs:
         
       - name: SSH into Host
         run: |
-          ls
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls"
