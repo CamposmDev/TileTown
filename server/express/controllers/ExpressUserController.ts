@@ -116,7 +116,7 @@ export default class UserController {
         }
 
         if (!req.body.email) {
-            res.status(400).json({ message: "Missing required field 'email'" });
+            res.status(400).json({ message: "Missing required field 'email/username'" });
             return;
         }
         if (!req.body.password) {
@@ -127,8 +127,11 @@ export default class UserController {
         // Check the user exists - if not return error
         let user: User | null = await db.users.getUserByEmail(req.body.email);
         if (user === null) {
-            res.status(400).json({ message: `No user registered wth email '${req.body.email}'` });
-            return;
+            user = await db.users.getUserByUsername(req.body.email);
+            if (user === null) {
+                res.status(400).json({ message: `No user registered wth email/username '${req.body.email}'` });
+                return;
+            }
         }
 
         // Check the users password matches - if they don't match throw an error
