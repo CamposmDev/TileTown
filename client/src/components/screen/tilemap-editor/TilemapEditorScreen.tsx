@@ -30,6 +30,7 @@ import TilemapCanvas from "./TilemapCanvas";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTilesetModal from "../../modals/PublishTilesetModal";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
+import TilemapCanvasWrapper from "./TilemapCanvasWrapper";
 
 const TilemapEditorScreen = () => {
   let timeLeft = "1:24";
@@ -107,8 +108,8 @@ const TilemapEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name={'this tilemap'}/>
-              <PublishTileItemButton name={'this tilemap'}/>
+              <DeleteTileItemButton name={"this tilemap"} />
+              <PublishTileItemButton name={"this tilemap"} />
               {/* <Button startIcon={<Delete />} color="error">
                 Delete
               </Button> */}
@@ -128,7 +129,7 @@ const TilemapEditorScreen = () => {
           </Stack>
         </Grid>
       </Toolbar>
-      <TilemapCanvas />
+      <TilemapCanvasWrapper />
     </Grid>
   );
 };

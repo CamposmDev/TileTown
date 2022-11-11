@@ -21,6 +21,7 @@ import { TilesetEditContextProvider } from "./context/tilesetEditor";
 import CardTester from "./components/CardTester";
 import ModalTester from "./components/ModalTester";
 import NotificationSnack from "./components/modals/NotificationSnack";
+import { TilemapEditContextProvider } from "./context/tilemapEditor";
 
 /**
  * Pixel Editors
@@ -96,7 +97,14 @@ const App = () => {
                 </TilesetEditContextProvider>
               }
             />
-            <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
+            <Route
+              path="/create/tilemap"
+              element={
+                <TilemapEditContextProvider>
+                  <TilemapEditorScreen />
+                </TilemapEditContextProvider>
+              }
+            />
             <Route path="/cards" element={<CardTester />} />
             <Route path="/modals" element={<ModalTester />} />
           </Routes>

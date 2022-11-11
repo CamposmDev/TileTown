@@ -1,11 +1,12 @@
 import { Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import "./default.css";
-import Layer from "./Layer";
-import Property from "./Property";
-import { Color } from "./Color";
+import {
+  Layer,
+  Color,
+  Property,
+} from "src/context/tilemapEditor/TilemapEditTypes";
 import { Type } from "./Type";
-import LayerCanvas from "./LayerCanvas";
 
 const TilemapCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -18,28 +19,6 @@ const TilemapCanvas = () => {
   const imageWidth: number = tileWidth * columns;
   const canvasHeight: number = 400;
   const canvasWidth: number = 400;
-  let testLayer1: Partial<Layer> = {
-    data: [
-      1, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2, 3, 4, 5, 1, 2, 3, 10, 10, 10, 1, 2, 3, 4,
-      1, 2, 3, 4, 1, 10, 1, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
-      3, 3, 3, 3, 0, 1, 0, 0, 3, 1, 3, 4, 5, 6, 7, 5,
-    ],
-  };
-  let testLayer2: Partial<Layer> = {
-    data: [
-      4, 4, 14, 14, 14, 14, 3, 3, 3, 12, 12, 13, 14, 15, 11, 12, 13, 0, 0, 0, 0,
-      0, 0, 0, 1, 2, 0, 4, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 0,
-      0, 0, 3, 3, 10, 0, 0, 0, 0, 0, 3, 1, 3, 4, 8, 8, 8, 8,
-    ],
-  };
-  let testLayer3: Partial<Layer> = {
-    data: [
-      0, 0, 4, 0, 14, 14, 0, 0, 0, 1, 2, 0, 1, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0,
-      1, 2, 0, 4, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    ],
-  };
-  const testLayers: Partial<Layer>[] = [testLayer1, testLayer2, testLayer3];
 
   useEffect(() => {
     const canvas: HTMLCanvasElement | null = canvasRef.current;
@@ -71,9 +50,6 @@ const TilemapCanvas = () => {
 
   let root = (
     <div id="tilemap-canvas-wrapper">
-      {testLayers.map((layers, index) => (
-        <LayerCanvas layerIndex={index}></LayerCanvas>
-      ))}
       <canvas className="tilemap-canvas" ref={canvasRef}>
         Please use a browser that supports canvas
       </canvas>
