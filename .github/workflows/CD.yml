@@ -1,0 +1,22 @@
+
+
+name: CD
+
+
+on: [workflow_dispatch, push]
+  branch:
+    - "main"
+
+jobs:
+
+  Deploy:
+    
+    runs-on: self-hosted
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        
+      - name: SSH into Host
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls"
