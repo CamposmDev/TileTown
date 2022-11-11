@@ -24,7 +24,9 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Grid,
 } from "@mui/material";
+import TileSelectorCanvas from "./TileSelectorCanvas";
 
 const LayerDrawer = () => {
   let numOfCollaborators = 2;
@@ -33,7 +35,7 @@ const LayerDrawer = () => {
       open={true}
       anchor="right"
       variant="permanent"
-      PaperProps={{ sx: { mt: 15 } }}
+      PaperProps={{ sx: { mt: 15, overflow: "auto", height: "700px" } }}
     >
       <Stack pl={1} pr={1} direction="row" alignItems="center">
         <Typography flexGrow={1}>Layer</Typography>
@@ -181,7 +183,16 @@ const LayerDrawer = () => {
         <Button variant="contained" sx={{ m: 1, width: 1 / 2 }}>
           Add Tileset
         </Button>
-        <img src="/testTileset.png"></img>
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <TileSelectorCanvas></TileSelectorCanvas>
+        </Grid>
+        {/* <img src="/testTileset.png"></img> */}
       </Stack>
     </Drawer>
   );
