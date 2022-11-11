@@ -4,6 +4,22 @@ import { Community } from '@types';
 
 export default class CommunityController {
 
+    public async getCommunities(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({ message: "Bad Request!"});
+        }
+        if (!req.query) {
+            return res.status(400).json({ message: "Missing query options" });
+        }
+
+        let name = req.query.name ? req.query.name.toString() : "";
+        let communities = await db.communities.getCommunities(name);
+        if (communities.length === 0) {
+            return res.status(404).json({ message: `No contests found with name "${name}"`});
+        }
+
+        return res.status(200).json({message: "Got contests!", communities: communities});
+    }
 
     public async getCommunityById(req: Request, res: Response): Promise<Response> {
         /** If there isn't an id in the url params return 400 - Bad Request */

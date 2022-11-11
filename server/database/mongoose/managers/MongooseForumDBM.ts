@@ -9,6 +9,11 @@ import { ForumSchemaType } from "../types";
  */
 export default class MongooseForumDBM implements ForumDBM {
 
+    async searchForumPost(title: string): Promise<ForumPost[]> {
+        let forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")});
+        return forums.map(f => this.parseForumPost(f));
+    }
+
     async getForumPost(forumPostId: string): Promise<ForumPost | null> {
         if (!mongoose.Types.ObjectId.isValid(forumPostId)) { return null; }
 

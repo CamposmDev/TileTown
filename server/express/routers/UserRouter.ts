@@ -8,6 +8,7 @@ const UserRouter: Router = Router();
 UserRouter.get('/:id', Auth.verifyJWT, UserController.getUserById);
 UserRouter.get('/', Auth.verifyJWT, UserController.getLoggedIn);
 UserRouter.get('/verify', UserController.verifyUser);
+UserRouter.get('/search');
 
 UserRouter.post('/', UserController.createUser);
 UserRouter.post('/login', UserController.loginUser);
@@ -17,6 +18,9 @@ UserRouter.put('/profile', Auth.verifyJWT, Upload.single("file"), UserController
 UserRouter.put('/username', Auth.verifyJWT, UserController.updateUserUsername);
 UserRouter.put('/password', Auth.verifyJWT, UserController.updateUserPassword);
 UserRouter.put('/email', Auth.verifyJWT, UserController.updateUserEmail);
+
+UserRouter.put('/friend/add/:id', Auth.verifyJWT, UserController.addFriend);
+UserRouter.put('/friend/remove/:id', Auth.verifyJWT, UserController.removeFriend);
 
 UserRouter.delete('/', Auth.verifyJWT, UserController.deleteUserById);
 

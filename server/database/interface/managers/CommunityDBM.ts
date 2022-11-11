@@ -19,8 +19,8 @@ export default interface CommunityDBM {
    * @return if successful, a new Community object with the data associated with the community in the DBMS
    */
   getCommunityById(communityId: string): Promise<Community | null>;
-  getCommunityByName(name: string): Promise<Community | null>
-
+  getCommunityByName(name: string): Promise<Community | null>;
+  getCommunities(name: string): Promise<Community[]>;
   getCommunitiesById(communityIds: string[]): Promise<Community[]>;
 
   /**
@@ -79,7 +79,6 @@ export default interface CommunityDBM {
    * @param communityId the id of the community in the DBMS
    * @return if successful, the id of the community in the DBMS the user was added to.
    */
-//   addCommunityMember(userId: string, communityId: string): Promise<string | null>;
 
   /**
    * Removes a user with the given user id from the community with the given community id.
@@ -97,7 +96,6 @@ export default interface CommunityDBM {
    * @param communityId the id of the community in the DBMS.
    * @return if successful, the id of the community in the DBMS the user was removed from; null otherwise
    */
-//   removeCommunityMember(userId: string, communityId: string): Promise<boolean>;
 
     /**
      * Removes a user with the given user id from the community with the given community id.
