@@ -135,4 +135,6 @@ export default interface ForumDBM {
    * @return if successful, 
    */
 //   commentForumPostById(forumPostId: string, payload: Comment): Promise<Comment | null>
+
+    searchForumPost(title: string): Promise<ForumPost[]>
 }

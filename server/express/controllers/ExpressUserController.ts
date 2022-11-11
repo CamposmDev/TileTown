@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { log } from 'npmlog';
+
 import { User } from '@types';
 import { db } from '../../database';
 import { HashingUtils } from "../../util";
 import { Auth } from '../middleware';
+import { Mailer } from '../../util/mail';
 
 export default class UserController {
 
@@ -101,11 +102,15 @@ export default class UserController {
             return;
         }
 
-        let token: string = Auth.signJWT<string>(user.id)
 
-        res.status(201).
-            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
-            json({ message: "User created successfully!", user: user });
+        // Mailer.sendMail({
+        //     to: user.email, 
+        //     from: "tiletown123@gmail.com", 
+        //     subject: "Testing", 
+        //     text: "This is a test email verification...?"
+        // });
+
+        res.status(201).json({ message: "User created successfully!", user: user });
         return;
     }
 
@@ -344,7 +349,6 @@ export default class UserController {
         res.status(200).clearCookie("token").json({ message: "User deleted successfully!", user: user });
         return;
     }
-
     public async updateUserProfile(req: Request, res: Response): Promise<Response> {
         if (!req) {
             return res.status(400).json({ message: "Bad request" });
@@ -369,4 +373,88 @@ export default class UserController {
         return res.status(200).json({message: "Updated user profile picture!", user: updatedUser});
     }
 
+
+    public async addFriend(req: Request, res: Response): Promise<Response> {
+        // Check for bad request
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing friend id"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        // Check if the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+
+        // Check if the friend exists
+        let friend = await db.users.getUserById(req.params.id);
+        if (friend === null) {
+            return res.status(404).json({ message: `User ${req.params.id} not found`});
+        }
+
+        // Check if the user is already friends with the other user
+        let idx = user.friends.indexOf(friend.id);
+        if (idx !== -1) {
+            return res.status(400).json({ message: `User ${user.id} is already friends with user ${friend.id}`});
+        }
+
+        // Add the friend to the users friend list
+        user.friends.push(friend.id);
+
+        // Update the users friends list in the database
+        let updatedUser = await db.users.updateUser(user.id, {friends: user.friends});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: `Error updating user ${user.id}`});
+        }
+        // Return the updated friend
+        return res.status(200).json({ message: `Friend added!`, user: updatedUser });
+    }
+    public async removeFriend(req: Request, res: Response): Promise<Response> {
+        // Check for bad request format
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing friend id"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        // Check if the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+        // Check if the friend exists
+        let friend = await db.users.getUserById(req.params.id);
+        if (friend === null) {
+            return res.status(404).json({ message: `User ${req.params.id} not found`});
+        }
+
+        // Check if user is friends with the friend
+        let idx = user.friends.indexOf(friend.id);
+        if (idx === -1) {
+            return res.status(400).json({ message: `User ${req.params.id} is not friends with user ${friend.id}`});
+        }
+
+        // Remove the friend
+        user.friends.splice(idx, 1);
+
+        // Update the users friends list
+        let updatedUser = await db.users.updateUser(user.id, {friends: user.friends});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: `Error updating user ${user.id}`});
+        }
+
+        // Return the updated user
+        return res.status(200).json({message: "Friend removed!", user: updatedUser});
+
+    }
 }

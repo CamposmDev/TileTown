@@ -5,6 +5,8 @@ import { Auth } from "../middleware";
 const ForumRouter: Router = Router();
 
 ForumRouter.get('/:id', ForumController.getForumPostById);
+ForumRouter.get('/', ForumController.getForumPosts);
+
 ForumRouter.post('/', Auth.verifyJWT, ForumController.createForumPost);
 ForumRouter.put('/:id', Auth.verifyJWT, ForumController.updateForumPostById);
 ForumRouter.delete('/:id', Auth.verifyJWT, ForumController.deleteForumPostById);

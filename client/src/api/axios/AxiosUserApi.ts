@@ -32,6 +32,8 @@ export default class AxiosUserApi  {
     async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
         return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
     }
+
+
 }
 
 
