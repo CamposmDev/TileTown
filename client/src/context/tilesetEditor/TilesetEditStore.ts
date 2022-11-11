@@ -241,9 +241,6 @@ export class TilesetEditStore {
       zoom: this._state.zoom,
       currentTile: payload.currentTile,
     });
-    console.log(payload.currentTile);
-    console.log("within store");
-    console.log(this._state.currentTile);
   }
   protected handleUpdateZoom(zoom: number): void {
     this.setEdit({
