@@ -26,6 +26,9 @@ const TileSelectorCanvas = () => {
   const rows = edit.state.Tilesets[edit.state.currentTilesetIndex].rows;
   const columns = edit.state.Tilesets[edit.state.currentTilesetIndex].columns;
   const image = edit.state.Tilesets[edit.state.currentTilesetIndex].image;
+  const currentGlobalTileID =
+    edit.state.Tilemap.globalTileIDs[edit.state.currentTilesetIndex];
+  const currentTileIndex = edit.state.currentTileIndex;
 
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
@@ -67,10 +70,34 @@ const TileSelectorCanvas = () => {
     canvasWidth: number,
     canvasHeight: number
   ) => {
-    canvasImage.src = image;
+    canvasImage.src = src;
     canvasImage.onload = () => {
       ctx.drawImage(canvasImage, 0, 0, canvasWidth, canvasHeight);
+      drawGrid(ctx, canvasHeight, canvasWidth);
+      highlightSelectedTile(ctx, canvasWidth, canvasHeight);
     };
+  };
+
+  const highlightSelectedTile = (
+    ctx: CanvasRenderingContext2D,
+    canvasWidth: number,
+    canvasHeight: number
+  ) => {
+    const rectHeight = canvasHeight;
+    const rectWidth = canvasWidth;
+    const scaleY = rectHeight / imageHeight;
+    const scaleX = rectWidth / imageWidth;
+    const scaledTileHeight = tileHeight * scaleY;
+    const scaledTileWidth = tileWidth * scaleX;
+    //works with shapes but not with images
+    ctx.fillStyle = "rgba(25, 255, 255, 0.3)";
+    ctx.fillRect(
+      ((currentTileIndex - currentGlobalTileID) % columns) * scaledTileWidth,
+      Math.floor((currentTileIndex - currentGlobalTileID) / columns) *
+        scaledTileHeight,
+      scaledTileWidth,
+      scaledTileHeight
+    );
   };
 
   useEffect(() => {
@@ -84,14 +111,57 @@ const TileSelectorCanvas = () => {
       if (ctx) {
         gridContextRef.current = ctx;
         drawImage(ctx, canvasImage, image, canvasWidth, canvasHeight);
-        drawGrid(ctx, canvasHeight, canvasWidth);
       }
     }
-  }, [drawGrid, drawImage]);
+  }, [drawImage]);
+
+  const selectCurrentTile = ({ nativeEvent }: any): void => {
+    if (gridCanvasRef.current) {
+      const canvas: HTMLCanvasElement = gridCanvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+      edit.updateCurrentTile(
+        currentTile.x + columns * currentTile.y + currentGlobalTileID
+      );
+    }
+  };
+  const screenToCanvasCoordinates = (
+    nativeEvent: any,
+    canvas: HTMLCanvasElement
+  ): { x: number; y: number } => {
+    const rect = canvas.getBoundingClientRect(), // abs. size of element
+      scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
+      scaleY = canvas.height / rect.height;
+    return {
+      x: (nativeEvent.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
+      y: (nativeEvent.clientY - rect.top) * scaleY, // been adjusted to be relative to element
+    };
+  };
+
+  /**
+   *
+   * @param x current x Position of mouse relative to Canvas
+   * @param y current y Position of mouse relative to Canvas
+   * @returns the 0 indexed column and row of the current tile
+   */
+  const calcCurrentTile = (x: number, y: number): { x: number; y: number } => {
+    const scaleY = canvasHeight / imageHeight;
+    const scaleX = canvasWidth / imageWidth;
+    const scaledTileHeight = tileHeight * scaleY;
+    const scaledTileWidth = tileWidth * scaleX;
+    return {
+      x: Math.floor(x / scaledTileWidth),
+      y: Math.floor(y / scaledTileHeight),
+    };
+  };
 
   let root = (
     <div>
-      <canvas className="tilemap-canvas" ref={gridCanvasRef}>
+      <canvas
+        className="tilemap-canvas"
+        ref={gridCanvasRef}
+        onMouseDown={selectCurrentTile}
+      >
         Please user a browser that supports HTML Canvas
       </canvas>
     </div>

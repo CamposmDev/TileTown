@@ -27,12 +27,10 @@ const CurrentLayerCanvas = () => {
   ) => {
     const rectHeight = canvasHeight;
     const rectWidth = canvasWidth;
-    console.log(rectWidth);
     const scaleY = rectHeight / imageHeight;
     const scaleX = rectWidth / imageWidth;
     const scaledTileHeight = tileHeight * scaleY;
     const scaledTileWidth = tileWidth * scaleX;
-    console.log(scaledTileWidth);
     //draw vertical lines of grid
 
     for (let i = scaledTileHeight; i < rectHeight; i += scaledTileHeight) {

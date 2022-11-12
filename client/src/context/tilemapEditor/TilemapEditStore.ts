@@ -91,7 +91,6 @@ export class TilemapEditStore {
   }
 
   public async updateTilemap(Tilemap: Partial<Tilemap>): Promise<void> {
-    console.log(Tilemap);
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_TILEMAP,
       payload: {
