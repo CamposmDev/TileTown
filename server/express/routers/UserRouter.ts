@@ -7,7 +7,7 @@ const UserRouter: Router = Router();
 
 UserRouter.get('/:id', Auth.verifyJWT, UserController.getUserById);
 UserRouter.get('/', Auth.verifyJWT, UserController.getLoggedIn);
-UserRouter.get('/verify', UserController.verifyUser);
+UserRouter.get('/verify/:id', UserController.verifyUser);
 
 UserRouter.post('/', UserController.createUser);
 UserRouter.post('/login', UserController.loginUser);
