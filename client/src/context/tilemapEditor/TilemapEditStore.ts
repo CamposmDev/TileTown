@@ -120,6 +120,7 @@ export class TilemapEditStore {
   public async updateCurrentSelection(
     currentSelection: number[]
   ): Promise<void> {
+    console.log(currentSelection);
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION,
       payload: { currentSelection },
