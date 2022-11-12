@@ -113,16 +113,18 @@ const TileSelectorCanvas = () => {
         drawImage(ctx, canvasImage, image, canvasWidth, canvasHeight);
       }
     }
-  }, [drawImage]);
+  }, []);
 
   const selectCurrentTile = ({ nativeEvent }: any): void => {
-    if (gridCanvasRef.current) {
+    if (gridCanvasRef.current && gridContextRef.current) {
       const canvas: HTMLCanvasElement = gridCanvasRef.current;
+      const ctx: CanvasRenderingContext2D = gridContextRef.current;
       const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
       const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
       edit.updateCurrentTile(
         currentTile.x + columns * currentTile.y + currentGlobalTileID
       );
+      highlightSelectedTile(ctx, canvasWidth, canvasHeight);
     }
   };
   const screenToCanvasCoordinates = (

@@ -147,11 +147,11 @@ const TilemapCanvas = () => {
         const scaleX = canvasWidth / imageWidth;
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
       }
     }
-  }, [drawCanvas]);
+  }, []);
 
   const highlightTile = ({ nativeEvent }: any): void => {
     if (canvasRef.current) {

@@ -15,6 +15,7 @@ const CurrentLayerCanvas = () => {
   const tileWidth = edit.state.Tilemap.tileWidth;
   const height = edit.state.Tilemap.height;
   const width = edit.state.Tilemap.width;
+  const currentSelection = edit.state.currentSelection;
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
   const canvasHeight: number = 800;
@@ -47,6 +48,38 @@ const CurrentLayerCanvas = () => {
     ctx.closePath();
   };
 
+  const highlightTile = (
+    ctx: CanvasRenderingContext2D,
+    canvasHeight: number,
+    canvasWidth: number,
+    tileIndex: number
+  ) => {
+    const rectHeight = canvasHeight;
+    const rectWidth = canvasWidth;
+    const scaleY = rectHeight / imageHeight;
+    const scaleX = rectWidth / imageWidth;
+    const scaledTileHeight = tileHeight * scaleY;
+    const scaledTileWidth = tileWidth * scaleX;
+    //works with shapes but not with images
+    ctx.fillStyle = "rgba(25, 255, 255, 0.3)";
+    ctx.fillRect(
+      (tileIndex % width) * scaledTileWidth,
+      Math.floor(tileIndex / width) * scaledTileHeight,
+      scaledTileWidth,
+      scaledTileHeight
+    );
+  };
+
+  const highlightSelectedTiles = (
+    ctx: CanvasRenderingContext2D,
+    canvasHeight: number,
+    canvasWidth: number
+  ) => {
+    for (let i = 0; i < currentSelection.length; i++) {
+      highlightTile(ctx, canvasHeight, canvasWidth, currentSelection[i]);
+    }
+  };
+
   useEffect(() => {
     console.log("rerender grid canvas");
     if (gridCanvasRef.current) {
@@ -59,9 +92,10 @@ const CurrentLayerCanvas = () => {
       if (ctx) {
         gridContextRef.current = ctx;
         drawGrid(ctx, canvasHeight, canvasWidth);
+        highlightSelectedTiles(ctx, canvasHeight, canvasWidth);
       }
     }
-  }, [drawGrid]);
+  }, [drawGrid, highlightSelectedTiles]);
 
   let root = (
     <div>
