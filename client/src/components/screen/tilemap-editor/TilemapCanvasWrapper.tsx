@@ -23,8 +23,8 @@ const TilemapCanvasWrapper = () => {
   const width = edit.state.Tilemap.width;
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
-  const canvasHeight: number = tileHeight * 50;
-  const canvasWidth: number = tileWidth * 50;
+  const canvasHeight: number = imageHeight * 5;
+  const canvasWidth: number = imageWidth * 5;
 
   return (
     <Grid id="overflow-wrapper">
