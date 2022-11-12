@@ -15,7 +15,8 @@ import {
     LeaveCommunityRes, 
     UpdateCommunityRes, 
     CreateCommunityRes,
-    DeleteCommunityRes
+    DeleteCommunityRes,
+    GetCommunitiesRes
 } from "@responses/community";
 
 
@@ -39,6 +40,10 @@ export default class AxiosCommunityApi {
 
     public static async deleteCommunity(communityId: string, payload: DeleteCommunityReq): Promise<AxiosResponse<DeleteCommunityRes>> {
         return AxiosApi.delete<DeleteCommunityRes, AxiosResponse<DeleteCommunityRes>, DeleteCommunityReq>(`/community/${communityId}`, payload);
+    }
+
+    public static async getCommunities(name: string): Promise<AxiosResponse<GetCommunitiesRes>> {
+        return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name }});
     }
 
 }

@@ -21,4 +21,4 @@ jobs:
         
       - name: SSH into Host
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash /var/www/deploy.sh"

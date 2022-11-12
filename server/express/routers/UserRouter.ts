@@ -18,6 +18,9 @@ UserRouter.put('/username', Auth.verifyJWT, UserController.updateUserUsername);
 UserRouter.put('/password', Auth.verifyJWT, UserController.updateUserPassword);
 UserRouter.put('/email', Auth.verifyJWT, UserController.updateUserEmail);
 
+UserRouter.put('/friend/add/:id', Auth.verifyJWT, UserController.addFriend);
+UserRouter.put('/friend/remove/:id', Auth.verifyJWT, UserController.removeFriend);
+
 UserRouter.delete('/', Auth.verifyJWT, UserController.deleteUserById);
 
 export default UserRouter;
