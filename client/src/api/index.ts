@@ -4,14 +4,15 @@ import AxiosContestApi from "./axios/AxiosContestApi";
 import AxiosForumApi from "./axios/AxiosForumApi";
 import AxiosTilesetApi from "./axios/AxiosTilesetApi";
 import AxiosUserApi from "./axios/AxiosUserApi";
-axios.defaults.withCredentials = true
+import AxiosContestApi from "./axios/AxiosContestApi";
+import AxiosForumApi from "./axios/AxiosForumApi";
+import AxiosCommunityApi from "./axios/AxiosCommunityApi";
 
-const api = axios.create({
-    baseURL: 'http://localhost:3000/'
-})
+axios.defaults.withCredentials = true
 
 const CommunityApi = new AxiosCommunityApi();
 const UserApi = new AxiosUserApi();
+
 const ContestApi = new AxiosContestApi();
 const ForumApi = new AxiosForumApi();
 const TilesetApi = new AxiosTilesetApi();
