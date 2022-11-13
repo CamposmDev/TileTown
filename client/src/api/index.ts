@@ -1,10 +1,14 @@
 import axios from "axios";
 import AxiosUserApi from "./axios/AxiosUserApi";
+import AxiosContestApi from "./axios/AxiosContestApi";
+import AxiosForumApi from "./axios/AxiosForumApi";
+import AxiosCommunityApi from "./axios/AxiosCommunityApi";
+
 axios.defaults.withCredentials = true
 
-const api = axios.create({
-    baseURL: 'http://localhost:3000/'
-})
-
 const UserApi = new AxiosUserApi();
-export { UserApi }
+const CommunityApi = new AxiosCommunityApi();
+const ContestApi = new AxiosContestApi();
+const ForumApi = new AxiosForumApi();
+
+export { UserApi, CommunityApi, ContestApi, ForumApi }
