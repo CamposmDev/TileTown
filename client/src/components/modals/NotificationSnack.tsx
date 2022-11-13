@@ -1,24 +1,24 @@
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { Alert, Snackbar } from '@mui/material';
 import { useContext } from 'react';
-import { AuthContext } from 'src/context/auth';
+import { SnackContext } from 'src/context/snack';
 
 /**
  * Reports messages received from the server
  * @returns SnackBar
  */
 const NotificationSnack = () => {
-    const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     return (
         <div>
             <Snackbar
-                open={auth.isMsg()}
+                open={snack.open()}
                 TransitionComponent={SLIDE_DOWN_TRANSITION}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                 autoHideDuration={5000}
-                onClose={() => auth.clearError()}
+                onClose={() => snack.clearMessage()}
             >
-                <Alert severity={auth.getMsgType()}>{auth.getMsg()}</Alert>
+                <Alert severity={snack.getSeverity()}>{snack.getMessage()}</Alert>
             </Snackbar>
         </div>
     );
