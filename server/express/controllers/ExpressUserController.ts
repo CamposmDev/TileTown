@@ -48,11 +48,14 @@ export default class UserController {
         if (!req) {
             return res.status(400).json({message: "Bad Request!"});
         }
-        if (!req.query) {
+        if (!req.body) {
             return res.status(400).json({message: "No query options"});
         }
+        if (!req.body.username) {
+            return res.status(400).json({message: "Query cannot be empty!"})
+        }
 
-        let username = req.query.username ? req.query.username.toString() : "";
+        let username = req.body.username ? req.body.username.toString() : "";
         let users = await db.users.getUsers(username);
         if (users.length === 0) {
             return res.status(404).json({message: `No users found with username "${username}"`});

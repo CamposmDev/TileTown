@@ -6,9 +6,11 @@ import { Logout, Hail, Person, Settings, PersonAdd } from "@mui/icons-material";
 import { AuthContext } from "src/context/auth";
 import { MENU_PAPER_PROPS, stringAvatar } from "../util/Constants";
 import { User } from '@types'
+import { SnackContext } from "src/context/snack";
 
 const AccountButton = () => {
     const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
     const open = Boolean(anchorEl)
@@ -20,12 +22,12 @@ const AccountButton = () => {
     }
 
     const handleLogout = () => {
-        auth.logoutUser()
+        auth.logoutUser(snack)
         handleMenuClose()
     }
 
     const handleGuest = () => {
-        auth.loginAsGuest()
+        auth.loginAsGuest(snack)
         handleMenuClose()
     }
 

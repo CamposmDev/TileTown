@@ -1,5 +1,4 @@
 import { User } from "@types";
-import { MsgType } from "./AuthStore";
 
 export type AuthAction = 
 | RegisterUser 
@@ -9,8 +8,6 @@ export type AuthAction =
 | ChangeUsername
 | ChangePassword
 | ChangeEmail
-| DisplayErrorModal
-| ClearErrorModal
 | GetLoggedIn
 
 
@@ -41,7 +38,6 @@ export type GetLoggedIn = {
 export type RegisterUser = {
     type: AuthActionType.registerUser,
     payload: {
-        message: string,
         user: User
     }
 }
@@ -55,52 +51,29 @@ export type LoginUser = {
 }
 
 export type LogoutUser = {
-    type: AuthActionType.logoutUser,
-    payload: {
-        message: string
-    }
+    type: AuthActionType.logoutUser
 }
 
 export type LoginAsGuest = {
-    type: AuthActionType.loginAsGuest,
-    payload: {
-        message: string
-    }
+    type: AuthActionType.loginAsGuest
 }
 
 export type ChangeUsername = {
     type: AuthActionType.changeUsername,
     payload: { 
-        message: string,
         username: string
     }
 }
 
 export type ChangePassword = {
     type: AuthActionType.changePassword,
-    payload: {
-        message: string
-    }
 }
 
 export type ChangeEmail = {
     type: AuthActionType.changeEmail,
     payload: {
-        message: string,
         email: string
     }
-}
-
-export type DisplayErrorModal = {
-    type: AuthActionType.displayError,
-    payload: {
-        messageType: MsgType,
-        message: string
-    }
-}
-
-export type ClearErrorModal = {
-    type: AuthActionType.clearError
 }
 
 

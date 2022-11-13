@@ -13,9 +13,11 @@ import { Fade } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth';
 import PasswordField from '../PasswordField';
+import { SnackContext } from 'src/context/snack';
 
 const RegisterScreen = () => {
     const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     const handleSubmit = (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
@@ -31,7 +33,7 @@ const RegisterScreen = () => {
             username: username,
             password: password
         }
-        auth.registerUser(payload)
+        auth.registerUser(payload, snack)
     }
     let ui =
         <Container component="main" maxWidth="xs">

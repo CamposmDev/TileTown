@@ -5,10 +5,12 @@ import { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { AuthContext } from '../../context/auth';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
+import { SnackContext } from 'src/context/snack';
 
 
 const ChangeEmailModal = () => {
     const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
 
@@ -16,7 +18,7 @@ const ChangeEmailModal = () => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         let email: string | undefined = formData.get('email')?.toString()
-        auth.changeEmail(email)
+        auth.changeEmail(email, snack)
         handleClose()
     }
 
