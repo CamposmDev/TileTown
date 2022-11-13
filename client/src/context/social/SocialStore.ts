@@ -1,17 +1,25 @@
 import axios from "axios"
-import { CommunityApi, ContestApi } from "src/api"
+import { CommunityApi, ContestApi, UserApi } from "src/api"
+import { Community, ForumPost, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
-import { SocialAction } from "./SocialAction"
+import { SocialAction, SocialActionType } from "./SocialAction"
+import { SnackActionType } from "../snack/SnackAction"
 
 export interface SocialState {
-
+    users: User[]
 }
 
 export class SocialStore {
     private readonly _social: SocialState
+    private readonly _setSocial: (social: SocialState) => void
 
     constructor(social: SocialState, setSocial: (social: SocialState) => void) {
         this._social = social
+        this._setSocial = setSocial
+    }
+
+    public getUserSearchResult(): User[] {
+        return this._social.users
     }
 
     public async createCommunity(name: string, description: string, snack?: SnackStore): Promise<void> {
@@ -83,20 +91,52 @@ export class SocialStore {
     }
 
     public async searchUsers(query: string, snack?: SnackStore): Promise<void> {
-        throw new Error('Not Yet Implemented')
+        let res = UserApi.getUsers({username: query})
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: SocialActionType.searchUsersByName,
+                    payload: {
+                        users: res.data.users
+                    }
+                })
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     public async addFriend(userId: string, snack?: SnackStore): Promise<void> {
-        throw new Error('Not Yet Implemented')
+        let res = UserApi.addFriend(userId)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     public async removeFriend(userId: string, snack?: SnackStore): Promise<void> {
-        throw new Error('Not Yet Implemented')
+        let res = UserApi.removeFriend(userId)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     protected handleAction(action: SocialAction): void {
         switch (action.type) {
-
+            case SocialActionType.searchUsersByName: {
+                this._setSocial({
+                    users: action.payload.users
+                })
+                break
+            }
         }
     }
 }

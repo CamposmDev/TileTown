@@ -1,3 +1,5 @@
+import { User } from "@types"
+
 export type SocialAction =
 | CreateCommunity
 | DeleteCommunity
@@ -46,7 +48,10 @@ export type SearchContestsByName = {
 }
 
 export type SearchUsersByName = {
-    type: SocialActionType.searchUsersByName
+    type: SocialActionType.searchUsersByName,
+    payload: {
+        users: User[]
+    }
 }
 
 export type AddFriend = {

@@ -2,6 +2,8 @@ import { Grid } from "@mui/material"
 import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { AuthContext } from "src/context/auth"
+import { SocialContext } from "src/context/social"
+import { SocialActionType } from "src/context/social/SocialAction"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
@@ -16,6 +18,7 @@ interface Props {
 
 const SearchScreen = (props: Props) => {
     const auth = useContext(AuthContext)
+    const social = useContext(SocialContext)
     const nav = useNavigate()
     useEffect(() => {
         if (!auth.isLoggedIn()) nav('/')
@@ -31,90 +34,6 @@ const SearchScreen = (props: Props) => {
                 dislikes={39034}
                 likes={39034}
                 title={'This is another post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is another other post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is a post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is a post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is another post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is another other post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is a post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is a post'}
                 publishDate={new Date(2022,9,27)}
                 views={3490340}
             />
@@ -563,7 +482,15 @@ const SearchScreen = (props: Props) => {
                 alignItems={'center'}
                 spacing={1}
                 mt={1}>
-                {[1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                    {social.getUserSearchResult().map((x,i) => <Grid>
+                        <UserProfileCard 
+                            firstName={x.firstName}
+                            lastName={x.lastName}
+                            username={x.username}
+                            fancy={true}
+                        />
+                    </Grid>)}
+                {/* {[1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <UserProfileCard
                         firstName='Michael'
@@ -572,7 +499,7 @@ const SearchScreen = (props: Props) => {
                         fancy={true}
                     />
                     </Grid>
-                )}
+                )} */}
             </Grid>
             break
         case SearchCategory.Communities:

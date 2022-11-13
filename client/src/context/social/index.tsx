@@ -1,10 +1,10 @@
 import { useState, createContext } from "react"
-import { SocialStore } from "./SocialStore";
+import { SocialState, SocialStore } from "./SocialStore";
 
-const SocialContext = createContext({})
+const SocialContext = createContext<SocialStore>(new SocialStore({users: []}, () => {}))
 
 function SocialContextProvider(props: Record<string, any>) {
-    const [social, setSocial] = useState({})
+    const [social, setSocial] = useState<SocialState>({users: []})
     const Social = new SocialStore(social, setSocial)
     return (
         <SocialContext.Provider value={Social}>
