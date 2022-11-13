@@ -15,10 +15,10 @@ export default class CommunityController {
         let name = req.query.name ? req.query.name.toString() : "";
         let communities = await db.communities.getCommunities(name);
         if (communities.length === 0) {
-            return res.status(404).json({ message: `No contests found with name "${name}"`});
+            return res.status(404).json({ message: `No communities found with name "${name}"`});
         }
 
-        return res.status(200).json({message: "Got contests!", communities: communities});
+        return res.status(200).json({message: "Got communities!", communities: communities});
     }
 
     public async getCommunityById(req: Request, res: Response): Promise<Response> {
