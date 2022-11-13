@@ -8,7 +8,7 @@ import express from 'express';
 
 // Set up enviorment configuration
 dotenv.config();
-const port: string = process.env.PORT || '3000';
+const port: string = process.env.NODE_PORT || '3000';
 const mongo: string = process.env.MONGO_URI || 'mongodb+srv://Admin:BxXqBUDuPWvof95o@tiletown.bi0xq5u.mongodb.net/?retryWrites=true&w=majority'
 
 // This serves the client application from the base URL - all the backend routes are at "/api"
