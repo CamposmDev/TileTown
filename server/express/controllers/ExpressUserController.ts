@@ -44,6 +44,22 @@ export default class UserController {
         return res.status(200).json({ message: "User is logged in", user: user });
     }
 
+    public async getUsers(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({message: "Bad Request!"});
+        }
+        if (!req.query) {
+            return res.status(400).json({message: "No query options"});
+        }
+
+        let username = req.query.username ? req.query.username.toString() : "";
+        let users = await db.users.getUsers(username);
+        if (users.length === 0) {
+            return res.status(404).json({message: `No users found with username "${username}"`});
+        }
+        return res.status(200).json({message: "Got users posts!", users: users});
+    }
+
     public async createUser(req: Request, res: Response): Promise<Response> {
         if (!req || !req.body) {
             return res.status(400).json({ message: "Bad Request" });
