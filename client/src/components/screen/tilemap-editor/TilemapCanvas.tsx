@@ -149,7 +149,7 @@ const TilemapCanvas = () => {
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
         // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
+        // drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
         // edit.preventTilemapRender();
       }
     }

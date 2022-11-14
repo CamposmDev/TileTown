@@ -146,10 +146,10 @@ export class TilemapEditStore {
       payload: {},
     });
   }
-  public async preventCurrentLayerRender(): Promise<void> {
+  public async renderCurrentLayerRender(willRender: boolean): Promise<void> {
     this.handleAction({
-      type: TilemapEditorActionType.PREVENT_CURRENT_LAYER_CANVAS_RENDER,
-      payload: {},
+      type: TilemapEditorActionType.RENDER_CURRENT_LAYER_CANVAS_RENDER,
+      payload: { willRender },
     });
   }
 
@@ -197,16 +197,8 @@ export class TilemapEditStore {
         this.handleUpdateSelection(payload.currentSelection);
         break;
       }
-      case TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER: {
-        this.handlePreventTilemapRender();
-        break;
-      }
-      case TilemapEditorActionType.PREVENT_TILE_SELECTION_CANVAS_RENDER: {
-        this.handlePreventTileSelectionRender();
-        break;
-      }
-      case TilemapEditorActionType.PREVENT_CURRENT_LAYER_CANVAS_RENDER: {
-        this.handlePreventTileSelectionRender();
+      case TilemapEditorActionType.RENDER_CURRENT_LAYER_CANVAS_RENDER: {
+        this.handleRenderCurrentLayerCanvas(payload.willRender);
         break;
       }
       default: {
@@ -241,25 +233,7 @@ export class TilemapEditStore {
       renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
     });
   }
-  protected handlePreventCurrentLayerRender(): void {
-    console.log(this._state.renderTilemapCanvas);
-    this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: this._state.renderTilemapCanvas,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
-      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
-    });
-  }
-  protected handlePreventTileSelectionRender(): void {
+  protected handleRenderCurrentLayerCanvas(willRender: boolean): void {
     this.setEdit({
       Tilemap: this._state.Tilemap,
       Tilesets: this._state.Tilesets,
@@ -272,25 +246,7 @@ export class TilemapEditStore {
       isSaved: this._state.isSaved,
       renderTilemapCanvas: this._state.renderTilemapCanvas,
       renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
-      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
-      renderTileSelectorCanvas: false,
-    });
-  }
-  protected handlePreventTilemapRender(): void {
-    console.log(this._state.renderTilemapCanvas);
-    this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
-      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
+      renderCurrentLayerCanvas: willRender,
       renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
     });
   }

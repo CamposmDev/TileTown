@@ -8,6 +8,12 @@ const CurrentLayerCanvas = () => {
   //Tilemap edit store context
   const edit = useContext(TilemapEditContext);
 
+  const [mouseDown, setMouseDown] = useState(false);
+  const [startingTile, setStartingTile] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
   //canvas refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -110,9 +116,6 @@ const CurrentLayerCanvas = () => {
           scaledTileWidth,
           scaledTileHeight
         );
-      } else {
-        ctx.fillStyle = edit.state.Tilemap.backgroundColor;
-        ctx.fillRect(i, y, scaledTileWidth, scaledTileHeight);
       }
     }
   };
@@ -151,7 +154,7 @@ const CurrentLayerCanvas = () => {
         }
       }
     }
-    edit.preventCurrentLayerRender();
+    edit.renderCurrentLayerRender(false);
   }, [render]);
 
   const onMouseDown = ({ nativeEvent }: any): void => {
@@ -165,6 +168,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.shapeFill: {
+        startSpaceFill({ nativeEvent });
         break;
       }
       case TilemapEditControl.fillSelect: {
@@ -191,6 +195,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.shapeFill: {
+        drawSpaceFill({ nativeEvent });
         break;
       }
       case TilemapEditControl.fillSelect: {
@@ -215,6 +220,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.shapeFill: {
+        endSpaceFill();
         break;
       }
       case TilemapEditControl.fillSelect: {
@@ -242,6 +248,8 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.shapeFill: {
+        setStartingTile(null);
+        edit.updateCurrentSelection([]);
         break;
       }
       case TilemapEditControl.fillSelect: {
@@ -370,6 +378,55 @@ const CurrentLayerCanvas = () => {
       edit.updateCurrentSelection([currentTile.x + width * currentTile.y]);
     }
   };
+
+  const endSpaceFill = (): void => {
+    console.log(edit.state.currentSelection);
+    edit.updateCurrentLayerData(currentTileIndex);
+    edit.updateCurrentSelection([]);
+    edit.renderCurrentLayerRender(true);
+    setStartingTile(null);
+  };
+
+  const startSpaceFill = ({ nativeEvent }: any): void => {
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+      edit.updateCurrentSelection([currentTile.x + width * currentTile.y]);
+      setStartingTile(currentTile);
+    }
+  };
+
+  const drawSpaceFill = ({ nativeEvent }: any): void => {
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+
+      let selection: number[] = [];
+      if (startingTile) {
+        if (startingTile.y > currentTile.y)
+          for (let i = currentTile.y; i <= startingTile.y; i++)
+            selection = selection.concat(addRowSpaceFill(currentTile.x, i));
+        else
+          for (let i = startingTile.y; i <= currentTile.y; i++)
+            selection = selection.concat(addRowSpaceFill(currentTile.x, i));
+        edit.updateCurrentSelection(selection);
+      }
+    }
+  };
+
+  const addRowSpaceFill = (x: number, y: number): number[] => {
+    let selection: number[] = new Array();
+    if (startingTile) {
+      if (startingTile.x > x)
+        for (let i = x; i <= startingTile.x; i++) selection.push(i + width * y);
+      else
+        for (let i = startingTile.x; i <= x; i++) selection.push(i + width * y);
+    }
+    return selection;
+  };
+
   const screenToCanvasCoordinates = (
     nativeEvent: any,
     canvas: HTMLCanvasElement
