@@ -1,8 +1,7 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItemProps } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import {  MenuItem } from '@mui/material';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { SnackContext } from 'src/context/snack';
 import { SocialContext } from 'src/context/social';
@@ -14,13 +13,11 @@ const CreateCommunityModal = () => {
     const social = React.useContext(SocialContext)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    // const [isOpen, setIsOpen] = useState(false)
 
     const handleClose = () => {
         setName('')
         setDescription('')
         modal.close()
-        // setIsOpen(false)
     }
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -80,14 +77,6 @@ const CreateCommunityModal = () => {
         <div>
             {ui}
         </div>
-        // <>
-        //     <MenuItem onClick={(e) => {
-        //         if (props.onClick) props.onClick(e)
-        //         // setIsOpen(true)
-        //         modal.showCreateCommunityModal()
-        //     }}>Create Community</MenuItem>
-        //     {ui}
-        // </>
     )
 
 }

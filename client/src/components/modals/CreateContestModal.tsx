@@ -21,13 +21,11 @@ const CreateContestModal = () => {
         desc: '',
         endDate: new Date()
     })
-    console.log(contest.endDate)
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContest({
             name: e.target.value,
             desc: contest.desc,
             endDate: contest.endDate
-
         })
     }
     const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,10 +96,10 @@ const CreateContestModal = () => {
                                 margin='normal'
                                 label="Due Date"
                                 type="date"
-                                defaultValue="2022-12-31"
+                                defaultValue={contest.endDate.getFullYear() + '-' + (contest.endDate.getUTCMonth()+1) + '-' + (contest.endDate.getUTCDate())}
                                 onChange={handleDateChange}
                                 InputLabelProps={{
-                                shrink: true,
+                                    shrink: true,
                                 }}
                             />
                         </Stack>
