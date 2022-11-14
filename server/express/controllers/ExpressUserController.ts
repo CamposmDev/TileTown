@@ -60,7 +60,7 @@ export default class UserController {
         if (users.length === 0) {
             return res.status(404).json({message: `No users found with username "${username}"`});
         }
-        return res.status(200).json({message: "Got users posts!", users: users});
+        return res.status(200).json({message: `Found ${users.length} user(s)!`, users: users});
     }
 
     public async createUser(req: Request, res: Response): Promise<Response> {

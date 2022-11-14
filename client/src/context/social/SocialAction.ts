@@ -1,26 +1,32 @@
-import { User } from "@types"
+import { Community, Contest, User } from "@types"
 
 export type SocialAction =
 | CreateCommunity
 | DeleteCommunity
 | CreateContest
 | DeleteContest
-| SearchCommunityByName
-| SearchContestsByName
-| SearchUsersByName
+| GetTilemapByName
+| GetTilesetByName
+| GetCommunityByName
+| GetContestByName
+| GetUserByUsername
 | AddFriend
 | RemoveFriend
+| Clear
 
 export enum SocialActionType {
     createCommunity = 'CREATE_COMMUNITY',
     deleteCommunity = 'DELETE_COMMUNITY',
     createContest = 'CREATE_CONTEST',
     deleteContest = 'DELETE_CONTEST',
-    searchCommunityByName = 'SEARCH_COMMUNITY_BY_NAME',
-    searchContestsByName = 'SEARCH_CONTESTS_BY_NAME',
-    searchUsersByName = 'SEARCH_USERS_BY_NAME',
+    getTilesetByName = 'GET_TILESET_BY_NAME',
+    getTilemapByName = 'GET_TILEMAP_BY_NAME',
+    getCommunityByName = 'GET_COMMUNITY_BY_NAME',
+    getContestByName = 'GET_CONTEST_BY_NAME',
+    getUserByUsername = 'GET_USER_BY_NAME',
     addFriend = 'ADD_FRIEND',
-    removeFriend = 'REMOVE_FRIEND'
+    removeFriend = 'REMOVE_FRIEND',
+    clear = 'CLEAR'
 }
 
 export type CreateCommunity = {
@@ -32,23 +38,37 @@ export type DeleteCommunity = {
 }
 
 export type CreateContest = {
-    type: SocialActionType.searchCommunityByName
+    type: SocialActionType.createContest
 }
 
 export type DeleteContest = {
     type: SocialActionType.deleteContest
 }
 
-export type SearchCommunityByName = {
-    type: SocialActionType.searchCommunityByName
+export type GetTilesetByName = {
+    type: SocialActionType.getTilesetByName
 }
 
-export type SearchContestsByName = {
-    type: SocialActionType.searchContestsByName
+export type GetTilemapByName = {
+    type: SocialActionType.getTilemapByName
 }
 
-export type SearchUsersByName = {
-    type: SocialActionType.searchUsersByName,
+export type GetCommunityByName = {
+    type: SocialActionType.getCommunityByName,
+    payload: {
+        communities: Community[]
+    }
+}
+
+export type GetContestByName = {
+    type: SocialActionType.getContestByName,
+    payload: {
+        contests: Contest[]
+    }
+}
+
+export type GetUserByUsername = {
+    type: SocialActionType.getUserByUsername,
     payload: {
         users: User[]
     }
@@ -60,5 +80,9 @@ export type AddFriend = {
 
 export type RemoveFriend = {
     type: SocialActionType.removeFriend
+}
+
+export type Clear = {
+    type: SocialActionType.clear
 }
 
