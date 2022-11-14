@@ -8,7 +8,7 @@ const app: Express = express();
 
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://209.151.154.164"],
     credentials: true
 }));
 app.use(express.json());
