@@ -21,6 +21,11 @@ import { TilesetEditContextProvider } from "./context/tilesetEditor";
 import CardTester from "./components/CardTester";
 import ModalTester from "./components/ModalTester";
 import NotificationSnack from "./components/modals/NotificationSnack";
+import { SnackContextProvider } from "./context/snack";
+import { SocialContextProvider } from "./context/social";
+import { ModalContextProvider } from "./context/modal";
+import CreateCommunityModal from "./components/modals/CreateCommunityModal";
+import CreateContestModal from "./components/modals/CreateContestModal";
 import { TilemapEditContextProvider } from "./context/tilemapEditor";
 
 /**

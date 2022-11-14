@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 
 import { User, Tilemap } from "@types";
 import { LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq, UpdateEmailReq, UpdatePasswordReq } from "@requests/user";
@@ -31,6 +31,18 @@ export default class AxiosUserApi  {
     }
     async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
         return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
+    }
+    async getUserById(userId: string) {
+        return AxiosApi.get(`/user/${userId}`)
+    }
+    async getUsers(payload: {username: string | undefined}) {
+        return AxiosApi.post('/user/users', payload)
+    }
+    async addFriend(userId: string) {
+        return AxiosApi.put(`/user/friend/add/${userId}`)
+    }
+    async removeFriend(userId: string) {
+        return AxiosApi.put(`/user/friend/remove/${userId}`)
     }
 }
 

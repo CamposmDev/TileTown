@@ -1,11 +1,18 @@
-import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem } from '@mui/material'
-import { useState } from 'react'
+import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem, Button } from '@mui/material'
+import { useContext, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 // import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import UserProfileCard from './card/UserProfileCard'
+import { Add } from '@mui/icons-material'
+import AddFriendModal from './modals/AddFriendModal'
+import { AuthContext } from 'src/context/auth'
+import { UserApi } from 'src/api'
+import { SocialContext } from 'src/context/social'
 
 export default function NavDrawer() {
+  const auth = useContext(AuthContext)
+  const social = useContext(SocialContext)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   // const navigate = useNavigate()
 
@@ -19,9 +26,71 @@ export default function NavDrawer() {
     )
   }
 
+  // let initFriendCards = () => {
+  //   let user = auth.getUsr()
+  //   if (user && user.friends) {
+  //     return user.friends.map((x,i) => {
+  //       let f = async(userId: string) => {
+  //         let u = await social.getUserById(userId)
+  //         if (u) {
+  //           return <Grid item key={userId}><UserProfileCard firstName={u.firstName} lastName={u.lastName} username={u.username}/></Grid>
+  //         } else {
+  //           return <div></div>
+  //         }
+  //       }
+  //       return f(x).then((v) => {
+  //         return v
+  //       }).catch((e) => {
+  //         return <div></div>
+  //       })
+  //     })
+  //   }
+  //   return <div></div>
+  // }
+
+  let initFriendCards = () => {
+    let user = auth.getUsr()
+    if (user && user.friends) {
+      return user.friends.map((x,i) => {
+        // let u = social.getUserById(x)
+        // let userX = u.then((u) => {
+        //   return u ? u : null
+        // })
+        return <Grid item key={x} mb={1}>
+          <UserProfileCard
+            firstName={x}
+            lastName={x}
+            username={x}
+          />
+        </Grid>
+      })
+    }
+    return <Grid item></Grid>
+  }
+
+  let friends = initFriendCards()
+
+
+  // let user = auth.getUsr()
+  // let friends: any = <div></div>
+  // if (user) {
+  //   if (user.friends) {
+  //     friends = user.friends.map((x,i) => {
+  //       let u = social.getUserById(x)
+  //       return u.then((a) => {
+  //         if (a) {
+  //           <Grid key={a.id} item><UserProfileCard firstName={a.firstName} lastName={a.lastName} username={a.username}/></Grid>
+  //         } else {
+  //           <div></div>
+  //         }
+  //       })
+  //     })
+  //   }
+  // }
+
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-        <Box p={2} width='256px' role='presentation' textAlign='start'>
+        <Box p={2} width='333px' role='presentation' textAlign='start'>
           <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
               <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>
@@ -57,76 +126,26 @@ export default function NavDrawer() {
             </Grid>
           </Grid>
           <Divider/>
-          <Typography mt={2} ml={2} pb={1}>Friends</Typography>
-          <Grid sx={{
-            overflow: 'auto',
-            height: '320px'
-          }}
-          container
-          spacing={1}>
-            <Grid item>
+          <Grid container alignItems={'center'} mt={1} ml={2} pb={1}>
+            <Typography>Friends</Typography>
+            <AddFriendModal/>
+          </Grid>
+          <Grid 
+            sx={{
+              overflow: 'auto',
+              height: '300px'
+            }}
+            // container
+            // spacing={1}
+          >
+            {friends}
+            {/* <Grid item>
               <UserProfileCard
                 firstName='Andrew'
                 lastName='Ojeda'
                 username='H8TER$HADE$'
               />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
-            <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
       </Drawer>

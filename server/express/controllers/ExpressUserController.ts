@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { log } from 'npmlog';
+
 import { User } from '@types';
 import { db } from '../../database';
 import { HashingUtils } from "../../util";
 import { Auth } from '../middleware';
+import { Mailer } from '../../util/mail';
 
 export default class UserController {
 
@@ -43,48 +44,58 @@ export default class UserController {
         return res.status(200).json({ message: "User is logged in", user: user });
     }
 
-    public async createUser(req: Request, res: Response): Promise<void> {
+    public async getUsers(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({message: "Bad Request!"});
+        }
+        if (!req.body) {
+            return res.status(400).json({message: "No query options"});
+        }
+        if (!req.body.username) {
+            return res.status(400).json({message: "Query cannot be empty!"})
+        }
+
+        let username = req.body.username ? req.body.username.toString() : "";
+        let users = await db.users.getUsers(username);
+        if (users.length === 0) {
+            return res.status(404).json({message: `No users found with username "${username}"`});
+        }
+        return res.status(200).json({message: `Found ${users.length} user(s)!`, users: users});
+    }
+
+    public async createUser(req: Request, res: Response): Promise<Response> {
         if (!req || !req.body) {
-            res.status(400).json({ message: "Bad Request" });
-            return;
+            return res.status(400).json({ message: "Bad Request" });
         }
 
         if (!req.body.firstName) {
-            res.status(400).json({ message: "User missing required field 'first name'" });
-            return;
+            return res.status(400).json({ message: "User missing required field 'first name'" });
         }
         if (!req.body.lastName) {
-            res.status(400).json({ message: "User missing required field 'last name'" });
-            return;
+            return res.status(400).json({ message: "User missing required field 'last name'" });
         }
         if (!req.body.email) {
-            res.status(400).json({ message: "User missing required field 'email'" });
-            return;
+            return res.status(400).json({ message: "User missing required field 'email'" });
         }
         if (!req.body.username) {
-            res.status(400).json({ message: "User missing required field 'username'" });
-            return;
+            return res.status(400).json({ message: "User missing required field 'username'" });
         }
         if (!req.body.password) {
-            res.status(400).json({ message: "User missing required field 'password'" });
-            return;
+            return res.status(400).json({ message: "User missing required field 'password'" });
         }
 
         let existingEmail = await db.users.getUserByEmail(req.body.email);
         if (existingEmail !== null) {
-            res.status(400).json({ message: `User with email '${req.body.email}' already exists` });
-            return;
+            return res.status(400).json({ message: `User with email '${req.body.email}' already exists` });
         }
 
         let existingUsername = await db.users.getUserByUsername(req.body.username);
         if (existingUsername !== null) {
-            res.status(400).json({ message: `User with username '${req.body.username}' already exists` });
-            return;
+            return res.status(400).json({ message: `User with username '${req.body.username}' already exists` });
         }
 
         if (req.body.password.length < 12) {
-            res.status(400).json({ message: `Password must be at least 12 characters` });
-            return;
+            return res.status(400).json({ message: `Password must be at least 12 characters` });
         }
 
         let hashedPassword = await HashingUtils.hash(req.body.password);
@@ -97,31 +108,34 @@ export default class UserController {
         });
 
         if (user === null) {
-            res.status(500).json({ message: "Server Error" });
-            return;
+            return res.status(500).json({ message: "Server Error" });
         }
 
-        let token: string = Auth.signJWT<string>(user.id)
+        // Email verification system... need to experiment with this a little
+        try {
+            await Mailer.sendMail({
+                to: user.email, 
+                from: "tiletown123@gmail.com", 
+                subject: "Verify your TileTown Account", 
+                text: `http://209.151.154.164/api/user/verify/${user.id}`,
+            });
+        } catch {
+            return res.status(400).json({ message: `That doesn't look like a valid email address...`});
+        }
 
-        res.status(201).
-            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
-            json({ message: "User created successfully!", user: user });
-        return;
+        return res.status(201).json({ message: "User created successfully!", user: user });
     }
 
-    public async loginUser(req: Request, res: Response): Promise<void> {
+    public async loginUser(req: Request, res: Response): Promise<Response> {
         if (!req || !req.body) {
-            res.status(400).json({ message: "Bad request!" });
-            return;
+            return res.status(400).json({ message: "Bad request!" });
         }
 
         if (!req.body.email) {
-            res.status(400).json({ message: "Missing required field 'email/username'" });
-            return;
+            return res.status(400).json({ message: "Missing required field 'email/username'" });
         }
         if (!req.body.password) {
-            res.status(400).json({ message: "Missing required field 'password'" });
-            return;
+            return res.status(400).json({ message: "Missing required field 'password'" });
         }
 
         // Check the user exists - if not return error
@@ -129,26 +143,30 @@ export default class UserController {
         if (user === null) {
             user = await db.users.getUserByUsername(req.body.email);
             if (user === null) {
-                res.status(400).json({ message: `No user registered wth email/username '${req.body.email}'` });
-                return;
+                return res.status(400).json({ message: `No user registered wth email/username '${req.body.email}'` });
             }
+        }
+
+        if (!user.isVerified) {
+            return res.status(400).json({ message: `This account has not been verified`});
+        }
+
+        if (!user.isVerified) {
+            return res.status(400).json({ message: `This account has not been verified`});
         }
 
         // Check the users password matches - if they don't match throw an error
         let match = await HashingUtils.compare(req.body.password, user.password);
         if (!match) {
-            res.status(400).json({ message: `Wrong password` });
-            return;
+            return res.status(400).json({ message: `Wrong password` });
         }
 
         // If user exists and passwords match give the user a signed token 
         let token: string = Auth.signJWT<string>(user.id);
 
-        res.status(200).
+        return res.status(200).
             cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
             json({ message: "User successfully logged in!", user: user });
-
-        return;
     }
     public async logoutUser(req: Request, res: Response): Promise<void> {
         if (!req.userId) {
@@ -288,32 +306,27 @@ export default class UserController {
         return;
     }
 
-    public async verifyUser(req: Request, res: Response): Promise<void> {
+    public async verifyUser(req: Request, res: Response): Promise<Response> {
         if (!req || !req.params) {
-            res.status(400).json({ message: "Bad Request" });
-            return;
+            return res.status(400).json({ message: "Bad Request" });
         }
         if (!req.params.id) {
-            res.status(400).json({ message: "No verification key provided" });
-            return;
+            return res.status(400).json({ message: "No verification key provided" });
         }
 
         // Get the user with the verification key from the database
         let user = await db.users.getUserById(req.params.id);
         if (user === null) {
-            res.status(400).json({ message: "User with verification key does not exist" });
-            return;
+            return res.status(400).json({ message: "User with verification key does not exist" });
         }
 
         // Verify the user
         let verifiedUser = await db.users.updateUser(req.params.id, { isVerified: true });
         if (verifiedUser === null) {
-            res.status(500).json({ message: "Server Error" });
-            return;
+            return res.status(500).json({ message: "Server Error" });
         }
 
-        res.status(200).json({ message: "Verifying user was successful!", user: verifiedUser });
-        return;
+        return res.status(200).json({ message: "Verifying user was successful!", user: verifiedUser });
     }
 
     public async deleteUserById(req: Request, res: Response): Promise<void> {
@@ -344,7 +357,6 @@ export default class UserController {
         res.status(200).clearCookie("token").json({ message: "User deleted successfully!", user: user });
         return;
     }
-
     public async updateUserProfile(req: Request, res: Response): Promise<Response> {
         if (!req) {
             return res.status(400).json({ message: "Bad request" });
@@ -369,4 +381,88 @@ export default class UserController {
         return res.status(200).json({message: "Updated user profile picture!", user: updatedUser});
     }
 
+
+    public async addFriend(req: Request, res: Response): Promise<Response> {
+        // Check for bad request
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing friend id"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        // Check if the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+
+        // Check if the friend exists
+        let friend = await db.users.getUserById(req.params.id);
+        if (friend === null) {
+            return res.status(404).json({ message: `User ${req.params.id} not found`});
+        }
+
+        // Check if the user is already friends with the other user
+        let idx = user.friends.indexOf(friend.id);
+        if (idx !== -1) {
+            return res.status(400).json({ message: `User ${user.id} is already friends with user ${friend.id}`});
+        }
+
+        // Add the friend to the users friend list
+        user.friends.push(friend.id);
+
+        // Update the users friends list in the database
+        let updatedUser = await db.users.updateUser(user.id, {friends: user.friends});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: `Error updating user ${user.id}`});
+        }
+        // Return the updated friend
+        return res.status(200).json({ message: `Friend added!`, user: updatedUser });
+    }
+    public async removeFriend(req: Request, res: Response): Promise<Response> {
+        // Check for bad request format
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request"});
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing friend id"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        // Check if the user exists
+        let user = await db.users.getUserById(req.userId);
+        if (user === null) {
+            return res.status(404).json({ message: `User ${req.userId} not found`});
+        }
+        // Check if the friend exists
+        let friend = await db.users.getUserById(req.params.id);
+        if (friend === null) {
+            return res.status(404).json({ message: `User ${req.params.id} not found`});
+        }
+
+        // Check if user is friends with the friend
+        let idx = user.friends.indexOf(friend.id);
+        if (idx === -1) {
+            return res.status(400).json({ message: `User ${req.params.id} is not friends with user ${friend.id}`});
+        }
+
+        // Remove the friend
+        user.friends.splice(idx, 1);
+
+        // Update the users friends list
+        let updatedUser = await db.users.updateUser(user.id, {friends: user.friends});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: `Error updating user ${user.id}`});
+        }
+
+        // Return the updated user
+        return res.status(200).json({message: "Friend removed!", user: updatedUser});
+
+    }
 }

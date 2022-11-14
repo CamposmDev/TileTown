@@ -18,6 +18,24 @@ export default class ForumController {
 
         return res.status(200).json({message: "Success!", forumPost: forumPost});
     }
+
+    public async getForumPosts(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({message: "Bad Request!"});
+        }
+        if (!req.query) {
+            return res.status(400).json({message: "No query options"});
+        }
+
+        let title = req.query.title ? req.query.title.toString() : "";
+        let forums = await db.forums.searchForumPost(title);
+        if (forums.length === 0) {
+            return res.status(404).json({message: `No forum posts found with title "${title}"`});
+        }
+
+        return res.status(200).json({message: "Got forum posts!", forumPosts: forums});
+    }
+
     public async createForumPost(req: Request, res: Response): Promise<Response> {
         if (!req || !req.body) {
             return res.status(400).json({message: 'Bad Request'});
@@ -215,7 +233,7 @@ export default class ForumController {
             return res.status(500).json({message: "Server Error. Error updating tileset social data"});
         }
 
-        return res.status(201).json({message: "Successfully created a comment on a forum post", forum: updatedForum});
+        return res.status(201).json({message: "Successfully created a comment on a forum post", forumPost: updatedForum});
     }
     public async viewForumPost(req: Request, res: Response): Promise<Response> {
         // Check for bad request and missing parameters
@@ -242,6 +260,6 @@ export default class ForumController {
         }
 
         // Return the updated social data
-        return res.status(200).json({message: "Forum updated!", social: updatedForum});
+        return res.status(200).json({message: "Forum updated!", forumPost: updatedForum});
     }
 }

@@ -10,6 +10,11 @@ import { CommunitySchemaType } from "../types";
  */
 export default class MongooseCommunityDBM implements CommunityDBM {
 
+    async getCommunities(name: string): Promise<Community[]> {
+        let communities = await CommunityModel.find({name: new RegExp(`^${name}`, "i")});
+        return communities.map(c => this.parseCommunity(c));
+    }
+
     async getCommunityById(communityId: string): Promise<Community | null> {
         if (!mongoose.Types.ObjectId.isValid(communityId)) { return null; }
         let community = await CommunityModel.findById(communityId);
@@ -27,14 +32,14 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         return communities.map(community => this.parseCommunity(community));
     }
 
-    async createCommunity(community: Partial<Community>): Promise<Community | null> {
+    async createCommunity(community: Partial<Community> & {owner: string, name: string}): Promise<Community | null> {
         
         let comm = await CommunityModel.create({
             owner: community.owner,
             name: community.name,
-            description: community.description,
-            memberCounter: 1,
-            visibility: community.visibility
+            description: community.description ? community.description : "Community Description",
+            members: [],
+            visibility: community.visibility ? community.visibility : "public"
         })
 
         let savedCommunity = await comm.save()

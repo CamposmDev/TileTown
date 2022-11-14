@@ -5,7 +5,12 @@ name: CI
 # CI tests should be triggered whenever we make a push, be that to
 # main or the development branch. 
 
-on: [workflow_call, workflow_dispatch, push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "*"
+    
 
 jobs:
 
@@ -23,33 +28,4 @@ jobs:
         run: |
           npm --prefix server install
           npm --prefix server run build
-          
-  # Next, check if the unit tests are passing
-  # Test: 
-    # Specify the operating system
-    # runs-on: self-hosted
-    
-    # This is how we require that Test runs only if Compile is successful
-    # needs: Compile
-
-    # steps:
-
-      # Checkout the branch
-      # - uses: actions/checkout@v3
-
-      # Run the unit tests
-      # - name: Unit Tests
-        # run: |
-          # npm --prefix server install 
-          # npm --prefix server run test
-  Deploy:
-    
-    runs-on: self-hosted
-    
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        
-      - name: SSH into Host
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash bash.sh"
+  

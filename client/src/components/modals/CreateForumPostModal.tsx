@@ -6,20 +6,39 @@ import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
 import * as React from 'react';
 import { Create } from '@mui/icons-material';
-import { AuthContext } from 'src/context/auth';
+import { AuthContext } from '../../context/auth';
+import { ForumApi } from '../../api';
+import axios, { Axios } from 'axios';
+import { SnackContext } from 'src/context/snack';
 
 const CreateForumPostModal = () => {
     const auth = React.useContext(AuthContext)
+    const snack = React.useContext(SnackContext)
     const [isOpen, setIsOpen] = useState(false)
-    const [author, setAuthor] = useState('Annonymous')
+    const [title, setTitle] = useState('')
+    const [question, setQuestion] = useState('')
+    // const [author, setAuthor] = useState('Annonymous')
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setAuthor(event.target.value as string)
+    // const handleChange = (event: SelectChangeEvent) => {
+    //     setAuthor(event.target.value as string)
+    // }
+    const handleClose = () => {
+        setTitle('')
+        setQuestion('')
+        setIsOpen(false)
     }
-    const handleClose = () => setIsOpen(false);
-    const handlePost = () => {
-        throw new Error("Not Yet Implemented")
-        handleClose()
+    const handlePost = async () => {
+        let res = ForumApi.createForum({forumPost: {title: title, body: question}})
+        res.then((res) => {
+            if (res.status === 201) {
+                snack.showSuccessMessage(res.data.message)
+                handleClose()
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e)) {
+                if (e.response) snack.showErrorMessage(e.response.data.message)
+            }
+        })
     }
     let ui = (
         <Dialog 
@@ -34,9 +53,9 @@ const CreateForumPostModal = () => {
                         margin="dense"
                         required
                         fullWidth
+                        onChange={(e) => setTitle(e.target.value)}
                         label="Title"
                         name="forumTitle"
-                        autoComplete="forumTitle"
                         autoFocus
                     />
                     <TextField
@@ -44,13 +63,14 @@ const CreateForumPostModal = () => {
                         margin="dense"
                         required
                         fullWidth
+                        onChange={(e) => setQuestion(e.target.value)}
                         label="Write your question here"
                         name="question"
                         autoFocus
                         multiline
                         rows={7}
                     />
-                    <FormControl margin='dense' fullWidth>
+                    {/* <FormControl margin='dense' fullWidth>
                     <InputLabel>Show my name as</InputLabel>
                         <Select
                             label='Show my name as'
@@ -60,7 +80,7 @@ const CreateForumPostModal = () => {
                             <MenuItem value={'Annonymous'}>Annonymous</MenuItem>
                             <MenuItem value={'Your username'}>Your username</MenuItem>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                 </Box>
             </DialogContent>
             <DialogActions>
