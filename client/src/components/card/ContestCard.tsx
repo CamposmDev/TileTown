@@ -12,10 +12,7 @@ interface Props {
     }
 }
 
-const ContestCard = (props: Props) => {
-    
-    console.log(props.payload.startDate)
-    console.log(props.payload.endDate)
+const ContestCard = (props: Props) => {    
     const timeLeft = calcTimeLeft(props.payload.startDate, props.payload.endDate)
 
     return (

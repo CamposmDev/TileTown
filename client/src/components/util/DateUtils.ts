@@ -16,6 +16,7 @@ const calcTimeLeft = (startDate: Date, endDate: Date): string => {
     /** Compute the seconds left  from ms left*/
     let secLeft = Math.floor(timeLeft / 1000)
     if (secLeft <= 59) {
+        if (secLeft <= 0) return 'Contest Over!'
         if (secLeft === 1) return secLeft + ' Second Left'
         return secLeft + ' Seconds Left'
     }
