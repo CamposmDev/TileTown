@@ -274,6 +274,7 @@ export enum TilemapEditorActionType {
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
   UPDATE_CURRENT_LAYER = "UPDATE_CURRENT_LAYER",
+  UPDATE_CURRENT_LAYER_DATA = "UPDATE_CURRENT_LAYER_DATA",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
   PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
@@ -314,6 +315,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER;
       payload: { currentLayerIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;
+      payload: {};
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET;

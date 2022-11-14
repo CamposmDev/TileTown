@@ -120,7 +120,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: drawColor }}
+                  sx={{ bgcolor: drawColor }}
                   onClick={() => setEditControl(TilemapEditControl.draw)}
                   children={<Edit />}
                 />
@@ -132,7 +132,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: eraseColor }}
+                  sx={{ bgcolor: eraseColor }}
                   onClick={() => setEditControl(TilemapEditControl.erase)}
                 >
                   <FaEraser></FaEraser>
@@ -145,7 +145,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: fillColor }}
+                  sx={{ bgcolor: fillColor }}
                   onClick={() => setEditControl(TilemapEditControl.shapeFill)}
                   children={<Square />}
                 />
@@ -157,7 +157,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: selectColor }}
+                  sx={{ bgcolor: selectColor }}
                   onClick={() =>
                     edit.updateEditControl(TilemapEditControl.fillSelect)
                   }
@@ -171,7 +171,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: magicColor }}
+                  sx={{ bgcolor: magicColor }}
                   onClick={() => setEditControl(TilemapEditControl.magicWand)}
                   children={<AutoFixHigh />}
                 />
@@ -183,7 +183,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
-                  sx={{ bgColor: sameColor }}
+                  sx={{ bgcolor: sameColor }}
                   onClick={() =>
                     setEditControl(TilemapEditControl.sameTileSelect)
                   }

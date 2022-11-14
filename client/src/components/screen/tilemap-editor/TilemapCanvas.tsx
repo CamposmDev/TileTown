@@ -6,6 +6,7 @@ import {
   Layer,
   Color,
   Property,
+  TilemapEditControl,
 } from "src/context/tilemapEditor/TilemapEditTypes";
 import { Type } from "./Type";
 
@@ -154,50 +155,8 @@ const TilemapCanvas = () => {
     }
   }, [currentLayerIndex]);
 
-  const highlightTile = ({ nativeEvent }: any): void => {
-    if (canvasRef.current) {
-      const canvas: HTMLCanvasElement = canvasRef.current;
-      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
-      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
-      edit.updateCurrentSelection([currentTile.x + width * currentTile.y]);
-    }
-  };
-  const screenToCanvasCoordinates = (
-    nativeEvent: any,
-    canvas: HTMLCanvasElement
-  ): { x: number; y: number } => {
-    const rect = canvas.getBoundingClientRect(), // abs. size of element
-      scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
-      scaleY = canvas.height / rect.height;
-    return {
-      x: (nativeEvent.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
-      y: (nativeEvent.clientY - rect.top) * scaleY, // been adjusted to be relative to element
-    };
-  };
-
-  /**
-   *
-   * @param x current x Position of mouse relative to Canvas
-   * @param y current y Position of mouse relative to Canvas
-   * @returns the 0 indexed column and row of the current tile
-   */
-  const calcCurrentTile = (x: number, y: number): { x: number; y: number } => {
-    const scaleY = canvasHeight / imageHeight;
-    const scaleX = canvasWidth / imageWidth;
-    const scaledTileHeight = tileHeight * scaleY;
-    const scaledTileWidth = tileWidth * scaleX;
-    return {
-      x: Math.floor(x / scaledTileWidth),
-      y: Math.floor(y / scaledTileHeight),
-    };
-  };
-
   let root = (
-    <canvas
-      className="tilemap-canvas"
-      ref={canvasRef}
-      onMouseMove={highlightTile}
-    >
+    <canvas className="tilemap-canvas--no-input" ref={canvasRef}>
       Please use a browser that supports canvas
     </canvas>
   );

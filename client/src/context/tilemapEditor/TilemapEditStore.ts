@@ -99,6 +99,13 @@ export class TilemapEditStore {
     });
   }
 
+  public async updateCurrentLayerData(): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA,
+      payload: {},
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -139,6 +146,12 @@ export class TilemapEditStore {
       payload: {},
     });
   }
+  public async preventCurrentLayerRender(): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.PREVENT_CURRENT_LAYER_CANVAS_RENDER,
+      payload: {},
+    });
+  }
 
   /**
    * This is the reducer function for the auth store.
@@ -158,6 +171,10 @@ export class TilemapEditStore {
       }
       case TilemapEditorActionType.SAVE_TILEMAP: {
         this.handleSaveTilemap(payload.Tilemap);
+        break;
+      }
+      case TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA: {
+        this.handleUpdateCurrentLayerData();
         break;
       }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
@@ -188,12 +205,60 @@ export class TilemapEditStore {
         this.handlePreventTileSelectionRender();
         break;
       }
+      case TilemapEditorActionType.PREVENT_CURRENT_LAYER_CANVAS_RENDER: {
+        this.handlePreventTileSelectionRender();
+        break;
+      }
       default: {
         throw new Error(
           `Unhandled action with type ${action} caught in auth reducer`
         );
       }
     }
+  }
+  protected handleUpdateCurrentLayerData(): void {
+    const updatedLayerData: number[] =
+      this._state.Tilemap.layers[this._state.currentLayerIndex].data;
+    for (let i = 0; i < this._state.currentSelection.length; i++) {
+      updatedLayerData[this._state.currentSelection[i]] =
+        this._state.currentTileIndex;
+    }
+    const updatedTileMap = this._state.Tilemap;
+    updatedTileMap.layers[this._state.currentLayerIndex].data =
+      updatedLayerData;
+    this.setEdit({
+      Tilemap: updatedTileMap,
+      Tilesets: this._state.Tilesets,
+      currentEditControl: this._state.currentEditControl,
+      currentLayerIndex: this._state.currentLayerIndex,
+      currentTilesetIndex: this._state.currentTilesetIndex,
+      currentTileIndex: this._state.currentTileIndex,
+      currentSelection: this._state.currentSelection,
+      modalType: TilemapEditorModalType.close,
+      isSaved: this._state.isSaved,
+      renderTilemapCanvas: this._state.renderTilemapCanvas,
+      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
+      renderCurrentLayerCanvas: true,
+      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
+    });
+  }
+  protected handlePreventCurrentLayerRender(): void {
+    console.log(this._state.renderTilemapCanvas);
+    this.setEdit({
+      Tilemap: this._state.Tilemap,
+      Tilesets: this._state.Tilesets,
+      currentEditControl: this._state.currentEditControl,
+      currentLayerIndex: this._state.currentLayerIndex,
+      currentTilesetIndex: this._state.currentTilesetIndex,
+      currentTileIndex: this._state.currentTileIndex,
+      currentSelection: this._state.currentSelection,
+      modalType: TilemapEditorModalType.close,
+      isSaved: this._state.isSaved,
+      renderTilemapCanvas: this._state.renderTilemapCanvas,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
+      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
+    });
   }
   protected handlePreventTileSelectionRender(): void {
     this.setEdit({
