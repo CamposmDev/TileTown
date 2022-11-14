@@ -318,7 +318,7 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;
-      payload: {};
+      payload: { currentTileIndex: number };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET;

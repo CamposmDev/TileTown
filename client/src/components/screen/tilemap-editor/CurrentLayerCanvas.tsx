@@ -110,6 +110,9 @@ const CurrentLayerCanvas = () => {
           scaledTileWidth,
           scaledTileHeight
         );
+      } else {
+        ctx.fillStyle = edit.state.Tilemap.backgroundColor;
+        ctx.fillRect(i, y, scaledTileWidth, scaledTileHeight);
       }
     }
   };
@@ -154,10 +157,11 @@ const CurrentLayerCanvas = () => {
   const onMouseDown = ({ nativeEvent }: any): void => {
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
-        edit.updateCurrentLayerData();
+        edit.updateCurrentLayerData(currentTileIndex);
         break;
       }
       case TilemapEditControl.erase: {
+        edit.updateCurrentLayerData(0);
         break;
       }
       case TilemapEditControl.shapeFill: {
@@ -234,6 +238,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.erase: {
+        edit.updateCurrentSelection([]);
         break;
       }
       case TilemapEditControl.shapeFill: {
