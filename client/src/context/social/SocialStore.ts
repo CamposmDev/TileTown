@@ -3,9 +3,7 @@ import { CommunityApi, ContestApi, ForumApi, UserApi } from "src/api"
 import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
-import { snackbarClasses } from "@mui/material"
 import { AuthStore } from "../auth/AuthStore"
-import { SnackActionType } from "../snack/SnackAction"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -54,12 +52,33 @@ export class SocialStore {
         })
     }
 
-    public async deleteCommunity(communityId: string, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityById(communityId: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
             if (res.status === 200) snack?.showSuccessMessage(res.data.message)
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message) 
+        })
+    }
+    
+    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, snack?: SnackStore): Promise<void> {
+        let res = CommunityApi.getCommunities(commName)
+        res.then((res) => {
+            if (res.status === 200 && res.data.communities) {
+                let comms = res.data.communities
+                comms.forEach(x => {
+                    if (userId && commName && x.name.localeCompare(commName) === 0) {
+                        let commId = x.id
+                        if (x.owner.localeCompare(userId) === 0) {
+                            this.deleteCommunityById(commId, snack)
+                        } else {
+                            snack?.showErrorMessage(`You do not own community '${x.name}'`)
+                        }
+                    }
+                })
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 
@@ -79,13 +98,17 @@ export class SocialStore {
         })
     }
 
-    public async deleteContest(contestId: string, snack?: SnackStore): Promise<void> {
+    public async deleteContestById(contestId: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.deleteContestById(contestId)
         res.then((res) => {
             if (res.status === 200) snack?.showSuccessMessage(res.data.message)
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
+    }
+
+    public async deleteContestByName(userId: string | undefined, contestName: string | undefined, snack?: SnackStore): Promise<void> {
+        throw new Error('Not Yet Implemented')
     }
 
     public async getUserByUsername(query: string | undefined, snack?: SnackStore): Promise<void> {
