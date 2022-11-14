@@ -88,7 +88,7 @@ const CardTester = () => {
         </Grid>
         <Grid item> 
             <Stack direction='column' spacing={1}>
-                <UserProfileCard
+                {/* <UserProfileCard
                     firstName='Andrew' lastName='Ojeda'
                     username='H8TER$HAD3$'
                 />
@@ -99,14 +99,14 @@ const CardTester = () => {
                 <UserProfileCard
                     firstName='Kevin' lastName='Lemus'
                     username='xKevzy'
-                />
+                /> */}
             </Stack>
         </Grid>
         <Grid item>
             <ContestCard payload={
                 {
                     contestName: 'Camposm\'s Challenge',
-                    ownerName: 'Camposm',
+                    owner: 'Camposm',
                     startDate: startDate1,
                     endDate: endDate1,
                     contestTheme: 'Fantasy',
