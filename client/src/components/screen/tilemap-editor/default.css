@@ -1,17 +1,27 @@
 #tilemap-canvas-wrapper {
-  height: 80vh;
-  width: 160vh;
+  position: relative;
+}
+#overflow-wrapper {
+  max-width: 90vh;
+  max-height: 90vh;
+  width: fit-content;
+  height: fit-content;
   position: relative;
   left: 50%;
   transform: translate(-50%);
+  overflow: auto;
 }
-.tilemap-canvas {
-  max-width: 80%;
-  height: 80%;
+[class^="tilemap-canvas"] {
+  width: 100%;
+  height: 100%;
   image-rendering: crisp-edges;
   border: 1px solid black;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.tilemap-canvas--no-input {
+  pointer-events: none;
 }

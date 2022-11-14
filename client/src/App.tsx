@@ -28,6 +28,7 @@ import CreateCommunityModal from "./components/modals/CreateCommunityModal";
 import CreateContestModal from "./components/modals/CreateContestModal";
 import DeleteCommunityModal from "./components/modals/DeleteCommunityModal";
 import DeleteContestModal from "./components/modals/DeleteContestModal";
+import { TilemapEditContextProvider } from "./context/tilemapEditor";
 
 /**
  * Pixel Editors
@@ -106,7 +107,14 @@ const App = () => {
                     </TilesetEditContextProvider>
                   }
                 />
-                <Route path="/create/tilemap" element={<TilemapEditorScreen />} />
+                <Route
+                  path="/create/tilemap"
+                  element={
+                    <TilemapEditContextProvider>
+                      <TilemapEditorScreen />
+                    </TilemapEditContextProvider>
+                  }
+                />
                 <Route path="/cards" element={<CardTester />} />
                 <Route path="/modals" element={<ModalTester />} />
               </Routes>
