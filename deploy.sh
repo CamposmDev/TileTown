@@ -16,7 +16,8 @@ npm --prefix ./server run build
 mkdir server/build/server/client
 cp -r client/build/* server/build/server/client
 
-# Start running the server with nodemon
-npm --prefix ./server run start
+# Restart the tiletown service on the server 
+systemctl restart tiletown.service
+systemctl status tiletown.service
 
 
