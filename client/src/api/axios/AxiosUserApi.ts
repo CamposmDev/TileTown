@@ -32,7 +32,10 @@ export default class AxiosUserApi  {
     async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
         return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
     }
-    async getUsers(payload: {username: string}) {
+    async getUserById(userId: string) {
+        return AxiosApi.get(`/user/${userId}`)
+    }
+    async getUsers(payload: {username: string | undefined}) {
         return AxiosApi.post('/user/users', payload)
     }
     async addFriend(userId: string) {

@@ -20,7 +20,26 @@ const SearchToolbar = (props: Props) => {
     const handleMenuOpen = (event: any) => setAnchorEl(event.currentTarget)
     const handleMenuClose = () => setAnchorEl(null)
     const handleSubmit = (e: any) => {
-        if (e.key === 'Enter') social.searchUsers(query, snack)
+        if (e.key === 'Enter') {
+            switch (props.category) {
+                case SearchCategory.Tilemaps:
+                    break
+                case SearchCategory.Tilesets:
+                    break
+                case SearchCategory.Users:
+                    social.getUserByUsername(query, snack)
+                    break
+                case SearchCategory.Communities:
+                    social.getCommunityByName(query, snack)
+                    break
+                case SearchCategory.Contests:
+                    social.getContestByName(query, snack)
+                    break
+                case SearchCategory.Forums:
+                    social.getForumPostByTitle(query, snack)
+                    break
+            }
+        }
     }
 
     const sortMenu = (

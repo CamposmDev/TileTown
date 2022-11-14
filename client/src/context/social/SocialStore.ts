@@ -1,12 +1,18 @@
 import axios from "axios"
-import { CommunityApi, ContestApi, UserApi } from "src/api"
-import { Community, ForumPost, User } from "@types"
+import { CommunityApi, ContestApi, ForumApi, UserApi } from "src/api"
+import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
-import { SnackActionType } from "../snack/SnackAction"
+import { snackbarClasses } from "@mui/material"
 
 export interface SocialState {
+    currentUser: User | undefined
+    tilesets: TilesetSocial[]
+    tilemaps: TilemapSocial[]
     users: User[]
+    communities: Community[]
+    contests: Contest[]
+    forumPosts: ForumPost[]
 }
 
 export class SocialStore {
@@ -72,31 +78,13 @@ export class SocialStore {
         })
     }
 
-    public async searchCommunityByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = CommunityApi.getCommunities(query)
-        res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
-    public async searchContestsByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = ContestApi.getContests(query)
-        res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
-    public async searchUsers(query: string, snack?: SnackStore): Promise<void> {
+    public async getUserByUsername(query: string | undefined, snack?: SnackStore): Promise<void> {
         let res = UserApi.getUsers({username: query})
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
                 this.handleAction({
-                    type: SocialActionType.searchUsersByName,
+                    type: SocialActionType.getUserByUsername,
                     payload: {
                         users: res.data.users
                     }
@@ -107,6 +95,61 @@ export class SocialStore {
         })
     }
 
+    public async getUserProfileCard(userId: string): Promise<User | null> {
+        return null
+    }
+
+    public async getUserById(userId: string): Promise<User | null> {
+        let res = UserApi.getUserById(userId)
+        return res.then((res) => {
+            if (res.status === 200) {
+                return res.data.user
+            }
+        }).catch((e) => {
+            return null
+        })
+    }
+
+    public async getUsersByUsername(query: string | undefined): Promise<User[] | null> {
+        let res = UserApi.getUsers({username: query})
+        return res.then((res) => {
+            if (res.status === 200) {
+                return res.data.users
+            }
+        }).catch((e) => {
+            return null
+        })
+    }
+
+    public async getCommunityByName(query: string, snack?: SnackStore): Promise<void> {
+        let res = CommunityApi.getCommunities(query)
+        res.then((res) => {
+            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+
+    public async getContestByName(query: string, snack?: SnackStore): Promise<void> {
+        let res = ContestApi.getContests(query)
+        res.then((res) => {
+            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+
+    public async getForumPostByTitle(query: string, snack?: SnackStore): Promise<void> {
+        let res = ForumApi.getForums(query)
+        res.then((res) => {
+            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) {
+                snack?.showErrorMessage(e.response.data.message)
+            }
+        })
+    }
+
     public async addFriend(userId: string, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
@@ -114,7 +157,10 @@ export class SocialStore {
                 snack?.showSuccessMessage(res.data.message)
             }
         }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            if (e.response) {
+                console.log(e.response.data.message)
+                snack?.showErrorMessage(e.response.data.message)
+            }
         })
     }
 
@@ -129,14 +175,53 @@ export class SocialStore {
         })
     }
 
+    public async clear(): Promise<void> {
+        this.handleAction({
+            type: SocialActionType.clear
+        })
+    }
+
     protected handleAction(action: SocialAction): void {
         switch (action.type) {
-            case SocialActionType.searchUsersByName: {
+            case SocialActionType.getTilesetByName: {
+                throw new Error('Not Yet Implemented')
+                break
+            }
+            case SocialActionType.getTilemapByName: {
+                throw new Error('Not Yet Implemented')
+                break
+            }
+            case SocialActionType.getUserByUsername: {
                 this._setSocial({
-                    users: action.payload.users
+                    currentUser: this._social.currentUser,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets,
+                    users: action.payload.users,
+                    communities: this._social.communities,
+                    contests: this._social.contests,
+                    forumPosts: this._social.forumPosts
                 })
                 break
             }
+            case SocialActionType.getCommunityByName: {
+                break
+            }
+            case SocialActionType.getContestByName: {
+                break
+            }
+            case SocialActionType.clear: {
+                this._setSocial({
+                    currentUser: this._social.currentUser,
+                    tilemaps: [],
+                    tilesets: [],
+                    users: [],
+                    communities: [],
+                    contests: [],
+                    forumPosts: []
+                })
+            }
         }
     }
+
+    
 }

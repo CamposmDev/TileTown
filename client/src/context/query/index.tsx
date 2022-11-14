@@ -20,6 +20,11 @@ const QueryContext = createContext<QueryStore>(new QueryStore({
     forumPostResult: []
 }, () => {}, () => {}))
 
+/**
+ * @deprecated
+ * @param props 
+ * @returns 
+ */
 function QueryContextProvider(props: Record<string, any>) {
     const [query, setQuery] = useState<QueryState>({
         tilemapResult: [],
