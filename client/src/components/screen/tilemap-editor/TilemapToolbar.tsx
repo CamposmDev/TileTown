@@ -22,6 +22,7 @@ import {
   SquareOutlined,
   SelectAll,
   Schema,
+  FormatColorFill,
 } from "@mui/icons-material";
 import { FaEraser } from "react-icons/fa";
 import PropertyDrawer from "./PropertyDrawer";
@@ -51,6 +52,7 @@ const TilemapToolbar = () => {
   let drawColor: Color = unselectedColor;
   let eraseColor: Color = unselectedColor;
   let fillColor: Color = unselectedColor;
+  let bucketColor: Color = unselectedColor;
   let selectColor: Color = unselectedColor;
   let magicColor: Color = unselectedColor;
   let sameColor: Color = unselectedColor;
@@ -66,6 +68,10 @@ const TilemapToolbar = () => {
     }
     case TilemapEditControl.shapeFill: {
       fillColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.bucketFill: {
+      bucketColor = selectedColor;
       break;
     }
     case TilemapEditControl.fillSelect: {
@@ -148,6 +154,18 @@ const TilemapToolbar = () => {
                   sx={{ bgcolor: fillColor }}
                   onClick={() => setEditControl(TilemapEditControl.shapeFill)}
                   children={<Square />}
+                />
+              }
+            />
+            <Tooltip
+              title="Bucket Fill"
+              arrow
+              children={
+                <IconButton
+                  color="primary"
+                  sx={{ bgcolor: bucketColor }}
+                  onClick={() => setEditControl(TilemapEditControl.bucketFill)}
+                  children={<FormatColorFill />}
                 />
               }
             />

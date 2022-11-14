@@ -224,6 +224,7 @@ export enum TilemapEditControl {
   draw = "DRAW",
   erase = "ERASE",
   shapeFill = "SHAPE_FILL",
+  bucketFill = "BUCKET_FILL",
   magicWand = "MAGIC_WAND",
   sameTileSelect = "SAME_TILE_SELECT",
   fillSelect = "FILL_SELECT",

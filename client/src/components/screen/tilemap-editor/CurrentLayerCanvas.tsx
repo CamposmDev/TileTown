@@ -175,6 +175,10 @@ const CurrentLayerCanvas = () => {
         startSpaceFill({ nativeEvent });
         break;
       }
+      case TilemapEditControl.bucketFill: {
+        bucketFill({ nativeEvent });
+        break;
+      }
       case TilemapEditControl.magicWand: {
         magicWand({ nativeEvent });
         break;
@@ -201,6 +205,9 @@ const CurrentLayerCanvas = () => {
         drawSpaceFill({ nativeEvent });
         break;
       }
+      case TilemapEditControl.bucketFill: {
+        break;
+      }
       case TilemapEditControl.fillSelect: {
         drawSpaceFill({ nativeEvent });
         break;
@@ -225,6 +232,9 @@ const CurrentLayerCanvas = () => {
       }
       case TilemapEditControl.shapeFill: {
         endSpaceFill();
+        break;
+      }
+      case TilemapEditControl.bucketFill: {
         break;
       }
       case TilemapEditControl.fillSelect: {
@@ -257,6 +267,9 @@ const CurrentLayerCanvas = () => {
         edit.updateCurrentSelection([]);
         break;
       }
+      case TilemapEditControl.bucketFill: {
+        break;
+      }
       case TilemapEditControl.fillSelect: {
         setStartingTile(null);
         break;
@@ -271,110 +284,6 @@ const CurrentLayerCanvas = () => {
         break;
     }
   };
-
-  // const updateCurrentTile = (): void => {
-  //   if (canvasRef.current && contextRef.current) {
-  //     const canvas: HTMLCanvasElement = canvasRef.current;
-  //     const ctx: CanvasRenderingContext2D = contextRef.current;
-  //     canvas.height = canvasHeight;
-  //     canvas.width = canvasWidth;
-  //     const scaleY = canvasHeight / imageHeight;
-  //     const scaleX = canvasWidth / imageWidth;
-  //     const scaledTileHeight = tileHeight * scaleY;
-  //     const scaledTileWidth = tileWidth * scaleX;
-  //     let currentGlobalTileID: number = 0;
-  //     let currentTilesetIndex: number = 0;
-  //     for (let i = currentGlobalTileIDs.length - 1; i >= 0; i--) {
-  //       if (currentGlobalTileIDs[i] < currentTileIndex) {
-  //         currentGlobalTileID = currentGlobalTileIDs[i];
-  //         currentTilesetIndex = i;
-  //       }
-  //     }
-  //     const tilesetTileWidth =
-  //       edit.state.Tilesets[currentTilesetIndex].tileWidth;
-  //     const tilesetTileHeight =
-  //       edit.state.Tilesets[currentTilesetIndex].tileHeight;
-  //     const tilesetWidth = edit.state.Tilesets[currentTilesetIndex].columns;
-
-  //     const image: HTMLImageElement = tilesetImages[currentTilesetIndex];
-  //     image.src = edit.state.Tilesets[currentTilesetIndex].image;
-  //     image.onload = function () {
-  //       ctx.drawImage(
-  //         image,
-  //         ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
-  //           tilesetTileWidth,
-  //         Math.floor((currentTileIndex - currentGlobalTileID) / tilesetWidth) *
-  //           tilesetTileHeight,
-  //         tilesetTileWidth,
-  //         tilesetTileHeight,
-  //         (currentTileIndex % width) * scaledTileWidth,
-  //         Math.floor(currentTileIndex / width) * scaledTileHeight,
-  //         scaledTileWidth,
-  //         scaledTileHeight
-  //       );
-  //     };
-  //   }
-  //   edit.updateCurrentLayerData();
-  // };
-
-  // const updateSelectedTiles = (): void => {
-  //   if (canvasRef.current && contextRef.current) {
-  //     const canvas: HTMLCanvasElement = canvasRef.current;
-  //     const ctx: CanvasRenderingContext2D = contextRef.current;
-  //     canvas.height = canvasHeight;
-  //     canvas.width = canvasWidth;
-  //     const scaleY = canvasHeight / imageHeight;
-  //     const scaleX = canvasWidth / imageWidth;
-  //     const scaledTileHeight = tileHeight * scaleY;
-  //     const scaledTileWidth = tileWidth * scaleX;
-  //     let imagesLoaded = 0;
-  //     for (let i = 0; i < tilesetImages.length; i++) {
-  //       tilesetImages[i] = new Image();
-  //       tilesetImages[i].src = edit.state.Tilesets[i].image;
-  //       tilesetImages[i].onload = function () {
-  //         imagesLoaded++;
-  //         if (imagesLoaded === tilesetImages.length) {
-  //           for (let i = 0; i < currentSelection.length; i++) {
-  //             let currentGlobalTileID: number = 0;
-  //             let currentTilesetIndex: number = 0;
-  //             for (let i = currentGlobalTileIDs.length - 1; i >= 0; i--) {
-  //               if (currentGlobalTileIDs[i] < currentTileIndex) {
-  //                 currentGlobalTileID = currentGlobalTileIDs[i];
-  //                 currentTilesetIndex = i;
-  //               }
-  //             }
-  //             const tilesetTileWidth =
-  //               edit.state.Tilesets[currentTilesetIndex].tileWidth;
-  //             const tilesetTileHeight =
-  //               edit.state.Tilesets[currentTilesetIndex].tileHeight;
-  //             const tilesetWidth =
-  //               edit.state.Tilesets[currentTilesetIndex].columns;
-
-  //             const image: HTMLImageElement =
-  //               tilesetImages[currentTilesetIndex];
-
-  //             ctx.drawImage(
-  //               image,
-  //               ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
-  //                 tilesetTileWidth,
-  //               Math.floor(
-  //                 (currentTileIndex - currentGlobalTileID) / tilesetWidth
-  //               ) * tilesetTileHeight,
-  //               tilesetTileWidth,
-  //               tilesetTileHeight,
-  //               (currentSelection[i] % width) * scaledTileWidth,
-  //               Math.floor(currentSelection[i] / width) * scaledTileHeight,
-  //               scaledTileWidth,
-  //               scaledTileHeight
-  //             );
-  //           }
-  //         }
-  //       };
-  //     }
-
-  //     edit.updateCurrentLayerData();
-  //   }
-  // };
 
   const highlightTile = ({ nativeEvent }: any): void => {
     if (canvasRef.current) {
@@ -403,6 +312,18 @@ const CurrentLayerCanvas = () => {
   };
 
   const drawSpaceFill = ({ nativeEvent }: any): void => {
+    const addRowSpaceFill = (x: number, y: number): number[] => {
+      let selection: number[] = new Array();
+      if (startingTile) {
+        if (startingTile.x > x)
+          for (let i = x; i <= startingTile.x; i++)
+            selection.push(i + width * y);
+        else
+          for (let i = startingTile.x; i <= x; i++)
+            selection.push(i + width * y);
+      }
+      return selection;
+    };
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
       const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
@@ -436,6 +357,96 @@ const CurrentLayerCanvas = () => {
     }
   };
 
+  const bucketFill = ({ nativeEvent }: any): void => {
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+      const startingIndex = currentTile.x + width * currentTile.y;
+      console.log(startingIndex);
+      if (!currentSelection.includes(startingIndex)) return;
+      console.log("current index in current selection");
+      const currentTileData = currentLayer[startingIndex];
+      let selection = new Map<number, number>();
+      let startingPoints: number[] = [];
+      startingPoints.push(startingIndex);
+      let currentIndex = startingIndex;
+
+      const scanLeft = (
+        currentIndex: number,
+        currentTileData: number
+      ): void => {
+        if (currentLayer[currentIndex] !== currentTileData) return;
+        while (
+          currentIndex % width >= 0 &&
+          !selection.has(currentIndex) &&
+          currentLayer[currentIndex] === currentTileData
+        ) {
+          const aboveIndex = currentIndex - width;
+          if (
+            aboveIndex >= 0 &&
+            !selection.has(aboveIndex) &&
+            currentLayer[aboveIndex] === currentTileData
+          ) {
+            startingPoints.push(aboveIndex);
+          }
+          const belowIndex = currentIndex + width;
+          if (
+            belowIndex < currentLayer.length &&
+            !selection.has(belowIndex) &&
+            currentLayer[belowIndex] === currentTileData
+          ) {
+            startingPoints.push(belowIndex);
+          }
+          selection.set(currentIndex, currentIndex);
+          console.log(currentLayer[currentIndex]);
+          currentIndex--;
+        }
+      };
+
+      const scanRight = (
+        currentIndex: number,
+        currentTileData: number
+      ): void => {
+        if (currentLayer[currentIndex] !== currentTileData) return;
+        while (
+          currentIndex % width < width &&
+          !selection.has(currentIndex) &&
+          currentLayer[currentIndex] === currentTileData
+        ) {
+          const aboveIndex = currentIndex - width;
+          if (
+            aboveIndex >= 0 &&
+            !selection.has(aboveIndex) &&
+            currentLayer[aboveIndex] === currentTileData
+          ) {
+            startingPoints.push(aboveIndex);
+          }
+          const belowIndex = currentIndex + width;
+          if (
+            belowIndex < currentLayer.length &&
+            !selection.has(belowIndex) &&
+            currentLayer[belowIndex] === currentTileData
+          ) {
+            startingPoints.push(belowIndex);
+          }
+          selection.set(currentIndex, currentIndex);
+          console.log(currentLayer[currentIndex]);
+          currentIndex++;
+        }
+      };
+      edit.updateCurrentSelection([]);
+
+      for (let i = 0; i < startingPoints.length; i++) {
+        scanLeft(startingPoints[i], currentTileData);
+        scanRight(startingPoints[i] + 1, currentTileData);
+      }
+
+      edit.updateCurrentSelection([...selection.values()]);
+      edit.updateCurrentLayerData(currentTileIndex);
+    }
+  };
+
   const magicWand = ({ nativeEvent }: any): void => {
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
@@ -452,9 +463,6 @@ const CurrentLayerCanvas = () => {
         currentIndex: number,
         currentTileData: number
       ): void => {
-        console.log("scan Left");
-        console.log(currentIndex);
-
         while (
           currentIndex % width >= 0 &&
           !selection.has(currentIndex) &&
@@ -466,8 +474,6 @@ const CurrentLayerCanvas = () => {
             !selection.has(aboveIndex) &&
             currentLayer[aboveIndex] === currentTileData
           ) {
-            console.log("push above");
-            console.log(aboveIndex);
             startingPoints.push(aboveIndex);
           }
           const belowIndex = currentIndex + width;
@@ -476,12 +482,8 @@ const CurrentLayerCanvas = () => {
             !selection.has(belowIndex) &&
             currentLayer[belowIndex] === currentTileData
           ) {
-            console.log("push below");
-            console.log(belowIndex);
             startingPoints.push(belowIndex);
           }
-          console.log("scan Left");
-          console.log(currentIndex);
           selection.set(currentIndex, currentIndex);
           currentIndex--;
         }
@@ -491,9 +493,6 @@ const CurrentLayerCanvas = () => {
         currentIndex: number,
         currentTileData: number
       ): void => {
-        console.log("scan Right");
-        console.log(currentIndex);
-
         while (
           currentIndex % width < width &&
           !selection.has(currentIndex) &&
@@ -505,8 +504,6 @@ const CurrentLayerCanvas = () => {
             !selection.has(aboveIndex) &&
             currentLayer[aboveIndex] === currentTileData
           ) {
-            console.log("push above");
-            console.log(aboveIndex);
             startingPoints.push(aboveIndex);
           }
           const belowIndex = currentIndex + width;
@@ -515,12 +512,8 @@ const CurrentLayerCanvas = () => {
             !selection.has(belowIndex) &&
             currentLayer[belowIndex] === currentTileData
           ) {
-            console.log("push below");
-            console.log(belowIndex);
             startingPoints.push(belowIndex);
           }
-          console.log("scan right");
-          console.log(currentIndex);
           selection.set(currentIndex, currentIndex);
           currentIndex++;
         }
@@ -528,46 +521,12 @@ const CurrentLayerCanvas = () => {
       edit.updateCurrentSelection([]);
 
       for (let i = 0; i < startingPoints.length; i++) {
-        console.log(startingPoints[i]);
-        //check points above and below to see:
-        //if it's with the boundaries
-        //if it hasn't been checked
-        //if it has the same tileset data
-        // const aboveIndex = startingPoints[i] - width;
-        // if (
-        //   aboveIndex >= 0 &&
-        //   !selection.has(aboveIndex) &&
-        //   currentLayer[aboveIndex] === currentTileData
-        // ) {
-        //   startingPoints.push(aboveIndex);
-        // }
-        // const belowIndex = startingPoints[i] + width;
-        // if (
-        //   belowIndex < currentLayer.length &&
-        //   !selection.has(belowIndex) &&
-        //   currentLayer[belowIndex] === currentTileData
-        // ) {
-        //   startingPoints.push(belowIndex);
-        // }
-        //scan left and right, adding in points into selections
-        //and adding in new starting points
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
 
       edit.updateCurrentSelection([...selection.values()]);
     }
-  };
-
-  const addRowSpaceFill = (x: number, y: number): number[] => {
-    let selection: number[] = new Array();
-    if (startingTile) {
-      if (startingTile.x > x)
-        for (let i = x; i <= startingTile.x; i++) selection.push(i + width * y);
-      else
-        for (let i = startingTile.x; i <= x; i++) selection.push(i + width * y);
-    }
-    return selection;
   };
 
   const screenToCanvasCoordinates = (
