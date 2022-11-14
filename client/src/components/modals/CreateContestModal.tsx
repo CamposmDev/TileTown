@@ -1,41 +1,53 @@
 import Button from '@mui/material/Button';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
-import { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import {  MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
+import { ModalContext } from 'src/context/modal';
+import { SocialContext } from 'src/context/social';
+import { SnackContext } from 'src/context/snack';
 
-
-
-interface Props {
-    callback?: Function
-}
-
-const CreateContestModal = (props: Props) => {
-    const [isOpen, setIsOpen] = useState(false)
+const CreateContestModal = () => {
+    const modal = useContext(ModalContext)
+    const social = useContext(SocialContext)
+    const snack = useContext(SnackContext)
     const handleClose = () => {
-        setContest({name: '', desc: ''})
-        setIsOpen(false);
+        setContest({name: '', desc: '', endDate: new Date()})
+        modal.close()
     }
     const [contest, setContest] = useState({
         name: '',
-        desc: ''
+        desc: '',
+        endDate: new Date()
     })
+    console.log(contest.endDate)
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContest({
             name: e.target.value,
-            desc: contest.desc
+            desc: contest.desc,
+            endDate: contest.endDate
+
         })
     }
     const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContest({
             name: contest.name,
-            desc: e.target.value
+            desc: e.target.value,
+            endDate: contest.endDate
+
+        })
+    }
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setContest({
+            name: contest.name,
+            desc: contest.desc,
+            endDate: new Date(e.target.value)
         })
     }
     const handleCreate = () => {
-        throw new Error('Not Yet Implemented')
+        social.createContest(contest.name, contest.desc, contest.endDate, snack)
+        modal.close()
     }
 
     let btDisabled = true
@@ -44,7 +56,7 @@ const CreateContestModal = (props: Props) => {
     }
     let ui = (
         <Dialog 
-            open={isOpen} 
+            open={modal.getModal().showCreateContestModal} 
             onClose={handleClose}
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
@@ -87,6 +99,7 @@ const CreateContestModal = (props: Props) => {
                                 label="Due Date"
                                 type="date"
                                 defaultValue="2022-12-31"
+                                onChange={handleDateChange}
                                 InputLabelProps={{
                                 shrink: true,
                                 }}
@@ -106,13 +119,9 @@ const CreateContestModal = (props: Props) => {
         </Dialog>
     )
     return (
-        <>
-            <MenuItem onClick={() => {
-                setIsOpen(!isOpen)
-            }}
-            >Create Contest</MenuItem>
+        <div>
             {ui}
-        </>
+        </div>
     )
 
 }

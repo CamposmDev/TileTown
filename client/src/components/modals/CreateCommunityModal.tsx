@@ -1,45 +1,46 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItemProps } from '@mui/material';
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
-
+import { SnackContext } from 'src/context/snack';
+import { SocialContext } from 'src/context/social';
+import { ModalContext } from 'src/context/modal';
 
 const CreateCommunityModal = () => {
-    const [isOpen, setIsOpen] = useState(false)
+    const modal = React.useContext(ModalContext)
+    const snack = React.useContext(SnackContext)
+    const social = React.useContext(SocialContext)
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    // const [isOpen, setIsOpen] = useState(false)
+
     const handleClose = () => {
-        setComm({name: '', desc: ''})
-        setIsOpen(false)
+        setName('')
+        setDescription('')
+        modal.close()
+        // setIsOpen(false)
     }
-    const [comm, setComm] = useState({
-        name: '',
-        desc: ''
-    })
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setComm({
-            name: e.target.value,
-            desc: comm.desc
-        })
+        setName(e.target.value)
     }
     const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setComm({
-            name: comm.name,
-            desc: e.target.value
-        })
+        setDescription(e.target.value)
     }
     const handleCreate = () => {
-        throw new Error('Not Yet Implemented')
+        social.createCommunity(name, description, snack)
+        modal.close()
     }
 
     let btDisabled = true
-    if (comm.name && comm.desc) {
+    if (name && description) {
         btDisabled = false
     }
 
     let ui = (
         <Dialog 
-            open={isOpen} 
+            open={modal.getModal().showCreateCommunityModal} 
             onClose={handleClose}
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
@@ -76,10 +77,17 @@ const CreateCommunityModal = () => {
         </Dialog>
     )
     return (
-        <>
-            <MenuItem onClick={() => setIsOpen(true)}>Create Community</MenuItem>
+        <div>
             {ui}
-        </>
+        </div>
+        // <>
+        //     <MenuItem onClick={(e) => {
+        //         if (props.onClick) props.onClick(e)
+        //         // setIsOpen(true)
+        //         modal.showCreateCommunityModal()
+        //     }}>Create Community</MenuItem>
+        //     {ui}
+        // </>
     )
 
 }
