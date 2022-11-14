@@ -70,6 +70,7 @@ const CommunitySettingsButton = (props: Props) => {
                             {props.members.map((x,i) => 
                             <Grid key={x.username + i} mt={0.5}>
                                 <UserProfileCard
+                                    userId={''}
                                     firstName={x.firstName} 
                                     lastName={x.lastName}
                                     username={x.username}
