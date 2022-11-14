@@ -11,7 +11,7 @@ import { CommunitySchemaType } from "../types";
 export default class MongooseCommunityDBM implements CommunityDBM {
 
     async getCommunities(name: string): Promise<Community[]> {
-        let communities = await CommunityModel.find({name: name});
+        let communities = await CommunityModel.find({name: new RegExp(`${name}`, "i")});
         return communities.map(c => this.parseCommunity(c));
     }
 
