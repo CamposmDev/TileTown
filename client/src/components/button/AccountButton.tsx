@@ -2,14 +2,16 @@ import { useContext, useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom';
 import { Avatar, Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
-import { Logout, Hail, Person, Settings, PersonAdd } from "@mui/icons-material";
+import { Logout, Hail, Person, Settings, PersonAdd, EmojiEvents, GroupRemove } from "@mui/icons-material";
 import { AuthContext } from "src/context/auth";
 import { MENU_PAPER_PROPS, stringAvatar } from "../util/Constants";
 import { User } from '@types'
 import { SnackContext } from "src/context/snack";
+import { ModalContext } from "src/context/modal";
 
 const AccountButton = () => {
     const auth = useContext(AuthContext)
+    const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const navigate = useNavigate()
@@ -31,7 +33,17 @@ const AccountButton = () => {
         handleMenuClose()
     }
 
-    const loggedInItems = (
+    const handleShowCommunityDeleteModal = () => {
+        modal.showDeleteCommunityModal()
+        handleMenuClose()
+    }
+
+    const handleShowContestDeleteModal = () => {
+        modal.showDeleteContestModal()
+        handleMenuClose()
+    }
+
+    let loggedInItems = (
         <Box>
             <MenuItem disabled={auth.isGuest()} onClick={handleMenuClose} component={Link} to={'/profile'}>
                 <ListItemIcon><Person/></ListItemIcon>
@@ -41,12 +53,31 @@ const AccountButton = () => {
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText>Settings</ListItemText>
             </MenuItem>
+            <MenuItem onClick={handleShowCommunityDeleteModal}>
+                <ListItemIcon><GroupRemove/></ListItemIcon>
+                <ListItemText>Delete Community</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleShowContestDeleteModal}>
+                <ListItemIcon><EmojiEvents/></ListItemIcon>
+                <ListItemText>Delete Contest</ListItemText>
+            </MenuItem>
             <MenuItem onClick={handleLogout}>
                 <ListItemIcon><Logout/></ListItemIcon>
                 <ListItemText>Logout</ListItemText>
             </MenuItem>
         </Box>
     )
+
+    if (auth.isGuest()) {
+        loggedInItems = (
+            <Box>
+                <MenuItem onClick={handleLogout}>
+                    <ListItemIcon><Logout/></ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                </MenuItem>
+            </Box>
+        )
+    }
 
     const loggedOutItems = (
         <Box>

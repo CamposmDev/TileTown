@@ -28,7 +28,7 @@ export default class AxiosContestApi {
         return AxiosApi.delete<DeleteContestRes, AxiosResponse<DeleteContestRes>, DeleteContestReq>(`/contest/${contestId}`);
     }
 
-    public async getContests(name: string): Promise<AxiosResponse<GetContestsRes>> {
+    public async getContests(name: string | undefined): Promise<AxiosResponse<GetContestsRes>> {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name }});
     }
 }
