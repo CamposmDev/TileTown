@@ -80,7 +80,7 @@ const CreateContestModal = () => {
                     rows={7}
                 />
                 <Grid container spacing={1} margin='dense'>
-                    <Grid item xs={12} sm={6}>
+                    {/* <Grid item xs={12} sm={6}>
                         <TextField
                             required
                             margin='normal'
@@ -88,7 +88,7 @@ const CreateContestModal = () => {
                             label="Theme"
                             defaultValue="Any"
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} sm={6}>
                         <Stack component="form" noValidate spacing={3}>
                             <TextField
