@@ -55,7 +55,15 @@ export class SocialStore {
     public async deleteCommunityById(communityId: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: SocialActionType.getCommunityByName,
+                    payload: {
+                        communities: this._social.communities.filter(x => x.id.localeCompare(communityId) !== 0)
+                    }
+                })
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message) 
         })
@@ -101,7 +109,15 @@ export class SocialStore {
     public async deleteContestById(contestId: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.deleteContestById(contestId)
         res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: SocialActionType.getContestByName,
+                    payload: {
+                        contests: this._social.contests.filter(x => x.id.localeCompare(contestId) !== 0)
+                    }
+                })
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })

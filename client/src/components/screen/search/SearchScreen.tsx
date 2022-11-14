@@ -484,6 +484,7 @@ const SearchScreen = (props: Props) => {
                 mt={1}>
                     {social.getUsers().map((x,i) => <Grid>
                         <UserProfileCard 
+                            userId={x.id}
                             firstName={x.firstName}
                             lastName={x.lastName}
                             username={x.username}
@@ -532,7 +533,7 @@ const SearchScreen = (props: Props) => {
                                     contestName: x.name,
                                     startDate: new Date(x.startDate),
                                     endDate: new Date(x.endDate),
-                                    ownerName: x.owner,
+                                    owner: x.owner,
                                     contestTheme: 'undefined',
                                     numOfParticipates: x.participates.length
                                 }}
