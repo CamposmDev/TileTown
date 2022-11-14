@@ -326,7 +326,12 @@ export default class UserController {
             return res.status(500).json({ message: "Server Error" });
         }
 
-        return res.status(200).json({ message: "Verifying user was successful!", user: verifiedUser });
+        return res.status(200).send(`
+            <div>
+                Hello ${verifiedUser.firstName}! You've successfully verified your TileTown account!
+                <a src="/login">Login</a>
+            </div>
+        `);
     }
 
     public async deleteUserById(req: Request, res: Response): Promise<void> {
