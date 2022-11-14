@@ -4,13 +4,17 @@ import { ModalState, ModalStore } from "./ModalStore";
 
 const ModalContext = createContext<ModalStore>(new ModalStore({
     showCreateCommunityModal: false,
-    showCreateContestModal: false
+    showCreateContestModal: false,
+    showDeleteCommunityModal: false,
+    showDeleteContestModal: false
 }, () => {}))
 
 function ModalContextProvider(props: Record<string, any>) {
     const [modal, setModal] = useState<ModalState>({
         showCreateCommunityModal: false,
-        showCreateContestModal: false
+        showCreateContestModal: false,
+        showDeleteCommunityModal: false,
+        showDeleteContestModal: false
     })
     const Modal = new ModalStore(modal, setModal)
     return (

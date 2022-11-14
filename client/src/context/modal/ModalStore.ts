@@ -3,6 +3,8 @@ import { ModalAction, ModalActionType } from "./ModalAction"
 export interface ModalState {
     showCreateCommunityModal: boolean
     showCreateContestModal: boolean
+    showDeleteCommunityModal: boolean
+    showDeleteContestModal: boolean
 }
 
 export class ModalStore {
@@ -30,10 +32,24 @@ export class ModalStore {
         })
     }
 
+    public showDeleteCommunityModal() {
+        this.handleAction({
+            type: ModalActionType.showDeleteCommunity
+        })
+    }
+
+    public showDeleteContestModal() {
+        this.handleAction({
+            type: ModalActionType.showDeleteContest
+        })
+    }
+
     public close() {
         this._setModal({
             showCreateCommunityModal: false,
-            showCreateContestModal: false
+            showCreateContestModal: false,
+            showDeleteCommunityModal: false,
+            showDeleteContestModal: false
         })
     }
 
@@ -43,13 +59,33 @@ export class ModalStore {
                 console.log('show create comm')
                 this._setModal({
                     showCreateCommunityModal: true,
-                    showCreateContestModal: false
+                    showCreateContestModal: false,
+                    showDeleteCommunityModal: false,
+                    showDeleteContestModal: false
                 })
                 break
             case ModalActionType.showCreateContest:
                 this._setModal({
                     showCreateCommunityModal: false,
-                    showCreateContestModal: true
+                    showCreateContestModal: true,
+                    showDeleteCommunityModal: false,
+                    showDeleteContestModal: false
+                })
+                break
+            case ModalActionType.showDeleteCommunity:
+                this._setModal({
+                    showCreateCommunityModal: false,
+                    showCreateContestModal: false,
+                    showDeleteCommunityModal: true,
+                    showDeleteContestModal: false
+                })
+                break
+            case ModalActionType.showDeleteContest:
+                this._setModal({
+                    showCreateCommunityModal: false,
+                    showCreateContestModal: false,
+                    showDeleteCommunityModal: false,
+                    showDeleteContestModal: true
                 })
                 break
         }
