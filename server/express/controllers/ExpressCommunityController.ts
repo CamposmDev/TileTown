@@ -69,14 +69,14 @@ export default class CommunityController {
         user.joinedCommunities.push(community.id);
         community.members.push(user.id);
 
-        // let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
-        // if (updatedUser === null) {
-        //     return res.status(500).json({ message: "Error updating users joined communities"});
-        // }
-        // let updatedCommunity = await db.communities.updateCommunity(updatedUser.id, {members: community.members});
-        // if (updatedCommunity === null) {
-        //     return res.status(500).json({ message: "Error updating communities members"});
-        // }
+        let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: "Error updating users joined communities"});
+        }
+        let updatedCommunity = await db.communities.updateCommunity(community.id, {members: community.members});
+        if (updatedCommunity === null) {
+            return res.status(500).json({ message: "Error updating communities members"});
+        }
 
         return res.status(201).json({ message: "Community created!", community: community })
     }
