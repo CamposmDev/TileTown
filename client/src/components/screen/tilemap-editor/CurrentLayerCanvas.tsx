@@ -176,6 +176,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.magicWand: {
+        magicWand({ nativeEvent });
         break;
       }
       case TilemapEditControl.sameTileSelect: {
@@ -432,6 +433,129 @@ const CurrentLayerCanvas = () => {
         if (currentLayer[i] === currentTileData) selection.push(i);
       }
       edit.updateCurrentSelection(selection);
+    }
+  };
+
+  const magicWand = ({ nativeEvent }: any): void => {
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+      const startingIndex = currentTile.x + width * currentTile.y;
+      const currentTileData = currentLayer[startingIndex];
+      let selection = new Map<number, number>();
+      let startingPoints: number[] = [];
+      startingPoints.push(startingIndex);
+      let currentIndex = startingIndex;
+
+      const scanLeft = (
+        currentIndex: number,
+        currentTileData: number
+      ): void => {
+        console.log("scan Left");
+        console.log(currentIndex);
+
+        while (
+          currentIndex % width >= 0 &&
+          !selection.has(currentIndex) &&
+          currentLayer[currentIndex] === currentTileData
+        ) {
+          const aboveIndex = currentIndex - width;
+          if (
+            aboveIndex >= 0 &&
+            !selection.has(aboveIndex) &&
+            currentLayer[aboveIndex] === currentTileData
+          ) {
+            console.log("push above");
+            console.log(aboveIndex);
+            startingPoints.push(aboveIndex);
+          }
+          const belowIndex = currentIndex + width;
+          if (
+            belowIndex < currentLayer.length &&
+            !selection.has(belowIndex) &&
+            currentLayer[belowIndex] === currentTileData
+          ) {
+            console.log("push below");
+            console.log(belowIndex);
+            startingPoints.push(belowIndex);
+          }
+          console.log("scan Left");
+          console.log(currentIndex);
+          selection.set(currentIndex, currentIndex);
+          currentIndex--;
+        }
+      };
+
+      const scanRight = (
+        currentIndex: number,
+        currentTileData: number
+      ): void => {
+        console.log("scan Right");
+        console.log(currentIndex);
+
+        while (
+          currentIndex % width < width &&
+          !selection.has(currentIndex) &&
+          currentLayer[currentIndex] === currentTileData
+        ) {
+          const aboveIndex = currentIndex - width;
+          if (
+            aboveIndex >= 0 &&
+            !selection.has(aboveIndex) &&
+            currentLayer[aboveIndex] === currentTileData
+          ) {
+            console.log("push above");
+            console.log(aboveIndex);
+            startingPoints.push(aboveIndex);
+          }
+          const belowIndex = currentIndex + width;
+          if (
+            belowIndex < currentLayer.length &&
+            !selection.has(belowIndex) &&
+            currentLayer[belowIndex] === currentTileData
+          ) {
+            console.log("push below");
+            console.log(belowIndex);
+            startingPoints.push(belowIndex);
+          }
+          console.log("scan right");
+          console.log(currentIndex);
+          selection.set(currentIndex, currentIndex);
+          currentIndex++;
+        }
+      };
+      edit.updateCurrentSelection([]);
+
+      for (let i = 0; i < startingPoints.length; i++) {
+        console.log(startingPoints[i]);
+        //check points above and below to see:
+        //if it's with the boundaries
+        //if it hasn't been checked
+        //if it has the same tileset data
+        // const aboveIndex = startingPoints[i] - width;
+        // if (
+        //   aboveIndex >= 0 &&
+        //   !selection.has(aboveIndex) &&
+        //   currentLayer[aboveIndex] === currentTileData
+        // ) {
+        //   startingPoints.push(aboveIndex);
+        // }
+        // const belowIndex = startingPoints[i] + width;
+        // if (
+        //   belowIndex < currentLayer.length &&
+        //   !selection.has(belowIndex) &&
+        //   currentLayer[belowIndex] === currentTileData
+        // ) {
+        //   startingPoints.push(belowIndex);
+        // }
+        //scan left and right, adding in points into selections
+        //and adding in new starting points
+        scanLeft(startingPoints[i], currentTileData);
+        scanRight(startingPoints[i] + 1, currentTileData);
+      }
+
+      edit.updateCurrentSelection([...selection.values()]);
     }
   };
 
