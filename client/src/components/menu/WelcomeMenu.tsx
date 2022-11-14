@@ -16,7 +16,7 @@ const WelcomeMenu = () => {
                     noWrap
                     component='div'
                     >
-                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>TileTown</Link>
+                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>Testing</Link>
                     </Typography>
             </Grid>
             <AccountButton />
