@@ -22,10 +22,10 @@ const TilemapCanvas = () => {
   const width: number = edit.state.Tilemap.width;
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
+  const currentLayerIndex: number = edit.state.currentLayerIndex;
 
-  const currentTilesetIndex = edit.state.currentTileIndex;
-  const currentTileIndex = edit.state.currentTileIndex;
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
+  const render = edit.state.renderTilemapCanvas;
 
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
@@ -134,13 +134,13 @@ const TilemapCanvas = () => {
   };
 
   useEffect(() => {
-    console.log("render tilemap");
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d", {
         willReadFrequently: true,
       });
       if (ctx) {
+        console.log("render tilemap");
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         const scaleY = canvasHeight / imageHeight;
@@ -149,9 +149,10 @@ const TilemapCanvas = () => {
         const scaledTileWidth = tileWidth * scaleX;
         // ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
+        // edit.preventTilemapRender();
       }
     }
-  }, []);
+  }, [currentLayerIndex]);
 
   const highlightTile = ({ nativeEvent }: any): void => {
     if (canvasRef.current) {

@@ -254,6 +254,10 @@ export interface TilemapEditorState {
   currentSelection: number[]; //array of indices of tiles selected for editing
   modalType: TilemapEditorModalType;
   isSaved: boolean;
+  renderTilemapCanvas: boolean;
+  renderTilemapGridCanvas: boolean;
+  renderCurrentLayerCanvas: boolean;
+  renderTileSelectorCanvas: boolean;
 }
 
 /**
@@ -271,6 +275,10 @@ export enum TilemapEditorActionType {
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
   UPDATE_CURRENT_LAYER = "UPDATE_CURRENT_LAYER",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
+  PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
+  PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
+  PREVENT_CURRENT_LAYER_CANVAS_RENDER = "PREVENT_CURRENT_LAYER_CANVAS_RENDER",
+  PREVENT_TILE_SELECTION_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
 }
 
 /**action type and payload pairs*/
@@ -314,4 +322,20 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION;
       payload: { currentSelection: number[] };
+    }
+  | {
+      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER;
+      payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.PREVENT_GRID_CANVAS_RENDER;
+      payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.PREVENT_CURRENT_LAYER_CANVAS_RENDER;
+      payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.PREVENT_TILE_SELECTION_CANVAS_RENDER;
+      payload: {};
     };

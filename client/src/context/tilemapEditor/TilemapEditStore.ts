@@ -120,10 +120,23 @@ export class TilemapEditStore {
   public async updateCurrentSelection(
     currentSelection: number[]
   ): Promise<void> {
-    console.log(currentSelection);
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION,
       payload: { currentSelection },
+    });
+  }
+
+  public async preventTilemapRender(): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER,
+      payload: {},
+    });
+  }
+
+  public async preventTileSelectionRender(): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.PREVENT_TILE_SELECTION_CANVAS_RENDER,
+      payload: {},
     });
   }
 
@@ -133,6 +146,7 @@ export class TilemapEditStore {
    * @param payload the data associated with the action
    */
   protected handleAction(action: TilemapEditorAction): void {
+    console.log(action.type);
     const { type, payload } = action;
     switch (type) {
       case TilemapEditorActionType.CREATE_NEW_TILEMAP: {
@@ -167,6 +181,14 @@ export class TilemapEditStore {
         this.handleUpdateSelection(payload.currentSelection);
         break;
       }
+      case TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER: {
+        this.handlePreventTilemapRender();
+        break;
+      }
+      case TilemapEditorActionType.PREVENT_TILE_SELECTION_CANVAS_RENDER: {
+        this.handlePreventTileSelectionRender();
+        break;
+      }
       default: {
         throw new Error(
           `Unhandled action with type ${action} caught in auth reducer`
@@ -174,6 +196,42 @@ export class TilemapEditStore {
       }
     }
   }
+  protected handlePreventTileSelectionRender(): void {
+    this.setEdit({
+      Tilemap: this._state.Tilemap,
+      Tilesets: this._state.Tilesets,
+      currentEditControl: this._state.currentEditControl,
+      currentLayerIndex: this._state.currentLayerIndex,
+      currentTilesetIndex: this._state.currentTilesetIndex,
+      currentTileIndex: this._state.currentTileIndex,
+      currentSelection: this._state.currentSelection,
+      modalType: TilemapEditorModalType.close,
+      isSaved: this._state.isSaved,
+      renderTilemapCanvas: this._state.renderTilemapCanvas,
+      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
+      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
+      renderTileSelectorCanvas: false,
+    });
+  }
+  protected handlePreventTilemapRender(): void {
+    console.log(this._state.renderTilemapCanvas);
+    this.setEdit({
+      Tilemap: this._state.Tilemap,
+      Tilesets: this._state.Tilesets,
+      currentEditControl: this._state.currentEditControl,
+      currentLayerIndex: this._state.currentLayerIndex,
+      currentTilesetIndex: this._state.currentTilesetIndex,
+      currentTileIndex: this._state.currentTileIndex,
+      currentSelection: this._state.currentSelection,
+      modalType: TilemapEditorModalType.close,
+      isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
+      renderCurrentLayerCanvas: this._state.renderCurrentLayerCanvas,
+      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
+    });
+  }
+
   protected handleUpdateSelection(currentSelection: number[]): void {
     this.setEdit({
       Tilemap: this._state.Tilemap,
@@ -181,11 +239,17 @@ export class TilemapEditStore {
       currentEditControl: this._state.currentEditControl,
       currentLayerIndex: this._state.currentLayerIndex,
       currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTilesetIndex,
+      currentTileIndex: this._state.currentTileIndex,
       currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
+    console.log(this._state.currentTileIndex);
+    console.log(this._state.currentSelection);
   }
   protected handleUpdateCurrentTile(currentTileIndex: number): void {
     this.setEdit({
@@ -198,7 +262,13 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: true,
     });
+    console.log(this._state.currentTileIndex);
+    console.log(this._state.currentSelection);
   }
 
   protected handleCreateNewTilemap(Tilemap: Tilemap): void {
@@ -212,6 +282,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: true,
+      renderTilemapGridCanvas: true,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 
@@ -263,6 +337,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 
@@ -277,6 +355,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: true,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 
@@ -291,6 +373,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 
@@ -305,6 +391,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType: TilemapEditorModalType.close,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 
@@ -319,6 +409,10 @@ export class TilemapEditStore {
       currentSelection: this._state.currentSelection,
       modalType,
       isSaved: this._state.isSaved,
+      renderTilemapCanvas: false,
+      renderTilemapGridCanvas: false,
+      renderCurrentLayerCanvas: false,
+      renderTileSelectorCanvas: false,
     });
   }
 }

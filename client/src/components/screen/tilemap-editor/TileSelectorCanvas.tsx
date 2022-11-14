@@ -10,6 +10,7 @@ import {
 import "./default.css";
 import TilemapCanvas from "./TilemapCanvas";
 import CurrentLayerCanvas from "./CurrentLayerCanvas";
+import { ContentPasteSearchOutlined, Store } from "@mui/icons-material";
 
 const TileSelectorCanvas = () => {
   //tilemap edit store context
@@ -19,16 +20,16 @@ const TileSelectorCanvas = () => {
   const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  const tileHeight =
-    edit.state.Tilesets[edit.state.currentTilesetIndex].tileHeight;
-  const tileWidth =
-    edit.state.Tilesets[edit.state.currentTilesetIndex].tileWidth;
-  const rows = edit.state.Tilesets[edit.state.currentTilesetIndex].rows;
-  const columns = edit.state.Tilesets[edit.state.currentTilesetIndex].columns;
-  const image = edit.state.Tilesets[edit.state.currentTilesetIndex].image;
+  const currentTilesetIndex = edit.state.currentTilesetIndex;
+  const tileHeight = edit.state.Tilesets[currentTilesetIndex].tileHeight;
+  const tileWidth = edit.state.Tilesets[currentTilesetIndex].tileWidth;
+  const rows = edit.state.Tilesets[currentTilesetIndex].rows;
+  const columns = edit.state.Tilesets[currentTilesetIndex].columns;
+  const image = edit.state.Tilesets[currentTilesetIndex].image;
   const currentGlobalTileID =
-    edit.state.Tilemap.globalTileIDs[edit.state.currentTilesetIndex];
+    edit.state.Tilemap.globalTileIDs[currentTilesetIndex];
   const currentTileIndex = edit.state.currentTileIndex;
+  const render = edit.state.renderTileSelectorCanvas;
 
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
@@ -101,6 +102,7 @@ const TileSelectorCanvas = () => {
   };
 
   useEffect(() => {
+    console.log("render tile selector canvas");
     if (gridCanvasRef.current) {
       const canvas: HTMLCanvasElement = gridCanvasRef.current;
       canvas.height = canvasHeight;
@@ -108,12 +110,13 @@ const TileSelectorCanvas = () => {
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d", {
         willReadFrequently: true,
       });
+
       if (ctx) {
         gridContextRef.current = ctx;
         drawImage(ctx, canvasImage, image, canvasWidth, canvasHeight);
       }
     }
-  }, []);
+  }, [currentTileIndex, currentTilesetIndex]);
 
   const selectCurrentTile = ({ nativeEvent }: any): void => {
     if (gridCanvasRef.current && gridContextRef.current) {
@@ -124,7 +127,6 @@ const TileSelectorCanvas = () => {
       edit.updateCurrentTile(
         currentTile.x + columns * currentTile.y + currentGlobalTileID
       );
-      highlightSelectedTile(ctx, canvasWidth, canvasHeight);
     }
   };
   const screenToCanvasCoordinates = (

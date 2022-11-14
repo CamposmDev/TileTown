@@ -67,6 +67,10 @@ const TilemapEditContext = createContext<TilemapEditStore>(
       currentSelection: [],
       modalType: TilemapEditorModalType.close,
       isSaved: false,
+      renderTilemapCanvas: true,
+      renderTilemapGridCanvas: true,
+      renderCurrentLayerCanvas: true,
+      renderTileSelectorCanvas: true,
     },
     () => {},
     () => {}
@@ -151,9 +155,12 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     currentSelection: [],
     modalType: TilemapEditorModalType.close,
     isSaved: false,
+    renderTilemapCanvas: true,
+    renderTilemapGridCanvas: true,
+    renderCurrentLayerCanvas: true,
+    renderTileSelectorCanvas: true,
   });
 
-  // The navigation for the auth context???
   const nav = useNavigate();
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
