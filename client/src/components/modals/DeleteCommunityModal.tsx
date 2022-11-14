@@ -14,7 +14,6 @@ import { SocialContext } from "src/context/social"
             e.preventDefault()
             let formData = new FormData(e.currentTarget)
             let commName = formData.get('comm-name')?.toString()  
-            console.log(commName)
             social.deleteCommunityByName(auth.getUsr()?.id, commName, snack)
             modal.close()
         }

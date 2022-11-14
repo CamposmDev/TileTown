@@ -108,7 +108,24 @@ export class SocialStore {
     }
 
     public async deleteContestByName(userId: string | undefined, contestName: string | undefined, snack?: SnackStore): Promise<void> {
-        throw new Error('Not Yet Implemented')
+        let res = ContestApi.getContests(contestName)
+        res.then((res) => {
+            if (res.status === 200 && res.data.contests) {
+                let contests = res.data.contests
+                contests.forEach(x => {
+                    if (userId && contestName && x.name.localeCompare(contestName) === 0) {
+                        let contestId = x.id
+                        if (x.owner.localeCompare(userId) === 0) {
+                            this.deleteContestById(contestId, snack)
+                        } else {
+                            snack?.showErrorMessage(`You do not own contest '${x.name}'`)
+                        }
+                    }
+                })
+            } 
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     public async getUserByUsername(query: string | undefined, snack?: SnackStore): Promise<void> {
