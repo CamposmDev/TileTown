@@ -14,7 +14,8 @@ interface Props {
 
 const ContestCard = (props: Props) => {
     
-
+    console.log(props.payload.startDate)
+    console.log(props.payload.endDate)
     const timeLeft = calcTimeLeft(props.payload.startDate, props.payload.endDate)
 
     return (
@@ -32,9 +33,9 @@ const ContestCard = (props: Props) => {
                             </Stack>
                             <Box flexGrow={1}/>
                             <Stack direction='column'>
-                                <Typography variant='caption'>
+                                {/* <Typography variant='caption'>
                                     <b>Theme</b>:&ensp;{props.payload.contestTheme}
-                                </Typography>
+                                </Typography> */}
                                 <Typography variant='caption'><b>Started:&ensp;</b>
                                     {parseDateToStr(props.payload.startDate)}
                                 </Typography>

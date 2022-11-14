@@ -1,12 +1,14 @@
 import { Add } from "@mui/icons-material"
 import { Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField } from "@mui/material"
 import React, { useContext, useState } from "react"
+import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { SocialStore } from "src/context/social/SocialStore"
 
 const AddFriendModal = () => {
     const [open, setOpen] = useState(false)
+    const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,7 +18,7 @@ const AddFriendModal = () => {
         let users = await social.getUsersByUsername(username)
         if (users) {
             if (users.length === 1) {
-                social.addFriend(users[0].id, snack)
+                social.addFriend(users[0].id, auth, snack)
                 setOpen(false)
             }
         } else {

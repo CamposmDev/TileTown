@@ -4,6 +4,8 @@ import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, Tileset
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { snackbarClasses } from "@mui/material"
+import { AuthStore } from "../auth/AuthStore"
+import { SnackActionType } from "../snack/SnackAction"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -24,8 +26,16 @@ export class SocialStore {
         this._setSocial = setSocial
     }
 
-    public getUserSearchResult(): User[] {
+    public getUsers(): User[] {
         return this._social.users
+    }
+
+    public getCommunities(): Community[] {
+        return this._social.communities
+    }
+
+    public getContests(): Contest[] {
+        return this._social.contests
     }
 
     public async createCommunity(name: string, description: string, snack?: SnackStore): Promise<void> {
@@ -124,7 +134,18 @@ export class SocialStore {
     public async getCommunityByName(query: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.getCommunities(query)
         res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                if (res.data.communities) {
+                    console.log(res.data.communities)
+                    this.handleAction({
+                        type: SocialActionType.getCommunityByName,
+                        payload: {
+                            communities: res.data.communities
+                        }
+                    })
+                }
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
@@ -133,7 +154,18 @@ export class SocialStore {
     public async getContestByName(query: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.getContests(query)
         res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                if (res.data.contests) {
+                    console.log(res.data.contests)
+                    this.handleAction({
+                        type: SocialActionType.getContestByName,
+                        payload: {
+                            contests: res.data.contests
+                        }
+                    })
+                }
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
@@ -150,11 +182,12 @@ export class SocialStore {
         })
     }
 
-    public async addFriend(userId: string, snack?: SnackStore): Promise<void> {
+    public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                auth.addFriend(userId)
             }
         }).catch((e) => {
             if (e.response) {
@@ -164,11 +197,12 @@ export class SocialStore {
         })
     }
 
-    public async removeFriend(userId: string, snack?: SnackStore): Promise<void> {
+    public async removeFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.removeFriend(userId)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                auth.removeFriend(userId)
             }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
@@ -204,9 +238,27 @@ export class SocialStore {
                 break
             }
             case SocialActionType.getCommunityByName: {
+                this._setSocial({
+                    currentUser: this._social.currentUser,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets,
+                    users: this._social.users,
+                    communities: action.payload.communities,
+                    contests: this._social.contests,
+                    forumPosts: this._social.forumPosts
+                })
                 break
             }
             case SocialActionType.getContestByName: {
+                this._setSocial({
+                    currentUser: this._social.currentUser,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets,
+                    users: this._social.users,
+                    communities: this._social.communities,
+                    contests: action.payload.contests,
+                    forumPosts: this._social.forumPosts
+                })
                 break
             }
             case SocialActionType.clear: {

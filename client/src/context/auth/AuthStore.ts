@@ -8,7 +8,7 @@ import { SnackStore } from '../snack/SnackStore';
 import { 
     AuthActionType, AuthAction, RegisterUser, LoginUser, 
     LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
-    GetLoggedIn, LoginAsGuest
+    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend
 } from "./AuthAction"; 
 
 /**
@@ -47,6 +47,38 @@ export class AuthStore {
 
     public getUsr(): User | null {
         return this._auth.usr
+    }
+
+    public addFriend(userId: string) {
+        this.handleAction({
+            type: AuthActionType.addFriend,
+            payload: {
+                userId: userId
+            }
+        })
+    }
+
+    public removeFriend(userId: string) {
+        this.handleAction({
+            type: AuthActionType.removeFriend,
+            payload: {
+                userId: userId
+            }
+        })
+        // let usr = this.getUsr()
+        // if (usr && usr.friends) {
+        //     let i = usr.friends.indexOf(userId)
+        //     if (i >= 0) {
+        //         let friends = usr.friends.splice(i, 1)
+        //         if (this._auth.usr !== null) {
+        //             this._setAuth({
+        //                 usr: {...this._auth.usr, friends: friends}, 
+        //                 loggedIn: this._auth.loggedIn
+        //             })
+        //         }
+               
+        //     }
+        // }
     }
 
     public async loginUser(email: string | undefined, password: string | undefined, snack?: SnackStore): Promise<void> { 
@@ -293,6 +325,14 @@ export class AuthStore {
                 this.handleChangeEmail(action);
                 break;
             }
+            case AuthActionType.addFriend: {
+                this.handleAddFriend(action)
+                break
+            }
+            case AuthActionType.removeFriend: {
+                this.handleRemoveFriend(action)
+                break
+            }
             default: { 
                 throw new Error(`Unhandled action with type ${action} caught in auth reducer`);
             }
@@ -351,4 +391,21 @@ export class AuthStore {
             });
         }
     };
+    protected handleAddFriend(action: AddFriend): void {
+        if (this._auth.usr !== null) {
+            this._auth.usr.friends.push(action.payload.userId)
+            this._setAuth({
+                usr: {...this._auth.usr, friends: this._auth.usr.friends},
+                loggedIn: this._auth.loggedIn
+            })
+        }
+    }
+    protected handleRemoveFriend(action: RemoveFriend): void {
+        if (this._auth.usr !== null) {
+            this._setAuth({
+                usr: {...this._auth.usr, friends: this._auth.usr.friends.filter(x => x.localeCompare(action.payload.userId) !== 0)},
+                loggedIn: this._auth.loggedIn
+            })
+        }
+    }
 }
