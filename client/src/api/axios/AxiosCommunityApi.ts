@@ -42,7 +42,7 @@ export default class AxiosCommunityApi {
         return AxiosApi.delete<DeleteCommunityRes, AxiosResponse<DeleteCommunityRes>, DeleteCommunityReq>(`/community/${communityId}`, payload);
     }
 
-    public async getCommunities(name: string): Promise<AxiosResponse<GetCommunitiesRes>> {
+    public async getCommunities(name: string | undefined): Promise<AxiosResponse<GetCommunitiesRes>> {
         return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name }});
     }
 
