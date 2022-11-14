@@ -482,7 +482,7 @@ const SearchScreen = (props: Props) => {
                 alignItems={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getUserSearchResult().map((x,i) => <Grid>
+                    {social.getUsers().map((x,i) => <Grid>
                         <UserProfileCard 
                             firstName={x.firstName}
                             lastName={x.lastName}
@@ -490,16 +490,6 @@ const SearchScreen = (props: Props) => {
                             fancy={true}
                         />
                     </Grid>)}
-                {/* {[1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
-                    <Grid item>
-                        <UserProfileCard
-                        firstName='Michael'
-                        lastName="Campos"
-                        username="Camposm"
-                        fancy={true}
-                    />
-                    </Grid>
-                )} */}
             </Grid>
             break
         case SearchCategory.Communities:
@@ -507,7 +497,18 @@ const SearchScreen = (props: Props) => {
                 justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                    {social.getCommunities().map((x,i) => 
+                        <Grid item key={x.name}>
+                            <CommunityCard
+                                commName={x.name}
+                                commDesc={x.description}
+                                numOfMembers={x.members.length}
+                                numOfTilemaps={0}
+                                numOfTilesets={0}
+                            />
+                        </Grid>
+                    )}
+                {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <CommunityCard
                             commName="RPGs Done Right"
@@ -516,7 +517,7 @@ const SearchScreen = (props: Props) => {
                             numOfTilemaps={Math.random() * 100}
                             numOfTilesets={Math.random() * 100}
                         />    
-                    </Grid>)}
+                    </Grid>)} */}
             </Grid>
             break
         case SearchCategory.Contests:
@@ -524,7 +525,21 @@ const SearchScreen = (props: Props) => {
                 justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                    {social.getContests().map((x,i) => 
+                        <Grid item key={x.name}>
+                            <ContestCard
+                                payload={{
+                                    contestName: x.name,
+                                    startDate: new Date(x.startDate),
+                                    endDate: new Date(x.endDate),
+                                    ownerName: x.owner,
+                                    contestTheme: 'undefined',
+                                    numOfParticipates: x.participates.length
+                                }}
+                            />
+                        </Grid>
+                    )}
+                {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <ContestCard
                             payload={{
@@ -536,7 +551,7 @@ const SearchScreen = (props: Props) => {
                                 numOfParticipates: (Math.random() * 100)
                             }}
                         />    
-                    </Grid>)}
+                    </Grid>)} */}
             </Grid>
             break
     }

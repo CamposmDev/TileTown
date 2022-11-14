@@ -100,162 +100,6 @@ const UserProfileScreen = () => {
                             tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
                         />
                     </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-1'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_2_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-2'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_3_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-3'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_4_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-4'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/level5_1.png'
-                            tilemapName='McBendorjee vs Robots Level 5-1'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 10000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/Level5_2.png'
-                            tilemapName='McBendorjee vs Robots Level 5-2'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/Level5_3.png'
-                            tilemapName='McBendorjee vs Robots Level 5-3'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/Level5_4.png'
-                            tilemapName='McBendorjee vs Robots Level 5-4'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/level5_1.png'
-                            tilemapName='McBendorjee vs Robots Level 5-1'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-1'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_2_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-2'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_3_alt.png'
-                            tilemapName='McBendorjee vs Robots Level 1-3'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level6/Level6_4.png'
-                            tilemapName='McBendorjee vs Robots Level 6-4'
-                            author='Camposm'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid>
                 </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
@@ -275,246 +119,18 @@ const UserProfileScreen = () => {
                         tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
                     />
                 </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                            tilemapName='McBendorjee vs Robots Tileset'
-                            author='Emdoiqua'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                </Grid>
-                <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid>
+                    <Grid item>
+                        <TileItemCard
+                                preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
+                                tilemapName='McBendorjee vs Robots Tileset'
+                                author='Emdoiqua'
+                                publishDate={new Date(2022,11,5)}
+                                views={Math.random() * 3000}
+                                comments={Math.random() * 3000}
+                                likes={Math.random() * 3000}
+                                tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
+                            />
+                    </Grid>
                 </Grid>
                 </TabPanel>
                     <TabPanel value={value} index={2}>
@@ -522,7 +138,7 @@ const UserProfileScreen = () => {
                             justifyContent={'center'}
                             spacing={1}
                             mt={1}>
-                        {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                        {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                             <Grid item>
                                 <ContestCard
                                     payload={{
@@ -534,7 +150,7 @@ const UserProfileScreen = () => {
                                         numOfParticipates: (Math.random() * 100)
                                     }}
                                 />    
-                            </Grid>)}
+                            </Grid>)} */}
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
@@ -542,7 +158,7 @@ const UserProfileScreen = () => {
                 justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <CommunityCard
                             commName="RPGs Done Right"
@@ -551,7 +167,7 @@ const UserProfileScreen = () => {
                             numOfTilemaps={Math.random() * 100}
                             numOfTilesets={Math.random() * 100}
                         />    
-                    </Grid>)}
+                    </Grid>)} */}
             </Grid>
                     </TabPanel>
                 </Box>
