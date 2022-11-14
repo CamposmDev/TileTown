@@ -227,6 +227,32 @@ const CurrentLayerCanvas = () => {
     }
   };
 
+  const onMouseOut = ({ nativeEvent }: any): void => {
+    switch (currentEditControl) {
+      case TilemapEditControl.draw: {
+        edit.updateCurrentSelection([]);
+        break;
+      }
+      case TilemapEditControl.erase: {
+        break;
+      }
+      case TilemapEditControl.shapeFill: {
+        break;
+      }
+      case TilemapEditControl.fillSelect: {
+        break;
+      }
+      case TilemapEditControl.magicWand: {
+        break;
+      }
+      case TilemapEditControl.sameTileSelect: {
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
   // const updateCurrentTile = (): void => {
   //   if (canvasRef.current && contextRef.current) {
   //     const canvas: HTMLCanvasElement = canvasRef.current;
@@ -375,6 +401,7 @@ const CurrentLayerCanvas = () => {
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
+        onMouseOut={onMouseOut}
         ref={canvasRef}
       >
         Please user a browser that supports HTML Canvas
