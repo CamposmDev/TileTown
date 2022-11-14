@@ -20,4 +20,5 @@ jobs:
       - name: SSH into Host
         run: |
           ls
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash /var/www/deploy.sh"
+          scp -r ./* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:temp
+  #        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash /var/www/deploy.sh"
