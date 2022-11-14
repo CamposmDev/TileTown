@@ -58,6 +58,7 @@ export default function NavDrawer() {
         // })
         return <Grid item key={x} mb={1}>
           <UserProfileCard
+            userId={x}
             firstName={x}
             lastName={x}
             username={x}

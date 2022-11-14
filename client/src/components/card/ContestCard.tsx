@@ -1,4 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
+import { SocialContext } from "src/context/social"
 import { parseDateToStr, calcTimeLeft } from '../util/DateUtils'
 
 interface Props {
@@ -6,15 +8,33 @@ interface Props {
         contestName: string,
         startDate: Date,
         endDate: Date,
-        ownerName: string
+        owner: string
         contestTheme: string
         numOfParticipates: number
     }
 }
 
-const ContestCard = (props: Props) => {    
+const ContestCard = (props: Props) => {
+    const social = useContext(SocialContext)
+    const [user, setUser] = useState({
+        userId: '',
+        firstName: '',
+        lastName: '',
+        username: ''
+    })    
     const timeLeft = calcTimeLeft(props.payload.startDate, props.payload.endDate)
-
+    useEffect(() => {
+        social.getUserById(props.payload.owner).then(u => {
+            if (u) {
+                setUser({
+                    userId: u.id,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    username: u.username
+                })
+            }
+        })
+    }, [])
     return (
             <Card>
                 <CardActionArea>
@@ -26,7 +46,7 @@ const ContestCard = (props: Props) => {
                                     <Typography variant='caption'>{timeLeft}</Typography>
                                 </Card>
                                 <Box flexGrow={1}/>
-                                <Typography variant='caption'><b>By</b>:&ensp;{props.payload.ownerName}</Typography>
+                                <Typography variant='caption'><b>By</b>:&ensp;{user.username}</Typography>
                             </Stack>
                             <Box flexGrow={1}/>
                             <Stack direction='column'>
