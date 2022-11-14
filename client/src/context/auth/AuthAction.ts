@@ -9,6 +9,8 @@ export type AuthAction =
 | ChangePassword
 | ChangeEmail
 | GetLoggedIn
+| AddFriend
+| RemoveFriend
 
 
 export enum AuthActionType {
@@ -23,8 +25,8 @@ export enum AuthActionType {
     changePassword = "CHANGE_PASSWORD",
     changeEmail = "CHANGE_EMAIL",
 
-    displayError = "DISPLAY_ERROR",
-    clearError = "CLEAR_ERROR"
+    addFriend = 'ADD_FRIEND',
+    removeFriend = 'REMOVE_FRIEND'
 }
 
 export type GetLoggedIn = {
@@ -73,6 +75,20 @@ export type ChangeEmail = {
     type: AuthActionType.changeEmail,
     payload: {
         email: string
+    }
+}
+
+export type AddFriend = {
+    type: AuthActionType.addFriend,
+    payload: {
+        userId: string
+    }
+}
+
+export type RemoveFriend = {
+    type: AuthActionType.removeFriend,
+    payload: {
+        userId: string
     }
 }
 

@@ -4,6 +4,7 @@ import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, Tileset
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { snackbarClasses } from "@mui/material"
+import { AuthStore } from "../auth/AuthStore"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -150,11 +151,12 @@ export class SocialStore {
         })
     }
 
-    public async addFriend(userId: string, snack?: SnackStore): Promise<void> {
+    public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                auth.addFriend(userId)
             }
         }).catch((e) => {
             if (e.response) {
@@ -164,11 +166,12 @@ export class SocialStore {
         })
     }
 
-    public async removeFriend(userId: string, snack?: SnackStore): Promise<void> {
+    public async removeFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.removeFriend(userId)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                auth.removeFriend(userId)
             }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
