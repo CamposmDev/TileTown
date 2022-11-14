@@ -19,7 +19,7 @@ import { SnackContext } from 'src/context/snack';
 const LoginScreen = () => {
     const auth = useContext(AuthContext)
     const snack = useContext(SnackContext)
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         let email = formData.get('email')?.toString()
