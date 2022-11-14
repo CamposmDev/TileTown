@@ -172,12 +172,14 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.fillSelect: {
+        startSpaceFill({ nativeEvent });
         break;
       }
       case TilemapEditControl.magicWand: {
         break;
       }
       case TilemapEditControl.sameTileSelect: {
+        selectSameTiles({ nativeEvent });
         break;
       }
       default:
@@ -199,6 +201,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.fillSelect: {
+        drawSpaceFill({ nativeEvent });
         break;
       }
       case TilemapEditControl.magicWand: {
@@ -224,6 +227,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.fillSelect: {
+        setStartingTile(null);
         break;
       }
       case TilemapEditControl.magicWand: {
@@ -253,6 +257,7 @@ const CurrentLayerCanvas = () => {
         break;
       }
       case TilemapEditControl.fillSelect: {
+        setStartingTile(null);
         break;
       }
       case TilemapEditControl.magicWand: {
@@ -380,7 +385,6 @@ const CurrentLayerCanvas = () => {
   };
 
   const endSpaceFill = (): void => {
-    console.log(edit.state.currentSelection);
     edit.updateCurrentLayerData(currentTileIndex);
     edit.updateCurrentSelection([]);
     edit.renderCurrentLayerRender(true);
@@ -413,6 +417,21 @@ const CurrentLayerCanvas = () => {
             selection = selection.concat(addRowSpaceFill(currentTile.x, i));
         edit.updateCurrentSelection(selection);
       }
+    }
+  };
+
+  const selectSameTiles = ({ nativeEvent }: any): void => {
+    if (canvasRef.current) {
+      const canvas: HTMLCanvasElement = canvasRef.current;
+      const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
+      const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
+      const currentTileData =
+        currentLayer[currentTile.x + width * currentTile.y];
+      const selection: number[] = [];
+      for (let i = 0; i < currentLayer.length; i++) {
+        if (currentLayer[i] === currentTileData) selection.push(i);
+      }
+      edit.updateCurrentSelection(selection);
     }
   };
 
