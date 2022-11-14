@@ -73,7 +73,7 @@ export default class CommunityController {
         if (updatedUser === null) {
             return res.status(500).json({ message: "Error updating users joined communities"});
         }
-        let updatedCommunity = await db.communities.updateCommunity(updatedUser.id, {members: community.members});
+        let updatedCommunity = await db.communities.updateCommunity(community.id, {members: community.members});
         if (updatedCommunity === null) {
             return res.status(500).json({ message: "Error updating communities members"});
         }
