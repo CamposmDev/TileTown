@@ -146,7 +146,6 @@ export class TilemapEditStore {
    * @param payload the data associated with the action
    */
   protected handleAction(action: TilemapEditorAction): void {
-    console.log(action.type);
     const { type, payload } = action;
     switch (type) {
       case TilemapEditorActionType.CREATE_NEW_TILEMAP: {
@@ -248,8 +247,6 @@ export class TilemapEditStore {
       renderCurrentLayerCanvas: false,
       renderTileSelectorCanvas: false,
     });
-    console.log(this._state.currentTileIndex);
-    console.log(this._state.currentSelection);
   }
   protected handleUpdateCurrentTile(currentTileIndex: number): void {
     this.setEdit({
@@ -267,8 +264,6 @@ export class TilemapEditStore {
       renderCurrentLayerCanvas: false,
       renderTileSelectorCanvas: true,
     });
-    console.log(this._state.currentTileIndex);
-    console.log(this._state.currentSelection);
   }
 
   protected handleCreateNewTilemap(Tilemap: Tilemap): void {

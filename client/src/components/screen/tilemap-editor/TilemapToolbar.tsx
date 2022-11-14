@@ -54,39 +54,41 @@ const TilemapToolbar = () => {
   let selectColor: Color = unselectedColor;
   let magicColor: Color = unselectedColor;
   let sameColor: Color = unselectedColor;
-  useEffect(() => {
-    switch (currentEditControl) {
-      case TilemapEditControl.draw: {
-        drawColor = selectedColor;
-        break;
-      }
-      case TilemapEditControl.erase: {
-        eraseColor = selectedColor;
-        break;
-      }
-      case TilemapEditControl.shapeFill: {
-        fillColor = selectedColor;
-        break;
-      }
-      case TilemapEditControl.fillSelect: {
-        selectColor = selectedColor;
-        break;
-      }
-      case TilemapEditControl.magicWand: {
-        magicColor = selectedColor;
-        break;
-      }
-      case TilemapEditControl.sameTileSelect: {
-        sameColor = selectedColor;
-        break;
-      }
-      default:
-        break;
-    }
-  }, [currentEditControl]);
 
+  switch (currentEditControl) {
+    case TilemapEditControl.draw: {
+      drawColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.erase: {
+      eraseColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.shapeFill: {
+      fillColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.fillSelect: {
+      selectColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.magicWand: {
+      magicColor = selectedColor;
+      break;
+    }
+    case TilemapEditControl.sameTileSelect: {
+      sameColor = selectedColor;
+      break;
+    }
+    default:
+      break;
+  }
+
+  const setEditControl = (editControl: TilemapEditControl) => {
+    edit.updateEditControl(editControl);
+  };
   return (
-    <div>
+    <Grid alignItems="center">
       <Toolbar sx={{ boxShadow: 1 }} variant="dense">
         <Grid container direction="row" alignItems="center">
           <PropertyDrawer />
@@ -119,7 +121,7 @@ const TilemapToolbar = () => {
                 <IconButton
                   color="primary"
                   sx={{ bgColor: drawColor }}
-                  onClick={() => console.log("double clicked")}
+                  onClick={() => setEditControl(TilemapEditControl.draw)}
                   children={<Edit />}
                 />
               }
@@ -128,7 +130,11 @@ const TilemapToolbar = () => {
               title="Eraser"
               arrow
               children={
-                <IconButton color="primary">
+                <IconButton
+                  color="primary"
+                  sx={{ bgColor: eraseColor }}
+                  onClick={() => setEditControl(TilemapEditControl.erase)}
+                >
                   <FaEraser></FaEraser>
                 </IconButton>
               }
@@ -136,24 +142,54 @@ const TilemapToolbar = () => {
             <Tooltip
               title="Space Fill"
               arrow
-              children={<IconButton color="primary" children={<Square />} />}
+              children={
+                <IconButton
+                  color="primary"
+                  sx={{ bgColor: fillColor }}
+                  onClick={() => setEditControl(TilemapEditControl.shapeFill)}
+                  children={<Square />}
+                />
+              }
             />
             <Tooltip
               title="Space Select"
               arrow
-              children={<IconButton color="primary" children={<SelectAll />} />}
+              children={
+                <IconButton
+                  color="primary"
+                  sx={{ bgColor: selectColor }}
+                  onClick={() =>
+                    edit.updateEditControl(TilemapEditControl.fillSelect)
+                  }
+                  children={<SelectAll />}
+                />
+              }
             />
             <Tooltip
               title="Magic Wand"
               arrow
               children={
-                <IconButton color="primary" children={<AutoFixHigh />} />
+                <IconButton
+                  color="primary"
+                  sx={{ bgColor: magicColor }}
+                  onClick={() => setEditControl(TilemapEditControl.magicWand)}
+                  children={<AutoFixHigh />}
+                />
               }
             />
             <Tooltip
               title="Same Tile Selector"
               arrow
-              children={<IconButton color="primary" children={<Schema />} />}
+              children={
+                <IconButton
+                  color="primary"
+                  sx={{ bgColor: sameColor }}
+                  onClick={() =>
+                    setEditControl(TilemapEditControl.sameTileSelect)
+                  }
+                  children={<Schema />}
+                />
+              }
             />
           </Grid>
           <Grid item>
@@ -179,7 +215,7 @@ const TilemapToolbar = () => {
           </Stack>
         </Grid>
       </Toolbar>
-    </div>
+    </Grid>
   );
 };
 export default TilemapToolbar;
