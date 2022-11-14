@@ -15,7 +15,7 @@ const NotificationSnack = () => {
                 open={snack.open()}
                 TransitionComponent={SLIDE_DOWN_TRANSITION}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                autoHideDuration={5000}
+                autoHideDuration={3500}
                 onClose={() => snack.clearMessage()}
             >
                 <Alert severity={snack.getSeverity()}>{snack.getMessage()}</Alert>

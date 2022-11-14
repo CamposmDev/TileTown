@@ -23,6 +23,9 @@ import ModalTester from "./components/ModalTester";
 import NotificationSnack from "./components/modals/NotificationSnack";
 import { SnackContextProvider } from "./context/snack";
 import { SocialContextProvider } from "./context/social";
+import { ModalContextProvider } from "./context/modal";
+import CreateCommunityModal from "./components/modals/CreateCommunityModal";
+import CreateContestModal from "./components/modals/CreateContestModal";
 
 /**
  * Pixel Editors
@@ -54,6 +57,7 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <SnackContextProvider key={'snack-context-provider'}>
+          <ModalContextProvider>
           <SocialContextProvider key={'social-contest-provider'}>
             <AuthContextProvider key={"auth-context-provider"}>
               <NavBar />
@@ -105,8 +109,11 @@ const App = () => {
                 <Route path="/modals" element={<ModalTester />} />
               </Routes>
               <NotificationSnack />
+              <CreateCommunityModal/>
+              <CreateContestModal/>
             </AuthContextProvider>
           </SocialContextProvider>
+          </ModalContextProvider>
         </SnackContextProvider>
       </ThemeProvider>
     </BrowserRouter>
