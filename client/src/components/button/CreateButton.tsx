@@ -51,6 +51,11 @@ const CreateButton = (props: MenuItemProps) => {
         handleMenuClose()
     }
 
+    const showCreateTilesetModal = () => {
+        modal.showUploadTilesetModal()
+        handleMenuClose()
+    }
+
     const menu = (
         <Menu
             anchorEl={anchorEl}
@@ -61,7 +66,7 @@ const CreateButton = (props: MenuItemProps) => {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
             <MenuItem onClick={handleMenuClose} component={Link} to='/create/tilemap'>Tilemap</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to='/create/tileset'>Tileset</MenuItem>
+            <MenuItem onClick={showCreateTilesetModal} component={Link} to='/profile'>Tileset</MenuItem>
             <MenuItem onClick={showCreateCommunityModal}>Create Community</MenuItem>
             <MenuItem onClick={showCreateContestModal}>Create Contest</MenuItem>
         </Menu>

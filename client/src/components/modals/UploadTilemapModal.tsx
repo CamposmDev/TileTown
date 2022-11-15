@@ -92,7 +92,7 @@ const UploadTilemapModal = () => {
                                 endAdornment: <InputAdornment position="start">JSON</InputAdornment>
                             }}
                         />
-                        <Button variant="contained">Browser</Button>
+                        <Button variant="contained">Browse</Button>
                     </Stack>
                 </Grid>
             </Box>

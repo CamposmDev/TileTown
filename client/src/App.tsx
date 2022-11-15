@@ -29,6 +29,7 @@ import CreateContestModal from "./components/modals/CreateContestModal";
 import DeleteCommunityModal from "./components/modals/DeleteCommunityModal";
 import DeleteContestModal from "./components/modals/DeleteContestModal";
 import { TilemapEditContextProvider } from "./context/tilemapEditor";
+import UploadTilesetModal from "./components/modals/UploadTilesetModal";
 
 /**
  * Pixel Editors
@@ -123,6 +124,7 @@ const App = () => {
               <CreateContestModal/>
               <DeleteCommunityModal/>
               <DeleteContestModal/>
+              <UploadTilesetModal/>
           </SocialContextProvider>
           </ModalContextProvider>
         </SnackContextProvider>
