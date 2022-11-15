@@ -319,7 +319,7 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;
-      payload: { currentTileIndex: number };
+      payload: { currentTileIndex: number; updateData: number[] };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET;

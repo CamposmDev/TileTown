@@ -99,10 +99,16 @@ export class TilemapEditStore {
     });
   }
 
-  public async updateCurrentLayerData(currentTileIndex: number): Promise<void> {
+  public async updateCurrentLayerData(
+    currentTileIndex: number,
+    currentSelection?: number[]
+  ): Promise<void> {
+    const updateData = currentSelection
+      ? currentSelection
+      : this._state.currentSelection;
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA,
-      payload: { currentTileIndex },
+      payload: { currentTileIndex, updateData },
     });
   }
 
@@ -174,7 +180,10 @@ export class TilemapEditStore {
         break;
       }
       case TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA: {
-        this.handleUpdateCurrentLayerData(payload.currentTileIndex);
+        this.handleUpdateCurrentLayerData(
+          payload.currentTileIndex,
+          payload.updateData
+        );
         break;
       }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
@@ -208,11 +217,14 @@ export class TilemapEditStore {
       }
     }
   }
-  protected handleUpdateCurrentLayerData(currentTileIndex: number): void {
+  protected handleUpdateCurrentLayerData(
+    currentTileIndex: number,
+    updateData: number[]
+  ): void {
     const updatedLayerData: number[] =
       this._state.Tilemap.layers[this._state.currentLayerIndex].data;
-    for (let i = 0; i < this._state.currentSelection.length; i++) {
-      updatedLayerData[this._state.currentSelection[i]] = currentTileIndex;
+    for (let i = 0; i < updateData.length; i++) {
+      updatedLayerData[updateData[i]] = currentTileIndex;
     }
     const updatedTileMap = this._state.Tilemap;
     updatedTileMap.layers[this._state.currentLayerIndex].data =
