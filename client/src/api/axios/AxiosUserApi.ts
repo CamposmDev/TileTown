@@ -1,8 +1,14 @@
 import { Axios, AxiosResponse } from 'axios';
-
 import { User, Tilemap } from "@types";
-import { LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq, UpdateEmailReq, UpdatePasswordReq } from "@requests/user";
-import { LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes, UpdateEmailRes, UpdatePasswordRes } from "@responses/user";
+import { 
+    LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq, UpdateEmailReq, 
+    UpdatePasswordReq, ResetPasswordReq
+} from "@requests/user";
+
+import { 
+    LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes, UpdateEmailRes, 
+    UpdatePasswordRes, ResetPasswordRes
+} from "@responses/user";
 
 import AxiosApi from './AxiosApi';
 
@@ -43,6 +49,9 @@ export default class AxiosUserApi  {
     }
     async removeFriend(userId: string) {
         return AxiosApi.put(`/user/friend/remove/${userId}`)
+    }
+    async resetPassword(email: string): Promise<AxiosResponse<ResetPasswordRes>> {
+        return AxiosApi.put<ResetPasswordRes, AxiosResponse<ResetPasswordRes>, ResetPasswordReq>(`/user/reset/password`, { email: email});
     }
 }
 
