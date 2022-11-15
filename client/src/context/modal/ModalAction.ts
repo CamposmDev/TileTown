@@ -3,12 +3,14 @@ export type ModalAction =
 | ShowCreateContest
 | ShowDeleteCommunity
 | ShowDeleteContest
+| ShowUploadTileset
 
 export enum ModalActionType {
     showCreateCommunity = 'SHOW_CREATE_COMMUNITY',
     showCreateContest = 'SHOW_CREATE_CONTEST',
     showDeleteCommunity = 'SHOW_DELETE_COMMUNITY',
-    showDeleteContest = 'SHOW_DELETE_CONTEST'
+    showDeleteContest = 'SHOW_DELETE_CONTEST',
+    showUploadTileset = 'SHOW_UPLOAD_TILESET'
 }
 
 export type ShowCreateCommunity = {
@@ -25,4 +27,8 @@ export type ShowDeleteCommunity = {
 
 export type ShowDeleteContest = {
     type: ModalActionType.showDeleteContest
+}
+
+export type ShowUploadTileset = {
+    type: ModalActionType.showUploadTileset
 }

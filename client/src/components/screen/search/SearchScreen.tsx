@@ -534,8 +534,7 @@ const SearchScreen = (props: Props) => {
                                     startDate: new Date(x.startDate),
                                     endDate: new Date(x.endDate),
                                     owner: x.owner,
-                                    contestTheme: 'undefined',
-                                    numOfParticipates: x.participates.length
+                                    participates: x.participates.length
                                 }}
                             />
                         </Grid>

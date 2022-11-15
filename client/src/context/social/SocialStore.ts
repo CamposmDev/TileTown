@@ -3,7 +3,7 @@ import { CommunityApi, ContestApi, ForumApi, UserApi } from "src/api"
 import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
-import { AuthStore } from "../auth/AuthStore"
+import { AuthState, AuthStore } from "../auth/AuthStore"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -18,10 +18,12 @@ export interface SocialState {
 export class SocialStore {
     private readonly _social: SocialState
     private readonly _setSocial: (social: SocialState) => void
+    private readonly _auth: AuthStore
 
-    constructor(social: SocialState, setSocial: (social: SocialState) => void) {
+    constructor(social: SocialState, setSocial: (social: SocialState) => void, auth: AuthStore) {
         this._social = social
         this._setSocial = setSocial
+        this._auth = auth
     }
 
     public getUsers(): User[] {
@@ -36,7 +38,7 @@ export class SocialStore {
         return this._social.contests
     }
 
-    public async createCommunity(name: string, description: string, snack?: SnackStore): Promise<void> {
+    public async createCommunity(name: string, description: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.createCommunity({
             community: {
                 name: name,
@@ -46,17 +48,19 @@ export class SocialStore {
         res.then((res) => {
             if (res.status === 201) {
                 snack?.showSuccessMessage(res.data.message)
+                auth?.addCommunity(res.data.community.id)
             }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 
-    public async deleteCommunityById(communityId: string, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityById(communityId: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                auth?.deleteCommunity(communityId)
                 this.handleAction({
                     type: SocialActionType.getCommunityByName,
                     payload: {
@@ -69,7 +73,7 @@ export class SocialStore {
         })
     }
     
-    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.getCommunities(commName)
         res.then((res) => {
             if (res.status === 200 && res.data.communities) {
@@ -78,7 +82,7 @@ export class SocialStore {
                     if (userId && commName && x.name.localeCompare(commName) === 0) {
                         let commId = x.id
                         if (x.owner.localeCompare(userId) === 0) {
-                            this.deleteCommunityById(commId, snack)
+                            this.deleteCommunityById(commId, auth, snack)
                         } else {
                             snack?.showErrorMessage(`You do not own community '${x.name}'`)
                         }
@@ -187,6 +191,24 @@ export class SocialStore {
         })
     }
 
+    public async getCommunitiesById(arr: string[] | undefined): Promise<Community[]> {
+        if (arr) {
+            let resultArr: Community[] = []
+            arr.map(x => {
+                CommunityApi.getCommunityById(x).then(res => {
+                    if (res.status === 200) {
+                        console.log('hmmm')
+                        console.log(res.data.community)
+                        resultArr.push(res.data.community)
+                    }
+                }).catch(e => console.log('uh oh'))
+            })
+            return resultArr
+        } else {
+            return []
+        }
+    }
+
     public async getCommunityByName(query: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.getCommunities(query)
         res.then((res) => {
@@ -205,6 +227,23 @@ export class SocialStore {
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
+    }
+
+    public async getContestsById(arr: string[] | undefined): Promise<Contest[]> {
+        if (arr) {
+            let resultArr: Contest[] = []
+            arr.map((id) => {
+                let res = ContestApi.getContestById(id)
+                res.then(res => {
+                    if (res.status === 200) {
+                        resultArr.push(res.data.contest)
+                    }
+                })
+            })
+            return resultArr
+        } else {
+            return []
+        }
     }
 
     public async getContestByName(query: string, snack?: SnackStore): Promise<void> {

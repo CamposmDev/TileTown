@@ -1,4 +1,6 @@
-import { useState, createContext } from "react"
+import { useState, createContext, useContext } from "react"
+import { AuthContext } from "../auth";
+import { AuthStore } from "../auth/AuthStore";
 import { SocialState, SocialStore } from "./SocialStore";
 
 const SocialContext = createContext<SocialStore>(new SocialStore(
@@ -10,9 +12,10 @@ const SocialContext = createContext<SocialStore>(new SocialStore(
         communities: [],
         contests: [],
         forumPosts: []
-    }, () => {}))
+    }, () => {}, new AuthStore({loggedIn: false, usr: null}, () => {}, () => {})))
 
 function SocialContextProvider(props: Record<string, any>) {
+    const auth = useContext(AuthContext)
     const [social, setSocial] = useState<SocialState>(
         {
             currentUser: undefined,
@@ -23,7 +26,7 @@ function SocialContextProvider(props: Record<string, any>) {
             contests: [],
             forumPosts: []
         })
-    const Social = new SocialStore(social, setSocial)
+    const Social = new SocialStore(social, setSocial, auth)
     return (
         <SocialContext.Provider value={Social}>
             {props.children}
