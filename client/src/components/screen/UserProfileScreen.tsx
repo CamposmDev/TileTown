@@ -1,7 +1,10 @@
-import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Grid, scopedCssBaselineClasses, Stack, Tab, Tabs, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
+import { SocialContext } from "src/context/social";
+import { SocialActionType } from "src/context/social/SocialAction";
+import { Community, Contest } from "@types";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
@@ -42,9 +45,21 @@ interface TabPanelProps {
 
 const UserProfileScreen = () => {
     const auth = useContext(AuthContext)
+    const social = useContext(SocialContext)
     const nav = useNavigate()
+    const [contests, setContests] = useState<Contest[]>([])
+    const [communities, setCommunities] = useState<Community[]>([])
     useEffect(() => {
-        if (!auth.isLoggedIn()) nav('/')
+        if (!auth.isLoggedIn()) {
+            nav('/')
+        } else {
+            social.getContestsById(auth.getUsr()?.joinedContests).then(arr => {
+                setContests(arr)
+            })
+            social.getCommunitiesById(auth.getUsr()?.joinedCommunities).then(arr => {
+                setCommunities(arr)
+            })
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const [value, setValue] = useState(0)
@@ -54,12 +69,38 @@ const UserProfileScreen = () => {
 
     let user = auth.getUsr()
     let profile = <div/>
+    let contestCards: JSX.Element | JSX.Element[] = <div>No contests found</div>
+    let communityCards: JSX.Element | JSX.Element[] = <div>No communities found</div>
     if (user) {
         profile = <UserProfileBox
             firstName={user.firstName}
             lastName={user.lastName}
             username={user.username}
         />
+        contestCards = contests.map((x,i) =>
+                <Grid item key={x.id}>
+                    <ContestCard
+                        payload={{
+                            contestName: x.name,
+                            startDate: new Date(x.startDate),
+                            endDate: new Date(x.endDate),
+                            owner: x.owner,
+                            participates: x.participates.length
+                        }}
+                    />
+                </Grid>
+        )
+        communityCards = communities.map((x,i) => 
+            <Grid item key={x.id}>
+                <CommunityCard
+                    commName={x.name}
+                    commDesc={x.description}
+                    numOfMembers={x.members.length}
+                    numOfTilemaps={0}
+                    numOfTilesets={0}
+                />
+            </Grid>
+        )
     }
     return (
         <Box>
@@ -138,6 +179,7 @@ const UserProfileScreen = () => {
                             justifyContent={'center'}
                             spacing={1}
                             mt={1}>
+                                {contestCards}
                         {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                             <Grid item>
                                 <ContestCard
@@ -158,6 +200,7 @@ const UserProfileScreen = () => {
                 justifyContent={'center'}
                 spacing={1}
                 mt={1}>
+                    {communityCards}
                 {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item>
                         <CommunityCard

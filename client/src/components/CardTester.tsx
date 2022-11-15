@@ -109,8 +109,7 @@ const CardTester = () => {
                     owner: 'Camposm',
                     startDate: startDate1,
                     endDate: endDate1,
-                    contestTheme: 'Fantasy',
-                    numOfParticipates: 32
+                    participates: 32
                 }
             }/>
         </Grid>

@@ -59,10 +59,10 @@ const App = () => {
     <BrowserRouter>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
+        <AuthContextProvider key={"auth-context-provider"}>
         <SnackContextProvider key={'snack-context-provider'}>
-          <ModalContextProvider>
+          <ModalContextProvider key={'modal-context-provider'}>
           <SocialContextProvider key={'social-contest-provider'}>
-            <AuthContextProvider key={"auth-context-provider"}>
               <NavBar />
               <Routes>
                 <Route path="/" element={<SplashScreen />} />
@@ -123,10 +123,10 @@ const App = () => {
               <CreateContestModal/>
               <DeleteCommunityModal/>
               <DeleteContestModal/>
-            </AuthContextProvider>
           </SocialContextProvider>
           </ModalContextProvider>
         </SnackContextProvider>
+        </AuthContextProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
