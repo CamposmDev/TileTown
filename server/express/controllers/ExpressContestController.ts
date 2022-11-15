@@ -24,6 +24,22 @@ export default class ContestController {
         /** Otherwise return all the data about the contest back to the client */
         return res.status(200).json({ message: "Got a contest!", contest: contest })
     }
+    public async getContests(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.query) {
+            return res.status(400).json({ message: "Missing query options" });
+        }
+
+        let name = req.query.name ? req.query.name.toString() : "";
+        let contests = await db.contests.getContests(name);
+        if (contests.length === 0) {
+            return res.status(404).json({ message: `No contests found with name "${name}"`});
+        }
+
+        return res.status(200).json({message: "Got contests!", contests: contests});
+    }
 
     public async createContest(req: Request, res: Response): Promise<Response> {
         if (!req || !res || !req.body) {

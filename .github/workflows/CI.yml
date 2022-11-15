@@ -5,14 +5,19 @@ name: CI
 # CI tests should be triggered whenever we make a push, be that to
 # main or the development branch. 
 
-on: [workflow_call, workflow_dispatch, push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "*"
+    
 
 jobs:
 
   # First, we check that the project compiles/builds successfully
   Compile:
     # The type of machine we want our tests to run on - in this, the latest version of linux ubuntu
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps: 
 
       # Checkout the branch we want to run 
@@ -23,22 +28,4 @@ jobs:
         run: |
           npm --prefix server install
           npm --prefix server run build
-          
-  # Next, check if the unit tests are passing
-  Test: 
-    # Specify the operating system
-    runs-on: ubuntu-latest
-    
-    # This is how we require that Test runs only if Compile is successful
-    needs: Compile
-
-    steps:
-
-      # Checkout the branch
-      - uses: actions/checkout@v3
-
-      # Run the unit tests
-      - name: Unit Tests
-        run: |
-          npm --prefix server install 
-          npm --prefix server run test
+  

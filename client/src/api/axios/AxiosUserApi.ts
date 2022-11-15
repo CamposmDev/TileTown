@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 
 import { User, Tilemap } from "@types";
 import { LoginReq, RegisterReq, LogoutReq, UpdateUsernameReq, UpdateEmailReq, UpdatePasswordReq } from "@requests/user";
@@ -23,9 +23,6 @@ export default class AxiosUserApi  {
     async delete(): Promise<AxiosResponse<DeleteRes>> {
         return AxiosApi.delete<DeleteRes, AxiosResponse<DeleteRes>, DeleteReq>("/user");
     }
-    async tilemaps(): Promise<AxiosResponse<GetTilemapsRes>> {
-        return AxiosApi.get<GetTilemapsRes, AxiosResponse<GetTilemapsRes>, GetTilemapsReq>("/user/tilemaps");
-    }
     async updateUsername(payload: UpdateUsernameReq): Promise<AxiosResponse> {
         return AxiosApi.put<UpdateUsernameRes, AxiosResponse<UpdateUsernameRes>, UpdateUsernameReq>('/user/username', payload)
     }
@@ -34,6 +31,18 @@ export default class AxiosUserApi  {
     }
     async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
         return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
+    }
+    async getUserById(userId: string) {
+        return AxiosApi.get(`/user/${userId}`)
+    }
+    async getUsers(payload: {username: string | undefined}) {
+        return AxiosApi.post('/user/users', payload)
+    }
+    async addFriend(userId: string) {
+        return AxiosApi.put(`/user/friend/add/${userId}`)
+    }
+    async removeFriend(userId: string) {
+        return AxiosApi.put(`/user/friend/remove/${userId}`)
     }
 }
 

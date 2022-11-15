@@ -1,0 +1,23 @@
+
+
+name: CD
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+
+  Deploy:
+    
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: SSH into Host
+        run: |
+          scp -r ./* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/TileTown
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash /var/www/deploy.sh"

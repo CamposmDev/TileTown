@@ -4,9 +4,11 @@ import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { AuthContext } from '../../context/auth';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
+import { SnackContext } from 'src/context/snack';
 
 const ChangeUsernameModal = () => {
     const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     const [isOpen, setIsOpen] = useState(false)
     const handleClose = () => setIsOpen(false);
 
@@ -14,7 +16,7 @@ const ChangeUsernameModal = () => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         let username: string | undefined = formData.get('username')?.toString()
-        auth.changeUsername(username)
+        auth.changeUsername(username, snack)
         handleClose()
     }
 

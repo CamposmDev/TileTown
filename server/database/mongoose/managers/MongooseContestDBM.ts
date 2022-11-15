@@ -15,6 +15,11 @@ export default class MongooseContestDBM implements ContestDBM {
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
+    async getContests(name: string): Promise<Contest[]> {
+        let contests = await ContestModel.find({name: new RegExp(`^${name}`, "i")});
+        return contests.map(c => this.parseContest(c));
+    }
+
     async getContestsById(contestIds: string[]): Promise<Contest[]> {
         if (!contestIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return []; }
         let contests = await ContestModel.find({_id: { $in: contestIds }});

@@ -1,37 +1,27 @@
-const nodemailer = require("nodemailer");
+import nodemailer from 'nodemailer';
 
-const sendEmail = async (email: string, subject: string, text: string) => {
-  console.log(email + " " + subject + " " + text);
-  let account = await nodemailer.createTestAccount();
-  console.log(account);
 
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: process.env.EMAIL,
-        pass: process.env.WORD,
-        clientId: process.env.OAUTH_CLIENTID,
-        clientSecret: process.env.OAUTH_CLIENT_SECRET,
-        refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+/**
+ * Nodemailers transporter object thingy used to send emails
+ */
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "tiletown123@gmail.com",
+      pass: "hwqqcfuauauvymbm"
+    },
+});
 
-    await transporter.sendMail({
-      from: "test@gmail.com",
-      to: email,
-      subject: subject,
-      text: text,
-    });
+/**
+ * The mailer class - basically used to send emails
+ */
+// export class Mailer { 
 
-    console.log("email sent successfully");
-  } catch (error) {
-    console.log(error, "email not sent");
-  }
-};
+//     public async sendMail(opts: MailOptions): Promise<void> {
+//         transporter.sendMail({ to: opts.to, from: opts.from, subject: opts.subject, text: opts.text });
+//     }
 
-module.exports = sendEmail;
+// }
+
+
+
