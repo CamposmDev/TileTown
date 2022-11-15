@@ -29,6 +29,7 @@ import CreateContestModal from "./components/modals/CreateContestModal";
 import DeleteCommunityModal from "./components/modals/DeleteCommunityModal";
 import DeleteContestModal from "./components/modals/DeleteContestModal";
 import { TilemapEditContextProvider } from "./context/tilemapEditor";
+import UploadTilesetModal from "./components/modals/UploadTilesetModal";
 
 /**
  * Pixel Editors
@@ -59,10 +60,10 @@ const App = () => {
     <BrowserRouter>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
+        <AuthContextProvider key={"auth-context-provider"}>
         <SnackContextProvider key={'snack-context-provider'}>
-          <ModalContextProvider>
+          <ModalContextProvider key={'modal-context-provider'}>
           <SocialContextProvider key={'social-contest-provider'}>
-            <AuthContextProvider key={"auth-context-provider"}>
               <NavBar />
               <Routes>
                 <Route path="/" element={<SplashScreen />} />
@@ -123,10 +124,11 @@ const App = () => {
               <CreateContestModal/>
               <DeleteCommunityModal/>
               <DeleteContestModal/>
-            </AuthContextProvider>
+              <UploadTilesetModal/>
           </SocialContextProvider>
           </ModalContextProvider>
         </SnackContextProvider>
+        </AuthContextProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

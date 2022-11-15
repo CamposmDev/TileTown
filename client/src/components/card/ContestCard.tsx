@@ -8,9 +8,8 @@ interface Props {
         contestName: string,
         startDate: Date,
         endDate: Date,
-        owner: string
-        contestTheme: string
-        numOfParticipates: number
+        owner: string,
+        participates: number
     }
 }
 
@@ -57,7 +56,7 @@ const ContestCard = (props: Props) => {
                                     {parseDateToStr(props.payload.startDate)}
                                 </Typography>
                                 <Typography variant='caption'>
-                                    <b>{props.payload.numOfParticipates.toFixed(0)}</b>&ensp;Participates
+                                    <b>{props.payload.participates.toFixed(0)}</b>&ensp;Participates
                                 </Typography>
                             </Stack>
                         </Grid>
