@@ -86,6 +86,7 @@ export default class TilemapController {
     }
 
     public async createTilemap(req: Request, res: Response): Promise<Response> {
+        console.log(req.file);
         //check to see if a request body was sent
         if (!req || !req.body) {
             return res.status(400).json({
