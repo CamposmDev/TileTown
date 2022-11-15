@@ -38,6 +38,14 @@ export default class TilesetController {
         if (!req.body.tileset) {
             return res.status(400).json({ message: "No tileset data provided" });
         }
+
+        // Convert the tileset attribute to valid JSON
+        try {
+            req.body.tileset = JSON.parse(req.body.tileset);
+        } catch {
+            return res.status(400).json({ messagee: "Tileset field is not valid JSON" });
+        }
+
         // Check if the tileset has a name
         if (!req.body.tileset.name) {
             return res.status(400).json({ message: "Tileset must have a name" });

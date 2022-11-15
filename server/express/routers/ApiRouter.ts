@@ -21,6 +21,6 @@ router.use('/tileset', TilesetRouter);
 router.use('/tilemap', TilemapRouter);
 router.use('/query', QueryRouter);
 
-router.get('/media/:id', express.static(path.join(__dirname, "../middleware/images")));
+router.use('/media', express.static(path.join(__dirname, "../middleware/images")));
 
 export default router;
