@@ -38,6 +38,14 @@ export default class TilesetController {
         if (!req.body.tileset) {
             return res.status(400).json({ message: "No tileset data provided" });
         }
+
+        // Convert the tileset attribute to valid JSON
+        try {
+            req.body.tileset = JSON.parse(req.body.tileset);
+        } catch {
+            return res.status(400).json({ messagee: "Tileset field is not valid JSON" });
+        }
+
         // Check if the tileset has a name
         if (!req.body.tileset.name) {
             return res.status(400).json({ message: "Tileset must have a name" });
@@ -54,8 +62,10 @@ export default class TilesetController {
             return res.status(400).json({ message: "Tileset must have a unique name" });
         }
 
+        console.log(`Image url: ${req.file?.filename}`);
+
         // Create the tileset
-        let tileset = await db.tilesets.createTileset(req.userId, req.body.tileset);
+        let tileset = await db.tilesets.createTileset(req.userId, {...req.body.tileset, image: req.file?.filename});
         if (tileset === null) {
             return res.status(500).json({ message: "Server Error. Error while creating tileset." });
         }
