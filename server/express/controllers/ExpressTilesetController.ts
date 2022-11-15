@@ -54,8 +54,10 @@ export default class TilesetController {
             return res.status(400).json({ message: "Tileset must have a unique name" });
         }
 
+        console.log(`Image url: ${req.file?.filename}`);
+
         // Create the tileset
-        let tileset = await db.tilesets.createTileset(req.userId, req.body.tileset);
+        let tileset = await db.tilesets.createTileset(req.userId, {...req.body.tileset, image: req.file?.filename});
         if (tileset === null) {
             return res.status(500).json({ message: "Server Error. Error while creating tileset." });
         }
