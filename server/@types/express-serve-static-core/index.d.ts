@@ -5,6 +5,7 @@
  * @author Peter Walsh
  */
 
+// @types/express-serve-static-core
 declare namespace Express {
     interface Request {
         userId: string

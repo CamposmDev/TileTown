@@ -124,7 +124,7 @@ export default class TilesetController {
             return res.status(500).json({ message: "Server Error. Error updating tileset" });
         }
 
-        return res.status(200).json({ message: "Updating a tileset!", tileset: updatedTileset });
+        return res.status(200).json({ message: "Updating a tileset!", tileset: updatedTileset, image: req.file });
     }
 
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { TilesetController } from "../controllers";
-import { Auth } from "../middleware";
+import { Auth, Upload } from "../middleware";
 
 const router: Router = Router();
 
@@ -8,7 +8,9 @@ const router: Router = Router();
 router.get("/:id", Auth.verifyJWT, TilesetController.getTilesetById);
 router.post("/", Auth.verifyJWT, TilesetController.createTileset);
 router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
-router.put("/:id", Auth.verifyJWT, TilesetController.updateTilesetById);
+
+router.put("/:id", Auth.verifyJWT, Upload.single('tileset'), TilesetController.updateTilesetById);
+
 router.delete("/:id", Auth.verifyJWT, TilesetController.deleteTilesetById);
 
 // SocialStatistics routes
