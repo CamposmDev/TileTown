@@ -20,4 +20,6 @@ router.use('/tileset', TilesetRouter);
 router.use('/tilemap', TilemapRouter);
 router.use('/query', QueryRouter);
 
+// router.get('/media/:id', e)
+
 export default router;
