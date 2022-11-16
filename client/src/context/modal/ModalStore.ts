@@ -5,6 +5,7 @@ export interface ModalState {
     showCreateContestModal: boolean
     showDeleteCommunityModal: boolean
     showDeleteContestModal: boolean
+    showUploadTilesetModal: boolean
 }
 
 export class ModalStore {
@@ -44,12 +45,19 @@ export class ModalStore {
         })
     }
 
+    public showUploadTilesetModal() {
+        this.handleAction({
+            type: ModalActionType.showUploadTileset
+        })
+    }
+
     public close() {
         this._setModal({
             showCreateCommunityModal: false,
             showCreateContestModal: false,
             showDeleteCommunityModal: false,
-            showDeleteContestModal: false
+            showDeleteContestModal: false,
+            showUploadTilesetModal: false
         })
     }
 
@@ -61,7 +69,8 @@ export class ModalStore {
                     showCreateCommunityModal: true,
                     showCreateContestModal: false,
                     showDeleteCommunityModal: false,
-                    showDeleteContestModal: false
+                    showDeleteContestModal: false,
+                    showUploadTilesetModal: false
                 })
                 break
             case ModalActionType.showCreateContest:
@@ -69,7 +78,8 @@ export class ModalStore {
                     showCreateCommunityModal: false,
                     showCreateContestModal: true,
                     showDeleteCommunityModal: false,
-                    showDeleteContestModal: false
+                    showDeleteContestModal: false,
+                    showUploadTilesetModal: false
                 })
                 break
             case ModalActionType.showDeleteCommunity:
@@ -77,7 +87,8 @@ export class ModalStore {
                     showCreateCommunityModal: false,
                     showCreateContestModal: false,
                     showDeleteCommunityModal: true,
-                    showDeleteContestModal: false
+                    showDeleteContestModal: false,
+                    showUploadTilesetModal: false
                 })
                 break
             case ModalActionType.showDeleteContest:
@@ -85,7 +96,17 @@ export class ModalStore {
                     showCreateCommunityModal: false,
                     showCreateContestModal: false,
                     showDeleteCommunityModal: false,
-                    showDeleteContestModal: true
+                    showDeleteContestModal: true,
+                    showUploadTilesetModal: false
+                })
+                break
+            case ModalActionType.showUploadTileset:
+                this._setModal({
+                    showCreateCommunityModal: false,
+                    showCreateContestModal: false,
+                    showDeleteCommunityModal: false,
+                    showDeleteContestModal: false,
+                    showUploadTilesetModal: true
                 })
                 break
         }

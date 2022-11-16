@@ -1,14 +1,16 @@
 import { AlertColor, snackbarClasses } from '@mui/material';
 import { User } from '@types';
 import axios from 'axios';
+import { timeStamp } from 'console';
 import { NavigateFunction } from 'react-router';
-import { UserApi } from "../../api/";
+import { CommunityApi, UserApi } from "../../api/";
 import { SnackStore } from '../snack/SnackStore';
+import { SocialStore } from '../social/SocialStore';
 
 import { 
     AuthActionType, AuthAction, RegisterUser, LoginUser, 
     LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
-    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend
+    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend, DeleteCommunity, AddCommunity
 } from "./AuthAction"; 
 
 /**
@@ -267,6 +269,24 @@ export class AuthStore {
         })
     }
 
+    public async addCommunity(commId: string) {
+        this.handleAction({
+            type: AuthActionType.addCommunity,
+            payload: {
+                communityId: commId
+            }
+        })
+    }
+
+    public async deleteCommunity(commId: string, snack?: SnackStore) {
+        this.handleAction({
+            type: AuthActionType.deleteCommunity,
+            payload: {
+                communityId: commId
+            }
+        })
+    }
+
     public async deleteAccount(snack?: SnackStore): Promise<void> {
         let res = UserApi.delete()
         res.then((res) => {
@@ -324,6 +344,14 @@ export class AuthStore {
             case AuthActionType.changeEmail: {
                 this.handleChangeEmail(action);
                 break;
+            }
+            case AuthActionType.addCommunity: {
+                this.handleAddCommunity(action)
+                break
+            }
+            case AuthActionType.deleteCommunity: {
+                this.handleDeleteCommunity(action)
+                break
             }
             case AuthActionType.addFriend: {
                 this.handleAddFriend(action)
@@ -391,6 +419,29 @@ export class AuthStore {
             });
         }
     };
+    protected handleAddCommunity(action: AddCommunity): void {
+        if (this._auth.usr !== null) {
+            let communities = this._auth.usr.joinedCommunities
+            communities.push(action.payload.communityId)
+            this.setAuth({
+                usr: {...this._auth.usr, joinedCommunities: communities},
+                loggedIn: this._auth.loggedIn
+            })
+        }
+    }
+    protected handleDeleteCommunity(action: DeleteCommunity): void {
+        if (this._auth.usr !== null) {
+            let communities = this._auth.usr.joinedCommunities
+            let idx = communities.indexOf(action.payload.communityId)
+            if (idx !== -1) {
+                communities.splice(idx, 1)
+            }
+            this.setAuth({
+                usr: {...this._auth.usr, joinedCommunities: communities},
+                loggedIn: this._auth.loggedIn
+            })
+        }
+    }
     protected handleAddFriend(action: AddFriend): void {
         if (this._auth.usr !== null) {
             this._auth.usr.friends.push(action.payload.userId)

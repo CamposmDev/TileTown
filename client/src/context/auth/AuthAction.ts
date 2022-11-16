@@ -8,6 +8,8 @@ export type AuthAction =
 | ChangeUsername
 | ChangePassword
 | ChangeEmail
+| AddCommunity
+| DeleteCommunity
 | GetLoggedIn
 | AddFriend
 | RemoveFriend
@@ -24,6 +26,9 @@ export enum AuthActionType {
     changeUsername = "CHANGE_USERNAME",
     changePassword = "CHANGE_PASSWORD",
     changeEmail = "CHANGE_EMAIL",
+
+    addCommunity = 'ADD_COMMUNITY',
+    deleteCommunity = "DELETE_COMMUNITY",
 
     addFriend = 'ADD_FRIEND',
     removeFriend = 'REMOVE_FRIEND'
@@ -75,6 +80,20 @@ export type ChangeEmail = {
     type: AuthActionType.changeEmail,
     payload: {
         email: string
+    }
+}
+
+export type AddCommunity = {
+    type: AuthActionType.addCommunity,
+    payload: {
+        communityId: string
+    }
+}
+
+export type DeleteCommunity = {
+    type: AuthActionType.deleteCommunity,
+    payload: {
+        communityId: string
     }
 }
 

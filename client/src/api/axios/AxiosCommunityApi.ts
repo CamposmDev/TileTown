@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 
 import AxiosApi from "./AxiosApi";
 
@@ -40,6 +40,10 @@ export default class AxiosCommunityApi {
 
     public async deleteCommunity(communityId: string, payload: DeleteCommunityReq): Promise<AxiosResponse<DeleteCommunityRes>> {
         return AxiosApi.delete<DeleteCommunityRes, AxiosResponse<DeleteCommunityRes>, DeleteCommunityReq>(`/community/${communityId}`, payload);
+    }
+
+    public async getCommunityById(id: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/community/${id}`)
     }
 
     public async getCommunities(name: string | undefined): Promise<AxiosResponse<GetCommunitiesRes>> {
