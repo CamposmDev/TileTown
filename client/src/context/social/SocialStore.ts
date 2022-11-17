@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommunityApi, ContestApi, UserApi } from "src/api"
+import { CommunityApi, ContestApi, ForumApi, UserApi } from "src/api"
 import { Community, ForumPost, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -85,6 +85,26 @@ export class SocialStore {
         let res = ContestApi.getContests(query)
         res.then((res) => {
             if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+    public async searchForumsByName(query: string, snack?: SnackStore): Promise<void> {
+        let res = ForumApi.getForums(query)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                let arr: ForumPost[] | undefined = res.data.forumPost
+                if (arr) {
+                    console.log(arr)
+                    this.handleAction({
+                        type: SocialActionType.searchForumsByName,
+                        payload: {
+                            forums: arr
+                        }
+                    })
+                }
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })

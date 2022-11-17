@@ -1,4 +1,4 @@
-import { User } from "@types"
+import { ForumPost, User } from "@types"
 
 export type SocialAction =
 | CreateCommunity
@@ -8,6 +8,7 @@ export type SocialAction =
 | SearchCommunityByName
 | SearchContestsByName
 | SearchUsersByName
+| SearchForumsByName
 | AddFriend
 | RemoveFriend
 
@@ -19,6 +20,7 @@ export enum SocialActionType {
     searchCommunityByName = 'SEARCH_COMMUNITY_BY_NAME',
     searchContestsByName = 'SEARCH_CONTESTS_BY_NAME',
     searchUsersByName = 'SEARCH_USERS_BY_NAME',
+    searchForumsByName = 'SEARCH_FORUMS_BY_NAME',
     addFriend = 'ADD_FRIEND',
     removeFriend = 'REMOVE_FRIEND'
 }
@@ -51,6 +53,13 @@ export type SearchUsersByName = {
     type: SocialActionType.searchUsersByName,
     payload: {
         users: User[]
+    }
+}
+
+export type SearchForumsByName = {
+    type: SocialActionType.searchForumsByName,
+    payload:{
+        forums: ForumPost[]
     }
 }
 
