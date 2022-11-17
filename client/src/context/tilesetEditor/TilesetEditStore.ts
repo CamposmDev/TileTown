@@ -11,6 +11,11 @@ import {
   TilesetEditorAction,
 } from "./TilesetEditTypes";
 import { TilesetApi } from "../../api";
+import { SnackContext } from "../snack";
+import axios from "axios";
+import { useContext } from "react";
+import { SnackStore } from "../snack/SnackStore";
+import { ModalStore } from "../modal/ModalStore";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
@@ -20,15 +25,21 @@ export class TilesetEditStore {
   private readonly _state: TilesetEditorState;
   private readonly setEdit: (edit: TilesetEditorState) => void;
   private readonly nav: NavigateFunction;
+  private readonly snack: SnackStore | undefined;
+  private readonly modal: ModalStore | undefined;
 
   constructor(
     edit: TilesetEditorState,
     setEdit: (state: TilesetEditorState) => void,
-    nav: NavigateFunction
+    nav: NavigateFunction,
+    snack: SnackStore | undefined,
+    modal: ModalStore | undefined
   ) {
     this._state = edit;
     this.setEdit = setEdit;
     this.nav = nav;
+    this.snack = snack;
+    this.modal = modal;
   }
 
   public get state(): TilesetEditorState {
@@ -264,24 +275,38 @@ export class TilesetEditStore {
   }
 
   protected async handleCreateNewTileset(formData: FormData): Promise<void> {
-    TilesetApi.createTileset(formData);
-
-    // this.setEdit({
-    //   tileset,
-    //   currentEditControl: TilesetEditControl.draw,
-    //   penSize: 1,
-    //   penColor: "#000000",
-    //   savedColors: [],
-    //   gridEnabled: true,
-    //   restrictToTile: false,
-    //   gridSize: 1,
-    //   gridColor: "#000000",
-    //   modalType: TilesetEditorModalType.close,
-    //   isSaved: true,
-    //   firstRender: true,
-    //   zoom: this._state.zoom,
-    //   currentTile: this._state.currentTile,
-    // });
+    const res = TilesetApi.createTileset(formData);
+    res
+      .then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          console.log("?");
+          this.snack?.showSuccessMessage(res.data.message);
+          this.modal?.close();
+          const newTileset: Tileset = res.data.tileset;
+          this.setEdit({
+            tileset: newTileset,
+            currentEditControl: this._state.currentEditControl,
+            penSize: this._state.penSize,
+            penColor: this._state.penColor,
+            savedColors: this._state.savedColors,
+            gridEnabled: this._state.gridEnabled,
+            restrictToTile: this._state.restrictToTile,
+            gridSize: this._state.gridSize,
+            gridColor: this._state.gridColor,
+            modalType: TilesetEditorModalType.close,
+            isSaved: false,
+            firstRender: this._state.firstRender,
+            zoom: this._state.zoom,
+            currentTile: this._state.currentTile,
+          });
+        }
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e) && e.response) {
+          this.snack?.showErrorMessage(e.response.data.message);
+        }
+      });
   }
 
   protected handleUpdateTileset(tileset: Partial<Tileset>): void {
