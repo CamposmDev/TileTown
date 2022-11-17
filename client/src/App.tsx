@@ -61,73 +61,74 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <AuthContextProvider key={"auth-context-provider"}>
-        <SnackContextProvider key={'snack-context-provider'}>
-          <ModalContextProvider key={'modal-context-provider'}>
-          <SocialContextProvider key={'social-contest-provider'}>
-              <NavBar />
-              <Routes>
-                <Route path="/" element={<SplashScreen />} />
-                <Route path="/login" element={<LoginScreen />} />
-                <Route path="/register" element={<RegisterScreen />} />
-                <Route path="/home" element={<HomeScreen />} />
-                <Route path="/settings" element={<AccountSettingsScreen />} />
-                <Route
-                  path="/community/rpgs-done-right"
-                  element={<CommunityProfileScreen />}
-                />
-                <Route path="/profile" element={<UserProfileScreen />} />
-                <Route
-                  path="/search/tilemaps"
-                  element={<SearchScreen cat={SearchCategory.Tilemaps} />}
-                />
-                <Route
-                  path="/search/tilesets"
-                  element={<SearchScreen cat={SearchCategory.Tilesets} />}
-                />
-                <Route
-                  path="/search/users"
-                  element={<SearchScreen cat={SearchCategory.Users} />}
-                />
-                <Route
-                  path="/search/communities"
-                  element={<SearchScreen cat={SearchCategory.Communities} />}
-                />
-                <Route
-                  path="/search/contests"
-                  element={<SearchScreen cat={SearchCategory.Contests} />}
-                />
-                <Route
-                  path="/search/forums"
-                  element={<SearchScreen cat={SearchCategory.Forums} />}
-                />
-                <Route
-                  path="/create/tileset"
-                  element={
-                    <TilesetEditContextProvider>
-                      <TilesetEditorScreen />
-                    </TilesetEditContextProvider>
-                  }
-                />
-                <Route
-                  path="/create/tilemap"
-                  element={
-                    <TilemapEditContextProvider>
-                      <TilemapEditorScreen />
-                    </TilemapEditContextProvider>
-                  }
-                />
-                <Route path="/cards" element={<CardTester />} />
-                <Route path="/modals" element={<ModalTester />} />
-              </Routes>
-              <NotificationSnack />
-              <CreateCommunityModal/>
-              <CreateContestModal/>
-              <DeleteCommunityModal/>
-              <DeleteContestModal/>
-              <UploadTilesetModal/>
-          </SocialContextProvider>
-          </ModalContextProvider>
-        </SnackContextProvider>
+          <SnackContextProvider key={"snack-context-provider"}>
+            <ModalContextProvider key={"modal-context-provider"}>
+              <SocialContextProvider key={"social-contest-provider"}>
+                <NavBar />
+                <Routes>
+                  <Route path="/" element={<SplashScreen />} />
+                  <Route path="/login" element={<LoginScreen />} />
+                  <Route path="/register" element={<RegisterScreen />} />
+                  <Route path="/home" element={<HomeScreen />} />
+                  <Route path="/settings" element={<AccountSettingsScreen />} />
+                  <Route
+                    path="/community/rpgs-done-right"
+                    element={<CommunityProfileScreen />}
+                  />
+                  <Route path="/profile" element={<UserProfileScreen />} />
+                  <Route
+                    path="/search/tilemaps"
+                    element={<SearchScreen cat={SearchCategory.Tilemaps} />}
+                  />
+                  <Route
+                    path="/search/tilesets"
+                    element={<SearchScreen cat={SearchCategory.Tilesets} />}
+                  />
+                  <Route
+                    path="/search/users"
+                    element={<SearchScreen cat={SearchCategory.Users} />}
+                  />
+                  <Route
+                    path="/search/communities"
+                    element={<SearchScreen cat={SearchCategory.Communities} />}
+                  />
+                  <Route
+                    path="/search/contests"
+                    element={<SearchScreen cat={SearchCategory.Contests} />}
+                  />
+                  <Route
+                    path="/search/forums"
+                    element={<SearchScreen cat={SearchCategory.Forums} />}
+                  />
+                  <Route
+                    path="/create/tileset"
+                    element={
+                      <TilesetEditContextProvider>
+                        <TilesetEditorScreen />
+                        <UploadTilesetModal />
+                      </TilesetEditContextProvider>
+                    }
+                  />
+                  <Route
+                    path="/create/tilemap"
+                    element={
+                      <TilemapEditContextProvider>
+                        <TilemapEditorScreen />
+                      </TilemapEditContextProvider>
+                    }
+                  />
+                  <Route path="/cards" element={<CardTester />} />
+                  <Route path="/modals" element={<ModalTester />} />
+                </Routes>
+                <NotificationSnack />
+                <UploadTilesetModal />
+                <CreateCommunityModal />
+                <CreateContestModal />
+                <DeleteCommunityModal />
+                <DeleteContestModal />
+              </SocialContextProvider>
+            </ModalContextProvider>
+          </SnackContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
     </BrowserRouter>
