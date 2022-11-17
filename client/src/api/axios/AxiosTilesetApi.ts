@@ -14,14 +14,15 @@ import {
   GetTilesetRes,
   UpdateTilesetRes,
 } from "@responses/tileset";
+import Tileset from "../../../../@types/Tileset";
 
 export default class AxiosTilesetApi {
   public async createTileset(
-    payload: FormData
+    formData: FormData
   ): Promise<AxiosResponse<CreateTilesetRes>> {
     return AxiosApi.postForm<CreateTilesetRes, AxiosResponse<CreateTilesetRes>>(
       `/tileset`,
-      payload
+      formData
     );
   }
 

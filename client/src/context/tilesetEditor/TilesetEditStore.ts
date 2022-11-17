@@ -10,6 +10,7 @@ import {
   TilesetEditorActionType,
   TilesetEditorAction,
 } from "./TilesetEditTypes";
+import { TilesetApi } from "../../api";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
@@ -34,28 +35,11 @@ export class TilesetEditStore {
     return this._state;
   }
 
-  public async createTileset(name: string): Promise<void> {
-    const newTileset: Tileset = {
-      id: "",
-      columns: 12,
-      rows: 12,
-      createDate: new Date(),
-      lastSaveDate: new Date(),
-      image: "",
-      imageHeight: 120,
-      imageWidth: 120,
-      tileHeight: 10,
-      tileWidth: 10,
-      margin: 0,
-      name: name,
-      owner: "",
-      properties: [],
-      isPublished: false,
-    };
+  public async createTileset(formData: FormData): Promise<void> {
     this.handleAction({
       type: TilesetEditorActionType.CREATE_NEW_TILESET,
       payload: {
-        tileset: newTileset,
+        formData: formData,
       },
     });
   }
@@ -164,7 +148,7 @@ export class TilesetEditStore {
     const { type, payload } = action;
     switch (type) {
       case TilesetEditorActionType.CREATE_NEW_TILESET: {
-        this.handleCreateNewTileset(payload.tileset);
+        this.handleCreateNewTileset(payload.formData);
         break;
       }
       case TilesetEditorActionType.UPDATE_TILESET: {
@@ -279,23 +263,25 @@ export class TilesetEditStore {
     });
   }
 
-  protected handleCreateNewTileset(tileset: Tileset): void {
-    this.setEdit({
-      tileset,
-      currentEditControl: TilesetEditControl.draw,
-      penSize: 1,
-      penColor: "#000000",
-      savedColors: [],
-      gridEnabled: true,
-      restrictToTile: false,
-      gridSize: 1,
-      gridColor: "#000000",
-      modalType: TilesetEditorModalType.close,
-      isSaved: true,
-      firstRender: true,
-      zoom: this._state.zoom,
-      currentTile: this._state.currentTile,
-    });
+  protected async handleCreateNewTileset(formData: FormData): Promise<void> {
+    TilesetApi.createTileset(formData);
+
+    // this.setEdit({
+    //   tileset,
+    //   currentEditControl: TilesetEditControl.draw,
+    //   penSize: 1,
+    //   penColor: "#000000",
+    //   savedColors: [],
+    //   gridEnabled: true,
+    //   restrictToTile: false,
+    //   gridSize: 1,
+    //   gridColor: "#000000",
+    //   modalType: TilesetEditorModalType.close,
+    //   isSaved: true,
+    //   firstRender: true,
+    //   zoom: this._state.zoom,
+    //   currentTile: this._state.currentTile,
+    // });
   }
 
   protected handleUpdateTileset(tileset: Partial<Tileset>): void {

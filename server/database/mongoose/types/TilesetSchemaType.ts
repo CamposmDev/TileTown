@@ -12,6 +12,9 @@ export default interface TilesetSchemaType {
   createdAt: Date;
   updatedAt: Date;
   columns: number;
+  rows: number;
+  tileHeight: number;
+  tileWidth: number;
   image: string;
   imageHeight: number;
   imageWidth: number;

@@ -12,6 +12,9 @@ const ObjectId = Schema.Types.ObjectId;
 
 const TilesetSchema = new Schema<TilesetSchemaType>({
   columns: { type: Number, required: true },
+  rows: { type: Number, required: true },
+  tileHeight: { type: Number, required: true },
+  tileWidth: { type: Number, required: true },
   image: { type: String, required: true },
   imageHeight: { type: Number, required: true },
   imageWidth: { type: Number, required: true },
@@ -33,4 +36,4 @@ const TilesetSchema = new Schema<TilesetSchemaType>({
 
 const TilesetModel = mongoose.model("Tileset", TilesetSchema);
 
-export { TilesetModel }
+export { TilesetModel };
