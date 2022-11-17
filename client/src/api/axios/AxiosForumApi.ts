@@ -5,6 +5,7 @@ import {
 } from "@responses/forum";
 
 import AxiosApi  from "./AxiosApi";
+import GetForumsReq from "@requests/forum/GetForumsReq";
 
 export default class AxiosForumApi {
 
@@ -21,7 +22,8 @@ export default class AxiosForumApi {
     }
 
     public async getForums(name: string): Promise<AxiosResponse<GetForumsRes>> {
-        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>>(`/forum`, { params: { name: name } });
+        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { name: name } });
+
     }
 
     public async updateForumById(forumId: string, payload: UpdateForumReq): Promise<AxiosResponse<UpdateForumRes>> {

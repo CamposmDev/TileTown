@@ -1,6 +1,7 @@
-import { Contest } from "@types";
+import { ForumPost } from "@types";
 
-export default interface GetContestsRes {
-    contests?: Contest[]
+export default interface GetForumsRes {
+    forumPost?: ForumPost[]
+
     message: string
 }
