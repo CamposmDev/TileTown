@@ -9,61 +9,52 @@ import { ContestSchemaType } from '../types/index';
  */
 export default class MongooseContestDBM implements ContestDBM {
 
-    async getContestById(contestId: string): Promise<Contest | null> {
+    public async getContestById(contestId: string): Promise<Contest | null> {
         if (!mongoose.Types.ObjectId.isValid(contestId)) { return null; }
         let contest = await ContestModel.findById(contestId);
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
-    async getContests(name: string): Promise<Contest[]> {
+
+    public async getContests(name: string): Promise<Contest[]> {
         let contests = await ContestModel.find({name: new RegExp(`^${name}`, "i")});
         return contests.map(c => this.parseContest(c));
     }
 
-    async getContestsById(contestIds: string[]): Promise<Contest[]> {
+    public async getContestsById(contestIds: string[]): Promise<Contest[]> {
         if (!contestIds.every(id => mongoose.Types.ObjectId.isValid(id))) { return []; }
         let contests = await ContestModel.find({_id: { $in: contestIds }});
         return contests.map(contest=> this.parseContest(contest));
     }
-    async getContestByName(name: string): Promise<Contest | null> {
+
+    public async getContestByName(name: string): Promise<Contest | null> {
         let contest = await ContestModel.findOne({name: name});
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
-    async createContest(partial: Partial<Contest> & {owner: string, name: string}): Promise<Contest | null> {
-        if (!mongoose.Types.ObjectId.isValid(partial.owner)) { return null; }
 
-        let contest = await ContestModel.create({
-            owner: partial.owner.toString(),
-            name: partial.name,
-            description: partial.description ? partial.description : "",
-            participates: partial.participates ? partial.participates : [],
-            startDate: partial.startDate ? partial.startDate : new Date(Date.now() + 900000),
-            endDate: partial.endDate ? partial.endDate : new Date(Date.now() + 900000),
-            winner: partial.winner ? partial.winner : null,
-            isPublished: partial.isPublished ? partial.isPublished : false
-        });
+    public async createContest(partial: Partial<Contest> & {owner: string, name: string}): Promise<Contest | null> {
+        if (!mongoose.Types.ObjectId.isValid(partial.owner)) { return null; }
+        let contest = await ContestModel.create({...partial});
         let savedContest = await contest.save();
         return this.parseContest(savedContest);
     }
-    async updateContest(contestId: string, partial: Partial<Contest>): Promise<Contest | null> {
+
+    public async updateContest(contestId: string, partial: Partial<Contest>): Promise<Contest | null> {
         if (!mongoose.Types.ObjectId.isValid(contestId)) { return null; }
-
-        let contest = await ContestModel.findById(contestId)
+        let contest = await ContestModel.findById(contestId);
         if (contest === null) { return null; }
-
         this.fillContest(contest, partial);
         let savedContest = await contest.save();
         return this.parseContest(savedContest);
-        
     }
-    async deleteContest(contestId: string): Promise<Contest | null> {
+
+    public async deleteContest(contestId: string): Promise<Contest | null> {
         if (!mongoose.Types.ObjectId.isValid(contestId)) { return null; }
         let contest = await ContestModel.findByIdAndDelete(contestId);
         if (contest === null) { return null; }
         return this.parseContest(contest);
     }
-
 
     protected parseContest(contest: ContestSchemaType & { _id: mongoose.Types.ObjectId}): Contest { 
         return {

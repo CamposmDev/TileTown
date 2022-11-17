@@ -23,16 +23,7 @@ export default class MongooseForumDBM implements ForumDBM {
         return this.parseForumPost(forumPost);
     }
     async createForumPost(payload: Partial<ForumPost> & {author: string, title: string, body: string}): Promise<ForumPost | null> {
-        let forumPost = new ForumPostModel({
-            author: payload.author,
-            title: payload.title,
-            body: payload.body,
-            tags: payload.tags ? payload.tags : [],
-            likes: payload.likes ? payload.likes : [],
-            dislikes: payload.dislikes ? payload.dislikes : [],
-            isPublished: payload.isPublished ? payload.isPublished : false,
-            comments: payload.comments ? payload.comments : []
-        });
+        let forumPost = new ForumPostModel({...payload});
         let res = await forumPost.save()
         return this.parseForumPost(res);
     }
