@@ -6,7 +6,7 @@ const router: Router = Router();
 
 // Tilemap - basic CRUD routes and publish
 router.get("/:id", Auth.verifyJWT, TilesetController.getTilesetById);
-router.post("/", Auth.verifyJWT, TilesetController.createTileset);
+router.post("/", Auth.verifyJWT, Upload.single('image'), TilesetController.createTileset);
 router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
 
 router.put("/:id", Auth.verifyJWT, Upload.single('tileset'), TilesetController.updateTilesetById);

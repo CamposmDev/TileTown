@@ -6,7 +6,8 @@ const ModalContext = createContext<ModalStore>(new ModalStore({
     showCreateCommunityModal: false,
     showCreateContestModal: false,
     showDeleteCommunityModal: false,
-    showDeleteContestModal: false
+    showDeleteContestModal: false,
+    showUploadTilesetModal: false
 }, () => {}))
 
 function ModalContextProvider(props: Record<string, any>) {
@@ -14,7 +15,8 @@ function ModalContextProvider(props: Record<string, any>) {
         showCreateCommunityModal: false,
         showCreateContestModal: false,
         showDeleteCommunityModal: false,
-        showDeleteContestModal: false
+        showDeleteContestModal: false,
+        showUploadTilesetModal: false
     })
     const Modal = new ModalStore(modal, setModal)
     return (

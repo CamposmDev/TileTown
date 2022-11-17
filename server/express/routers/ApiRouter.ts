@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
+import path from "path";
 
 import ContestRouter from './ContestRouter';
 import ForumRouter from './ForumRouter';
@@ -19,5 +20,7 @@ router.use('/community', CommunityRouter);
 router.use('/tileset', TilesetRouter);
 router.use('/tilemap', TilemapRouter);
 router.use('/query', QueryRouter);
+
+router.use('/media', express.static(path.join(__dirname, "../middleware/images")));
 
 export default router;

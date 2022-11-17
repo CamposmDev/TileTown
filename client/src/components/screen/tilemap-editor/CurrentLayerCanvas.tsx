@@ -84,15 +84,16 @@ const CurrentLayerCanvas = () => {
     for (let i = 0; i < canvasWidth; i += scaledTileWidth) {
       const currentTileIndex =
         edit.state.Tilemap.layers[layerIndex].data[
-          i / scaledTileWidth + dataIndex
+          Math.round(i / scaledTileWidth + dataIndex)
         ];
+
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
-        for (let i = currentGlobalTileIDs.length - 1; i >= 0; i--) {
-          if (currentGlobalTileIDs[i] < currentTileIndex) {
-            currentGlobalTileID = currentGlobalTileIDs[i];
-            currentTilesetIndex = i;
+        for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
+          if (currentGlobalTileIDs[j] < currentTileIndex) {
+            currentGlobalTileID = currentGlobalTileIDs[j];
+            currentTilesetIndex = j;
           }
         }
         const tilesetTileWidth =
@@ -377,16 +378,19 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
+        console.log("hello left");
         while (
           currentIndex % width >= 0 &&
           !selection.has(currentIndex) &&
-          currentLayer[currentIndex] === currentTileData
+          currentLayer[currentIndex] === currentTileData &&
+          currentSelection.includes(currentIndex)
         ) {
           const aboveIndex = currentIndex - width;
           if (
             aboveIndex >= 0 &&
             !selection.has(aboveIndex) &&
-            currentLayer[aboveIndex] === currentTileData
+            currentLayer[aboveIndex] === currentTileData &&
+            currentSelection.includes(aboveIndex)
           ) {
             startingPoints.push(aboveIndex);
           }
@@ -394,12 +398,12 @@ const CurrentLayerCanvas = () => {
           if (
             belowIndex < currentLayer.length &&
             !selection.has(belowIndex) &&
-            currentLayer[belowIndex] === currentTileData
+            currentLayer[belowIndex] === currentTileData &&
+            currentSelection.includes(belowIndex)
           ) {
             startingPoints.push(belowIndex);
           }
           selection.set(currentIndex, currentIndex);
-          console.log(currentLayer[currentIndex]);
           currentIndex--;
         }
       };
@@ -409,16 +413,19 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
+        console.log("hello right");
         while (
           currentIndex % width < width &&
           !selection.has(currentIndex) &&
-          currentLayer[currentIndex] === currentTileData
+          currentLayer[currentIndex] === currentTileData &&
+          currentSelection.includes(currentIndex)
         ) {
           const aboveIndex = currentIndex - width;
           if (
             aboveIndex >= 0 &&
             !selection.has(aboveIndex) &&
-            currentLayer[aboveIndex] === currentTileData
+            currentLayer[aboveIndex] === currentTileData &&
+            currentSelection.includes(aboveIndex)
           ) {
             startingPoints.push(aboveIndex);
           }
@@ -426,24 +433,25 @@ const CurrentLayerCanvas = () => {
           if (
             belowIndex < currentLayer.length &&
             !selection.has(belowIndex) &&
-            currentLayer[belowIndex] === currentTileData
+            currentLayer[belowIndex] === currentTileData &&
+            currentSelection.includes(belowIndex)
           ) {
             startingPoints.push(belowIndex);
           }
           selection.set(currentIndex, currentIndex);
-          console.log(currentLayer[currentIndex]);
           currentIndex++;
         }
       };
-      edit.updateCurrentSelection([]);
+
+      // edit.updateCurrentSelection([]);
 
       for (let i = 0; i < startingPoints.length; i++) {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
-
-      edit.updateCurrentSelection([...selection.values()]);
-      edit.updateCurrentLayerData(currentTileIndex);
+      console.log([...selection.values()]);
+      // edit.updateCurrentSelection([...selection.values()]);
+      edit.updateCurrentLayerData(currentTileIndex, [...selection.values()]);
     }
   };
 
@@ -524,6 +532,8 @@ const CurrentLayerCanvas = () => {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
+
+      console.log([...selection.values()]);
 
       edit.updateCurrentSelection([...selection.values()]);
     }

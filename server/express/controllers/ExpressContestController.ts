@@ -128,6 +128,20 @@ export default class ContestController {
             return res.status(500).json({ message: `Contest with id ${req.params}` });
         }
 
+        // Get the owner of the contest
+        let user = await db.users.getUserById(deletedContest.owner)
+        if (user === null) {
+            return res.status(500).json({message: "Server Error. Failed to get owner of deleted contest"})
+        }
+        let idx = user.joinedContests.indexOf(deletedContest.id)
+        if (idx !== -1) {
+            user.joinedContests.splice(idx, 1)
+            let updatedUser = await db.users.updateUser(user.id, {joinedContests: user.joinedContests})
+            if (updatedUser === null) {
+                return res.status(500).json({message: `Error updating owner ${user.id} in deleted contest`})
+            }
+        }
+
         return res.status(200).json({ message: "Deleted a contest!", contest: deletedContest });
     }
 

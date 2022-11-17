@@ -134,6 +134,20 @@ export default class CommunityController {
             return res.status(500).json({message: `Server Error. Failed to delete community with id ${req.params.id}`})
         }
 
+        // Get the owner of the community
+        let user = await db.users.getUserById(deletedCommunity.owner)
+        if (user === null) {
+            return res.status(500).json({message: "Server Error. Failed to get owner of deleted community"})
+        }
+        let idx = user.joinedCommunities.indexOf(deletedCommunity.id)
+        if (idx !== -1) {
+            user.joinedCommunities.splice(idx, 1)
+            let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities})
+            if (updatedUser === null) {
+                return res.status(500).json({message: `Error updating owner ${user.id} in deleted community`})
+            }
+        }
+
         // Get all the users in the community
         let users = await db.users.getUsersById(deletedCommunity.members);
         if (users === null) {
@@ -149,7 +163,7 @@ export default class CommunityController {
             let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
 
             if (updatedUser === null) {
-                return res.status(500).json({message: `Error updating user ${user.id} in delete community`});
+                return res.status(500).json({message: `Error updating user ${user.id} in deleted community`});
             }
         }
 
