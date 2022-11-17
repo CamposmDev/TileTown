@@ -1,4 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
+import { SocialContext } from "src/context/social"
 import { parseDateToStr, calcTimeLeft } from '../util/DateUtils'
 
 interface Props {
@@ -6,17 +8,32 @@ interface Props {
         contestName: string,
         startDate: Date,
         endDate: Date,
-        ownerName: string
-        contestTheme: string
-        numOfParticipates: number
+        owner: string,
+        participates: number
     }
 }
 
 const ContestCard = (props: Props) => {
-    
-
+    const social = useContext(SocialContext)
+    const [user, setUser] = useState({
+        userId: '',
+        firstName: '',
+        lastName: '',
+        username: ''
+    })    
     const timeLeft = calcTimeLeft(props.payload.startDate, props.payload.endDate)
-
+    useEffect(() => {
+        social.getUserById(props.payload.owner).then(u => {
+            if (u) {
+                setUser({
+                    userId: u.id,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    username: u.username
+                })
+            }
+        })
+    }, [])
     return (
             <Card>
                 <CardActionArea>
@@ -28,18 +45,18 @@ const ContestCard = (props: Props) => {
                                     <Typography variant='caption'>{timeLeft}</Typography>
                                 </Card>
                                 <Box flexGrow={1}/>
-                                <Typography variant='caption'><b>By</b>:&ensp;{props.payload.ownerName}</Typography>
+                                <Typography variant='caption'><b>By</b>:&ensp;{user.username}</Typography>
                             </Stack>
                             <Box flexGrow={1}/>
                             <Stack direction='column'>
-                                <Typography variant='caption'>
+                                {/* <Typography variant='caption'>
                                     <b>Theme</b>:&ensp;{props.payload.contestTheme}
-                                </Typography>
+                                </Typography> */}
                                 <Typography variant='caption'><b>Started:&ensp;</b>
                                     {parseDateToStr(props.payload.startDate)}
                                 </Typography>
                                 <Typography variant='caption'>
-                                    <b>{props.payload.numOfParticipates.toFixed(0)}</b>&ensp;Participates
+                                    <b>{props.payload.participates.toFixed(0)}</b>&ensp;Participates
                                 </Typography>
                             </Stack>
                         </Grid>

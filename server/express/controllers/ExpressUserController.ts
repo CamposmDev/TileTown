@@ -60,7 +60,7 @@ export default class UserController {
         if (users.length === 0) {
             return res.status(404).json({message: `No users found with username "${username}"`});
         }
-        return res.status(200).json({message: "Got users posts!", users: users});
+        return res.status(200).json({message: `Found ${users.length} user(s)!`, users: users});
     }
 
     public async createUser(req: Request, res: Response): Promise<Response> {
@@ -326,7 +326,48 @@ export default class UserController {
             return res.status(500).json({ message: "Server Error" });
         }
 
-        return res.status(200).json({ message: "Verifying user was successful!", user: verifiedUser });
+        return res.status(200).send(`
+            <div>
+                Hello ${verifiedUser.firstName}! You've successfully verified your TileTown account!
+                <a src="/login">Login</a>
+            </div>
+        `);
+    }
+
+    public async resetPassword(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.body) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.body.email) {
+            return res.status(400).json({ message: "Missing email" });
+        }
+        
+        let user = await db.users.getUserByEmail(req.body.email);
+        if (user === null) {
+            return res.status(404).json({ message: `No user found`});
+        }
+
+        let password = (Math.floor(Math.random()*999999999999)).toString();
+        let hash = await HashingUtils.hash(password);
+
+        console.log(password);
+        let updatedUser = await db.users.updateUser(user.id, {password: hash});
+        if (updatedUser === null) {
+            return res.status(500).json({ message: `Error updating users password`});
+        }
+
+        try {
+            await Mailer.sendMail({
+                to: updatedUser.email, 
+                from: "tiletown123@gmail.com", 
+                subject: "Verify your TileTown Account", 
+                text: `Hello ${updatedUser.username}! Your temporary tiletown password has been changed to ${password}. Remember to change your password when you log in!`,
+            });
+        } catch {
+            return res.status(400).json({ message: `That doesn't look like a valid email address...`});
+        }
+
+        return res.status(200).json({ message: "Password reset email sent!"});
     }
 
     public async deleteUserById(req: Request, res: Response): Promise<void> {

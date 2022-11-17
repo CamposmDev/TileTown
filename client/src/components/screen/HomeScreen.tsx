@@ -115,9 +115,8 @@ const HomeScreen = () => {
                                         contestName: 'A New Contest',
                                         startDate: new Date(2022,10,31),
                                         endDate: new Date(2022,11,5),
-                                        ownerName: 'Camposm',
-                                        contestTheme: 'A Theme',
-                                        numOfParticipates: (Math.random() * 100)
+                                        owner: 'Camposm',
+                                        participates: (Math.random() * 100)
                                     }}
                                 />    
                             </Grid>)}

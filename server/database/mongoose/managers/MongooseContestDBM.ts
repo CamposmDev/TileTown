@@ -16,7 +16,7 @@ export default class MongooseContestDBM implements ContestDBM {
         return this.parseContest(contest);
     }
     async getContests(name: string): Promise<Contest[]> {
-        let contests = await ContestModel.find({name: name});
+        let contests = await ContestModel.find({name: new RegExp(`^${name}`, "i")});
         return contests.map(c => this.parseContest(c));
     }
 

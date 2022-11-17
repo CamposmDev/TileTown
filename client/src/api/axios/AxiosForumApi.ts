@@ -1,6 +1,8 @@
 import { AxiosResponse } from "axios";
-import { CreateForumReq, DeleteForumReq, GetForumReq } from "@requests/forum";
-import { CreateForumRes, DeleteForumRes, GetForumRes, GetForumsRes } from "@responses/forum";
+import { CreateForumReq, DeleteForumReq, GetForumReq, UpdateForumReq } from "@requests/forum";
+import { 
+    CreateForumRes, DeleteForumRes, GetForumRes, GetForumsRes, UpdateForumRes
+} from "@responses/forum";
 
 import AxiosApi  from "./AxiosApi";
 import GetForumsReq from "@requests/forum/GetForumsReq";
@@ -21,5 +23,10 @@ export default class AxiosForumApi {
 
     public async getForums(name: string): Promise<AxiosResponse<GetForumsRes>> {
         return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { name: name } });
+
+    }
+
+    public async updateForumById(forumId: string, payload: UpdateForumReq): Promise<AxiosResponse<UpdateForumRes>> {
+        return AxiosApi.put<UpdateForumRes, AxiosResponse<UpdateForumRes>, UpdateForumReq>(`/forum/${forumId}`, payload);
     }
 }

@@ -43,7 +43,7 @@ const CommunityMembersModal = () => {
                     <Icon ><PeopleAltIcon /></Icon>
                 </Avatar>
                 <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
-                {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
+                {/* {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
                     <Grid item mt={1}>
                         <UserProfileCard
                         firstName='Michael'
@@ -51,7 +51,7 @@ const CommunityMembersModal = () => {
                         username="Camposm"
                     />
                     </Grid>
-                )}
+                )} */}
                 </Grid>        
             </Box>
             </DialogContent>

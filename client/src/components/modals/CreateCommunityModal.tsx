@@ -6,8 +6,10 @@ import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { SnackContext } from 'src/context/snack';
 import { SocialContext } from 'src/context/social';
 import { ModalContext } from 'src/context/modal';
+import { AuthContext } from 'src/context/auth';
 
 const CreateCommunityModal = () => {
+    const auth = React.useContext(AuthContext)
     const modal = React.useContext(ModalContext)
     const snack = React.useContext(SnackContext)
     const social = React.useContext(SocialContext)
@@ -26,7 +28,7 @@ const CreateCommunityModal = () => {
         setDescription(e.target.value)
     }
     const handleCreate = () => {
-        social.createCommunity(name, description, snack)
+        social.createCommunity(name, description, auth, snack)
         modal.close()
     }
 
