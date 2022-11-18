@@ -22,15 +22,6 @@ export class ForumStore {
         return this._forum.currentForumPost
     }
 
-    public setCurrentForumPost(forumPost: ForumPost): void {
-        this.handleAction({
-            type: ForumActionType.setCurrentForumPost,
-            payload: {
-                currentForumPost: forumPost
-            }
-        })
-    }
-
     public getForums(): ForumPost[] {
         return this._forum.forumPosts
     }
@@ -55,6 +46,77 @@ export class ForumStore {
         })
     }
 
+    public async viewForumPost(forumPost: ForumPost, snack?: SnackStore): Promise<void> {
+        ForumApi.viewForumById(forumPost.id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: ForumActionType.viewForumPost,
+                    payload: {
+                        oldForumPost: forumPost,
+                        currentForumPost: res.data.forumPost
+                    }
+                })      
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+
+    public async like(): Promise<void> {
+        let forumPost = this._forum.currentForumPost
+        if (forumPost) {
+            ForumApi.likeForumById(forumPost.id).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: ForumActionType.likeForumPost,
+                        payload: {
+                            oldForumPost: forumPost,
+                            currentForumPost: res.data.forumPost
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    public async dislike(): Promise<void> {
+        let forumPost = this._forum.currentForumPost
+        if (forumPost) {
+            ForumApi.dislikeForumById(forumPost.id).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: ForumActionType.dislikeForumPost,
+                        payload: {
+                            oldForumPost: forumPost,
+                            currentForumPost: res.data.forumPost
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    public async comment(body: string): Promise<void> {
+        let forumPost = this._forum.currentForumPost
+        if (forumPost) {
+            ForumApi.commentForumById(forumPost.id, {
+                comment: {
+                    body: body
+                }
+            }).then(res => {
+                if (res.status === 201) {
+                    this.handleAction({
+                        type: ForumActionType.commentForumPost,
+                        payload: {
+                            oldForumPost: forumPost,
+                            currentForumPost: res.data.forumPost
+                        }
+                    })
+                }
+            })
+        }
+    }
+
     public async clearCurrentForumPost(): Promise<void> {
         this.handleAction({
             type: ForumActionType.clear
@@ -70,11 +132,49 @@ export class ForumStore {
                 })
                 break
             }
-            case ForumActionType.setCurrentForumPost: {
+            case ForumActionType.viewForumPost: {
+                let i = this._forum.forumPosts.indexOf(action.payload.oldForumPost)
+                this._forum.forumPosts.splice(i, 1, action.payload.currentForumPost)
                 this._setForum({
                     currentForumPost: action.payload.currentForumPost,
                     forumPosts: this._forum.forumPosts
                 })
+                break
+            }
+            case ForumActionType.likeForumPost: {
+                let payload = action.payload
+                if (payload.oldForumPost) {
+                    let i = this._forum.forumPosts.indexOf(payload.oldForumPost)
+                    this._forum.forumPosts.splice(i, 1, payload.currentForumPost)
+                    this._setForum({
+                        currentForumPost: payload.currentForumPost,
+                        forumPosts: this._forum.forumPosts
+                    })
+                }
+                break
+            }
+            case ForumActionType.dislikeForumPost: {
+                let payload = action.payload
+                if (payload.oldForumPost) {
+                    let i = this._forum.forumPosts.indexOf(payload.oldForumPost)
+                    this._forum.forumPosts.splice(i, 1, payload.currentForumPost)
+                    this._setForum({
+                        currentForumPost: payload.currentForumPost,
+                        forumPosts: this._forum.forumPosts
+                    })
+                }
+                break
+            }
+            case ForumActionType.commentForumPost: {
+                let payload = action.payload
+                if (payload.oldForumPost) {
+                    let i = this._forum.forumPosts.indexOf(payload.oldForumPost)
+                    this._forum.forumPosts.splice(i, 1, payload.currentForumPost)
+                    this._setForum({
+                        currentForumPost: payload.currentForumPost,
+                        forumPosts: this._forum.forumPosts
+                    })
+                }
                 break
             }
             case ForumActionType.clear: {

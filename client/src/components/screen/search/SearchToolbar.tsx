@@ -63,28 +63,28 @@ const SearchToolbar = (props: Props) => {
     )
 
     return (
-        <Toolbar sx={{boxShadow: 1, position: 'sticky'}}>
-            <Grid container justifyContent='space-between'>
-                <Grid item xs={11}>
-                    <Stack direction='row' alignItems='center' spacing={1}>
-                        <Typography variant='h6'>{props.category}</Typography>
-                        <TextField 
-                            fullWidth 
-                            size="small"
-                            onChange={(e) => {
-                                setQuery(e.target.value)
-                            }}
-                            onKeyDown={handleSubmit}
-                            InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            )}} 
-                        />
-                    </Stack>
+        <Toolbar sx={{boxShadow: 3, position: 'sticky'}}>
+            <Grid container alignItems={'center'}>
+                <Grid item mr={1}>
+                    <Typography variant='h6'>{props.category}</Typography>
                 </Grid>
-                <Grid item alignItems='end'>
+                <Grid item flexGrow={1}>
+                    <TextField 
+                        fullWidth 
+                        size="small"
+                        onChange={(e) => {
+                            setQuery(e.target.value)
+                        }}
+                        onKeyDown={handleSubmit}
+                        InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Search />
+                            </InputAdornment>
+                        )}} 
+                    />
+                </Grid>
+                <Grid item>
                     {props.category === SearchCategory.Forums ? <CreateForumPostModal/> : <></>}
                     <Tooltip title='Sort By'>
                         <IconButton onClick={handleMenuOpen} children={<Sort/>}/>

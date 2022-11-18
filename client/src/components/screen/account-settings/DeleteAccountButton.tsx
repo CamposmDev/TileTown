@@ -17,7 +17,6 @@ const DeleteAccountButton = () => {
     const [verifyText, setVerifyText] = useState('')
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let username = e.target.value
-        console.log(username)
         setUsername(username)
     }
     const handleVerifyChange = (e: React.ChangeEvent<HTMLInputElement>) => {

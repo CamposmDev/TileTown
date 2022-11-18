@@ -37,11 +37,12 @@ export class SocialStore {
         return this._social.contests
     }
 
-    public async createCommunity(name: string, description: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
+    public async createCommunity(name: string, description: string, vis: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.createCommunity({
             community: {
                 name: name,
-                description: description
+                description: description,
+                visibility: vis
             }
         })
         res.then((res) => {
