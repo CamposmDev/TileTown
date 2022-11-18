@@ -8,6 +8,7 @@ import {
   HexToDec,
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import "./default.css";
+import { EditTwoTone } from "@mui/icons-material";
 
 const TilesetCanvas = () => {
   /**color data of all the pixels of an image
@@ -27,9 +28,7 @@ const TilesetCanvas = () => {
 
   //canvas refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-  const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
@@ -38,6 +37,7 @@ const TilesetCanvas = () => {
   const penSize = edit.state.penSize;
   const restrictToTile = edit.state.restrictToTile;
   const currentTile = edit.state.currentTile;
+  const id = edit.state.tileset.id;
 
   const tileHeight = edit.state.tileset.tileHeight;
   const tileWidth = edit.state.tileset.tileWidth;
@@ -54,11 +54,6 @@ const TilesetCanvas = () => {
       : window.location.host;
   const image: string =
     "http://" + host + "/api/media/" + edit.state.tileset.image;
-
-  console.log("tileset: ");
-  console.log(edit.state.tileset);
-  let render = edit.state.firstRender;
-
   useEffect(() => {
     console.log("render canvas");
     if (canvasRef.current) {
@@ -71,15 +66,13 @@ const TilesetCanvas = () => {
         const rectWidth = canvas.width;
         contextRef.current = ctx;
         canvasImage.src = image;
-        console.log(canvasImage.src);
         canvasImage.crossOrigin = "Anonymous";
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
         };
-        // render = false;
       }
     }
-  }, [image]);
+  }, [edit.state.tileset.image]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {

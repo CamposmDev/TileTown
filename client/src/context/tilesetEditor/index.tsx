@@ -8,6 +8,7 @@ import {
 import { TilesetEditStore } from "./TilesetEditStore";
 import { SnackContext } from "../snack";
 import { ModalContext } from "../modal";
+import { TilesetApi } from "src/api";
 
 /**
  * The edit context
@@ -88,6 +89,15 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     zoom: 1,
     currentTile: { x: null, y: null },
   });
+
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilesetApi.getTilesetById(id).then((res) => {
+      setEdit({ ...edit, tileset: res.data.tileset });
+    });
+    if (edit.tileset.id === "") return;
+  }, [edit.tileset.id]);
 
   // The navigation for the auth context???
   const nav = useNavigate();

@@ -16,6 +16,7 @@ import axios from "axios";
 import { useContext } from "react";
 import { SnackStore } from "../snack/SnackStore";
 import { ModalStore } from "../modal/ModalStore";
+import { useNavigate } from "react-router";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
@@ -40,14 +41,27 @@ export class TilesetEditStore {
     return this._state;
   }
 
-  public async createTileset(
+  public loadTileset(id: string): void {
+    TilesetApi.getTilesetById(id).then((res) => {
+      if (res.status === 200) {
+        console.log(res.data.tileset);
+        this.handleAction({
+          type: TilesetEditorActionType.UPDATE_TILESET,
+          payload: { tileset: res.data.tileset },
+        });
+      }
+    });
+  }
+
+  public createTileset(
     formData: FormData,
     snack?: SnackStore,
     modal?: ModalStore
-  ): Promise<void> {
-    await TilesetApi.createTileset(formData)
+  ): void {
+    TilesetApi.createTileset(formData)
       .then((res) => {
         if (res.status === 201) {
+          console.log("hello");
           const newTileset: Tileset = res.data.tileset;
           this.handleAction({
             type: TilesetEditorActionType.CREATE_NEW_TILESET,
@@ -296,11 +310,10 @@ export class TilesetEditStore {
       gridColor: this._state.gridColor,
       modalType: TilesetEditorModalType.close,
       isSaved: false,
-      firstRender: this._state.firstRender,
+      firstRender: true,
       zoom: this._state.zoom,
       currentTile: this._state.currentTile,
     });
-    console.log(this._state.tileset);
   }
 
   protected handleUpdateTileset(tileset: Partial<Tileset>): void {

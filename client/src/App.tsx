@@ -101,7 +101,7 @@ const App = () => {
                     element={<SearchScreen cat={SearchCategory.Forums} />}
                   />
                   <Route
-                    path="/create/tileset"
+                    path="/create/tileset/:id"
                     element={
                       <TilesetEditContextProvider>
                         <TilesetEditorScreen />

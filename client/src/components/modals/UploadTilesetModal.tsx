@@ -13,11 +13,13 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useContext, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm, UseFormRegister, FieldValues } from "react-hook-form";
 import { ModalContext } from "src/context/modal";
 import { SnackContext } from "src/context/snack";
 import { TilesetEditContext } from "src/context/tilesetEditor";
 import { TilesetApi } from "../../api";
+import { Tileset } from "@types";
 
 type imageForm = {
   image: File;
@@ -26,6 +28,7 @@ type imageForm = {
 const UploadTilesetModal = () => {
   const modal = useContext(ModalContext);
   const snack = useContext(SnackContext);
+  const nav = useNavigate();
   const edit = useContext(TilesetEditContext);
   const { register, handleSubmit } = useForm();
   const [tileset, setTileset] = useState({
@@ -121,7 +124,15 @@ const UploadTilesetModal = () => {
         imageHeight: Number(tileset.row) * Number(tileset.height),
       })
     );
-    edit.createTileset(f, snack, modal);
+    TilesetApi.createTileset(f).then((res) => {
+      if (res.status === 201) {
+        console.log("hello");
+        const id = res.data.tileset.id;
+        snack?.showSuccessMessage(res.data.message);
+        modal?.close();
+        nav(`/create/tileset/${id}`);
+      }
+    });
   };
   let ui = (
     <Dialog
