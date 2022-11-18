@@ -89,6 +89,17 @@ export class TilesetEditStore {
     });
   }
 
+  public async saveTileset(): Promise<void> {
+    const f = new FormData();
+    f.append("tileset", JSON.stringify(this._state.tilesetChanges));
+    TilesetApi.updateTilesetById(this._state.tileset.id, f).then((res) => {
+      this.handleAction({
+        type: TilesetEditorActionType.SAVE_TILESET,
+        payload: {},
+      });
+    });
+  }
+
   public async updateEditControl(
     editControl: TilesetEditControl
   ): Promise<void> {
@@ -189,7 +200,7 @@ export class TilesetEditStore {
         break;
       }
       case TilesetEditorActionType.SAVE_TILESET: {
-        this.handleSaveTileset(payload.tileset);
+        this.handleSaveTileset();
         break;
       }
       case TilesetEditorActionType.CHANGE_EDIT_CONTROL: {
@@ -244,6 +255,7 @@ export class TilesetEditStore {
   }): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -262,6 +274,8 @@ export class TilesetEditStore {
   protected handleUpdateZoom(zoom: number): void {
     this.setEdit({
       tileset: this._state.tileset,
+
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -280,6 +294,8 @@ export class TilesetEditStore {
   protected handleToggleFirstRender(): void {
     this.setEdit({
       tileset: this._state.tileset,
+
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -297,9 +313,10 @@ export class TilesetEditStore {
   }
 
   protected handleCreateNewTileset(tileset: Tileset): void {
-    console.log(tileset);
     this.setEdit({
       tileset: tileset,
+
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -317,36 +334,45 @@ export class TilesetEditStore {
   }
 
   protected handleUpdateTileset(tileset: Partial<Tileset>): void {
-    const updatedTileset: Tileset = {
-      id: this._state.tileset.id,
-      columns: tileset.columns ? tileset.columns : this._state.tileset.columns,
-      rows: tileset.rows ? tileset.rows : this._state.tileset.rows,
-      createDate: this._state.tileset.createDate,
-      lastSaveDate: this._state.tileset.lastSaveDate,
-      image: this._state.tileset.image,
-      imageHeight: tileset.imageHeight
-        ? tileset.imageHeight
-        : this._state.tileset.imageHeight,
-      imageWidth: tileset.imageWidth
-        ? tileset.imageWidth
-        : this._state.tileset.imageWidth,
-      tileHeight: tileset.tileHeight
-        ? tileset.tileHeight
-        : this._state.tileset.tileHeight,
-      tileWidth: tileset.tileWidth
-        ? tileset.tileWidth
-        : this._state.tileset.tileWidth,
-      margin: tileset.margin ? tileset.margin : this._state.tileset.margin,
-      name: tileset.name ? tileset.name : this._state.tileset.name,
-      owner: this._state.tileset.owner,
-      properties: tileset.properties
-        ? tileset.properties
-        : this._state.tileset.properties,
-      isPublished: false,
-    };
+    const updatedTileset = this._state.tileset;
+    const updatedChanges = this._state.tilesetChanges;
+
+    Object.assign(updatedTileset, tileset);
+    Object.assign(updatedChanges, tileset);
+
+    console.log(updatedChanges);
+
+    // const updatedTileset: Tileset = {
+    //   id: this._state.tileset.id,
+    //   columns: tileset.columns ? tileset.columns : this._state.tileset.columns,
+    //   rows: tileset.rows ? tileset.rows : this._state.tileset.rows,
+    //   createDate: this._state.tileset.createDate,
+    //   lastSaveDate: this._state.tileset.lastSaveDate,
+    //   image: this._state.tileset.image,
+    //   imageHeight: tileset.imageHeight
+    //     ? tileset.imageHeight
+    //     : this._state.tileset.imageHeight,
+    //   imageWidth: tileset.imageWidth
+    //     ? tileset.imageWidth
+    //     : this._state.tileset.imageWidth,
+    //   tileHeight: tileset.tileHeight
+    //     ? tileset.tileHeight
+    //     : this._state.tileset.tileHeight,
+    //   tileWidth: tileset.tileWidth
+    //     ? tileset.tileWidth
+    //     : this._state.tileset.tileWidth,
+    //   margin: tileset.margin ? tileset.margin : this._state.tileset.margin,
+    //   name: tileset.name ? tileset.name : this._state.tileset.name,
+    //   owner: this._state.tileset.owner,
+    //   properties: tileset.properties
+    //     ? tileset.properties
+    //     : this._state.tileset.properties,
+    //   isPublished: false,
+    // };
 
     this.setEdit({
       tileset: updatedTileset,
+      tilesetChanges: updatedChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -363,9 +389,10 @@ export class TilesetEditStore {
     });
   }
 
-  protected handleSaveTileset(tileset: Tileset): void {
+  protected handleSaveTileset(): void {
     this.setEdit({
-      tileset,
+      tileset: this._state.tileset,
+      tilesetChanges: {},
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -385,6 +412,7 @@ export class TilesetEditStore {
   protected handleChangeEditControl(editControl: TilesetEditControl): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: editControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -404,6 +432,7 @@ export class TilesetEditStore {
   protected handleUpdatePen(payload: { size: number; color: Color }): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: payload.size,
       penColor: payload.color,
@@ -422,6 +451,7 @@ export class TilesetEditStore {
   protected handleUpdateColors(colors: [Color]): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -445,6 +475,7 @@ export class TilesetEditStore {
   }): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -464,6 +495,7 @@ export class TilesetEditStore {
   protected handleToggleRestrictToTile(): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -482,6 +514,7 @@ export class TilesetEditStore {
   protected handleCloseModal(): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,
@@ -501,6 +534,7 @@ export class TilesetEditStore {
   protected handleOpenModal(modalType: TilesetEditorModalType): void {
     this.setEdit({
       tileset: this._state.tileset,
+      tilesetChanges: this._state.tilesetChanges,
       currentEditControl: this._state.currentEditControl,
       penSize: this._state.penSize,
       penColor: this._state.penColor,

@@ -126,7 +126,6 @@ const UploadTilesetModal = () => {
     );
     TilesetApi.createTileset(f).then((res) => {
       if (res.status === 201) {
-        console.log("hello");
         const id = res.data.tileset.id;
         snack?.showSuccessMessage(res.data.message);
         modal?.close();

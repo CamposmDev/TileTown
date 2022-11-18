@@ -37,7 +37,6 @@ const TilesetCanvas = () => {
   const penSize = edit.state.penSize;
   const restrictToTile = edit.state.restrictToTile;
   const currentTile = edit.state.currentTile;
-  const id = edit.state.tileset.id;
 
   const tileHeight = edit.state.tileset.tileHeight;
   const tileWidth = edit.state.tileset.tileWidth;
