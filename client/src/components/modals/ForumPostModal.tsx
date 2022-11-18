@@ -10,10 +10,12 @@ import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { parseDateToPostedStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import { SocialContext } from "src/context/social"
+import { AuthContext } from "src/context/auth"
 
 const ForumPostModal = () => {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
+    const auth = useContext(AuthContext)
     const [comment, setComment] = useState('')
     const [user, setUser] = useState({
         firstName: '',
@@ -32,19 +34,36 @@ const ForumPostModal = () => {
         }
         aux()
     }, [forum.getCurrentForumPost()])
+
+    const like = () => {
+        forum.like()
+    }
+
+    const dislike = () => {
+        forum.dislike()
+    }
+
     let open = Boolean(forum.getCurrentForumPost())
     const handleClose = () => {
         forum.clearCurrentForumPost()
     }
     const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.code === 'Enter') {
-            console.log(comment)
+            forum.comment(comment)
         }
     }
+
+    let disableLike = false
+    let disableDislike = false
 
     let forumPost: ForumPost | undefined = forum.getCurrentForumPost()
     let content = <div></div>
     if (forumPost) {
+        let usr = auth.getUsr()
+        if (usr) {
+            disableLike = !Boolean(forumPost.likes.indexOf(usr.id))
+            disableDislike = !Boolean(forumPost.dislikes.indexOf(usr.id))
+        }   
         content = 
             <CardContent>
                 <Grid container alignItems={'center'} mb={1}>
@@ -66,13 +85,13 @@ const ForumPostModal = () => {
                     </Grid>
                     <Grid item>
                         <Stack direction='row' alignItems='center'>
-                            <IconButton><ThumbUp sx={{color: 'primary.main'}}/></IconButton>
+                            <IconButton disabled={disableLike} onClick={like}><ThumbUp/></IconButton>
                             <Typography>{formatToSocialStr(forumPost.likes.length, '')}</Typography>    
                         </Stack>
                     </Grid>
                     <Grid item>
                         <Stack direction='row' alignItems='center'>
-                            <IconButton ><ThumbDown sx={{color: 'red'}}/></IconButton>
+                            <IconButton disabled={disableDislike} onClick={dislike}><ThumbDown/></IconButton>
                             <Typography>{formatToSocialStr(forumPost.dislikes.length, '')}</Typography>    
                         </Stack>
                     </Grid>
@@ -97,14 +116,23 @@ const ForumPostModal = () => {
             </AppBar>
             <Grid container p={1}>
                 <Grid item xs={6} pr={1}>
-                    <Card>
+                    <Card sx={{boxShadow: 3}}>
                         {content}
                     </Card>
                 </Grid>
                 <Grid container item xs={6} pl={1}>
-                    <TextField fullWidth label='Comment' onChange={(e) => setComment(e.target.value)} onKeyUp={handleKeyUp}/>
+                    <Grid container>
+                        <TextField 
+                            fullWidth 
+                            label='Comment' 
+                            onChange={(e) => setComment(e.target.value)} 
+                            onKeyUp={handleKeyUp}
+                        />
+                    </Grid>
                     {forumPost?.comments.map(x =>
-                        <CommentCard commentId={x} key={x}/>
+                        <Grid container>
+                            <CommentCard commentId={x} key={x}/>
+                        </Grid>
                     )}
                 </Grid>
             </Grid>

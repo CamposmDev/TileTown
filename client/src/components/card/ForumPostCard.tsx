@@ -28,7 +28,7 @@ const ForumPostCard = (props: Props) => {
         forum.viewForumPost(props.forumPost, snack)
     }
     return (
-        <Card>
+        <Card sx={{boxShadow: 3}}>
             <CardActionArea onClick={handleClick}>
                 <CardContent>
                     <Grid container alignItems='center'>
