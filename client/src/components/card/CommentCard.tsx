@@ -1,21 +1,28 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
+import { useEffect } from "react"
 import UserProfileBox from "../UserProfileBox"
 
-const CommentCard = () => {
-    const comment = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'
+interface Props {
+    commentId: string
+}
+
+const CommentCard = (props: Props) => {
+    useEffect(() => {
+
+    })
     return (
         <Card sx={{mt: 1}}>
             <CardContent>
                 <Grid container alignItems={'center'}>
-                    <UserProfileBox
+                    {/* <UserProfileBox
                         firstName="John"
                         lastName="Doe"
                         username="TheBullDozer"
-                    />
+                    /> */}
                     <Box flexGrow={1}/>
                     <Typography>{'Dec 9 2022'}</Typography>
                     <Grid container mt={1}>
-                        <Typography>{comment}</Typography>
+                        {/* <Typography>{comment}</Typography> */}
                     </Grid>
                 </Grid>
             </CardContent>
