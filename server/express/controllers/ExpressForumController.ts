@@ -72,7 +72,7 @@ export default class ForumController {
         }
 
         // Update the forum post
-        let forumPost = await db.forums.updateForumPost(req.params.id, req.body.forumPost);
+        let forumPost = await db.forums.updateForumPost(req.params.id, {...req.body.forumPost, updatedDate: new Date(Date.now())});
         if (forumPost === null) {
             return res.status(500).json({message: "Error occured while updating forum post"});
         }

@@ -23,16 +23,7 @@ export default class MongooseForumDBM implements ForumDBM {
         return this.parseForumPost(forumPost);
     }
     async createForumPost(payload: Partial<ForumPost> & {author: string, title: string, body: string}): Promise<ForumPost | null> {
-        let forumPost = new ForumPostModel({
-            author: payload.author,
-            title: payload.title,
-            body: payload.body,
-            tags: payload.tags ? payload.tags : [],
-            likes: payload.likes ? payload.likes : [],
-            dislikes: payload.dislikes ? payload.dislikes : [],
-            isPublished: payload.isPublished ? payload.isPublished : false,
-            comments: payload.comments ? payload.comments : []
-        });
+        let forumPost = new ForumPostModel({...payload});
         let res = await forumPost.save()
         return this.parseForumPost(res);
     }
@@ -66,7 +57,9 @@ export default class MongooseForumDBM implements ForumDBM {
             dislikes: forum.dislikes.map(id => id.toString()),
             views: forum.views,
             isPublished: forum.isPublished,
-            comments: forum.comments.map(id => id.toString())
+            comments: forum.comments.map(id => id.toString()),
+            publishDate: forum.publishDate,
+            updatedDate: forum.updatedDate
         }
     }
     protected fillForumPost(forum: ForumSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<ForumPost>): void {
@@ -78,5 +71,7 @@ export default class MongooseForumDBM implements ForumDBM {
         forum.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : forum.dislikes;
         forum.isPublished = partial.isPublished ? partial.isPublished : forum.isPublished;
         forum.comments = partial.comments ? partial.comments.map(id => new mongoose.Types.ObjectId(id)) : forum.comments;
+        forum.publishDate = partial.publishDate ? partial.publishDate : forum.publishDate;
+        forum.updatedDate = partial.updatedDate ? partial.updatedDate : forum.updatedDate;
     }
 }
