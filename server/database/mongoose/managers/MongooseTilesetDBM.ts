@@ -101,10 +101,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return this.parseTileset(tileset);
     }
 
-    async createTileset(
-        userId: string,
-        tileset: Partial<Tileset>
-    ): Promise<Tileset | null> {
+    async createTileset(userId: string, tileset: Partial<Tileset>): Promise<Tileset | null> {
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return null;
         }

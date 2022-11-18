@@ -86,7 +86,6 @@ export default class TilemapController {
     }
 
     public async createTilemap(req: Request, res: Response): Promise<Response> {
-        console.log(req.file);
         //check to see if a request body was sent
         if (!req || !req.body) {
             return res.status(400).json({
@@ -118,7 +117,7 @@ export default class TilemapController {
         }
 
         // Try to create the new tilemap in the DBMS
-        let tilemap = await db.tilemaps.createTilemap(req.userId, req.body.tilemap);
+        let tilemap = await db.tilemaps.createTilemap({owner: user.id, ...req.body.tilemap});
         if (tilemap === null) {
             return res.status(500).json({message: "Error creating a tilemap"});
         }
@@ -213,7 +212,7 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, tilemap);
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, createDate: new Date(Date.now())});
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }
