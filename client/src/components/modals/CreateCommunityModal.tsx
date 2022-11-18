@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material';
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
@@ -15,10 +15,12 @@ const CreateCommunityModal = () => {
     const social = React.useContext(SocialContext)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
+    const [vis, setVis] = useState('public')
 
     const handleClose = () => {
         setName('')
         setDescription('')
+        setVis('public')
         modal.close()
     }
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +29,11 @@ const CreateCommunityModal = () => {
     const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDescription(e.target.value)
     }
+    const handleChangeVisiblity = (e: any) => {
+        setVis(e.target.value)
+    }
     const handleCreate = () => {
-        social.createCommunity(name, description, auth, snack)
+        social.createCommunity(name, description, vis, auth, snack)
         modal.close()
     }
 
@@ -58,11 +63,21 @@ const CreateCommunityModal = () => {
                     required
                     fullWidth
                     label="Description"
-                    multiline
-                    rows={5}
                     margin='dense'
                     onChange={handleDescChange}
                 />
+                <FormControl margin='dense' fullWidth>
+                    <InputLabel>Visibility</InputLabel>
+                        <Select
+                            margin='dense'
+                            label='Visibility'
+                            value={vis}
+                            onChange={handleChangeVisiblity}
+                        >
+                            <MenuItem value={'public'}>Public</MenuItem>
+                            <MenuItem value={'private'}>Private</MenuItem>
+                        </Select>
+                    </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button
