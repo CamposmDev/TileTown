@@ -1,9 +1,9 @@
 import axios from "axios"
-import { CommunityApi, ContestApi, ForumApi, UserApi } from "src/api"
-import { Community, Contest, ForumPost, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
+import { CommunityApi, ContestApi, UserApi } from "src/api"
+import { Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
-import { AuthState, AuthStore } from "../auth/AuthStore"
+import { AuthStore } from "../auth/AuthStore"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -12,7 +12,6 @@ export interface SocialState {
     users: User[]
     communities: Community[]
     contests: Contest[]
-    forumPosts: ForumPost[]
 }
 
 export class SocialStore {
@@ -36,10 +35,6 @@ export class SocialStore {
 
     public getContests(): Contest[] {
         return this._social.contests
-    }
-
-    public getForums(): ForumPost[] {
-        return this._social.forumPosts
     }
 
     public async createCommunity(name: string, description: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
@@ -270,28 +265,6 @@ export class SocialStore {
         })
     }
 
-    public async getForumPostByTitle(query: string, snack?: SnackStore): Promise<void> {
-        let res = ForumApi.getForums(query)
-        res.then((res) => {
-            if (res.status === 200) {
-                snack?.showSuccessMessage(res.data.message)
-                let arr = res.data.forumPosts
-                if (arr) {
-                    this.handleAction({
-                        type: SocialActionType.searchForumsByName,
-                        payload: {
-                            forums: arr
-                        }
-                    })
-                }
-            }
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) {
-                snack?.showErrorMessage(e.response.data.message)
-            }
-        })
-    }
-
     public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
@@ -343,7 +316,6 @@ export class SocialStore {
                     users: action.payload.users,
                     communities: this._social.communities,
                     contests: this._social.contests,
-                    forumPosts: this._social.forumPosts
                 })
                 break
             }
@@ -355,7 +327,6 @@ export class SocialStore {
                     users: this._social.users,
                     communities: action.payload.communities,
                     contests: this._social.contests,
-                    forumPosts: this._social.forumPosts
                 })
                 break
             }
@@ -367,19 +338,6 @@ export class SocialStore {
                     users: this._social.users,
                     communities: this._social.communities,
                     contests: action.payload.contests,
-                    forumPosts: this._social.forumPosts
-                })
-                break
-            }
-            case SocialActionType.searchForumsByName: {
-                this._setSocial({
-                    currentUser: this._social.currentUser,
-                    tilemaps: this._social.tilemaps,
-                    tilesets: this._social.tilesets,
-                    users: this._social.users,
-                    communities: this._social.communities,
-                    contests: this._social.contests,
-                    forumPosts: action.payload.forums
                 })
                 break
             }
@@ -391,7 +349,6 @@ export class SocialStore {
                     users: [],
                     communities: [],
                     contests: [],
-                    forumPosts: []
                 })
             }
         }

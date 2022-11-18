@@ -64,7 +64,7 @@ const CardTester = () => {
             />
         </Grid>
         <Grid item>
-            <ForumPostCard
+            {/* <ForumPostCard
                 title='How do i compute?'
                 author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
                 publishDate={publishDate}
@@ -73,7 +73,7 @@ const CardTester = () => {
                 likes={2345678}
                 dislikes={309302}
                 comments={342}
-            />
+            /> */}
         </Grid>
         <Grid item>
             <Stack>

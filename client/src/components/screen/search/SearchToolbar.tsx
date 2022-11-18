@@ -1,8 +1,9 @@
 import { Search, Sort } from "@mui/icons-material"
-import { Box, CssBaseline, Grid, IconButton, InputAdornment, Menu, MenuItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
+import { Grid, IconButton, InputAdornment, Menu, MenuItem, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { useContext, useState } from "react"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
+import { ForumContext } from "src/context/social/forum"
 import CreateForumPostModal from "../../modals/CreateForumPostModal"
 import { MENU_PAPER_PROPS, SearchCategory } from '../../util/Constants'
 
@@ -12,6 +13,7 @@ interface Props {
 
 const SearchToolbar = (props: Props) => {
     const social = useContext(SocialContext)
+    const forum = useContext(ForumContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
@@ -36,7 +38,7 @@ const SearchToolbar = (props: Props) => {
                     social.getContestByName(query, snack)
                     break
                 case SearchCategory.Forums:
-                    social.getForumPostByTitle(query, snack)
+                    forum.getForumPostsByName(query, snack)
                     break
             }
         }
@@ -59,11 +61,6 @@ const SearchToolbar = (props: Props) => {
             <MenuItem>Views</MenuItem>
         </Menu>
     )
-
-    let createBox = 
-        <Tooltip title='Create Post'>
-            <CreateForumPostModal/>
-        </Tooltip>
 
     return (
         <Toolbar sx={{boxShadow: 1, position: 'sticky'}}>
@@ -88,7 +85,7 @@ const SearchToolbar = (props: Props) => {
                     </Stack>
                 </Grid>
                 <Grid item alignItems='end'>
-                    {props.category === SearchCategory.Forums ? createBox : <></>}
+                    {props.category === SearchCategory.Forums ? <CreateForumPostModal/> : <></>}
                     <Tooltip title='Sort By'>
                         <IconButton onClick={handleMenuOpen} children={<Sort/>}/>
                     </Tooltip>

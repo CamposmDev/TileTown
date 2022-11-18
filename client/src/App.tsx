@@ -30,6 +30,8 @@ import DeleteCommunityModal from "./components/modals/DeleteCommunityModal";
 import DeleteContestModal from "./components/modals/DeleteContestModal";
 import { TilemapEditContextProvider } from "./context/tilemapEditor";
 import UploadTilesetModal from "./components/modals/UploadTilesetModal";
+import { ForumContextProvider } from "./context/social/forum";
+import ForumPostModal from "./components/modals/ForumPostModal";
 
 /**
  * Pixel Editors
@@ -64,6 +66,7 @@ const App = () => {
           <SnackContextProvider key={"snack-context-provider"}>
             <ModalContextProvider key={"modal-context-provider"}>
               <SocialContextProvider key={"social-contest-provider"}>
+                <ForumContextProvider key={'forum-context-provider'}>
                 <NavBar />
                 <Routes>
                   <Route path="/" element={<SplashScreen />} />
@@ -126,6 +129,7 @@ const App = () => {
                 <CreateContestModal />
                 <DeleteCommunityModal />
                 <DeleteContestModal />
+                </ForumContextProvider>
               </SocialContextProvider>
             </ModalContextProvider>
           </SnackContextProvider>
