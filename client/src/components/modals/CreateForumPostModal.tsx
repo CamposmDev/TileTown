@@ -10,6 +10,7 @@ import { AuthContext } from '../../context/auth';
 import { ForumApi } from '../../api';
 import axios, { Axios } from 'axios';
 import { SnackContext } from 'src/context/snack';
+import ForumPost from '../../../../@types/ForumPost';
 
 const CreateForumPostModal = () => {
     const auth = React.useContext(AuthContext)
@@ -17,11 +18,7 @@ const CreateForumPostModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [title, setTitle] = useState('')
     const [question, setQuestion] = useState('')
-    // const [author, setAuthor] = useState('Annonymous')
 
-    // const handleChange = (event: SelectChangeEvent) => {
-    //     setAuthor(event.target.value as string)
-    // }
     const handleClose = () => {
         setTitle('')
         setQuestion('')
@@ -45,7 +42,7 @@ const CreateForumPostModal = () => {
             open={isOpen} 
             onClose={handleClose}
         >
-            <DialogTitle>Create Post</DialogTitle>
+            <DialogTitle>Create Forum Post</DialogTitle>
             <DialogContent>
                 <Box>
                     <TextField
@@ -68,7 +65,7 @@ const CreateForumPostModal = () => {
                         name="question"
                         autoFocus
                         multiline
-                        rows={7}
+                        rows={11}
                     />
                     {/* <FormControl margin='dense' fullWidth>
                     <InputLabel>Show my name as</InputLabel>

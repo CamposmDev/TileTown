@@ -11,11 +11,13 @@ import { parseDateToPostedStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import { SocialContext } from "src/context/social"
 import { AuthContext } from "src/context/auth"
+import EditForumPostModal from "./EditForumPostModal"
 
 const ForumPostModal = () => {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
     const auth = useContext(AuthContext)
+    const [edit, setEdit] = useState(false)
     const [comment, setComment] = useState('')
     const [user, setUser] = useState({
         firstName: '',
@@ -44,6 +46,10 @@ const ForumPostModal = () => {
     }
 
     let open = Boolean(forum.getCurrentForumPost())
+
+    const handleEdit = () => {
+        setEdit(true)
+    }
     const handleClose = () => {
         forum.clearCurrentForumPost()
     }
@@ -55,14 +61,19 @@ const ForumPostModal = () => {
 
     let disableLike = false
     let disableDislike = false
-
     let forumPost: ForumPost | undefined = forum.getCurrentForumPost()
     let content = <div></div>
+    let editButton = <div></div>
+    let editModal = <div></div>
     if (forumPost) {
         let usr = auth.getUsr()
         if (usr) {
             disableLike = !Boolean(forumPost.likes.indexOf(usr.id))
             disableDislike = !Boolean(forumPost.dislikes.indexOf(usr.id))
+            if (usr.id.localeCompare(forumPost.author) === 0) {
+                editButton = <Button color='inherit' onClick={handleEdit}>Edit</Button>
+            }
+            editModal = <EditForumPostModal forumPost={forumPost} open={edit} callback={setEdit} />
         }   
         content = 
             <CardContent>
@@ -101,13 +112,22 @@ const ForumPostModal = () => {
     }
 
     return (
-        <Dialog open={open} fullScreen onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
+        <div>
+            <Dialog 
+            open={open} 
+            fullScreen 
+            onClose={handleClose} 
+            TransitionComponent={SLIDE_DOWN_TRANSITION}
+        >
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
                     <Grid alignItems={'center'} container direction='row' sx={{flexGrow: 1}}>
                         <Typography variant="h6" component="div">
                             {forumPost?.title}
                         </Typography>
+                    </Grid>
+                    <Grid>
+                        {editButton}
                     </Grid>
                     <Grid>
                         <Button color="inherit" onClick={handleClose}>Close</Button>
@@ -129,14 +149,18 @@ const ForumPostModal = () => {
                             onKeyUp={handleKeyUp}
                         />
                     </Grid>
-                    {forumPost?.comments.map(x =>
-                        <Grid container>
-                            <CommentCard commentId={x} key={x}/>
-                        </Grid>
-                    )}
+                    <Grid container>
+                        {forumPost?.comments.map(x =>
+                            <Grid>
+                                <CommentCard commentId={x} key={x}/>
+                            </Grid>
+                        )}
+                    </Grid>
                 </Grid>
             </Grid>
         </Dialog>
+        {editModal}
+        </div>
     )
 }
 
