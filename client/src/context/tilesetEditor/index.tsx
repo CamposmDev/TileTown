@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TilesetEditorState,
@@ -6,6 +6,8 @@ import {
   TilesetEditorModalType,
 } from "./TilesetEditTypes";
 import { TilesetEditStore } from "./TilesetEditStore";
+import { SnackContext } from "../snack";
+import { ModalContext } from "../modal";
 
 /**
  * The edit context
@@ -45,7 +47,9 @@ const TilesetEditContext = createContext<TilesetEditStore>(
       currentTile: { x: null, y: null },
     },
     () => {},
-    () => {}
+    () => {},
+    undefined,
+    undefined
   )
 );
 
@@ -53,6 +57,9 @@ const TilesetEditContext = createContext<TilesetEditStore>(
  * The edit context provider.
  */
 function TilesetEditContextProvider(props: Record<string, any>) {
+  const snack = useContext(SnackContext);
+  const modal = useContext(ModalContext);
+
   // The state of the edit context
   const [edit, setEdit] = useState<TilesetEditorState>({
     tileset: {
@@ -91,7 +98,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
   const nav = useNavigate();
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
-  const TilesetEdit = new TilesetEditStore(edit, setEdit, nav);
+  const TilesetEdit = new TilesetEditStore(edit, setEdit, nav, snack, modal);
 
   return (
     <TilesetEditContext.Provider value={TilesetEdit}>

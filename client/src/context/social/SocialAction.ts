@@ -1,10 +1,11 @@
-import { Community, Contest, User } from "@types"
+import { Community, Contest, User, ForumPost } from "@types"
 
 export type SocialAction =
 | CreateCommunity
 | DeleteCommunity
 | CreateContest
 | DeleteContest
+| GetForumsByName
 | GetTilemapByName
 | GetTilesetByName
 | GetCommunityByName
@@ -19,6 +20,10 @@ export enum SocialActionType {
     deleteCommunity = 'DELETE_COMMUNITY',
     createContest = 'CREATE_CONTEST',
     deleteContest = 'DELETE_CONTEST',
+    searchCommunityByName = 'SEARCH_COMMUNITY_BY_NAME',
+    searchContestsByName = 'SEARCH_CONTESTS_BY_NAME',
+    searchUsersByName = 'SEARCH_USERS_BY_NAME',
+    searchForumsByName = 'SEARCH_FORUMS_BY_NAME',
     getTilesetByName = 'GET_TILESET_BY_NAME',
     getTilemapByName = 'GET_TILEMAP_BY_NAME',
     getCommunityByName = 'GET_COMMUNITY_BY_NAME',
@@ -71,6 +76,13 @@ export type GetUserByUsername = {
     type: SocialActionType.getUserByUsername,
     payload: {
         users: User[]
+    }
+}
+
+export type GetForumsByName = {
+    type: SocialActionType.searchForumsByName,
+    payload:{
+        forums: ForumPost[]
     }
 }
 

@@ -11,12 +11,14 @@ const ForumPostSchema = new Schema<ForumSchemaType>({
     author: { type: ObjectId, require: true},
     title: { type: String, require: true},
     body: { type: String, require: true},
-    tags: { type: [String], require: true, default: []},
-    likes: { type: [ObjectId], require: true, default: []},
-    dislikes: { type: [ObjectId], require: true, default: []},
-    comments: { type: [ObjectId], require: true, default: []},
-    views: { type: Number, require: true, default: 0 },
-    isPublished: { type: Boolean, require: true, default: false}
+    tags: { type: [String], require: true},
+    likes: { type: [ObjectId], require: true},
+    dislikes: { type: [ObjectId], require: true},
+    comments: { type: [ObjectId], require: true},
+    views: { type: Number, require: true },
+    isPublished: { type: Boolean, require: true},
+    publishDate: { type: Date, require: true, default: new Date(Date.now())},
+    updatedDate: { type: Date, require: true, default: new Date(Date.now())}
 })
 
 const ForumPostModel = mongoose.model('ForumPostSchema', ForumPostSchema);

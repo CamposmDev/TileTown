@@ -38,6 +38,10 @@ export class SocialStore {
         return this._social.contests
     }
 
+    public getForums(): ForumPost[] {
+        return this._social.forumPosts
+    }
+
     public async createCommunity(name: string, description: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.createCommunity({
             community: {
@@ -269,7 +273,18 @@ export class SocialStore {
     public async getForumPostByTitle(query: string, snack?: SnackStore): Promise<void> {
         let res = ForumApi.getForums(query)
         res.then((res) => {
-            if (res.status === 200) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                let arr = res.data.forumPosts
+                if (arr) {
+                    this.handleAction({
+                        type: SocialActionType.searchForumsByName,
+                        payload: {
+                            forums: arr
+                        }
+                    })
+                }
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) {
                 snack?.showErrorMessage(e.response.data.message)
@@ -353,6 +368,18 @@ export class SocialStore {
                     communities: this._social.communities,
                     contests: action.payload.contests,
                     forumPosts: this._social.forumPosts
+                })
+                break
+            }
+            case SocialActionType.searchForumsByName: {
+                this._setSocial({
+                    currentUser: this._social.currentUser,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets,
+                    users: this._social.users,
+                    communities: this._social.communities,
+                    contests: this._social.contests,
+                    forumPosts: action.payload.forums
                 })
                 break
             }

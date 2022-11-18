@@ -24,21 +24,7 @@ const SearchScreen = (props: Props) => {
         if (!auth.isLoggedIn()) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    let items = 
-    <Grid container spacing={1} justifyContent='center'>
-        <Grid item flexGrow={1}>
-            <ForumPostCard
-                author={{firstName: 'Michael', lastName: 'Campos', username: 'Camposm'}}
-                comments={232}
-                desc={'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo'}
-                dislikes={39034}
-                likes={39034}
-                title={'This is another post'}
-                publishDate={new Date(2022,9,27)}
-                views={3490340}
-            />
-        </Grid>
-    </Grid>
+    let items = <div/>
     switch (props.cat) {
         case SearchCategory.Tilemaps:
             items = <Grid 
@@ -554,6 +540,32 @@ const SearchScreen = (props: Props) => {
                     </Grid>)} */}
             </Grid>
             break
+        case SearchCategory.Forums:
+            console.log('errhu')
+            items = 
+            <Grid container spacing={1} justifyContent='center'>
+                <Grid item flexGrow={1}>
+                    {social.getForums().map((x,i) => 
+                        <Grid item key={x.id}>
+                            <ForumPostCard
+                                title={x.title}
+                                author={{
+                                    firstName: '',
+                                    lastName: '',
+                                    username: ''
+                                }}
+                                desc={x.body}
+                                comments={0}
+                                likes={0}
+                                dislikes={0}
+                                views={x.views}
+                                publishDate={new Date()}
+                            />  
+                        </Grid>  
+                    )}
+                </Grid>
+            </Grid>
+            break
     }
     return (
         <Grid alignItems={'center'}>
@@ -561,8 +573,7 @@ const SearchScreen = (props: Props) => {
                 <SearchToolbar category={props.cat}/>
             </Grid>
             <Grid item>
-            {items}
-
+                {items}
             </Grid>
         </Grid>
     )

@@ -48,6 +48,12 @@ const TilesetCanvas = () => {
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
   const canvasImage: HTMLImageElement = new Image();
+  const host: string =
+    window.location.host === "localhost:3001"
+      ? "localhost:3000"
+      : window.location.host;
+  const image: string =
+    "http://" + host + "/api/media/" + edit.state.tileset.image;
 
   useEffect(() => {
     console.log("render canvas");
@@ -60,13 +66,13 @@ const TilesetCanvas = () => {
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
         contextRef.current = ctx;
-        canvasImage.src = "/leve1and2tileset.png";
-        canvasImage.onload = () => {
+        canvasImage.src = image;
+        canvasImage.crossOrigin = "Anonymous";
+        canvasImage.onload = () =>
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
-        };
       }
     }
-  }, []);
+  }, [image]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {

@@ -33,5 +33,7 @@ export default interface ForumPost {
 
     /** A flag indicating whether this ForumPost has been published or not */
     isPublished: boolean,
-    
+
+    publishDate: Date;
+    updatedDate: Date;
 }

@@ -54,20 +54,20 @@ const ForumPostCard = (props: Props) => {
                                 <Grid item>
                                     <Stack direction='row' alignItems='center'>
                                         <Visibility/>
-                                        <Typography>{formatToSocialStr(props.views)}</Typography>
+                                        <Typography>{formatToSocialStr(props.views, '')}</Typography>
                                     </Stack>
 
                                 </Grid>
                                 <Grid item>
                                     <Stack direction='row' alignItems='center'>
                                         <IconButton><ThumbUp sx={{color: 'primary.main'}}/></IconButton>
-                                        <Typography>{formatToSocialStr(props.likes)}</Typography>    
+                                        <Typography>{formatToSocialStr(props.likes, '')}</Typography>    
                                     </Stack>
                                 </Grid>
                                 <Grid item>
                                     <Stack direction='row' alignItems='center'>
                                         <IconButton ><ThumbDown sx={{color: 'red'}}/></IconButton>
-                                        <Typography>{formatToSocialStr(props.dislikes)}</Typography>    
+                                        <Typography>{formatToSocialStr(props.dislikes, '')}</Typography>    
                                     </Stack>
                                 </Grid>
                             </Grid>
@@ -105,11 +105,11 @@ const ForumPostCard = (props: Props) => {
                                 <Stack spacing={1}>
                                     <Stack alignItems='center' direction='row'>
                                         <Visibility/>
-                                        <Typography ml={1} variant='caption'>{formatToSocialStr(props.views)}</Typography>
+                                        <Typography ml={1} variant='caption'>{formatToSocialStr(props.views, '')}</Typography>
                                     </Stack>
                                     <Stack alignItems='center' direction='row'>
                                         <Comment/>
-                                        <Typography ml={1} variant='caption'>{formatToSocialStr(props.comments)}</Typography>
+                                        <Typography ml={1} variant='caption'>{formatToSocialStr(props.comments, '')}</Typography>
                                     </Stack> 
                                 </Stack>
                             </Grid>
