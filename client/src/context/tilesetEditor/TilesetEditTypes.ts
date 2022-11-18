@@ -132,8 +132,6 @@ export function HexToDec(color: string): number {
     decString += hexByte;
   }
 
-  console.log(decString);
-  console.log(parseInt(decString).toString(16));
   return parseInt(decString);
 }
 
@@ -166,6 +164,7 @@ export enum TilesetEditorModalType {
  */
 export interface TilesetEditorState {
   tileset: Tileset;
+  tilesetChanges: Partial<Tileset>;
   currentEditControl: TilesetEditControl;
   penSize: number;
   penColor: Color;
@@ -213,7 +212,7 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.CREATE_NEW_TILESET;
-      payload: { formData: FormData };
+      payload: { tileset: Tileset };
     }
   | {
       type: TilesetEditorActionType.UPDATE_TILESET;
@@ -221,7 +220,7 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.SAVE_TILESET;
-      payload: { tileset: Tileset };
+      payload: {};
     }
   | {
       type: TilesetEditorActionType.UPDATE_GRID;

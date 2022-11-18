@@ -11,7 +11,6 @@ const SocialContext = createContext<SocialStore>(new SocialStore(
         users: [],
         communities: [],
         contests: [],
-        forumPosts: []
     }, () => {}, new AuthStore({loggedIn: false, usr: null}, () => {}, () => {})))
 
 function SocialContextProvider(props: Record<string, any>) {
@@ -24,7 +23,6 @@ function SocialContextProvider(props: Record<string, any>) {
             users: [],
             communities: [],
             contests: [],
-            forumPosts: []
         })
     const Social = new SocialStore(social, setSocial, auth)
     return (

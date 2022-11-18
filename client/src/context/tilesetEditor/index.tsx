@@ -8,6 +8,7 @@ import {
 import { TilesetEditStore } from "./TilesetEditStore";
 import { SnackContext } from "../snack";
 import { ModalContext } from "../modal";
+import { TilesetApi } from "src/api";
 
 /**
  * The edit context
@@ -21,7 +22,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
         rows: 12,
         createDate: new Date(),
         lastSaveDate: new Date(),
-        image: "/leve1and2tileset.png",
+        image: "",
         imageHeight: 120,
         imageWidth: 120,
         tileHeight: 10,
@@ -32,6 +33,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
         properties: [],
         isPublished: false,
       },
+      tilesetChanges: {},
       currentEditControl: TilesetEditControl.draw,
       penSize: 1,
       penColor: "#F00001",
@@ -47,9 +49,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
       currentTile: { x: null, y: null },
     },
     () => {},
-    () => {},
-    undefined,
-    undefined
+    () => {}
   )
 );
 
@@ -57,9 +57,6 @@ const TilesetEditContext = createContext<TilesetEditStore>(
  * The edit context provider.
  */
 function TilesetEditContextProvider(props: Record<string, any>) {
-  const snack = useContext(SnackContext);
-  const modal = useContext(ModalContext);
-
   // The state of the edit context
   const [edit, setEdit] = useState<TilesetEditorState>({
     tileset: {
@@ -68,7 +65,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
       rows: 12,
       createDate: new Date(),
       lastSaveDate: new Date(),
-      image: "/leve1and2tileset.png",
+      image: "",
       imageHeight: 120,
       imageWidth: 120,
       tileHeight: 10,
@@ -79,6 +76,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
       properties: [],
       isPublished: false,
     },
+    tilesetChanges: {},
     currentEditControl: TilesetEditControl.draw,
     penSize: 1,
     penColor: "#F0D101",
@@ -94,11 +92,20 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     currentTile: { x: null, y: null },
   });
 
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilesetApi.getTilesetById(id).then((res) => {
+      setEdit({ ...edit, tileset: res.data.tileset });
+    });
+    if (edit.tileset.id === "") return;
+  }, [edit.tileset.id]);
+
   // The navigation for the auth context???
   const nav = useNavigate();
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
-  const TilesetEdit = new TilesetEditStore(edit, setEdit, nav, snack, modal);
+  const TilesetEdit = new TilesetEditStore(edit, setEdit, nav);
 
   return (
     <TilesetEditContext.Provider value={TilesetEdit}>

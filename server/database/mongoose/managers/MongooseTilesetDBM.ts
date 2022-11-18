@@ -89,8 +89,18 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         if (!tilesetIds.every((id) => mongoose.Types.ObjectId.isValid(id))) {
             return [];
         }
+
         let tilesets = await TilesetModel.find({ _id: { $in: tilesetIds } });
         return tilesets.map((tileset) => this.parseTileset(tileset));
+    }
+
+    async createTileset(tileset: Partial<Tileset> & { owner: string, name: string }): Promise<Tileset | null> {
+        if (!mongoose.Types.ObjectId.isValid(tileset.owner)) {
+            return null;
+        }
+        let newTileset = new TilesetModel({ ...tileset });
+        let savedTileset = await newTileset.save();
+        return this.parseTileset(savedTileset);
     }
 
     async getTilesetByName(name: string): Promise<Tileset | null> {
@@ -99,15 +109,6 @@ export default class MongooseTilesetDBM implements TilesetDBM {
             return null;
         }
         return this.parseTileset(tileset);
-    }
-
-    async createTileset(tileset: Partial<Tileset> & { owner: string, name: string }): Promise<Tileset | null> {
-        if (!mongoose.Types.ObjectId.isValid(tileset.owner)) {
-            return null;
-        }
-        let newTileset = new TilesetModel({...tileset});
-        let savedTileset = await newTileset.save();
-        return this.parseTileset(savedTileset);
     }
 
     async updateTilesetById(
@@ -140,7 +141,9 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return this.parseTileset(tileset);
     }
 
-    protected parseTileset(tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId }): Tileset {
+    protected parseTileset(
+        tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId }
+    ): Tileset {
         return {
             id: tileset._id.toString(),
             columns: tileset.columns,
@@ -159,7 +162,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
             isPublished: tileset.isPublished,
         };
     }
-    protected fillTileset(tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId },
+    protected fillTileset(
+        tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId },
         partial: Partial<Tileset>
     ): void {
         tileset.columns = partial.columns ? partial.columns : tileset.columns;
@@ -188,6 +192,8 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         tileset.updatedAt = partial.lastSaveDate
             ? partial.lastSaveDate
             : tileset.updatedAt;
-        tileset.createdAt = partial.createDate ? partial.createDate : tileset.createdAt;
+        tileset.createdAt = partial.createDate
+            ? partial.createDate
+            : tileset.createdAt;
     }
 }

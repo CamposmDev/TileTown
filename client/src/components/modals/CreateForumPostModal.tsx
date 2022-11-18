@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
@@ -90,7 +90,9 @@ const CreateForumPostModal = () => {
     )
     return (
         <>
-            <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            <Tooltip title={'Create Post'}>
+             <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            </Tooltip>
             {ui}
         </>
     )

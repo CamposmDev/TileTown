@@ -8,6 +8,7 @@ import {
   HexToDec,
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import "./default.css";
+import { EditTwoTone } from "@mui/icons-material";
 
 const TilesetCanvas = () => {
   /**color data of all the pixels of an image
@@ -27,9 +28,7 @@ const TilesetCanvas = () => {
 
   //canvas refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-  const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
@@ -54,7 +53,6 @@ const TilesetCanvas = () => {
       : window.location.host;
   const image: string =
     "http://" + host + "/api/media/" + edit.state.tileset.image;
-
   useEffect(() => {
     console.log("render canvas");
     if (canvasRef.current) {
@@ -68,11 +66,12 @@ const TilesetCanvas = () => {
         contextRef.current = ctx;
         canvasImage.src = image;
         canvasImage.crossOrigin = "Anonymous";
-        canvasImage.onload = () =>
+        canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
+        };
       }
     }
-  }, [image]);
+  }, [edit.state.tileset.image]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {

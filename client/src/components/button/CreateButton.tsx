@@ -70,8 +70,8 @@ const CreateButton = (props: MenuItemProps) => {
       </MenuItem>
       <MenuItem
         onClick={showCreateTilesetModal}
-        component={Link}
-        to="/create/tileset"
+        // component={Link}
+        // to="/create/tileset"
       >
         Tileset
       </MenuItem>
