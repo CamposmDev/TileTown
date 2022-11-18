@@ -18,7 +18,7 @@ const EditForumPostModal = (props: Props) => {
     const [text, setText] = useState('')
 
     const handleAppend = () => {
-        // Do something here
+        throw new Error('Not Implemented Yet')
         props.callback(false)
     }
 
