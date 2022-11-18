@@ -55,6 +55,10 @@ const TilesetCanvas = () => {
   const image: string =
     "http://" + host + "/api/media/" + edit.state.tileset.image;
 
+  console.log("tileset: ");
+  console.log(edit.state.tileset);
+  let render = edit.state.firstRender;
+
   useEffect(() => {
     console.log("render canvas");
     if (canvasRef.current) {
@@ -67,12 +71,15 @@ const TilesetCanvas = () => {
         const rectWidth = canvas.width;
         contextRef.current = ctx;
         canvasImage.src = image;
+        console.log(canvasImage.src);
         canvasImage.crossOrigin = "Anonymous";
-        canvasImage.onload = () =>
+        canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
+        };
+        render = false;
       }
     }
-  }, [image]);
+  }, [render]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {

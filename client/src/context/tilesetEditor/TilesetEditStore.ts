@@ -25,40 +25,48 @@ export class TilesetEditStore {
   private readonly _state: TilesetEditorState;
   private readonly setEdit: (edit: TilesetEditorState) => void;
   private readonly nav: NavigateFunction;
-  private readonly snack: SnackStore | undefined;
-  private readonly modal: ModalStore | undefined;
 
   constructor(
     edit: TilesetEditorState,
     setEdit: (state: TilesetEditorState) => void,
-    nav: NavigateFunction,
-    snack: SnackStore | undefined,
-    modal: ModalStore | undefined
+    nav: NavigateFunction
   ) {
     this._state = edit;
     this.setEdit = setEdit;
     this.nav = nav;
-    this.snack = snack;
-    this.modal = modal;
-    console.log(snack);
-    console.log(modal);
   }
 
   public get state(): TilesetEditorState {
     return this._state;
   }
 
-  public async createTileset(formData: FormData): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.CREATE_NEW_TILESET,
-      payload: {
-        formData: formData,
-      },
-    });
+  public async createTileset(
+    formData: FormData,
+    snack?: SnackStore,
+    modal?: ModalStore
+  ): Promise<void> {
+    await TilesetApi.createTileset(formData)
+      .then((res) => {
+        if (res.status === 201) {
+          snack?.showSuccessMessage(res.data.message);
+          modal?.close();
+          const newTileset: Tileset = res.data.tileset;
+          this.handleAction({
+            type: TilesetEditorActionType.CREATE_NEW_TILESET,
+            payload: {
+              tileset: newTileset,
+            },
+          });
+        }
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e) && e.response) {
+          snack?.showErrorMessage(e.response.data.message);
+        }
+      });
   }
 
   public async updateTileset(tileset: Partial<Tileset>): Promise<void> {
-    console.log(tileset);
     this.handleAction({
       type: TilesetEditorActionType.UPDATE_TILESET,
       payload: {
@@ -144,8 +152,6 @@ export class TilesetEditStore {
     x: number | null;
     y: number | null;
   }): Promise<void> {
-    console.log("updateCurrentTile");
-    console.log(currentTile);
     this.handleAction({
       type: TilesetEditorActionType.UPDATE_CURRENT_TILE,
       payload: { currentTile },
@@ -161,7 +167,7 @@ export class TilesetEditStore {
     const { type, payload } = action;
     switch (type) {
       case TilesetEditorActionType.CREATE_NEW_TILESET: {
-        this.handleCreateNewTileset(payload.formData);
+        this.handleCreateNewTileset(payload.tileset);
         break;
       }
       case TilesetEditorActionType.UPDATE_TILESET: {
@@ -276,41 +282,25 @@ export class TilesetEditStore {
     });
   }
 
-  protected async handleCreateNewTileset(formData: FormData): Promise<void> {
-    const res = TilesetApi.createTileset(formData);
-    res
-      .then((res) => {
-        console.log(res);
-        if (res.status === 201) {
-          console.log("?");
-          console.log(this.snack);
-          console.log(this.modal);
-          this.snack?.showSuccessMessage(res.data.message);
-          this.modal?.close();
-          const newTileset: Tileset = res.data.tileset;
-          this.setEdit({
-            tileset: newTileset,
-            currentEditControl: this._state.currentEditControl,
-            penSize: this._state.penSize,
-            penColor: this._state.penColor,
-            savedColors: this._state.savedColors,
-            gridEnabled: this._state.gridEnabled,
-            restrictToTile: this._state.restrictToTile,
-            gridSize: this._state.gridSize,
-            gridColor: this._state.gridColor,
-            modalType: TilesetEditorModalType.close,
-            isSaved: false,
-            firstRender: this._state.firstRender,
-            zoom: this._state.zoom,
-            currentTile: this._state.currentTile,
-          });
-        }
-      })
-      .catch((e) => {
-        if (axios.isAxiosError(e) && e.response) {
-          this.snack?.showErrorMessage(e.response.data.message);
-        }
-      });
+  protected handleCreateNewTileset(tileset: Tileset): void {
+    console.log(tileset);
+    this.setEdit({
+      tileset: tileset,
+      currentEditControl: this._state.currentEditControl,
+      penSize: this._state.penSize,
+      penColor: this._state.penColor,
+      savedColors: this._state.savedColors,
+      gridEnabled: this._state.gridEnabled,
+      restrictToTile: this._state.restrictToTile,
+      gridSize: this._state.gridSize,
+      gridColor: this._state.gridColor,
+      modalType: TilesetEditorModalType.close,
+      isSaved: false,
+      firstRender: this._state.firstRender,
+      zoom: this._state.zoom,
+      currentTile: this._state.currentTile,
+    });
+    console.log(this._state.tileset);
   }
 
   protected handleUpdateTileset(tileset: Partial<Tileset>): void {

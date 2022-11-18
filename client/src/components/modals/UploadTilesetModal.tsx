@@ -15,6 +15,7 @@ import {
 import React, { useContext, useState, useRef } from "react";
 import { useForm, UseFormRegister, FieldValues } from "react-hook-form";
 import { ModalContext } from "src/context/modal";
+import { SnackContext } from "src/context/snack";
 import { TilesetEditContext } from "src/context/tilesetEditor";
 import { TilesetApi } from "../../api";
 
@@ -24,6 +25,7 @@ type imageForm = {
 
 const UploadTilesetModal = () => {
   const modal = useContext(ModalContext);
+  const snack = useContext(SnackContext);
   const edit = useContext(TilesetEditContext);
   const { register, handleSubmit } = useForm();
   const [tileset, setTileset] = useState({
@@ -106,12 +108,7 @@ const UploadTilesetModal = () => {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    console.log(e.target[0].files[0]);
-    console.log(e.target);
     let f = new FormData(e.target);
-    for (let key of f.keys()) {
-      console.log(key);
-    }
     f.append(
       "tileset",
       JSON.stringify({
@@ -124,7 +121,7 @@ const UploadTilesetModal = () => {
         imageHeight: Number(tileset.row) * Number(tileset.height),
       })
     );
-    edit.createTileset(f);
+    edit.createTileset(f, snack, modal);
   };
   let ui = (
     <Dialog

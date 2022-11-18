@@ -213,7 +213,7 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.CREATE_NEW_TILESET;
-      payload: { formData: FormData };
+      payload: { tileset: Tileset };
     }
   | {
       type: TilesetEditorActionType.UPDATE_TILESET;
