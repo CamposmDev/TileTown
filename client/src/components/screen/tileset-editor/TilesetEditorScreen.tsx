@@ -63,7 +63,7 @@ const TilesetEditorScreen = () => {
 
   const download = () => {
     const link = document.createElement("a");
-    link.download = "filename.png";
+    link.download = edit.state.tileset.name;
     link.href = edit.state.imageData;
     link.click();
   };
