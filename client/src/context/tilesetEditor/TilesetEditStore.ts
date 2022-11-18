@@ -40,6 +40,8 @@ export class TilesetEditStore {
     this.nav = nav;
     this.snack = snack;
     this.modal = modal;
+    console.log(snack);
+    console.log(modal);
   }
 
   public get state(): TilesetEditorState {
@@ -281,6 +283,8 @@ export class TilesetEditStore {
         console.log(res);
         if (res.status === 201) {
           console.log("?");
+          console.log(this.snack);
+          console.log(this.modal);
           this.snack?.showSuccessMessage(res.data.message);
           this.modal?.close();
           const newTileset: Tileset = res.data.tileset;

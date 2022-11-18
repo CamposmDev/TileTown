@@ -33,6 +33,7 @@ const UploadTilesetModal = () => {
     row: "",
     column: "",
     source: "",
+    error: true,
   });
   const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTileset({
@@ -40,10 +41,10 @@ const UploadTilesetModal = () => {
       width: tileset.width,
       height: tileset.height,
       row: tileset.row,
-      column: tileset.height,
+      column: tileset.column,
       source: tileset.source,
+      error: e.target.value === "",
     });
-    console.log(tileset);
   };
   const changeWidth = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTileset({
@@ -51,10 +52,10 @@ const UploadTilesetModal = () => {
       width: e.target.value,
       height: tileset.height,
       row: tileset.row,
-      column: tileset.height,
+      column: tileset.column,
       source: tileset.source,
+      error: isNaN(Number(e.target.value)),
     });
-    console.log(tileset);
   };
   const changeHeight = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTileset({
@@ -62,10 +63,10 @@ const UploadTilesetModal = () => {
       width: tileset.width,
       height: e.target.value,
       row: tileset.row,
-      column: tileset.height,
+      column: tileset.column,
       source: tileset.source,
+      error: isNaN(Number(e.target.value)),
     });
-    console.log(tileset);
   };
   const changeRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTileset({
@@ -73,10 +74,10 @@ const UploadTilesetModal = () => {
       width: tileset.width,
       height: tileset.height,
       row: e.target.value,
-      column: tileset.height,
+      column: tileset.column,
       source: tileset.source,
+      error: isNaN(Number(e.target.value)),
     });
-    console.log(tileset);
   };
   const changeColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTileset({
@@ -86,19 +87,10 @@ const UploadTilesetModal = () => {
       row: tileset.row,
       column: e.target.value,
       source: tileset.source,
-    });
-    console.log(tileset);
-  };
-  const changeSource = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTileset({
-      name: tileset.name,
-      width: tileset.width,
-      height: tileset.height,
-      row: tileset.row,
-      column: tileset.column,
-      source: e.target.value,
+      error: isNaN(Number(e.target.value)),
     });
   };
+
   const handleClose = () => {
     setTileset({
       name: "",
@@ -107,12 +99,11 @@ const UploadTilesetModal = () => {
       row: "",
       column: "",
       source: "",
+      error: false,
     });
     modal.close();
   };
-  const handleUpload = () => {
-    console.log(tileset);
-  };
+
   const onSubmit = (e: any) => {
     e.preventDefault();
     console.log(e.target[0].files[0]);
@@ -125,17 +116,15 @@ const UploadTilesetModal = () => {
       "tileset",
       JSON.stringify({
         name: tileset.name,
-        rows: parseInt(tileset.row),
-        columns: parseInt(tileset.column),
-        tileWidth: parseInt(tileset.width),
-        tileHeight: parseInt(tileset.height),
-        imageWidth: parseInt(tileset.column) * parseInt(tileset.width),
-        imageHeight: parseInt(tileset.row) * parseInt(tileset.height),
+        rows: Number(tileset.row),
+        columns: Number(tileset.column),
+        tileWidth: Number(tileset.width),
+        tileHeight: Number(tileset.height),
+        imageWidth: Number(tileset.column) * Number(tileset.width),
+        imageHeight: Number(tileset.row) * Number(tileset.height),
       })
     );
-    console.log(f.get("tileset"));
     edit.createTileset(f);
-    // TilesetApi.createTileset(f);
   };
   let ui = (
     <Dialog
@@ -149,6 +138,8 @@ const UploadTilesetModal = () => {
         </DialogContentText>
         <Grid container mr={2} ml={2}>
           <TextField
+            error={tileset.name === ""}
+            helperText={tileset.name === "" ? "Please Enter A Name" : ""}
             margin="dense"
             required
             fullWidth
@@ -160,6 +151,10 @@ const UploadTilesetModal = () => {
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <TextField
+                error={isNaN(Number(tileset.width))}
+                helperText={
+                  isNaN(Number(tileset.width)) ? "Please Enter A Number" : ""
+                }
                 margin="dense"
                 required
                 fullWidth
@@ -176,6 +171,10 @@ const UploadTilesetModal = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                error={isNaN(Number(tileset.height))}
+                helperText={
+                  isNaN(Number(tileset.height)) ? "Please Enter A Number" : ""
+                }
                 margin="dense"
                 required
                 fullWidth
@@ -194,6 +193,10 @@ const UploadTilesetModal = () => {
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <TextField
+                error={isNaN(Number(tileset.row))}
+                helperText={
+                  isNaN(Number(tileset.row)) ? "Please Enter A Number" : ""
+                }
                 margin="dense"
                 required
                 fullWidth
@@ -210,6 +213,10 @@ const UploadTilesetModal = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                error={isNaN(Number(tileset.column))}
+                helperText={
+                  isNaN(Number(tileset.column)) ? "Please Enter A Number" : ""
+                }
                 margin="dense"
                 required
                 fullWidth
@@ -226,26 +233,6 @@ const UploadTilesetModal = () => {
             </Grid>
           </Grid>
           <Grid container>
-            {/* <TextField
-              margin="dense"
-              required
-              fullWidth
-              label="Source"
-              name="source"
-              onChange={changeSource}
-              autoFocus
-              disabled
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Button onClick={handleBrowse}>
-                      Browse
-                      <input type="file" hidden />
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-            /> */}
             <form onSubmit={onSubmit}>
               <input
                 {...register("search")}
@@ -253,8 +240,7 @@ const UploadTilesetModal = () => {
                 name="image"
                 accept=".png,jpg"
               ></input>
-              <button>Upload</button>
-              {/* <Button startIcon={<Upload />}>Upload</Button> */}
+              <button disabled={tileset.error}>Upload</button>
             </form>
           </Grid>
         </Grid>
