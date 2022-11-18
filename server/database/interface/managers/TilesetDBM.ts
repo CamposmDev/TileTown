@@ -9,9 +9,7 @@ export default interface TilesetDBM {
     getTilesetsById(tilesetIds: string[]): Promise<Tileset[]>
     getTilesetByName(name: string): Promise<Tileset | null>;
 
-    createTileset(userId: string,
-        tileset: Partial<Tileset>
-    ): Promise<Tileset | null>;
+    createTileset(tileset: Partial<Tileset> & { owner: string, name: string }): Promise<Tileset | null>;
 
     updateTilesetById(
         tilesetId: string,

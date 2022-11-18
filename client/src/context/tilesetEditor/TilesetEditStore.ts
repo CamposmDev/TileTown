@@ -2,13 +2,13 @@ import { ThirteenMp } from "@mui/icons-material";
 import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
 import {
-  Color,
-  Tileset,
-  TilesetEditorState,
-  TilesetEditControl,
-  TilesetEditorModalType,
-  TilesetEditorActionType,
-  TilesetEditorAction,
+    Color,
+    Tileset,
+    TilesetEditorState,
+    TilesetEditControl,
+    TilesetEditorModalType,
+    TilesetEditorActionType,
+    TilesetEditorAction,
 } from "./TilesetEditTypes";
 import { TilesetApi } from "../../api";
 import { SnackContext } from "../snack";
@@ -111,60 +111,60 @@ export class TilesetEditStore {
     });
   }
 
-  public async updatePen(size: number, color: Color): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.UPDATE_PEN,
-      payload: {
-        size,
-        color,
-      },
-    });
-  }
+    public async updatePen(size: number, color: Color): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.UPDATE_PEN,
+            payload: {
+                size,
+                color,
+            },
+        });
+    }
 
-  public async toggleGrid(): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.UPDATE_GRID,
-      payload: {
-        gridEnabled: !this._state.gridEnabled,
-        gridSize: this._state.gridSize,
-        gridColor: this._state.gridColor,
-      },
-    });
-  }
+    public async toggleGrid(): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.UPDATE_GRID,
+            payload: {
+                gridEnabled: !this._state.gridEnabled,
+                gridSize: this._state.gridSize,
+                gridColor: this._state.gridColor,
+            },
+        });
+    }
 
-  public async updateGrid(gridSize: number, gridColor: Color): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.UPDATE_GRID,
-      payload: {
-        gridEnabled: this._state.gridEnabled,
-        gridSize,
-        gridColor,
-      },
-    });
-  }
+    public async updateGrid(gridSize: number, gridColor: Color): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.UPDATE_GRID,
+            payload: {
+                gridEnabled: this._state.gridEnabled,
+                gridSize,
+                gridColor,
+            },
+        });
+    }
 
-  public async updateColors(colors: [Color]): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.UPDATE_COLORS,
-      payload: {
-        colors,
-      },
-    });
-  }
+    public async updateColors(colors: [Color]): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.UPDATE_COLORS,
+            payload: {
+                colors,
+            },
+        });
+    }
 
-  public async toggleRestrictToTile(): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.TOGGLE_RESTRICT_TO_TILE,
-      payload: {},
-    });
-  }
+    public async toggleRestrictToTile(): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.TOGGLE_RESTRICT_TO_TILE,
+            payload: {},
+        });
+    }
 
-  public async toggleFirstRender(): Promise<void> {
-    this.handleAction({
-      type: TilesetEditorActionType.TOGGLE_FIRST_RENDER,
-      payload: {},
-    });
-  }
+    public async toggleFirstRender(): Promise<void> {
+        this.handleAction({
+            type: TilesetEditorActionType.TOGGLE_FIRST_RENDER,
+            payload: {},
+        });
+    }
 
   public async updateZoom(zoom: number): Promise<void> {
     this.handleAction({
