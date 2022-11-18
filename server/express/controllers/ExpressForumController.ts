@@ -142,7 +142,7 @@ export default class ForumController {
         }
 
         // Return the updated forum post
-        return res.status(200).json({message: "Successfully created a forum post", forumPost: updatedForumPost})
+        return res.status(200).json({message: "Successfully liked a forum post", forumPost: updatedForumPost})
     }
     public async dislikeForumPostById(req: Request, res: Response): Promise<Response> {
         // Check for bad request and missing parameters

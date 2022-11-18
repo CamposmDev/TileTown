@@ -2,12 +2,18 @@ import ForumPost from "../../../../../@types/ForumPost"
 
 export type ForumAction = 
 | GetForumPostsByName
-| SetCurrentForumPost
+| ViewForumPost
+| LikeForumPost
+| DislikeForumPost
+| CommentForumPost
 | Clear
 
 export enum ForumActionType {
-    setCurrentForumPost = 'SET_CURRENT_FORUM_POST',
     getForumPosts = 'GET_FORUM_POSTS',
+    viewForumPost = 'VIEW_FORUM_POST',
+    likeForumPost = 'LIKE_FORUM_POST',
+    dislikeForumPost = 'DISLIKE_FORUM_POST',
+    commentForumPost = 'COMMENT_FORUM_POST',
     clear = 'CLEAR'
 }
 
@@ -18,9 +24,34 @@ export type GetForumPostsByName = {
     }
 }
 
-export type SetCurrentForumPost = {
-    type: ForumActionType.setCurrentForumPost,
+export type ViewForumPost = {
+    type: ForumActionType.viewForumPost,
     payload: {
+        oldForumPost: ForumPost
+        currentForumPost: ForumPost
+    }
+}
+
+export type LikeForumPost = {
+    type: ForumActionType.likeForumPost,
+    payload: {
+        oldForumPost: ForumPost | undefined
+        currentForumPost: ForumPost
+    }
+}
+
+export type DislikeForumPost = {
+    type: ForumActionType.dislikeForumPost,
+    payload: {
+        oldForumPost: ForumPost | undefined
+        currentForumPost: ForumPost
+    }
+}
+
+export type CommentForumPost = {
+    type: ForumActionType.commentForumPost,
+    payload: {
+        oldForumPost: ForumPost | undefined
         currentForumPost: ForumPost
     }
 }

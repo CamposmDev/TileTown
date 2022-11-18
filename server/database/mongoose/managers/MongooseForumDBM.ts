@@ -81,6 +81,7 @@ export default class MongooseForumDBM implements ForumDBM {
         forum.tags = partial.tags ? partial.tags : forum.tags;
         forum.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : forum.likes;
         forum.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : forum.dislikes;
+        forum.views = partial.views ? partial.views : forum.views
         forum.isPublished = partial.isPublished ? partial.isPublished : forum.isPublished;
         forum.comments = partial.comments ? partial.comments.map(id => new mongoose.Types.ObjectId(id)) : forum.comments;
         forum.publishDate = partial.publishDate ? partial.publishDate : forum.publishDate;
