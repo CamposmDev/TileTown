@@ -75,7 +75,6 @@ const SearchToolbar = (props: Props) => {
                             fullWidth 
                             size="small"
                             onChange={(e) => {
-                                console.log(query)
                                 setQuery(e.target.value)
                             }}
                             onKeyDown={handleSubmit}

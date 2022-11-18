@@ -1,7 +1,6 @@
 import { ForumPost } from "@types";
 
 export default interface GetForumsRes {
-    forumPost?: ForumPost[]
-
+    forumPosts?: ForumPost[]
     message: string
 }

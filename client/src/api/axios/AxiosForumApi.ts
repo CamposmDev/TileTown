@@ -22,7 +22,7 @@ export default class AxiosForumApi {
     }
 
     public async getForums(name: string): Promise<AxiosResponse<GetForumsRes>> {
-        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { name: name } });
+        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { title: name } });
 
     }
 
