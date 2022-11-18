@@ -48,8 +48,6 @@ export class TilesetEditStore {
     await TilesetApi.createTileset(formData)
       .then((res) => {
         if (res.status === 201) {
-          snack?.showSuccessMessage(res.data.message);
-          modal?.close();
           const newTileset: Tileset = res.data.tileset;
           this.handleAction({
             type: TilesetEditorActionType.CREATE_NEW_TILESET,
@@ -57,6 +55,8 @@ export class TilesetEditStore {
               tileset: newTileset,
             },
           });
+          snack?.showSuccessMessage(res.data.message);
+          modal?.close();
         }
       })
       .catch((e) => {

@@ -76,10 +76,10 @@ const TilesetCanvas = () => {
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
         };
-        render = false;
+        // render = false;
       }
     }
-  }, [render]);
+  }, [image]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {
