@@ -66,7 +66,8 @@ export default class MongooseForumDBM implements ForumDBM {
             dislikes: forum.dislikes.map(id => id.toString()),
             views: forum.views,
             isPublished: forum.isPublished,
-            comments: forum.comments.map(id => id.toString())
+            comments: forum.comments.map(id => id.toString()),
+            publishDate: forum.publishDate
         }
     }
     protected fillForumPost(forum: ForumSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<ForumPost>): void {
@@ -78,5 +79,6 @@ export default class MongooseForumDBM implements ForumDBM {
         forum.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : forum.dislikes;
         forum.isPublished = partial.isPublished ? partial.isPublished : forum.isPublished;
         forum.comments = partial.comments ? partial.comments.map(id => new mongoose.Types.ObjectId(id)) : forum.comments;
+        forum.publishDate = partial.publishDate ? partial.publishDate : null;
     }
 }

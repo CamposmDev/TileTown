@@ -12,4 +12,5 @@ export default interface ForumSchemaType {
     comments: ObjectId[];
     views: number;
     isPublished: boolean;
+    publishDate: Date | null;
 }

@@ -16,7 +16,8 @@ const ForumPostSchema = new Schema<ForumSchemaType>({
     dislikes: { type: [ObjectId], require: true},
     comments: { type: [ObjectId], require: true},
     views: { type: Number, require: true },
-    isPublished: { type: Boolean, require: true}
+    isPublished: { type: Boolean, require: true},
+    publishDate: { type: Date, require: true, default: null}
 })
 
 const ForumPostModel = mongoose.model('ForumPostSchema', ForumPostSchema);
