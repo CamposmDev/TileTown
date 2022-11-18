@@ -1,8 +1,8 @@
-import { Dialog, Tooltip } from "@mui/material"
+import { Dialog } from "@mui/material"
 import { AppBar, Toolbar, Grid, Typography, Button, IconButton, Stack, Card, CardContent, TextField} from "@mui/material"
 import UserProfileBox from "../UserProfileBox"
 import CommentCard from "../card/CommentCard"
-import { Create, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
+import { ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import { ForumPost } from "@types"
 import { useContext, useEffect, useState } from "react"
 import { ForumContext } from "src/context/social/forum"
@@ -10,12 +10,11 @@ import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { parseDateToPostedStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import { SocialContext } from "src/context/social"
-import { AuthContext } from "src/context/auth"
 
 const ForumPostModal = () => {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
-    // const auth = useContext(AuthContext)
+    const [comment, setComment] = useState('')
     const [user, setUser] = useState({
         firstName: '',
         lastName: '',
@@ -23,36 +22,29 @@ const ForumPostModal = () => {
     })
 
     useEffect(() => {
-        let userId = forum.getCurrentForumPost()?.author
-        console.log(userId)
-        if (userId) {
-            social.getUserById(userId).then(u => {
-                if (u) {
-                    setUser({
-                        firstName: u.firstName,
-                        lastName: u.lastName,
-                        username: u.username
-                    })
-                }
-            })
+        let userId: string | undefined = forum.getCurrentForumPost()?.author
+        let aux = async () => {
+            if (userId) {
+                await social.getUserById(userId).then(u => {
+                    if (u) setUser({firstName: u.firstName, lastName: u.lastName, username: u.username})
+                })
+            }
         }
-    }, [])
+        aux()
+    }, [forum.getCurrentForumPost()])
     let open = Boolean(forum.getCurrentForumPost())
     const handleClose = () => {
         forum.clearCurrentForumPost()
     }
-
-    
+    const handleKeyUp = (e: React.KeyboardEvent) => {
+        if (e.code === 'Enter') {
+            console.log(comment)
+        }
+    }
 
     let forumPost: ForumPost | undefined = forum.getCurrentForumPost()
     let content = <div></div>
-    // let edit  = <div></div>
     if (forumPost) {
-        // if (auth.getUsr()?.id.localeCompare(forumPost.author) === 0) {
-        //     edit = <div>
-        //         <Tooltip title='Append Post'><IconButton><Create/></IconButton></Tooltip>
-        //     </div>
-        // }
         content = 
             <CardContent>
                 <Grid container alignItems={'center'} mb={1}>
@@ -93,7 +85,7 @@ const ForumPostModal = () => {
         <Dialog open={open} fullScreen onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
-                    <Grid alignItems={'center'} direction='row' sx={{flexGrow: 1}}>
+                    <Grid alignItems={'center'} container direction='row' sx={{flexGrow: 1}}>
                         <Typography variant="h6" component="div">
                             {forumPost?.title}
                         </Typography>
@@ -110,9 +102,9 @@ const ForumPostModal = () => {
                     </Card>
                 </Grid>
                 <Grid container item xs={6} pl={1}>
-                    <TextField fullWidth label='Comment'/>
-                    {forumPost?.comments.map((x,i) =>
-                        <CommentCard commentId={x} />
+                    <TextField fullWidth label='Comment' onChange={(e) => setComment(e.target.value)} onKeyUp={handleKeyUp}/>
+                    {forumPost?.comments.map(x =>
+                        <CommentCard commentId={x} key={x}/>
                     )}
                 </Grid>
             </Grid>

@@ -6,6 +6,8 @@ import {
 
 import AxiosApi  from "./AxiosApi";
 import GetForumsReq from "@requests/forum/GetForumsReq";
+import { ViewForumRes } from "@responses/forum/ViewForumRes";
+import { ViewForumReq } from "@requests/forum/ViewForumReq";
 
 export default class AxiosForumApi {
 
@@ -28,5 +30,9 @@ export default class AxiosForumApi {
 
     public async updateForumById(forumId: string, payload: UpdateForumReq): Promise<AxiosResponse<UpdateForumRes>> {
         return AxiosApi.put<UpdateForumRes, AxiosResponse<UpdateForumRes>, UpdateForumReq>(`/forum/${forumId}`, payload);
+    }
+
+    public async viewForumById(forumId: string): Promise<AxiosResponse<ViewForumRes>> {
+        return AxiosApi.put<ViewForumRes, AxiosResponse<ViewForumRes>, ViewForumReq>(`forum/view/${forumId}`)
     }
 }

@@ -22,12 +22,19 @@ export class ForumStore {
         return this._forum.currentForumPost
     }
 
-    public setCurrentForumPost(forumPost: ForumPost): void {
-        this.handleAction({
-            type: ForumActionType.setCurrentForumPost,
-            payload: {
-                currentForumPost: forumPost
+    public async viewForumPost(forumPost: ForumPost, snack?: SnackStore): Promise<void> {
+        ForumApi.viewForumById(forumPost.id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: ForumActionType.viewForumPost,
+                    payload: {
+                        oldForumPost: forumPost,
+                        currentForumPost: res.data.forumPost
+                    }
+                })      
             }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 
@@ -70,7 +77,9 @@ export class ForumStore {
                 })
                 break
             }
-            case ForumActionType.setCurrentForumPost: {
+            case ForumActionType.viewForumPost: {
+                let i = this._forum.forumPosts.indexOf(action.payload.oldForumPost)
+                this._forum.forumPosts.splice(i, 1, action.payload.currentForumPost)
                 this._setForum({
                     currentForumPost: action.payload.currentForumPost,
                     forumPosts: this._forum.forumPosts

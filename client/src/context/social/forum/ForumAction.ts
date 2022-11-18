@@ -2,12 +2,12 @@ import ForumPost from "../../../../../@types/ForumPost"
 
 export type ForumAction = 
 | GetForumPostsByName
-| SetCurrentForumPost
+| ViewForumPost
 | Clear
 
 export enum ForumActionType {
-    setCurrentForumPost = 'SET_CURRENT_FORUM_POST',
     getForumPosts = 'GET_FORUM_POSTS',
+    viewForumPost = 'VIEW_FORUM_POST',
     clear = 'CLEAR'
 }
 
@@ -18,9 +18,10 @@ export type GetForumPostsByName = {
     }
 }
 
-export type SetCurrentForumPost = {
-    type: ForumActionType.setCurrentForumPost,
+export type ViewForumPost = {
+    type: ForumActionType.viewForumPost,
     payload: {
+        oldForumPost: ForumPost
         currentForumPost: ForumPost
     }
 }
