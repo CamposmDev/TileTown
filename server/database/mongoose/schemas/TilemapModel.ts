@@ -27,7 +27,7 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
     default: { editMode: "free", timeLimit: 0, tileLimit: 0 }
   },
   collaboratorIndex: { type: Number, required: true, default: -1 },
-  image: { type: String, required: true, default: "" },
+  image: { type: String, required: true, default: "~" },
   height: { type: Number, required: true , default: 12 },
   width: { type: Number, required: true, default: 12 },
   layers: {
@@ -78,6 +78,8 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   },
   renderOrder: { type: String, required: true, default: "right-down" },
   isPublished: { type: Boolean, required: true, default: false },
+  createdAt: { type: Date, required: true, default: new Date(Date.now()) },
+  updatedAt: { type: Date, required: true, default: new Date(Date.now()) }
 });
 
 const TilemapModel = mongoose.model("Tilemap", TilemapSchema);

@@ -171,6 +171,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         tilemap.renderOrder = partial.renderOrder ? partial.renderOrder : tilemap.renderOrder;
         tilemap.isPublished = partial.isPublished ? partial.isPublished : tilemap.isPublished;
         tilemap.globalTileIDs = partial.globalTileIDs ? partial.globalTileIDs : tilemap.globalTileIDs;
+        tilemap.createdAt = partial.createDate ? partial.createDate : tilemap.createdAt;
+        tilemap.updatedAt = partial.createDate ? partial.createDate : tilemap.updatedAt;
     }
     
 }

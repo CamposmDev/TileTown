@@ -212,7 +212,7 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, tilemap);
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, createDate: new Date(Date.now())});
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }
