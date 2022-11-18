@@ -84,39 +84,16 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         return partials;
     }
 
-    async createTilemap(userId: string, tilemap: Partial<Tilemap>): Promise<Tilemap | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId)) return null;
+    async createTilemap(tilemap: Partial<Tilemap> & {owner: string, name: string}): Promise<Tilemap | null> {
+        if (!mongoose.Types.ObjectId.isValid(tilemap.owner)) return null;
 
-        //TODO add user to collaborators and collaborator names
-        let newTilemap = new TilemapModel({
-            backgroundColor: tilemap.backgroundColor == null ? "#FFFFFF" : tilemap.backgroundColor,
-            collaborators: [userId],
-            collaboratorNames: [],
-            collaboratorSettings: { editMode: "free", timeLimit: 0, tileLimit: 0 },
-            collaboratorIndex: -1,
-            image: tilemap.image == null ? "noImage" : tilemap.image,
-            height: tilemap.height == null ? 12 : tilemap.height,
-            width: tilemap.width == null ? 12 : tilemap.width,
-            layers: tilemap.layers == null ? [] : tilemap.layers,
-            tileHeight: tilemap.tileHeight == null ? -1 : tilemap.tileHeight,
-            tileWidth: tilemap.tileWidth == null ? -1 : tilemap.tileWidth,
-            nextLayerId: tilemap.nextLayerId == null ? 0 : tilemap.nextLayerId,
-            nextObjectId: tilemap.nextObjectId == null ? 0 : tilemap.nextObjectId,
-            orientation: "orthogonal",
-            name: tilemap.name,
-            owner: new mongoose.Types.ObjectId(userId),
-            tilesets: tilemap.tilesets == null ? [] : tilemap.tilesets,
-            globalTileIDs: tilemap.globalTileIDs == null ? [1] : tilemap.globalTileIDs,
-            properties: tilemap.properties == null ? [] : tilemap.properties,
-            renderOrder: tilemap.renderOrder == null ? "right-down" : tilemap.renderOrder,
-            isPublished: false,
-        });
-
+        let newTilemap = new TilemapModel({...tilemap});
         let savedTilemap = await newTilemap.save();
+
         if (savedTilemap === null) return null;
-        console.log(savedTilemap.collaboratorSettings);
         return this.parseTilemap(savedTilemap);
     }
+
     async updateTilemapById(tilemapId: string, partial: Partial<Tilemap>): Promise<Tilemap | null> {
         // Verify user is valid mongoose ObjectId
         if (!mongoose.Types.ObjectId.isValid(tilemapId)) return null;

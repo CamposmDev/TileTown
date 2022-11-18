@@ -11,25 +11,25 @@ const ObjectId = Schema.Types.ObjectId;
 /**
  * Data model for storing Tilemap data
  * @author Andrew Ojeda
- * @
+ * @author Peter Walsh
  */
-
 const TilemapSchema = new Schema<TilemapSchemaType>({
-  backgroundColor: { type: String, required: true },
-  collaborators: { type: [ObjectId], required: true },
-  collaboratorNames: { type: [String], required: true },
+  backgroundColor: { type: String, required: true, default: "#FFFFFF" },
+  collaborators: { type: [ObjectId], required: true, default: [] },
+  collaboratorNames: { type: [String], required: true, default: [] },
   collaboratorSettings: {
     type: {
-      editMode: { type: String, required: true },
-      timeLimit: { type: Number, required: true },
-      tileLimit: { type: Number, required: true },
+      editMode: { type: String, required: true, default: "free" },
+      timeLimit: { type: Number, required: true, default: 0 },
+      tileLimit: { type: Number, required: true, default: 0 },
     },
-    required: true,
+    required: true, 
+    default: { editMode: "free", timeLimit: 0, tileLimit: 0 }
   },
-  collaboratorIndex: { type: Number, required: true },
-  image: { type: String, required: true },
-  height: { type: Number, required: true },
-  width: { type: Number, required: true },
+  collaboratorIndex: { type: Number, required: true, default: -1 },
+  image: { type: String, required: true, default: "" },
+  height: { type: Number, required: true , default: 12 },
+  width: { type: Number, required: true, default: 12 },
   layers: {
     type: [
       {
@@ -53,29 +53,31 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
         y: { type: Number, required: true },
       },
     ],
-    required: true,
+    required: true, 
+    default: []
   },
-  tileHeight: { type: Number, required: true },
-  tileWidth: { type: Number, required: true },
-  nextLayerId: { type: Number, required: true },
-  nextObjectId: { type: Number, required: true },
-  orientation: { type: String, required: true },
+  tileHeight: { type: Number, required: true, default: -1 },
+  tileWidth: { type: Number, required: true, default: -1 },
+  nextLayerId: { type: Number, required: true, default: 0 },
+  nextObjectId: { type: Number, required: true, default: 0 },
+  orientation: { type: String, required: true, default: "orthogonal" },
   name: { type: String, required: true },
   owner: { type: String, required: true },
-  tilesets: { type: [ObjectId], required: true },
-  globalTileIDs: { type: [Number], required: true },
+  tilesets: { type: [ObjectId], required: true, default: [] },
+  globalTileIDs: { type: [Number], required: true, default: [1] },
   properties: {
     type: [
       {
-        name: { type: String, required: true },
-        ptype: { type: String, required: true },
-        value: { type: String, required: true },
+        name: { type: String, required: true, default: "" },
+        ptype: { type: String, required: true, default: "string" },
+        value: { type: String, required: true, default: "" },
       },
     ],
     required: false,
+    default: []
   },
-  renderOrder: { type: String, required: true },
-  isPublished: { type: Boolean, required: true },
+  renderOrder: { type: String, required: true, default: "right-down" },
+  isPublished: { type: Boolean, required: true, default: false },
 });
 
 const TilemapModel = mongoose.model("Tilemap", TilemapSchema);

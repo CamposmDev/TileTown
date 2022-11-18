@@ -60,7 +60,7 @@ export default interface TilemapDBM {
    * @param tilemap partial of Tilemap being created
    * @return a Tilemap object with all information about the Tilemap or null
    */
-  createTilemap(userId: string, tilemap: Partial<Tilemap>): Promise<Tilemap | null>;
+  createTilemap(tilemap: Partial<Tilemap> & {owner: string, name: string}): Promise<Tilemap | null>;
 
   /**
    * Updates Tilemap in the DBMS from the Partial Tilemap
