@@ -1,7 +1,7 @@
-import { EmojiEvents, Group } from "@mui/icons-material"
-import { Box, Grid, IconButton, Toolbar, Typography } from "@mui/material"
-import { Stack } from "@mui/system"
+import { Grid, Toolbar, Typography } from "@mui/material"
+import { useContext } from "react"
 import Carousel from "react-material-ui-carousel"
+import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import TileItemCard from "../card/TileItemCard"
 import CommunityContestsModal from "../modals/CommunityContestsModal"
@@ -70,15 +70,20 @@ let tilesets = [{
 }]
 
 const CommunityProfileScreen = () => {
-    const SIZE = 550
+    const comm = useContext(CommunityContext)
+    let c = comm.getCurrentCommunity()
+    if (c) {
+
+    }
+    const RES_SIZE = 550
     return (
         <Grid> 
             <Grid>
                 <Toolbar sx={{boxShadow: 1}}>
                     <Grid container alignItems='center'>
                         <Grid item>
-                            <Typography variant='h6'>RPGs Done Right</Typography>
-                            <Typography variant='body1'>We don't like streets or dungeon masters.</Typography>
+                            <Typography variant='h6'>{c?.name}</Typography>
+                            <Typography variant='body1'>{c?.description}</Typography>
                         </Grid>
                     </Grid>
                     <CommunityContestsModal/>
@@ -127,7 +132,7 @@ const CommunityProfileScreen = () => {
             <Grid container m={1} spacing={1} justifyContent='center'>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
-                    <Carousel sx={{width: SIZE, height: SIZE+30}}>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
                         {tilemaps.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
@@ -139,15 +144,15 @@ const CommunityProfileScreen = () => {
                                 tags={x.tags}
                                 tilemapName={x.tilemapName}
                                 views={x.views}
-                                width={SIZE}
-                                height={SIZE}
+                                width={RES_SIZE}
+                                height={RES_SIZE}
                             />
                         </Grid>)}
                     </Carousel>   
                 </Grid>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilesets</Typography>
-                    <Carousel sx={{width: SIZE, height: SIZE+30}}>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
                         {tilesets.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
@@ -159,8 +164,8 @@ const CommunityProfileScreen = () => {
                                 tags={x.tags}
                                 tilemapName={x.tilemapName}
                                 views={x.views}
-                                width={SIZE}
-                                height={SIZE}
+                                width={RES_SIZE}
+                                height={RES_SIZE}
                             /></Grid>)}
                     </Carousel>   
                 </Grid>

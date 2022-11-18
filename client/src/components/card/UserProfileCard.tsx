@@ -73,7 +73,7 @@ const UserProfileCard = (props: Props) => {
     let minimal = 
         <div>
             {menu}
-            <Card sx={{p: 1}}>
+            <Card sx={{p: 1, boxShadow: 3}}>
                 <Stack direction='row' alignItems='center'>
                     {card}
                     {/* <UserProfileBox 

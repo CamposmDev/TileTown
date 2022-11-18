@@ -9,6 +9,7 @@ import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
+import { CommunityContext } from "src/context/social/community";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -46,6 +47,7 @@ interface TabPanelProps {
 const UserProfileScreen = () => {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
+    const comm = useContext(CommunityContext)
     const nav = useNavigate()
     const [contests, setContests] = useState<Contest[]>([])
     const [communities, setCommunities] = useState<Community[]>([])
@@ -56,7 +58,7 @@ const UserProfileScreen = () => {
             social.getContestsById(auth.getUsr()?.joinedContests).then(arr => {
                 setContests(arr)
             })
-            social.getCommunitiesById(auth.getUsr()?.joinedCommunities).then(arr => {
+            comm.getCommunitiesById(auth.getUsr()?.joinedCommunities).then(arr => {
                 setCommunities(arr)
             })
         }
@@ -92,13 +94,7 @@ const UserProfileScreen = () => {
         )
         communityCards = communities.map((x,i) => 
             <Grid item key={x.id}>
-                <CommunityCard
-                    commName={x.name}
-                    commDesc={x.description}
-                    numOfMembers={x.members.length}
-                    numOfTilemaps={0}
-                    numOfTilesets={0}
-                />
+                <CommunityCard comm={x}/>
             </Grid>
         )
     }

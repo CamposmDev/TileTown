@@ -40,7 +40,6 @@ export const MENU_PAPER_PROPS = {
         right: 14,
         width: 10,
         height: 10,
-        bgcolor: 'background.paper',
         transform: 'translateY(-50%) rotate(45deg)',
         zIndex: 0,
       }

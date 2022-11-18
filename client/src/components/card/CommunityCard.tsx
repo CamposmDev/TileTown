@@ -1,25 +1,23 @@
-import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
-import { useNavigate } from "react-router"
+import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
+import { Community } from "@types"
 import { formatToSocialStr } from '../util/NumberUtils'
+import { useContext } from "react"
+import { CommunityContext } from "src/context/social/community"
 
 interface Props {
-    commName: string,
-    commDesc: string,
-    numOfMembers: number,
-    numOfTilemaps: number,
-    numOfTilesets: number
+    comm: Community
 }
 
 const CommunityCard = (props: Props) => {
-    const nav = useNavigate()
+    const comm = useContext(CommunityContext)
     return (
         <Card onClick={() => {
-            nav('/community/rpgs-done-right')
+            comm.viewCommunity(props.comm)
         }}>
             <CardActionArea>
             <CardContent>
-                        <Typography>{props.commName}</Typography>
-                        <Typography variant='caption'>{props.commDesc}</Typography>
+                        <Typography>{props.comm.name}</Typography>
+                        <Typography variant='caption'>{props.comm.description}</Typography>
                         <Stack direction='row'>
                             <Card sx={{
                                 borderRadius: 3,
@@ -28,13 +26,13 @@ const CommunityCard = (props: Props) => {
                                 bgcolor: 'secondary.main',
                                 color: 'white'
                             }} children={
-                                <Typography variant='caption'>{formatToSocialStr(props.numOfMembers, 'Members')}</Typography>
+                                <Typography variant='caption'>{formatToSocialStr(props.comm.members.length, 'Members')}</Typography>
                             }/>
                             <Card/>
                         </Stack>
                     <Stack direction='column'>
-                        <Typography variant='caption'><b>{props.numOfTilemaps.toFixed(0)}</b>&ensp;Tilemaps</Typography>
-                        <Typography variant='caption'><b>{props.numOfTilesets.toFixed(0)}</b>&ensp;Tilesets</Typography>
+                        <Typography variant='caption'><b>{props.comm.members.length}</b>&ensp;Tilemaps</Typography>
+                        <Typography variant='caption'><b>{props.comm.members.length}</b>&ensp;Tilesets</Typography>
                     </Stack>
                     
                 </CardContent>

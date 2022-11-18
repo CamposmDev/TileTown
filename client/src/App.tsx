@@ -32,6 +32,8 @@ import { TilemapEditContextProvider } from "./context/tilemapEditor";
 import UploadTilesetModal from "./components/modals/UploadTilesetModal";
 import { ForumContextProvider } from "./context/social/forum";
 import ForumPostModal from "./components/modals/ForumPostModal";
+import { CommunityContextProvider } from "./context/social/community";
+import { ContestContextProvider } from "./context/social/contest";
 
 /**
  * Pixel Editors
@@ -51,7 +53,7 @@ import ForumPostModal from "./components/modals/ForumPostModal";
  *
  */
 
-const darkTheme = createTheme({
+const theme = createTheme({
   palette: {
     mode: "light",
   },
@@ -60,12 +62,14 @@ const darkTheme = createTheme({
 const App = () => {
   return (
     <BrowserRouter>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthContextProvider key={"auth-context-provider"}>
           <SnackContextProvider key={"snack-context-provider"}>
             <ModalContextProvider key={"modal-context-provider"}>
-              <SocialContextProvider key={"social-contest-provider"}>
+              <SocialContextProvider key={"social-context-provider"}>
+                <CommunityContextProvider key={'community-context-provider'}>
+                <ContestContextProvider key={'contest-context-provider'}>
                 <ForumContextProvider key={'forum-context-provider'}>
                 <NavBar />
                 <Routes>
@@ -75,7 +79,7 @@ const App = () => {
                   <Route path="/home" element={<HomeScreen />} />
                   <Route path="/settings" element={<AccountSettingsScreen />} />
                   <Route
-                    path="/community/rpgs-done-right"
+                    path="/community/:id"
                     element={<CommunityProfileScreen />}
                   />
                   <Route path="/profile" element={<UserProfileScreen />} />
@@ -130,6 +134,8 @@ const App = () => {
                 <DeleteCommunityModal />
                 <DeleteContestModal />
                 </ForumContextProvider>
+                </ContestContextProvider>
+                </CommunityContextProvider>
               </SocialContextProvider>
             </ModalContextProvider>
           </SnackContextProvider>

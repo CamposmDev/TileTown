@@ -1,51 +1,21 @@
 import { Community, Contest, User, ForumPost } from "@types"
 
 export type SocialAction =
-| CreateCommunity
-| DeleteCommunity
-| CreateContest
-| DeleteContest
 | GetTilemapByName
 | GetTilesetByName
-| GetCommunityByName
-| GetContestByName
 | GetUserByUsername
 | AddFriend
 | RemoveFriend
 | Clear
 
 export enum SocialActionType {
-    createCommunity = 'CREATE_COMMUNITY',
-    deleteCommunity = 'DELETE_COMMUNITY',
-    createContest = 'CREATE_CONTEST',
-    deleteContest = 'DELETE_CONTEST',
-    searchCommunityByName = 'SEARCH_COMMUNITY_BY_NAME',
-    searchContestsByName = 'SEARCH_CONTESTS_BY_NAME',
     searchUsersByName = 'SEARCH_USERS_BY_NAME',
     getTilesetByName = 'GET_TILESET_BY_NAME',
     getTilemapByName = 'GET_TILEMAP_BY_NAME',
-    getCommunityByName = 'GET_COMMUNITY_BY_NAME',
-    getContestByName = 'GET_CONTEST_BY_NAME',
     getUserByUsername = 'GET_USER_BY_NAME',
     addFriend = 'ADD_FRIEND',
     removeFriend = 'REMOVE_FRIEND',
     clear = 'CLEAR'
-}
-
-export type CreateCommunity = {
-    type: SocialActionType.createCommunity
-}
-
-export type DeleteCommunity = {
-    type: SocialActionType.deleteCommunity
-}
-
-export type CreateContest = {
-    type: SocialActionType.createContest
-}
-
-export type DeleteContest = {
-    type: SocialActionType.deleteContest
 }
 
 export type GetTilesetByName = {
@@ -54,20 +24,6 @@ export type GetTilesetByName = {
 
 export type GetTilemapByName = {
     type: SocialActionType.getTilemapByName
-}
-
-export type GetCommunityByName = {
-    type: SocialActionType.getCommunityByName,
-    payload: {
-        communities: Community[]
-    }
-}
-
-export type GetContestByName = {
-    type: SocialActionType.getContestByName,
-    payload: {
-        contests: Contest[]
-    }
 }
 
 export type GetUserByUsername = {

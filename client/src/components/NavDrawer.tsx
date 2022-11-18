@@ -1,20 +1,15 @@
-import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem, Button } from '@mui/material'
+import { Drawer, Box, Typography, IconButton, Grid, Divider, MenuItem } from '@mui/material'
 import { useContext, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
-// import { useNavigate } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import UserProfileCard from './card/UserProfileCard'
-import { Add } from '@mui/icons-material'
 import AddFriendModal from './modals/AddFriendModal'
 import { AuthContext } from 'src/context/auth'
-import { UserApi } from 'src/api'
-import { SocialContext } from 'src/context/social'
 
 export default function NavDrawer() {
   const auth = useContext(AuthContext)
-  const social = useContext(SocialContext)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleMenuClose = () => {
     setIsDrawerOpen(false)
@@ -26,36 +21,10 @@ export default function NavDrawer() {
     )
   }
 
-  // let initFriendCards = () => {
-  //   let user = auth.getUsr()
-  //   if (user && user.friends) {
-  //     return user.friends.map((x,i) => {
-  //       let f = async(userId: string) => {
-  //         let u = await social.getUserById(userId)
-  //         if (u) {
-  //           return <Grid item key={userId}><UserProfileCard firstName={u.firstName} lastName={u.lastName} username={u.username}/></Grid>
-  //         } else {
-  //           return <div></div>
-  //         }
-  //       }
-  //       return f(x).then((v) => {
-  //         return v
-  //       }).catch((e) => {
-  //         return <div></div>
-  //       })
-  //     })
-  //   }
-  //   return <div></div>
-  // }
-
   let initFriendCards = () => {
     let user = auth.getUsr()
     if (user && user.friends) {
       return user.friends.map((x,i) => {
-        // let u = social.getUserById(x)
-        // let userX = u.then((u) => {
-        //   return u ? u : null
-        // })
         return <Grid item key={x} mb={1}>
           <UserProfileCard
             userId={x}
@@ -69,29 +38,11 @@ export default function NavDrawer() {
     return <Grid item></Grid>
   }
 
+  const DRAWER_WIDTH = '256px'
   let friends = initFriendCards()
-
-
-  // let user = auth.getUsr()
-  // let friends: any = <div></div>
-  // if (user) {
-  //   if (user.friends) {
-  //     friends = user.friends.map((x,i) => {
-  //       let u = social.getUserById(x)
-  //       return u.then((a) => {
-  //         if (a) {
-  //           <Grid key={a.id} item><UserProfileCard firstName={a.firstName} lastName={a.lastName} username={a.username}/></Grid>
-  //         } else {
-  //           <div></div>
-  //         }
-  //       })
-  //     })
-  //   }
-  // }
-
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-        <Box p={2} width='333px' role='presentation' textAlign='start'>
+        <Box p={2} width={DRAWER_WIDTH} role='presentation' textAlign='start'>
           <Grid container justifyContent={'start'} alignItems='center' spacing={1}>
             <Grid item> 
               <IconButton onClick={() => setIsDrawerOpen(false)}><MenuIcon/></IconButton>
@@ -162,7 +113,7 @@ export default function NavDrawer() {
         color='inherit'
         aria-label='logo'>
         <MenuIcon 
-          transform={'scale(1.3)'}
+          // transform={'scale(1.3)'}
         />
       </IconButton>
       {drawer}

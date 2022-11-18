@@ -76,7 +76,7 @@ const CardTester = () => {
             /> */}
         </Grid>
         <Grid item>
-            <Stack>
+            {/* <Stack>
                 <CommunityCard 
                     commName={'RPGs Done Right'} 
                     commDesc={'We don\'t like streets'} 
@@ -84,7 +84,7 @@ const CardTester = () => {
                     numOfTilemaps={367} 
                     numOfTilesets={198}                
                 />
-            </Stack>
+            </Stack> */}
         </Grid>
         <Grid item> 
             <Stack direction='column' spacing={1}>

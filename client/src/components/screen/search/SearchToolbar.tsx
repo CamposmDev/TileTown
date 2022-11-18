@@ -3,6 +3,8 @@ import { Grid, IconButton, InputAdornment, Menu, MenuItem, Stack, TextField, Too
 import { useContext, useState } from "react"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
+import { CommunityContext } from "src/context/social/community"
+import { ContestContext } from "src/context/social/contest"
 import { ForumContext } from "src/context/social/forum"
 import CreateForumPostModal from "../../modals/CreateForumPostModal"
 import { MENU_PAPER_PROPS, SearchCategory } from '../../util/Constants'
@@ -13,6 +15,8 @@ interface Props {
 
 const SearchToolbar = (props: Props) => {
     const social = useContext(SocialContext)
+    const comm = useContext(CommunityContext)
+    const contest = useContext(ContestContext)
     const forum = useContext(ForumContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -32,10 +36,10 @@ const SearchToolbar = (props: Props) => {
                     social.getUserByUsername(query, snack)
                     break
                 case SearchCategory.Communities:
-                    social.getCommunityByName(query, snack)
+                    comm.getCommunitiesByName(query, snack)
                     break
                 case SearchCategory.Contests:
-                    social.getContestByName(query, snack)
+                    contest.getContestByName(query, snack)
                     break
                 case SearchCategory.Forums:
                     forum.getForumPostsByName(query, snack)
