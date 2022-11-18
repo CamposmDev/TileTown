@@ -11,27 +11,28 @@ const ObjectId = Schema.Types.ObjectId;
  */
 
 const TilesetSchema = new Schema<TilesetSchemaType>({
-  columns: { type: Number, required: true },
-  rows: { type: Number, required: true },
-  tileHeight: { type: Number, required: true },
-  tileWidth: { type: Number, required: true },
-  image: { type: String, required: true },
-  imageHeight: { type: Number, required: true },
-  imageWidth: { type: Number, required: true },
-  margin: { type: Number, required: true },
+  columns: { type: Number, required: true, default: 12 },
+  rows: { type: Number, required: true, default: 12 },
+  tileHeight: { type: Number, required: true, default: 12 },
+  tileWidth: { type: Number, required: true, default: 12 },
+  image: { type: String, required: true, default: "~" },
+  imageHeight: { type: Number, required: true, default: 144},
+  imageWidth: { type: Number, required: true, default: 144 },
+  margin: { type: Number, required: true, default: 0 },
   name: { type: String, required: true },
   owner: { type: ObjectId, required: true },
   properties: {
     type: [
       {
-        name: { type: String, required: true },
-        ptype: { type: String, required: true },
-        value: { type: String, required: true },
+        name: { type: String, required: true, default: "property" },
+        ptype: { type: String, required: true, default: "string" },
+        value: { type: String, required: true, default: "value" },
       },
     ],
     required: false,
+    default: []
   },
-  isPublished: { type: Boolean, required: true },
+  isPublished: { type: Boolean, required: true, default: false },
   createdAt: { type: Date, required: true, default: new Date(Date.now())},
   updatedAt: { type: Date, required: true, default: new Date(Date.now())}
 });

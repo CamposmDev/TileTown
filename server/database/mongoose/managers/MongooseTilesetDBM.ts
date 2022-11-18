@@ -101,28 +101,12 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return this.parseTileset(tileset);
     }
 
-    async createTileset(userId: string, tileset: Partial<Tileset>): Promise<Tileset | null> {
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
+    async createTileset(tileset: Partial<Tileset> & { owner: string, name: string }): Promise<Tileset | null> {
+        if (!mongoose.Types.ObjectId.isValid(tileset.owner)) {
             return null;
         }
-
-        let newTileset = new TilesetModel({
-            columns: tileset.columns ? tileset.columns : 12,
-            rows: tileset.rows ? tileset.rows : 12,
-            tileHeight: tileset.tileHeight ? tileset.tileHeight : 12,
-            tileWidth: tileset.tileWidth ? tileset.tileWidth : 12,
-            image: tileset.image ? tileset.image : "dummy.jpg",
-            imageHeight: tileset.imageHeight ? tileset.imageHeight : 144,
-            imageWidth: tileset.imageWidth ? tileset.imageWidth : 144,
-            margin: tileset.margin ? tileset.margin : 0,
-            name: tileset.name,
-            owner: userId,
-            properties: tileset.properties ? tileset.properties : [],
-            isPublished: false,
-        });
-
+        let newTileset = new TilesetModel({...tileset});
         let savedTileset = await newTileset.save();
-
         return this.parseTileset(savedTileset);
     }
 

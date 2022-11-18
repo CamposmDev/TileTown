@@ -71,8 +71,9 @@ export default class TilesetController {
         console.log(`Image url: ${req.file?.filename}`);
 
         // Create the tileset
-        let tileset = await db.tilesets.createTileset(req.userId, {
+        let tileset = await db.tilesets.createTileset({
             ...req.body.tileset,
+            owner: user.id,
             image: req.file?.filename,
         });
         if (tileset === null) {
