@@ -68,6 +68,7 @@ const TilesetCanvas = () => {
         canvasImage.crossOrigin = "Anonymous";
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
+          edit.saveImage(canvas.toDataURL("image/png"));
         };
       }
     }
@@ -162,7 +163,7 @@ const TilesetCanvas = () => {
       }
       setIsDrawing(false);
       edit.updateCurrentTile({ x: null, y: null });
-      updateImage(canvas, canvasImage);
+      edit.saveImage(canvas.toDataURL("image/png"));
     }
   };
 
@@ -183,7 +184,6 @@ const TilesetCanvas = () => {
         }
         setIsDrawing(false);
         context.closePath();
-        updateImage(canvas, canvasImage);
         return;
       }
       if (
@@ -361,7 +361,7 @@ const TilesetCanvas = () => {
     }
 
     edit.updateCurrentTile({ x: null, y: null });
-    updateImage(canvas, canvasImage);
+    edit.saveImage(canvas.toDataURL("image/png"));
   };
 
   const screenToCanvasCoordinates = (
@@ -423,16 +423,6 @@ const TilesetCanvas = () => {
       return x < endX && y < endY && x > currentTile.x && y > currentTile.y;
     }
     return false;
-  };
-
-  const updateImage = (
-    canvas: HTMLCanvasElement,
-    canvasImage: HTMLImageElement
-  ): void => {
-    // const imgData = canvas
-    //   .toDataURL()
-    //   .replace(/^data:image\/(png|jpg);base64,/, "");
-    // localStorage.setItem("imgData", imgData);
   };
 
   let root = (

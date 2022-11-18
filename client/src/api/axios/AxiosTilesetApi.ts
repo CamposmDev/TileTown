@@ -38,13 +38,14 @@ export default class AxiosTilesetApi {
 
   public async updateTilesetById(
     id: string,
-    payload: FormData
+    tileset: Partial<Tileset>
   ): Promise<AxiosResponse<UpdateTilesetRes>> {
+    console.log({ tileset: tileset });
     return AxiosApi.putForm<
       UpdateTilesetRes,
       AxiosResponse<UpdateTilesetRes>,
       UpdateTilesetReq
-    >(`/tileset/${id}`, { data: payload });
+    >(`/tileset/${id}`, { tileset: tileset });
   }
 
   public async deleteTilesetById(

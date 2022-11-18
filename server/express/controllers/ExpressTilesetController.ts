@@ -136,7 +136,7 @@ export default class TilesetController {
       return res.status(400).json({ message: "Improperly formatted request" });
     }
     if (!req.params.id) {
-      return res.status(400).json({ message: "No tileest id provided" });
+      return res.status(400).json({ message: "No tileset id provided" });
     }
     // Check to see if a user id was provided and if it was formatted as a string
     if (!req.userId) {
@@ -144,6 +144,7 @@ export default class TilesetController {
     }
     // Check to see if a tileset partial was provided and if it was formatted properly
     if (!req.body.tileset) {
+      console.log(req);
       return res.status(400).json({ message: "No tileset data provided" });
     }
 
