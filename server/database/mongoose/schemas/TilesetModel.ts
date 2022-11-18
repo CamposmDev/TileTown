@@ -32,6 +32,8 @@ const TilesetSchema = new Schema<TilesetSchemaType>({
     required: false,
   },
   isPublished: { type: Boolean, required: true },
+  createdAt: { type: Date, required: true, default: new Date(Date.now())},
+  updatedAt: { type: Date, required: true, default: new Date(Date.now())}
 });
 
 const TilesetModel = mongoose.model("Tileset", TilesetSchema);
