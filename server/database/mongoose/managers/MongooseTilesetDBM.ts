@@ -156,9 +156,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         return this.parseTileset(tileset);
     }
 
-    protected parseTileset(
-        tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId }
-    ): Tileset {
+    protected parseTileset(tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId }): Tileset {
         return {
             id: tileset._id.toString(),
             columns: tileset.columns,
@@ -177,8 +175,7 @@ export default class MongooseTilesetDBM implements TilesetDBM {
             isPublished: tileset.isPublished,
         };
     }
-    protected fillTileset(
-        tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId },
+    protected fillTileset(tileset: TilesetSchemaType & { _id: mongoose.Types.ObjectId },
         partial: Partial<Tileset>
     ): void {
         tileset.columns = partial.columns ? partial.columns : tileset.columns;
@@ -207,5 +204,6 @@ export default class MongooseTilesetDBM implements TilesetDBM {
         tileset.updatedAt = partial.lastSaveDate
             ? partial.lastSaveDate
             : tileset.updatedAt;
+        tileset.createdAt = partial.createDate ? partial.createDate : tileset.createdAt;
     }
 }
