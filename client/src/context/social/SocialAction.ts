@@ -5,10 +5,7 @@ export type SocialAction =
 | DeleteCommunity
 | CreateContest
 | DeleteContest
-| SearchCommunityByName
-| SearchContestsByName
-| SearchUsersByName
-| SearchForumsByName
+| GetForumsByName
 | GetTilemapByName
 | GetTilesetByName
 | GetCommunityByName
@@ -82,7 +79,7 @@ export type GetUserByUsername = {
     }
 }
 
-export type SearchForumsByName = {
+export type GetForumsByName = {
     type: SocialActionType.searchForumsByName,
     payload:{
         forums: ForumPost[]
