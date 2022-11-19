@@ -58,5 +58,7 @@ export default class AxiosTilesetApi {
     >(`/tileset/${id}`, payload);
   }
 
-  public async publishTilesetById(id: string) : Promise<AxiosResponse<>>
+  public async publishTilesetById(id: string) : Promise<AxiosResponse<PublishTilesetRes>> {
+    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`);
+  }
 }
