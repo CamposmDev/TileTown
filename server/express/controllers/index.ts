@@ -25,3 +25,5 @@ export {
     TilesetController,
     QueryController
 }
+
+export { default as CommentController } from "./CommentController";

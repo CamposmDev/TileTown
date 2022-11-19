@@ -7,6 +7,7 @@ type ObjectId = mongoose.Types.ObjectId;
  */
 export default interface CommentSchemaType {
     author: ObjectId,
+    username: string,
     body: string,
     referenceId: ObjectId,
 }

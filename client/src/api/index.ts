@@ -4,6 +4,8 @@ import AxiosContestApi from "./axios/AxiosContestApi";
 import AxiosForumApi from "./axios/AxiosForumApi";
 import AxiosTilesetApi from "./axios/AxiosTilesetApi";
 import AxiosUserApi from "./axios/AxiosUserApi";
+import AxiosCommentApi from "./axios/AxiosCommentApi";
+
 axios.defaults.withCredentials = true
 
 const api = axios.create({
@@ -15,10 +17,13 @@ const UserApi = new AxiosUserApi();
 const ContestApi = new AxiosContestApi();
 const ForumApi = new AxiosForumApi();
 const TilesetApi = new AxiosTilesetApi();
+const CommentApi = new AxiosCommentApi();
+
 export { 
     CommunityApi, 
     UserApi,
     ContestApi,
     ForumApi,
-    TilesetApi
+    TilesetApi,
+    CommentApi
 }

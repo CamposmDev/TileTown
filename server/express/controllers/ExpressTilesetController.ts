@@ -481,6 +481,7 @@ export default class TilesetController {
     // Create the comment
     let comment = await db.comments.createComment(
       user.id,
+      user.username,
       social.id,
       req.body.comment.body
     );

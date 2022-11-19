@@ -219,7 +219,7 @@ export default class ForumController {
         }
 
         // Create the comment
-        let comment = await db.comments.createComment(user.id, forum.id, req.body.comment.body);
+        let comment = await db.comments.createComment(user.id, user.username, forum.id, req.body.comment.body);
         if (comment === null) {
             return res.status(500).json({message: "Server Error. Error occured while creating forum post comment"});
         }
