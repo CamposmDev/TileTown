@@ -72,6 +72,11 @@ export default class MongooseTilesetDBM implements TilesetDBM {
   }
 
   /** OPERATIONS FOR TILESET CREATION AND EDITING */
+  async getTilesets(tileset: Partial<Tileset>): Promise<Tileset[]> {
+    console.log(tileset);
+    let tilesets = await TilesetModel.find({owner: tileset.owner, isPublished: true})
+    return tilesets.map(tileset => this.parseTileset(tileset));
+  }
 
   async getTilesetById(tilesetId: string): Promise<Tileset | null> {
     if (!mongoose.Types.ObjectId.isValid(tilesetId)) {
@@ -213,5 +218,6 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     tileset.createdAt = partial.createDate
       ? partial.createDate
       : tileset.createdAt;
+    tileset.owner = partial.owner ? new mongoose.Types.ObjectId(partial.owner) : tileset.owner;
   }
 }

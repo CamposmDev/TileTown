@@ -10,6 +10,8 @@ UserRouter.get('/', Auth.verifyJWT, UserController.getLoggedIn);
 UserRouter.get('/verify/:id', UserController.verifyUser);
 UserRouter.post('/users', UserController.getUsers);
 
+UserRouter.get('/tilesets/unpublished', Auth.verifyJWT, UserController.getUnpublishedTilesets);
+
 UserRouter.post('/', UserController.createUser);
 UserRouter.post('/login', UserController.loginUser);
 UserRouter.post('/logout', Auth.verifyJWT, UserController.logoutUser);
