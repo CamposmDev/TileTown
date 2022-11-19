@@ -7,6 +7,8 @@ export default interface Comment {
     id: string
     /** The author of the comment */
     author: string
+    
+    username: string
 
     /** The content of the comment */
     body: string

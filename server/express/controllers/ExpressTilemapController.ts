@@ -473,7 +473,7 @@ export default class TilemapController {
         }
 
         // Create the comment
-        let comment = await db.comments.createComment(user.id, social.id, req.body.comment.body);
+        let comment = await db.comments.createComment(user.id, user.username, social.id, req.body.comment.body);
         if (comment === null) {
             return res.status(500).json({message: "Server Error"});
         }
