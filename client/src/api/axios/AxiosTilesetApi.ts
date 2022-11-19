@@ -13,6 +13,7 @@ import {
   DeleteTilesetRes,
   GetTilesetRes,
   UpdateTilesetRes,
+  PublishTilesetRes
 } from "@responses/tileset";
 import Tileset from "../../../../@types/Tileset";
 
@@ -55,5 +56,9 @@ export default class AxiosTilesetApi {
       AxiosResponse<DeleteTilesetRes>,
       DeleteTilesetReq
     >(`/tileset/${id}`, payload);
+  }
+
+  public async publishTilesetById(id: string) : Promise<AxiosResponse<PublishTilesetRes>> {
+    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`);
   }
 }
