@@ -21,15 +21,15 @@ const UserSchema = new Schema<UserSchemaType>({
     username: { type: String, required: true },
     password: { type: String, required: true },
     verifyKey: { type: String, required: true },
-    isVerified: { type: Boolean, required: true },
+    isVerified: { type: Boolean, required: true, default: false },
     tilemaps: { type: [ObjectId], required: true, default: []},
     tilesets: { type: [ObjectId], required: true, default: []},
-    favoriteTileMaps: { type: [ObjectId], required: true },
-    favoriteTileSets: { type: [ObjectId], required: true },
-    joinedContests: { type: [ObjectId], required: true},
-    joinedCommunities: { type: [ObjectId], required: true},
-    friends: { type: [ObjectId], required: true},
-    imageURL: { type: String, required: true }
+    favoriteTileMaps: { type: [ObjectId], required: true, default: [] },
+    favoriteTileSets: { type: [ObjectId], required: true, default: []},
+    joinedContests: { type: [ObjectId], required: true, default: []},
+    joinedCommunities: { type: [ObjectId], required: true, default: []},
+    friends: { type: [ObjectId], required: true, default: []},
+    imageURL: { type: String, required: true, default: ""}
 });
 
 const UserModel = mongoose.model('UserSchema', UserSchema)

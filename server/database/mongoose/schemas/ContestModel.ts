@@ -10,11 +10,11 @@ import ContestSchemaType from '../types/ContestSchemaType';
 const ContestSchema = new Schema<ContestSchemaType>({
     owner: { type: ObjectId, require: true},
     name: { type: String, require: true},
-    description: { type: String, require: true},
-    participates: { type: [ObjectId], require: true },
-    startDate: { type: Date, require: true},
-    endDate: { type: Date, require: true},
-    winner: { type: ObjectId, require: false},
+    description: { type: String, require: true, default: "Contest description!"},
+    participates: { type: [ObjectId], require: true, default: []},
+    startDate: { type: Date, require: true, default: new Date(Date.now() + 1000*60*5)},
+    endDate: { type: Date, require: true, default: new Date(Date.now() + 1000*60*60*24)},
+    winner: { type: ObjectId, require: true, default: null},
     isPublished: { type: Boolean, require: true, default: false }
 })
 

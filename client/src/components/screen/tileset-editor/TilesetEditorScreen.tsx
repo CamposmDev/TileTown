@@ -23,6 +23,7 @@ import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTileItemButton from "../../button/PublishTileItemButton";
 import { useContext } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
+import { SnackContext } from "src/context/snack";
 import {
   TilesetEditControl,
   Color,
@@ -30,6 +31,7 @@ import {
 
 const TilesetEditorScreen = () => {
   const edit = useContext(TilesetEditContext);
+  const snack = useContext(SnackContext);
 
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
@@ -59,6 +61,13 @@ const TilesetEditorScreen = () => {
     edit.updateEditControl(editControl);
   };
 
+  const download = () => {
+    const link = document.createElement("a");
+    link.download = edit.state.tileset.name;
+    link.href = edit.state.imageData;
+    link.click();
+  };
+
   return (
     <Grid alignItems="center">
       <Toolbar sx={{ boxShadow: 1 }} variant="dense">
@@ -68,12 +77,25 @@ const TilesetEditorScreen = () => {
             <Tooltip
               title="Save"
               arrow
-              children={<IconButton color="primary" children={<Save />} />}
+              children={
+                <IconButton
+                  color="primary"
+                  children={<Save />}
+                  disabled={edit.state.isSaved}
+                  onClick={() => edit.saveTileset(snack)}
+                />
+              }
             />
             <Tooltip
               title="Download"
               arrow
-              children={<IconButton color="primary" children={<Download />} />}
+              children={
+                <IconButton
+                  color="primary"
+                  children={<Download />}
+                  onClick={() => download()}
+                />
+              }
             />
             <Tooltip
               title="Undo"

@@ -9,7 +9,6 @@ const EditPasswordForm = () => {
     const snack = useContext(SnackContext)
     const changePassword = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log('fire!')
         const formData = new FormData(e.currentTarget)
         let oldPassword = formData.get('old-password')?.toString()
         let newPassword = formData.get('new-password')?.toString()

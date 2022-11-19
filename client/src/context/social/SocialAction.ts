@@ -1,4 +1,4 @@
-import { Community, Contest, User } from "@types"
+import { Community, Contest, User, ForumPost } from "@types"
 
 export type SocialAction =
 | CreateCommunity
@@ -19,6 +19,9 @@ export enum SocialActionType {
     deleteCommunity = 'DELETE_COMMUNITY',
     createContest = 'CREATE_CONTEST',
     deleteContest = 'DELETE_CONTEST',
+    searchCommunityByName = 'SEARCH_COMMUNITY_BY_NAME',
+    searchContestsByName = 'SEARCH_CONTESTS_BY_NAME',
+    searchUsersByName = 'SEARCH_USERS_BY_NAME',
     getTilesetByName = 'GET_TILESET_BY_NAME',
     getTilemapByName = 'GET_TILEMAP_BY_NAME',
     getCommunityByName = 'GET_COMMUNITY_BY_NAME',

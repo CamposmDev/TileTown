@@ -69,7 +69,7 @@ const GridCanvas = () => {
         drawGrid(ctx, canvasHeight, canvasWidth, gridEnabled);
       }
     }
-  }, [drawGrid]);
+  });
 
   let root = (
     <div>

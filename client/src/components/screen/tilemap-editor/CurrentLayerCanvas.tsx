@@ -578,7 +578,7 @@ const CurrentLayerCanvas = () => {
         onMouseOut={onMouseOut}
         ref={canvasRef}
       >
-        Please user a browser that supports HTML Canvas
+        Please use a browser that supports HTML Canvas
       </canvas>
     </div>
   );

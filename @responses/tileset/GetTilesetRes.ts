@@ -1,5 +1,6 @@
 import { Tileset } from "@types";
 
 export default interface GetTilesetRes {
-    tileset: Tileset;
+  tileset: Tileset;
+  message: string;
 }

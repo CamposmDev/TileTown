@@ -40,7 +40,6 @@ const ChangeUsernameModal = () => {
                         id="username"
                         label="New Username"
                         name="username"
-                        autoComplete="username"
                         autoFocus
                     />
                 </DialogContent>

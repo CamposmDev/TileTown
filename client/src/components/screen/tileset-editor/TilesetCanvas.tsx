@@ -8,6 +8,7 @@ import {
   HexToDec,
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import "./default.css";
+import { EditTwoTone } from "@mui/icons-material";
 
 const TilesetCanvas = () => {
   /**color data of all the pixels of an image
@@ -27,9 +28,7 @@ const TilesetCanvas = () => {
 
   //canvas refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const gridCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-  const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
@@ -48,7 +47,12 @@ const TilesetCanvas = () => {
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
   const canvasImage: HTMLImageElement = new Image();
-
+  const host: string =
+    window.location.host === "localhost:3001"
+      ? "localhost:3000"
+      : window.location.host;
+  const image: string =
+    "http://" + host + "/api/media/" + edit.state.tileset.image;
   useEffect(() => {
     console.log("render canvas");
     if (canvasRef.current) {
@@ -60,13 +64,18 @@ const TilesetCanvas = () => {
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
         contextRef.current = ctx;
-        canvasImage.src = "/leve1and2tileset.png";
+        canvasImage.src = image;
+        canvasImage.crossOrigin = "Anonymous";
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
+          canvas.toBlob((blob) => {
+            if (blob !== null)
+                edit.saveImage(canvas.toDataURL("image/png"), blob);        
+          });
         };
       }
     }
-  }, []);
+  }, [edit.state.tileset.image]);
 
   const onMouseDown = ({ nativeEvent }: any) => {
     if (contextRef.current && canvasRef.current) {
@@ -157,7 +166,11 @@ const TilesetCanvas = () => {
       }
       setIsDrawing(false);
       edit.updateCurrentTile({ x: null, y: null });
-      updateImage(canvas, canvasImage);
+
+      canvas.toBlob((blob) => {
+        if (blob !== null)
+            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+      })
     }
   };
 
@@ -178,7 +191,6 @@ const TilesetCanvas = () => {
         }
         setIsDrawing(false);
         context.closePath();
-        updateImage(canvas, canvasImage);
         return;
       }
       if (
@@ -356,7 +368,11 @@ const TilesetCanvas = () => {
     }
 
     edit.updateCurrentTile({ x: null, y: null });
-    updateImage(canvas, canvasImage);
+    canvas.toBlob((blob) => {
+        if (blob !== null)
+            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+    });
+    
   };
 
   const screenToCanvasCoordinates = (
@@ -418,16 +434,6 @@ const TilesetCanvas = () => {
       return x < endX && y < endY && x > currentTile.x && y > currentTile.y;
     }
     return false;
-  };
-
-  const updateImage = (
-    canvas: HTMLCanvasElement,
-    canvasImage: HTMLImageElement
-  ): void => {
-    // const imgData = canvas
-    //   .toDataURL()
-    //   .replace(/^data:image\/(png|jpg);base64,/, "");
-    // localStorage.setItem("imgData", imgData);
   };
 
   let root = (

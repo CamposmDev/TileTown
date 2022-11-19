@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TilesetEditorState,
@@ -6,6 +6,9 @@ import {
   TilesetEditorModalType,
 } from "./TilesetEditTypes";
 import { TilesetEditStore } from "./TilesetEditStore";
+import { SnackContext } from "../snack";
+import { ModalContext } from "../modal";
+import { TilesetApi } from "src/api";
 
 /**
  * The edit context
@@ -19,7 +22,7 @@ const TilesetEditContext = createContext<TilesetEditStore>(
         rows: 12,
         createDate: new Date(),
         lastSaveDate: new Date(),
-        image: "/leve1and2tileset.png",
+        image: "",
         imageHeight: 120,
         imageWidth: 120,
         tileHeight: 10,
@@ -30,6 +33,9 @@ const TilesetEditContext = createContext<TilesetEditStore>(
         properties: [],
         isPublished: false,
       },
+      tilesetChanges: {},
+      imageData: "",
+      image: new Blob(),
       currentEditControl: TilesetEditControl.draw,
       penSize: 1,
       penColor: "#F00001",
@@ -61,7 +67,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
       rows: 12,
       createDate: new Date(),
       lastSaveDate: new Date(),
-      image: "/leve1and2tileset.png",
+      image: "",
       imageHeight: 120,
       imageWidth: 120,
       tileHeight: 10,
@@ -72,6 +78,9 @@ function TilesetEditContextProvider(props: Record<string, any>) {
       properties: [],
       isPublished: false,
     },
+    tilesetChanges: {},
+    imageData: "",
+    image: new Blob(),
     currentEditControl: TilesetEditControl.draw,
     penSize: 1,
     penColor: "#F0D101",
@@ -86,6 +95,15 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     zoom: 1,
     currentTile: { x: null, y: null },
   });
+
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilesetApi.getTilesetById(id).then((res) => {
+      setEdit({ ...edit, tileset: res.data.tileset });
+    });
+    if (edit.tileset.id === "") return;
+  }, [edit.tileset.id]);
 
   // The navigation for the auth context???
   const nav = useNavigate();

@@ -72,7 +72,7 @@ export default class ForumController {
         }
 
         // Update the forum post
-        let forumPost = await db.forums.updateForumPost(req.params.id, req.body.forumPost);
+        let forumPost = await db.forums.updateForumPost(req.params.id, {...req.body.forumPost, updatedDate: new Date(Date.now())});
         if (forumPost === null) {
             return res.status(500).json({message: "Error occured while updating forum post"});
         }
@@ -142,7 +142,7 @@ export default class ForumController {
         }
 
         // Return the updated forum post
-        return res.status(200).json({message: "Successfully created a forum post", forumPost: updatedForumPost})
+        return res.status(200).json({message: "Successfully liked a forum post", forumPost: updatedForumPost})
     }
     public async dislikeForumPostById(req: Request, res: Response): Promise<Response> {
         // Check for bad request and missing parameters

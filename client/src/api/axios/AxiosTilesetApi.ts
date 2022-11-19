@@ -14,37 +14,36 @@ import {
   GetTilesetRes,
   UpdateTilesetRes,
 } from "@responses/tileset";
+import Tileset from "../../../../@types/Tileset";
 
 export default class AxiosTilesetApi {
   public async createTileset(
-    payload: FormData
+    formData: FormData
   ): Promise<AxiosResponse<CreateTilesetRes>> {
     return AxiosApi.postForm<CreateTilesetRes, AxiosResponse<CreateTilesetRes>>(
       `/tileset`,
-      payload
+      formData
     );
   }
 
   public async getTilesetById(
-    id: string,
-    payload: GetTilesetReq
+    id: string
   ): Promise<AxiosResponse<GetTilesetRes>> {
     return AxiosApi.get<
       GetTilesetRes,
       AxiosResponse<GetTilesetRes>,
       GetTilesetReq
-    >(`/tileset/${id}`, payload);
+    >(`/tileset/${id}`);
   }
 
   public async updateTilesetById(
     id: string,
-    payload: UpdateTilesetReq
+    formData: FormData
   ): Promise<AxiosResponse<UpdateTilesetRes>> {
     return AxiosApi.putForm<
       UpdateTilesetRes,
-      AxiosResponse<UpdateTilesetRes>,
-      UpdateTilesetReq
-    >(`/tileset/${id}`, payload);
+      AxiosResponse<UpdateTilesetRes>
+    >(`/tileset/${id}`, formData);
   }
 
   public async deleteTilesetById(

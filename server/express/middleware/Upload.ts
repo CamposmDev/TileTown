@@ -17,7 +17,14 @@ const storage: StorageEngine = multer.diskStorage({
         cb(null, path.join(__dirname, "images"));
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+        let ext = path.extname(file.originalname);
+        if (file.mimetype === 'image/png') {
+            ext = ".png"
+        } else if (file.mimetype === 'image/jpeg') {
+            ext = ".jpeg";
+        }
+
+        cb(null, Date.now() + ext);
     },
 });
 

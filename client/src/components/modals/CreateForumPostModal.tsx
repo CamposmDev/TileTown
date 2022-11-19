@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Select, SelectChangeEvent, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {  MenuItem } from '@mui/material';
@@ -10,6 +10,7 @@ import { AuthContext } from '../../context/auth';
 import { ForumApi } from '../../api';
 import axios, { Axios } from 'axios';
 import { SnackContext } from 'src/context/snack';
+import ForumPost from '../../../../@types/ForumPost';
 
 const CreateForumPostModal = () => {
     const auth = React.useContext(AuthContext)
@@ -17,11 +18,7 @@ const CreateForumPostModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [title, setTitle] = useState('')
     const [question, setQuestion] = useState('')
-    // const [author, setAuthor] = useState('Annonymous')
 
-    // const handleChange = (event: SelectChangeEvent) => {
-    //     setAuthor(event.target.value as string)
-    // }
     const handleClose = () => {
         setTitle('')
         setQuestion('')
@@ -45,7 +42,7 @@ const CreateForumPostModal = () => {
             open={isOpen} 
             onClose={handleClose}
         >
-            <DialogTitle>Create Post</DialogTitle>
+            <DialogTitle>Create Forum Post</DialogTitle>
             <DialogContent>
                 <Box>
                     <TextField
@@ -68,7 +65,7 @@ const CreateForumPostModal = () => {
                         name="question"
                         autoFocus
                         multiline
-                        rows={7}
+                        rows={11}
                     />
                     {/* <FormControl margin='dense' fullWidth>
                     <InputLabel>Show my name as</InputLabel>
@@ -90,7 +87,9 @@ const CreateForumPostModal = () => {
     )
     return (
         <>
-            <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            <Tooltip title={'Create Post'}>
+             <IconButton disabled={auth.isGuest()} onClick={() => setIsOpen(!isOpen)}><Create/></IconButton>
+            </Tooltip>
             {ui}
         </>
     )
