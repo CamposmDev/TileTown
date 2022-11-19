@@ -68,7 +68,10 @@ const TilesetCanvas = () => {
         canvasImage.crossOrigin = "Anonymous";
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
-          edit.saveImage(canvas.toDataURL("image/png"));
+          canvas.toBlob((blob) => {
+            if (blob !== null)
+                edit.saveImage(canvas.toDataURL("image/png"), blob);        
+          });
         };
       }
     }
@@ -163,7 +166,11 @@ const TilesetCanvas = () => {
       }
       setIsDrawing(false);
       edit.updateCurrentTile({ x: null, y: null });
-      edit.saveImage(canvas.toDataURL("image/png"));
+
+      canvas.toBlob((blob) => {
+        if (blob !== null)
+            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+      })
     }
   };
 
@@ -361,7 +368,11 @@ const TilesetCanvas = () => {
     }
 
     edit.updateCurrentTile({ x: null, y: null });
-    edit.saveImage(canvas.toDataURL("image/png"));
+    canvas.toBlob((blob) => {
+        if (blob !== null)
+            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+    });
+    
   };
 
   const screenToCanvasCoordinates = (

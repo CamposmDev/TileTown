@@ -165,6 +165,7 @@ export enum TilesetEditorModalType {
 export interface TilesetEditorState {
   tileset: Tileset;
   tilesetChanges: Partial<Tileset>;
+  image: Blob;
   imageData: string;
   currentEditControl: TilesetEditControl;
   penSize: number;
@@ -226,7 +227,7 @@ export type TilesetEditorAction =
     }
   | {
       type: TilesetEditorActionType.SAVE_IMAGE_DATA;
-      payload: { imageData: string };
+      payload: { imageData: string, image: Blob };
     }
   | {
       type: TilesetEditorActionType.UPDATE_GRID;
