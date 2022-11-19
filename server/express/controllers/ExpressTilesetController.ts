@@ -148,6 +148,15 @@ export default class TilesetController {
       return res.status(400).json({ message: "No tileset data provided" });
     }
 
+    // Convert the tileset attribute to valid JSON
+    try {
+        req.body.tileset = JSON.parse(req.body.tileset);
+    } catch {
+        return res
+            .status(400)
+            .json({ messagee: "Tileset field is not valid JSON" });
+    }
+
     let existingTileset = await db.tilesets.getTilesetById(req.params.id);
     // If tileset doesn't exist - error 404
     if (existingTileset === null) {
@@ -165,14 +174,15 @@ export default class TilesetController {
     // Update the tileset - if an error occurs - 500
     let updatedTileset = await db.tilesets.updateTilesetById(
       req.params.id,
-      req.body.tileset
+      {...req.body.tileset, image: req.file?.filename}
     );
     if (updatedTileset === null) {
       return res
         .status(500)
         .json({ message: "Server Error. Error updating tileset" });
     }
-
+    console.log(req.file?.filename);
+    console.log(updatedTileset);
     return res
       .status(200)
       .json({ message: "Updating a tileset!", tileset: updatedTileset });
