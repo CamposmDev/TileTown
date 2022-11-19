@@ -6,13 +6,15 @@ export type ContestAction =
 | UpdateContest
 | DeleteContest
 | ViewContest
+| Clear
 
 export enum ContestActionType {
     createContest = 'CREATE_CONTEST',
     getContests = 'GET_CONTEST',
     updateContest = 'UPDATE_CONTEST',
     deleteContest = 'DELETE_CONTEST',
-    viewContest = 'VIEW_CONTEST'
+    viewContest = 'VIEW_CONTEST',
+    clear = 'CLEAR'
 }
 
 export type CreateContest = {
@@ -47,3 +49,6 @@ export type ViewContest = {
     }
 }
 
+export type Clear = {
+    type: ContestActionType.clear
+}

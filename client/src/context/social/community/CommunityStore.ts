@@ -100,8 +100,6 @@ export class CommunityStore {
             arr.map(x => {
                 CommunityApi.getCommunityById(x).then(res => {
                     if (res.status === 200) {
-                        console.log('hmmm')
-                        console.log(res.data.community)
                         resultArr.push(res.data.community)
                     }
                 }).catch(e => console.log('uh oh'))
@@ -118,7 +116,6 @@ export class CommunityStore {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
                 if (res.data.communities) {
-                    console.log(res.data.communities)
                     this.handleAction({
                         type: CommunityActionType.getCommunities,
                         payload: {

@@ -73,11 +73,10 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Users:
             items = <Grid container 
-                justifyContent={'center'}
-                alignItems={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getUsers().map((x,i) => <Grid>
+                    {social.getUsers().map((x,i) => 
+                    <Grid item xs={2}>
                         <UserProfileCard 
                             userId={x.id}
                             firstName={x.firstName}
@@ -90,11 +89,10 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Communities:
             items = <Grid container 
-                justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                    {comm.getCommunities().map((x,i) => 
-                        <Grid item key={x.name}>
+                    {comm.getCommunities().map((x) => 
+                        <Grid xs={4} item key={x.name}>
                             <CommunityCard comm={x}/>
                         </Grid>
                     )}
@@ -106,17 +104,9 @@ const SearchScreen = (props: Props) => {
                 justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                    {contest.getContests().map((x,i) => 
-                        <Grid item key={x.name}>
-                            <ContestCard
-                                payload={{
-                                    contestName: x.name,
-                                    startDate: new Date(x.startDate),
-                                    endDate: new Date(x.endDate),
-                                    owner: x.owner,
-                                    participates: x.participates.length
-                                }}
-                            />
+                    {contest.getContests().map(x => 
+                        <Grid xs={3} item key={x.name}>
+                            <ContestCard c={x}/>
                         </Grid>
                     )}
             </Grid>

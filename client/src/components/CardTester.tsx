@@ -103,15 +103,15 @@ const CardTester = () => {
             </Stack>
         </Grid>
         <Grid item>
-            <ContestCard payload={
+            {/* <ContestCard payload={
                 {
                     contestName: 'Camposm\'s Challenge',
                     owner: 'Camposm',
                     startDate: startDate1,
                     endDate: endDate1,
                     participates: 32
-                }
-            }/>
+                } */}
+            {/* }/> */}
         </Grid>
     </Grid>
     )

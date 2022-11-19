@@ -48,7 +48,7 @@ export const MENU_PAPER_PROPS = {
   
 export function stringAvatar(firstName: string, lastName: string) {
     function stringToColor(string: string) {
-        let hash = 0;
+        let hash = 1;
         let i;
     
         /* eslint-disable no-bitwise */

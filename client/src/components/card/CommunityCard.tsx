@@ -13,7 +13,7 @@ const CommunityCard = (props: Props) => {
     return (
         <Card onClick={() => {
             comm.viewCommunity(props.comm)
-        }}>
+        }} sx={{boxShadow: 3}}>
             <CardActionArea>
             <CardContent>
                         <Typography>{props.comm.name}</Typography>

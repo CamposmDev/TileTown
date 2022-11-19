@@ -1,6 +1,8 @@
+import { ConstructionOutlined } from "@mui/icons-material"
 import { Grid, Toolbar, Typography } from "@mui/material"
 import { useContext } from "react"
 import Carousel from "react-material-ui-carousel"
+import { useNavigate } from "react-router"
 import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import TileItemCard from "../card/TileItemCard"
@@ -71,10 +73,8 @@ let tilesets = [{
 
 const CommunityProfileScreen = () => {
     const comm = useContext(CommunityContext)
+    const nav = useNavigate()
     let c = comm.getCurrentCommunity()
-    if (c) {
-
-    }
     const RES_SIZE = 550
     return (
         <Grid> 

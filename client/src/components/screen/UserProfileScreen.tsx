@@ -81,15 +81,7 @@ const UserProfileScreen = () => {
         />
         contestCards = contests.map((x,i) =>
                 <Grid item key={x.id}>
-                    <ContestCard
-                        payload={{
-                            contestName: x.name,
-                            startDate: new Date(x.startDate),
-                            endDate: new Date(x.endDate),
-                            owner: x.owner,
-                            participates: x.participates.length
-                        }}
-                    />
+                    <ContestCard c={x}/>
                 </Grid>
         )
         communityCards = communities.map((x,i) => 

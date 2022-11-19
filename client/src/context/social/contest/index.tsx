@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import ContestViewerModal from "src/components/modals/ContestViewerModal";
 import { ContestState, ContestStore } from "./ContestStore";
 
 const ContestContext = createContext<ContestStore>(new ContestStore(
@@ -17,6 +18,7 @@ function ContestContextProvider(props: Record<string, any>) {
     return (
         <ContestContext.Provider value={Contest}>
             {props.children}
+            <ContestViewerModal/>
         </ContestContext.Provider>
     )
 }

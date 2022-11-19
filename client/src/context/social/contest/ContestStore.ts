@@ -100,12 +100,41 @@ export class ContestStore {
         })
     }
 
+    public async viewContest(contest: Contest): Promise<void> {
+        this.handleAction({
+            type: ContestActionType.viewContest,
+            payload: {
+                currentContest: contest
+            }
+        })
+    }
+
+    public async clear(): Promise<void> {
+        this.handleAction({
+            type: ContestActionType.clear
+        })
+    }
+
     protected handleAction(action: ContestAction) {
         switch (action.type) {
             case ContestActionType.getContests: {
                 this._setContest({
                     currentContest: this._contest.currentContest,
                     contests: action.payload.contests,
+                })
+                break
+            }
+            case ContestActionType.viewContest: {
+                this._setContest({
+                    currentContest: action.payload.currentContest,
+                    contests: this._contest.contests
+                })
+                break
+            }
+            case ContestActionType.clear: {
+                this._setContest({
+                    currentContest: undefined,
+                    contests: this._contest.contests
                 })
                 break
             }
