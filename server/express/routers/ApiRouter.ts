@@ -8,6 +8,7 @@ import CommunityRouter from './CommunityRouter';
 import TilemapRouter from './TilemapRouter';
 import TilesetRouter from './TilesetRouter';
 import QueryRouter from './QueryRouter';
+import CommentRouter from './CommentRouter';
 
 
 /** The main Router object for the TileTown API */
@@ -20,6 +21,7 @@ router.use('/community', CommunityRouter);
 router.use('/tileset', TilesetRouter);
 router.use('/tilemap', TilemapRouter);
 router.use('/query', QueryRouter);
+router.use('/comment', CommentRouter);
 
 router.use('/media', express.static(path.join(__dirname, "../middleware/images")));
 

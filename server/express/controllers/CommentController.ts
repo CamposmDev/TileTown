@@ -17,6 +17,6 @@ export default class CommentController {
             return res.status(404).json({ message: "Comment not found" });
         }
 
-        return res.status(200).json({ message: "Comment found!" });
+        return res.status(200).json({ message: "Comment found!", comment: comment });
     }
 }
