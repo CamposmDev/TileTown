@@ -8,7 +8,7 @@ const router: Router = Router();
 router.get("/:id", Auth.verifyJWT, TilesetController.getTilesetById);
 router.post("/", Auth.verifyJWT, Upload.single('image'), TilesetController.createTileset);
 router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
-router.put("/:id", Auth.verifyJWT, TilesetController.updateTilesetById);
+router.put("/:id", Auth.verifyJWT, Upload.single('image'), TilesetController.updateTilesetById);
 router.delete("/:id", Auth.verifyJWT, TilesetController.deleteTilesetById);
 
 // SocialStatistics routes
