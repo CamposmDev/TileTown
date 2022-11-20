@@ -1,8 +1,10 @@
 import { ConstructionOutlined } from "@mui/icons-material"
 import { Grid, Toolbar, Typography } from "@mui/material"
+import userEvent from "@testing-library/user-event"
 import { useContext } from "react"
 import Carousel from "react-material-ui-carousel"
 import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
 import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import TileItemCard from "../card/TileItemCard"
@@ -72,10 +74,18 @@ let tilesets = [{
 }]
 
 const CommunityProfileScreen = () => {
+    const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
     let c = comm.getCurrentCommunity()
     const RES_SIZE = 550
+    let settings = <div/>
+    let usr = auth.getUsr()
+    if (usr && c) {
+        if (usr.id.localeCompare(c.owner) === 0) {
+            settings = <CommunitySettingsButton/>
+        }
+    }
     return (
         <Grid> 
             <Grid>
@@ -88,45 +98,7 @@ const CommunityProfileScreen = () => {
                     </Grid>
                     <CommunityContestsModal/>
                     <CommunityMembersModal/>
-                    {/* <IconButton><EmojiEvents sx={{color: 'gold'}}/></IconButton>
-                    <IconButton><Group/></IconButton> */}
-                    <CommunitySettingsButton
-                        title='RPGs Done Right'
-                        desc="We don't like streets or dungeon or masters."
-                        visibility={'Private'}
-                        members= {[
-                            {
-                                firstName: 'Michael',
-                                lastName: 'Campos',
-                                username: 'Camposm'
-                            },
-                            {
-                                firstName: 'Peter',
-                                lastName: 'Walsh',
-                                username: 'PeteyLumpkins'
-                            },
-                            {
-                                firstName: 'Jonathan',
-                                lastName: 'Lemus',
-                                username: 'The Gamer'
-                            },
-                            {
-                                firstName: 'Kevin',
-                                lastName: 'Lemus',
-                                username: 'xKevzy'
-                            },
-                            {
-                                firstName: 'Tuyen',
-                                lastName: 'Vo',
-                                username: 'Emdoiqua'
-                            },
-                            {
-                                firstName: 'Hector',
-                                lastName: 'Lemus',
-                                username: 'SomeQuickGuy'
-                            }
-                        ]}
-                    />
+                    {settings}
                 </Toolbar>
             </Grid>
             <Grid container m={1} spacing={1} justifyContent='center'>

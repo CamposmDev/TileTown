@@ -75,9 +75,10 @@ const SearchScreen = (props: Props) => {
             items = <Grid container 
                 spacing={1}
                 mt={1}>
-                    {social.getUsers().map((x,i) => 
+                    {social.getUsers().map((x) => 
                     <Grid item xs={2}>
                         <UserProfileCard 
+                            key={x.id}
                             userId={x.id}
                             firstName={x.firstName}
                             lastName={x.lastName}
@@ -101,7 +102,6 @@ const SearchScreen = (props: Props) => {
         case SearchCategory.Contests:
             items = 
             <Grid container 
-                justifyContent={'center'}
                 spacing={1}
                 mt={1}>
                     {contest.getContests().map(x => 

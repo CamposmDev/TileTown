@@ -18,8 +18,6 @@ import {
 import { SearchCategory } from "./components/util/Constants";
 import { AuthContextProvider } from "./context/auth";
 import { TilesetEditContextProvider } from "./context/tilesetEditor";
-import CardTester from "./components/CardTester";
-import ModalTester from "./components/ModalTester";
 import NotificationSnack from "./components/modals/NotificationSnack";
 import { SnackContextProvider } from "./context/snack";
 import { SocialContextProvider } from "./context/social";
@@ -124,8 +122,6 @@ const App = () => {
                       </TilemapEditContextProvider>
                     }
                   />
-                  <Route path="/cards" element={<CardTester />} />
-                  <Route path="/modals" element={<ModalTester />} />
                 </Routes>
                 <NotificationSnack />
                 <UploadTilesetModal />
