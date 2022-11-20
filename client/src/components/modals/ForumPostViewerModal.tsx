@@ -125,7 +125,7 @@ const ForumPostViewerModal = () => {
             >
                 <AppBar sx={{position: 'sticky'}}>
                     <Toolbar>
-                        <Grid container>
+                        <Grid container alignItems={'center'}>
                             <Grid item flexGrow={1}>
                                 <Typography variant="h6">{forumPost?.title}</Typography>
                             </Grid>
@@ -145,7 +145,7 @@ const ForumPostViewerModal = () => {
                         </Card>
                     </Grid>
                     <Grid container item xs={6} pl={1}>
-                        <Grid container>
+                    <Grid container>
                             <TextField 
                                 autoFocus
                                 fullWidth
