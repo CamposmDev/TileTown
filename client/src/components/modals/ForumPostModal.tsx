@@ -110,7 +110,7 @@ const ForumPostModal = () => {
                         </Stack>
                     </Grid>
                 </Grid>
-                <Typography sx={{whiteSpace: 'pre-line'}}>{forumPost.body}</Typography>
+                <Typography  sx={{overflowWrap: 'anywhere', whiteSpace: 'pre-line'}}>{forumPost.body}</Typography>
             </CardContent>
     }
 
