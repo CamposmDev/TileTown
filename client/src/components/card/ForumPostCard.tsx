@@ -33,7 +33,7 @@ const ForumPostCard = (props: Props) => {
                 <CardContent>
                     <Grid container>
                         <Grid item className='forum-post-card' flexGrow={1}>
-                            <Typography variant='h6'>{props.forumPost.title}</Typography>
+                            <Typography noWrap variant='h6'>{props.forumPost.title}</Typography>
                             <Typography noWrap>{props.forumPost.body}</Typography>
                             <Stack alignItems='center' direction='row'>
                                     <Typography><b>By</b>:&ensp;{username},&ensp;</Typography>

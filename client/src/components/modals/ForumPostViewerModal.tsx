@@ -1,4 +1,4 @@
-import { Dialog } from "@mui/material"
+import { Box, Dialog } from "@mui/material"
 import { AppBar, Toolbar, Grid, Typography, Button, IconButton, Stack, Card, CardContent, TextField} from "@mui/material"
 import UserProfileBox from "../UserProfileBox"
 import CommentCard from "../card/CommentCard"
@@ -115,55 +115,55 @@ const ForumPostViewerModal = () => {
     }
 
     return (
-        <div>
+        <Box>
             <Dialog 
-            open={open} 
-            fullScreen 
-            onClose={handleClose} 
-            TransitionComponent={SLIDE_DOWN_TRANSITION}
-        >
-            <AppBar sx={{position: 'sticky'}}>
-                <Toolbar>
-                    <Grid alignItems={'center'} container direction='row' sx={{flexGrow: 1}}>
-                        <Typography variant="h6" component="div">
-                            {forumPost?.title}
-                        </Typography>
-                    </Grid>
-                    <Grid>
-                        {editButton}
-                    </Grid>
-                    <Grid>
-                        <Button color="inherit" onClick={handleClose}>Close</Button>
-                    </Grid>
-                </Toolbar>
-            </AppBar>
-            <Grid container p={1}>
-                <Grid item xs={6} pr={1}>
-                    <Card sx={{boxShadow: 3}}>
-                        {content}
-                    </Card>
-                </Grid>
-                <Grid container item xs={6} pl={1}>
-                    <Grid container>
-                        <TextField 
-                            fullWidth 
-                            label='Comment' 
-                            onChange={(e) => setComment(e.target.value)} 
-                            onKeyUp={handleKeyUp}
-                        />
-                    </Grid>
-                    <Grid container>
-                        {forumPost?.comments.slice().reverse().map(x =>
-                            <Grid item xs={12}>
-                                <CommentCard commentId={x} key={x}/>
+                open={open} 
+                fullScreen 
+                onClose={handleClose} 
+                TransitionComponent={SLIDE_DOWN_TRANSITION}
+            >
+                <AppBar sx={{position: 'sticky'}}>
+                    <Toolbar>
+                        <Grid container>
+                            <Grid item flexGrow={1}>
+                                <Typography variant="h6">{forumPost?.title}</Typography>
                             </Grid>
-                        )}
+                            <Grid item>
+                                {editButton}
+                            </Grid>
+                            <Grid item>
+                               <Button color="inherit" onClick={handleClose}>Close</Button>
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
+                <Grid container p={1}>
+                    <Grid item xs={6} pr={1}>
+                        <Card sx={{boxShadow: 3}}>
+                            {content}
+                        </Card>
+                    </Grid>
+                    <Grid container item xs={6} pl={1}>
+                        <Grid container>
+                            <TextField 
+                                fullWidth 
+                                label='Comment' 
+                                onChange={(e) => setComment(e.target.value)} 
+                                onKeyUp={handleKeyUp}
+                            />
+                        </Grid>
+                        <Grid container>
+                            {forumPost?.comments.slice().reverse().map(x =>
+                                <Grid item xs={12}>
+                                    <CommentCard commentId={x} key={x}/>
+                                </Grid>
+                            )}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Dialog>
-        {editModal}
-        </div>
+            </Dialog>
+            {editModal}
+        </Box>
     )
 }
 
