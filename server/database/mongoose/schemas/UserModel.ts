@@ -29,8 +29,8 @@ const UserSchema = new Schema<UserSchemaType>({
     joinedContests: { type: [ObjectId], required: true, default: []},
     joinedCommunities: { type: [ObjectId], required: true, default: []},
     friends: { type: [ObjectId], required: true, default: []},
-    imageURL: { type: String, required: true, default: ""}
-});
+    imageURL: { type: String, required: true, default: ""},
+}, { timestamps: true});
 
 const UserModel = mongoose.model('UserSchema', UserSchema)
 

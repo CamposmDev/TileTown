@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import ForumPostModal from "src/components/modals/ForumPostModal";
+import ForumPostViewerModal from "src/components/modals/ForumPostViewerModal";
 import { ForumState, ForumStore } from "./ForumStore";
 
 const ForumContext = createContext<ForumStore>(new ForumStore({
@@ -16,7 +16,7 @@ function ForumContextProvider(props: Record<string, any>) {
     return (
         <ForumContext.Provider value={Forum}>
             {props.children}
-            <ForumPostModal/>
+            <ForumPostViewerModal/>
         </ForumContext.Provider>
     )
 }

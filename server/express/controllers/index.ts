@@ -26,4 +26,4 @@ export {
     QueryController
 }
 
-export { default as CommentController } from "./CommentController";
+export { default as CommentController } from "./ExpressCommentController";

@@ -44,7 +44,7 @@ const ContestViewerModal = () => {
                         username={user.username}
                     />
                 </Grid>
-                <Grid item>
+                <Grid item flexGrow={1}>
                     <Typography><b>Started:&ensp;</b>
                         {parseDateToStr(new Date(c.startDate))}
                     </Typography>
@@ -58,11 +58,7 @@ const ContestViewerModal = () => {
                     <Typography><b>Participates</b>&ensp;{c.participates.length}</Typography>
                 </Grid>
                 <Grid container item>
-                    <Card sx={{bowShadow: 3}}>
-                        <CardContent>
-                        <Typography>{c.description}</Typography>
-                        </CardContent>
-                    </Card>
+                    <Typography>{c.description}</Typography>
                 </Grid>
             </Grid>
         )

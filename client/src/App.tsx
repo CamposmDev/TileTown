@@ -29,7 +29,7 @@ import DeleteContestModal from "./components/modals/DeleteContestModal";
 import { TilemapEditContextProvider } from "./context/tilemapEditor";
 import UploadTilesetModal from "./components/modals/UploadTilesetModal";
 import { ForumContextProvider } from "./context/social/forum";
-import ForumPostModal from "./components/modals/ForumPostModal";
+import ForumPostViewerModal from "./components/modals/ForumPostViewerModal";
 import { CommunityContextProvider } from "./context/social/community";
 import { ContestContextProvider } from "./context/social/contest";
 

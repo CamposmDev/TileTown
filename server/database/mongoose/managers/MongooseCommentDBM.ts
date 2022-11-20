@@ -22,7 +22,8 @@ export default class MongooseCommentDBM implements CommentDBM {
             author: userId,
             username: uname,
             body: body,
-            referenceId: refId
+            referenceId: refId,
+            createdAt: new Date()
         });
         let savedComment = await comment.save();
 
@@ -32,10 +33,10 @@ export default class MongooseCommentDBM implements CommentDBM {
     protected parseComment(comment: CommentSchemaType & { _id: mongoose.Types.ObjectId}): Comment {
         return {
             id: comment._id.toString(),
-            author: comment._id.toString(),
-            username: comment.username,
+            author: comment.author.toString(),
             referenceId: comment.referenceId.toString(),
-            body: comment.body
+            body: comment.body,
+            createdAt: comment.createdAt
         }
     }
     

@@ -34,7 +34,6 @@ const SearchScreen = (props: Props) => {
         case SearchCategory.Tilemaps:
             content = <Grid 
                     container 
-                    justifyContent={'center'}
                     spacing={1} 
                     mt={1}
                 >
@@ -54,7 +53,6 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Tilesets:
             content = <Grid container 
-                    justifyContent={'center'}
                     spacing={1}
                     mt={1}>
                 <Grid item>
@@ -73,16 +71,13 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Users:
             content = <Grid container 
-                spacing={1}
-                mt={1}>
+                        spacing={1}
+                        mt={1}>
                     {social.getUsers().map((x) => 
-                    <Grid item xs={2}>
+                    <Grid item key={x.id}>
                         <UserProfileCard 
                             key={x.id}
                             userId={x.id}
-                            firstName={x.firstName}
-                            lastName={x.lastName}
-                            username={x.username}
                             fancy={true}
                         />
                     </Grid>)}
@@ -115,7 +110,7 @@ const SearchScreen = (props: Props) => {
             content = 
                 <Grid container spacing={1}>
                     {forum.getForums().map((x) => 
-                        <Grid item ml={1} mr={1} key={x.id} xs={12}>
+                        <Grid item key={x.id} xs={12}>
                             <ForumPostCard
                                 forumPost={x}
                             />  

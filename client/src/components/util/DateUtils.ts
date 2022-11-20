@@ -50,9 +50,10 @@ const calcTimeLeft = (startDate: Date, endDate: Date): string => {
     return yrLeft + ' Years Left'
 }
 
-const parseDateToPostedStr = (publishDate: Date): string => {
+const parseDateToPostedStr = (date: Date | undefined): string => {
+    if (!date) return 'Failed to Parse Date'
     let currentDate = new Date()
-    let timeInterval = currentDate.getTime() - publishDate.getTime()
+    let timeInterval = currentDate.getTime() - date.getTime()
     /** Compute the seconds left  from ms left*/
     let secLeft = Math.floor(timeInterval / 1000)
     if (secLeft <= 59) {
