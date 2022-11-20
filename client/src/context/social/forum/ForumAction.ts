@@ -6,6 +6,7 @@ export type ForumAction =
 | LikeForumPost
 | DislikeForumPost
 | CommentForumPost
+| UpdateForumPost
 | Clear
 
 export enum ForumActionType {
@@ -14,6 +15,7 @@ export enum ForumActionType {
     likeForumPost = 'LIKE_FORUM_POST',
     dislikeForumPost = 'DISLIKE_FORUM_POST',
     commentForumPost = 'COMMENT_FORUM_POST',
+    updateForumPost = 'UPDATE_FORUM_POST',
     clear = 'CLEAR'
 }
 
@@ -56,6 +58,13 @@ export type CommentForumPost = {
     }
 }
 
+export type UpdateForumPost = {
+    type: ForumActionType.updateForumPost,
+    payload: {
+        oldForumPost: ForumPost | undefined
+        currentForumPost: ForumPost
+    }
+}
 
 export type Clear = {
     type: ForumActionType.clear

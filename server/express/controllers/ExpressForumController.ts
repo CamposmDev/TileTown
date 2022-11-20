@@ -71,6 +71,10 @@ export default class ForumController {
             return res.status(400).json({message: "Missing forum post data"});
         }
 
+        if (!req.body.forumPost.body) {
+            return res.status(400).json({message: "Missing forum post data"})
+        }
+
         // Update the forum post
         let forumPost = await db.forums.updateForumPost(req.params.id, {...req.body.forumPost, updatedDate: new Date(Date.now())});
         if (forumPost === null) {
