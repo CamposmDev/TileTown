@@ -51,7 +51,7 @@ const CommunitySettingsButton = () => {
     if (c) {
         moderators = c.members.map(x =>
             <Grid item xs={12}>
-                <UserProfileCard userId={x} firstName='' lastName='' username='' />
+                <UserProfileCard userId={x} />
             </Grid>
         )
     }

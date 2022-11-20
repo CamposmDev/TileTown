@@ -74,13 +74,10 @@ const SearchScreen = (props: Props) => {
                         spacing={1}
                         mt={1}>
                     {social.getUsers().map((x) => 
-                    <Grid item>
+                    <Grid item key={x.id}>
                         <UserProfileCard 
                             key={x.id}
                             userId={x.id}
-                            firstName={x.firstName}
-                            lastName={x.lastName}
-                            username={x.username}
                             fancy={true}
                         />
                     </Grid>)}

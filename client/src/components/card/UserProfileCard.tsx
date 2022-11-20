@@ -10,14 +10,11 @@ import { MENU_PAPER_PROPS, stringAvatar } from "../util/Constants";
 
 interface Props {
     userId: string,
-    firstName: string,
-    lastName: string,
-    username: string,
     fancy?: boolean
 }
 
 const UserProfileCard = (props: Props) => {
-    const [user, setUser] = useState({
+    const [state, setState] = useState({
         userId: '',
         firstName: '',
         lastName: '',
@@ -34,7 +31,7 @@ const UserProfileCard = (props: Props) => {
     useEffect(() => {
         social.getUserById(props.userId).then(u => {
             if (u) {
-                setUser({
+                setState({
                     userId: u.id,
                     firstName: u.firstName,
                     lastName: u.lastName,
@@ -45,15 +42,14 @@ const UserProfileCard = (props: Props) => {
     }, [])
     let card = 
         <UserProfileBox
-            firstName={user.firstName}
-            lastName={user.lastName}
-            username={user.username}
+            firstName={state.firstName}
+            lastName={state.lastName}
+            username={state.username}
         />
     
 
     const removeFriend = () => {
-        console.log(props.username)
-        social.removeFriend(props.username, auth, snack)
+        social.removeFriend(state.username, auth, snack)
         handleMenuClose()
     }
 
@@ -71,35 +67,28 @@ const UserProfileCard = (props: Props) => {
     )
 
     let minimal = 
-        <div>
+        <Box>
             {menu}
             <Card sx={{p: 1, boxShadow: 3}}>
                 <Stack direction='row' alignItems='center'>
                     {card}
-                    {/* <UserProfileBox 
-                        firstName={props.firstName}
-                        lastName={props.lastName}
-                        username={props.username}
-                    /> */}
                     <Box flexGrow={1}/>
                     <IconButton onClick={handleMenuOpen} children={<MoreVert/>}/>
                 </Stack>
             </Card>
-        </div>
+        </Box>
         
     let fancy = 
-        <Card><CardActionArea>
-            <CardContent>
-            
-            <UserProfileBox
-                firstName={props.firstName}
-                lastName={props.lastName}
-                username={props.username}
-                fancy={props.fancy}
-            />
-            
-
-            </CardContent>
+        <Card>
+            <CardActionArea>
+                <CardContent>
+                    <UserProfileBox
+                        firstName={state.firstName}
+                        lastName={state.lastName}
+                        username={state.username}
+                        fancy={props.fancy}
+                    />
+                </CardContent>
             </CardActionArea>
         </Card>
     return props.fancy ? fancy : minimal

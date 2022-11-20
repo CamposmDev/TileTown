@@ -1,8 +1,7 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
-import { Comment, User } from "@types"
 import UserProfileBox from "../UserProfileBox"
-import { parseDateToPostedStr, parseDateToStr } from "../util/DateUtils"
+import { parseDateToPostedStr } from "../util/DateUtils"
 import { useContext } from "react"
 import { SocialContext } from "src/context/social"
 
