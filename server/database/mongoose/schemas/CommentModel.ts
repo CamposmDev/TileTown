@@ -11,7 +11,7 @@ const CommentSchema = new Schema<CommentSchemaType>({
     username: { type: String, require: true },
     referenceId: { type: ObjectId, require: true},
     body: { type: String, require: true, default: "Write your comment here!"}
-})
+}, { timestamps: true })
 
 const CommentModel = mongoose.model("CommentModel", CommentSchema);
 

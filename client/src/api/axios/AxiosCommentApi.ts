@@ -4,7 +4,7 @@ import { Comment } from "@types";
 
 export default class AxiosCommentApi {
 
-    public static async getCommentById(id: string): Promise<AxiosResponse<{comment?: Comment, message: string}>> {
+    public async getCommentById(id: string): Promise<AxiosResponse<{comment?: Comment, message: string}>> {
         return AxiosApi.get<{comment?: Comment, message: string}, AxiosResponse<{comment?: Comment, message: string}>>(`/comment/${id}`)
     }
 

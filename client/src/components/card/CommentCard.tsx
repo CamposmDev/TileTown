@@ -3,12 +3,15 @@ import { useEffect, useState } from "react"
 import { Comment, User } from "@types"
 import UserProfileBox from "../UserProfileBox"
 import { parseDateToPostedStr, parseDateToStr } from "../util/DateUtils"
+import { useContext } from "react"
+import { SocialContext } from "src/context/social"
 
 interface Props {
     commentId: string
 }
 
 const CommentCard = (props: Props) => {
+    const social = useContext(SocialContext)
     const [comment, setComment] = useState<Comment | undefined>(undefined)
     const [user, setUser] = useState<User | undefined>(undefined)
     useEffect(() => {

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommunityApi, ContestApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, UserApi } from "src/api"
 import { Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -123,6 +123,15 @@ export class SocialStore {
             }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+
+    public async getCommentById(commentId: string): Promise<void> {
+        CommentApi.getCommentById(commentId).then(res => {
+            if (res.status === 200) {
+                let comment = res.data.comment
+                console.log(comment)
+            }
         })
     }
 
