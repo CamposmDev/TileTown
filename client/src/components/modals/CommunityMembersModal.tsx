@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Typography from '@mui/material/Typography';
-import { Dialog, DialogContent, Grid, Icon, IconButton, Modal } from '@mui/material';
+import { Dialog, DialogContent, Drawer, Grid, Icon, IconButton, Modal } from '@mui/material';
 import { useState } from 'react';
 import { Group } from '@mui/icons-material';
 import UserProfileCard from '../card/UserProfileCard';
@@ -29,10 +29,10 @@ const CommunityMembersModal = () => {
       };
 
     let ui = (
-        <Dialog 
+        <Drawer 
             open={isOpen} 
             onClose={handleClose}
-            TransitionComponent={SLIDE_DOWN_TRANSITION}
+            anchor='right'
             >
             <DialogContent>
             <Box>
@@ -55,8 +55,7 @@ const CommunityMembersModal = () => {
                 </Grid>        
             </Box>
             </DialogContent>
-            
-        </Dialog>
+        </Drawer>
     )
     return (
         <>
