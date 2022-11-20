@@ -49,8 +49,8 @@ const CreateButton = (props: MenuItemProps) => {
       >
         Tileset
       </MenuItem>
-      <MenuItem onClick={showCreateCommunityModal}>Create Community</MenuItem>
-      <MenuItem onClick={showCreateContestModal}>Create Contest</MenuItem>
+      <MenuItem onClick={showCreateCommunityModal}>Community</MenuItem>
+      <MenuItem onClick={showCreateContestModal}>Contest</MenuItem>
     </Menu>
   );
 
