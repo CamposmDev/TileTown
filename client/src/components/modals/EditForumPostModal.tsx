@@ -1,6 +1,5 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material"
 import { useContext, useState } from "react"
-import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
 import { ForumContext } from "src/context/social/forum"
 import ForumPost from "../../../../@types/ForumPost"

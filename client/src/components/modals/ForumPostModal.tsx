@@ -1,4 +1,4 @@
-import { Box, Dialog } from "@mui/material"
+import { Dialog } from "@mui/material"
 import { AppBar, Toolbar, Grid, Typography, Button, IconButton, Stack, Card, CardContent, TextField} from "@mui/material"
 import UserProfileBox from "../UserProfileBox"
 import CommentCard from "../card/CommentCard"
@@ -66,7 +66,6 @@ const ForumPostModal = () => {
     let content = <div></div>
     let editButton = <div></div>
     let editModal = <div></div>
-    const NEW_LINE = '\n'
     if (forumPost) {
         let usr = auth.getUsr()
         if (usr) {
@@ -110,7 +109,6 @@ const ForumPostModal = () => {
                     </Grid>
                 </Grid>
                 <Typography sx={{whiteSpace: 'pre-line'}}>{forumPost.body}</Typography>
-                {/* {forumPost.body.split(NEW_LINE).map(x =>  */}
             </CardContent>
     }
 

@@ -4,7 +4,6 @@ import React, { useContext, useState } from "react"
 import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
-import { SocialStore } from "src/context/social/SocialStore"
 
 const AddFriendModal = () => {
     const [open, setOpen] = useState(false)

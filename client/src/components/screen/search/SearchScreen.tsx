@@ -29,10 +29,10 @@ const SearchScreen = (props: Props) => {
         if (!auth.isLoggedIn()) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    let items = <div/>
+    let content = <div/>
     switch (props.cat) {
         case SearchCategory.Tilemaps:
-            items = <Grid 
+            content = <Grid 
                     container 
                     justifyContent={'center'}
                     spacing={1} 
@@ -53,7 +53,7 @@ const SearchScreen = (props: Props) => {
                 </Grid>
             break
         case SearchCategory.Tilesets:
-            items = <Grid container 
+            content = <Grid container 
                     justifyContent={'center'}
                     spacing={1}
                     mt={1}>
@@ -72,7 +72,7 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Users:
-            items = <Grid container 
+            content = <Grid container 
                 spacing={1}
                 mt={1}>
                     {social.getUsers().map((x) => 
@@ -89,7 +89,7 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Communities:
-            items = <Grid container 
+            content = <Grid container 
                 spacing={1}
                 mt={1}>
                     {comm.getCommunities().map((x) => 
@@ -100,7 +100,7 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Contests:
-            items = 
+            content = 
             <Grid container 
                 spacing={1}
                 mt={1}>
@@ -112,10 +112,10 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Forums:
-            items = 
+            content = 
                 <Grid container spacing={1}>
                     {forum.getForums().map((x) => 
-                        <Grid item key={x.id} xs={12}>
+                        <Grid item ml={1} mr={1} key={x.id} xs={12}>
                             <ForumPostCard
                                 forumPost={x}
                             />  
@@ -130,7 +130,7 @@ const SearchScreen = (props: Props) => {
                 <SearchToolbar category={props.cat}/>
             </Grid>
             <Grid item>
-                {items}
+                {content}
             </Grid>
         </Grid>
     )
