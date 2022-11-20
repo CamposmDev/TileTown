@@ -109,7 +109,8 @@ const ForumPostModal = () => {
                         </Stack>
                     </Grid>
                 </Grid>
-                {forumPost.body.split(NEW_LINE).map(x => <Typography paragraph>{x}</Typography>)}
+                <Typography sx={{whiteSpace: 'pre-line'}}>{forumPost.body}</Typography>
+                {/* {forumPost.body.split(NEW_LINE).map(x =>  */}
             </CardContent>
     }
 

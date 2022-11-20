@@ -75,16 +75,24 @@ export default class MongooseForumDBM implements ForumDBM {
         }
     }
     protected fillForumPost(forum: ForumSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<ForumPost>): void {
+        forum.publishDate = partial.publishDate ? partial.publishDate : forum.publishDate;
+        forum.updatedDate = partial.updatedDate ? partial.updatedDate : forum.updatedDate;
         forum.author = partial.author ? new mongoose.Types.ObjectId(partial.author) : forum.author;
         forum.title = partial.title ? partial.title : forum.title;
-        forum.body = partial.body ? forum.body + '\n' + partial.body : forum.body;
+        forum.body = partial.body ? forum.body + `\n\nSince: ${this.parseDate(forum.updatedDate)}\n` + partial.body : forum.body;
         forum.tags = partial.tags ? partial.tags : forum.tags;
         forum.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : forum.likes;
         forum.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : forum.dislikes;
         forum.views = partial.views ? partial.views : forum.views
         forum.isPublished = partial.isPublished ? partial.isPublished : forum.isPublished;
         forum.comments = partial.comments ? partial.comments.map(id => new mongoose.Types.ObjectId(id)) : forum.comments;
-        forum.publishDate = partial.publishDate ? partial.publishDate : forum.publishDate;
-        forum.updatedDate = partial.updatedDate ? partial.updatedDate : forum.updatedDate;
+    }
+
+    protected parseDate(date: Date): string {
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric'
+        }) + ' ' + date.toLocaleTimeString()
     }
 }
