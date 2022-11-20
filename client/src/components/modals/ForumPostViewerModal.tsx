@@ -54,6 +54,7 @@ const ForumPostViewerModal = () => {
     }
     const handleClose = () => {
         forum.clearCurrentForumPost()
+        setComment('')
     }
     const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.code === 'Enter') {
@@ -146,7 +147,9 @@ const ForumPostViewerModal = () => {
                     <Grid container item xs={6} pl={1}>
                         <Grid container>
                             <TextField 
-                                fullWidth 
+                                autoFocus
+                                fullWidth
+                                value={comment}
                                 label='Comment' 
                                 onChange={(e) => setComment(e.target.value)} 
                                 onKeyUp={handleKeyUp}
