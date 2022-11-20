@@ -94,12 +94,8 @@ const TileItemModal = (props: ModalProps) => {
                     <Grid container mt={1}>
                         {auth.isGuest() ? <div/> : <TextField label='Comment' fullWidth/>}
                         <Grid item flexGrow={1} mt={1}>
-                            {/* <CommentCard/>
-                            <CommentCard/>
-                            <CommentCard/>
-                            <CommentCard/> */}
+                            {}
                         </Grid>
-                        
                     </Grid>
                 </Grid>
             </Grid>

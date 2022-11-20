@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SocialContext } from "src/context/social";
 import { SocialActionType } from "src/context/social/SocialAction";
-import { Community, Contest } from "@types";
+import { Community, Contest, Tileset } from "@types";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
@@ -21,11 +21,11 @@ function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
     return (
         <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
         >
         {value === index && (
             <Box sx={{ p: 3 }}>
@@ -48,12 +48,16 @@ const UserProfileScreen = () => {
     const social = useContext(SocialContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
+    const [tilesets, setTilesets] = useState<Tileset[]>([])
     const [contests, setContests] = useState<Contest[]>([])
     const [communities, setCommunities] = useState<Community[]>([])
     useEffect(() => {
         if (!auth.isLoggedIn()) {
             nav('/')
         } else {
+            social.getTilesetsById(auth.getUsr()?.tilesets).then(arr => {
+                setTilesets(arr)
+            })
             social.getContestsById(auth.getUsr()?.joinedContests).then(arr => {
                 setContests(arr)
             })
@@ -70,6 +74,7 @@ const UserProfileScreen = () => {
 
     let user = auth.getUsr()
     let profile = <div/>
+    let tilesetCards: JSX.Element | JSX.Element[] = <div>No tilesets</div>
     let contestCards: JSX.Element | JSX.Element[] = <div>No contests found</div>
     let communityCards: JSX.Element | JSX.Element[] = <div>No communities found</div>
     if (user) {
@@ -78,10 +83,16 @@ const UserProfileScreen = () => {
             lastName={user.lastName}
             username={user.username}
         />
+        tilesetCards = tilesets.map(x => 
+            <Grid item key={x.id}>
+                {/* <TileItemCard
+                    preview=""
+                /> */}
+            </Grid>)
         contestCards = contests.map((x) =>
-                <Grid item key={x.id} xs={3}>
-                    <ContestCard c={x}/>
-                </Grid>
+            <Grid item key={x.id} xs={3}>
+                <ContestCard c={x}/>
+            </Grid>
         )
         communityCards = communities.map((x) => 
             <Grid item key={x.id} xs={3}>
@@ -133,46 +144,49 @@ const UserProfileScreen = () => {
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                    <Grid container 
-                        spacing={1}
-                        mt={1}>
-                        <Grid item>
-                            <TileItemCard
-                                preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                                tilemapName='McBendorjee vs Robots Tileset'
-                                author='Emdoiqua'
-                                publishDate={new Date(2022,11,5)}
-                                views={Math.random() * 3000}
-                                comments={Math.random() * 3000}
-                                likes={Math.random() * 3000}
-                                tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <TileItemCard
-                                preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                                tilemapName='McBendorjee vs Robots Tileset'
-                                author='Emdoiqua'
-                                publishDate={new Date(2022,11,5)}
-                                views={Math.random() * 3000}
-                                comments={Math.random() * 3000}
-                                likes={Math.random() * 3000}
-                                tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                            />
-                        </Grid>
-                    </Grid>
-                </TabPanel>
-                    <TabPanel value={value} index={2}>
                         <Grid container 
                             spacing={1}
                             mt={1}>
-                                {contestCards}
+                                {tilesetCards}
+                            {/* <Grid item>
+                                <TileItemCard
+                                    preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
+                                    tilemapName='McBendorjee vs Robots Tileset'
+                                    author='Emdoiqua'
+                                    publishDate={new Date(2022,11,5)}
+                                    views={Math.random() * 3000}
+                                    comments={Math.random() * 3000}
+                                    likes={Math.random() * 3000}
+                                    tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TileItemCard
+                                    preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
+                                    tilemapName='McBendorjee vs Robots Tileset'
+                                    author='Emdoiqua'
+                                    publishDate={new Date(2022,11,5)}
+                                    views={Math.random() * 3000}
+                                    comments={Math.random() * 3000}
+                                    likes={Math.random() * 3000}
+                                    tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
+                                />
+                            </Grid> */}
+                        </Grid>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <Grid container 
+                            spacing={1}
+                            mt={1}
+                        >
+                            {contestCards}
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
                         <Grid container 
                             spacing={1}
-                            mt={1}>
+                            mt={1}
+                        >
                             {communityCards}
                         </Grid>
                     </TabPanel>

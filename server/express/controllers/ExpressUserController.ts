@@ -387,6 +387,12 @@ export default class UserController {
             return;
         }
 
+        user.tilemaps.forEach(id => db.tilemaps.deleteTilemapById(id))
+        user.tilesets.forEach(id => db.tilesets.deleteTilesetById(id))
+        user.joinedCommunities.forEach(id => db.communities.deleteCommunityById(id))
+        user.joinedContests.forEach(id => db.contests.deleteContestById(id))
+        db.comments.deleteUserComments(user.id)        
+
         // If user exists, try deleting the user
         let deleted = await db.users.deleteUser(req.userId);
         if (!deleted) {

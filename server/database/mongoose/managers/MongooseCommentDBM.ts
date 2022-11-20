@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import CommentDBM from "../../interface/managers/CommentDBM";
 import { Comment } from "@types";
 import { CommentModel } from '../schemas';
@@ -28,6 +28,15 @@ export default class MongooseCommentDBM implements CommentDBM {
         let savedComment = await comment.save();
 
         return this.parseComment(savedComment);
+    }
+
+    async deleteUserComments(userId: string): Promise<Boolean> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return false
+        }
+        let result = await CommentModel.deleteMany({author: userId})
+        console.log(`Deleted ${result.deletedCount} comments`)
+        return Boolean(result)
     }
 
     protected parseComment(comment: CommentSchemaType & { _id: mongoose.Types.ObjectId}): Comment {

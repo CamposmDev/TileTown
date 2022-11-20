@@ -49,7 +49,7 @@ export default class MongooseContestDBM implements ContestDBM {
         return this.parseContest(savedContest);
     }
 
-    public async deleteContest(contestId: string): Promise<Contest | null> {
+    public async deleteContestById(contestId: string): Promise<Contest | null> {
         if (!mongoose.Types.ObjectId.isValid(contestId)) { return null; }
         let contest = await ContestModel.findByIdAndDelete(contestId);
         if (contest === null) { return null; }
