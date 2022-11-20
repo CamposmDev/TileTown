@@ -12,11 +12,13 @@ import { formatToSocialStr } from "../util/NumberUtils"
 import { SocialContext } from "src/context/social"
 import { AuthContext } from "src/context/auth"
 import EditForumPostModal from "./EditForumPostModal"
+import { SnackContext } from "src/context/snack"
 
 const ForumPostModal = () => {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
     const auth = useContext(AuthContext)
+    const snack = useContext(SnackContext)
     const [edit, setEdit] = useState(false)
     const [comment, setComment] = useState('')
     const [user, setUser] = useState({
@@ -55,7 +57,8 @@ const ForumPostModal = () => {
     }
     const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.code === 'Enter') {
-            forum.comment(comment)
+            forum.comment(comment, snack)
+            setComment('')
         }
     }
 
@@ -119,7 +122,7 @@ const ForumPostModal = () => {
             onClose={handleClose} 
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
-            <AppBar sx={{ position: 'relative' }}>
+            <AppBar sx={{position: 'sticky'}}>
                 <Toolbar>
                     <Grid alignItems={'center'} container direction='row' sx={{flexGrow: 1}}>
                         <Typography variant="h6" component="div">

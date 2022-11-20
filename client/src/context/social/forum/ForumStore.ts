@@ -96,7 +96,7 @@ export class ForumStore {
         }
     }
 
-    public async comment(body: string): Promise<void> {
+    public async comment(body: string, snack?: SnackStore): Promise<void> {
         let forumPost = this._forum.currentForumPost
         if (forumPost) {
             ForumApi.commentForumById(forumPost.id, {
@@ -105,6 +105,7 @@ export class ForumStore {
                 }
             }).then(res => {
                 if (res.status === 201) {
+                    snack?.showSuccessMessage(res.data.message)
                     this.handleAction({
                         type: ForumActionType.commentForumPost,
                         payload: {

@@ -11,6 +11,13 @@ interface Props {
 
 const CommentCard = (props: Props) => {
     const social = useContext(SocialContext)
+    const [state, setState] = useState({
+        createdAt: new Date(),
+        username: '',
+        firstName: '',
+        lastName: '',
+        body: ''
+    })
     useEffect(() => {
         social.getCommentById(props.commentId).then(data => {
             let comment = data.comment
@@ -26,13 +33,6 @@ const CommentCard = (props: Props) => {
             }
         })
     }, [])
-    const [state, setState] = useState({
-        createdAt: new Date(),
-        username: '',
-        firstName: '',
-        lastName: '',
-        body: ''
-    })
 
     let content = 
         <Grid container alignItems={'center'}>

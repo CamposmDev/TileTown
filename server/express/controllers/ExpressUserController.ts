@@ -165,7 +165,7 @@ export default class UserController {
         let token: string = Auth.signJWT<string>(user.id);
 
         return res.status(200).
-            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
+            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + (60 * 60 * 1000)) }).
             json({ message: "User successfully logged in!", user: user });
     }
     public async logoutUser(req: Request, res: Response): Promise<void> {
