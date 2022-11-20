@@ -3,8 +3,9 @@ import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { AuthContext } from "src/context/auth"
 import { SocialContext } from "src/context/social"
+import { CommunityContext } from "src/context/social/community"
+import { ContestContext } from "src/context/social/contest"
 import { ForumContext } from "src/context/social/forum"
-import { SocialActionType } from "src/context/social/SocialAction"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
@@ -20,6 +21,8 @@ interface Props {
 const SearchScreen = (props: Props) => {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
+    const comm  = useContext(CommunityContext)
+    const contest = useContext(ContestContext)
     const forum = useContext(ForumContext)
     const nav = useNavigate()
     useEffect(() => {
@@ -70,12 +73,12 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Users:
             items = <Grid container 
-                justifyContent={'center'}
-                alignItems={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getUsers().map((x,i) => <Grid>
+                    {social.getUsers().map((x) => 
+                    <Grid item xs={2}>
                         <UserProfileCard 
+                            key={x.id}
                             userId={x.id}
                             firstName={x.firstName}
                             lastName={x.lastName}
@@ -87,18 +90,11 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Communities:
             items = <Grid container 
-                justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getCommunities().map((x,i) => 
-                        <Grid item key={x.name}>
-                            <CommunityCard
-                                commName={x.name}
-                                commDesc={x.description}
-                                numOfMembers={x.members.length}
-                                numOfTilemaps={0}
-                                numOfTilesets={0}
-                            />
+                    {comm.getCommunities().map((x) => 
+                        <Grid xs={4} item key={x.name}>
+                            <CommunityCard comm={x}/>
                         </Grid>
                     )}
             </Grid>
@@ -106,20 +102,11 @@ const SearchScreen = (props: Props) => {
         case SearchCategory.Contests:
             items = 
             <Grid container 
-                justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getContests().map((x,i) => 
-                        <Grid item key={x.name}>
-                            <ContestCard
-                                payload={{
-                                    contestName: x.name,
-                                    startDate: new Date(x.startDate),
-                                    endDate: new Date(x.endDate),
-                                    owner: x.owner,
-                                    participates: x.participates.length
-                                }}
-                            />
+                    {contest.getContests().map(x => 
+                        <Grid xs={3} item key={x.name}>
+                            <ContestCard c={x}/>
                         </Grid>
                     )}
             </Grid>

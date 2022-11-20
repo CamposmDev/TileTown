@@ -42,18 +42,10 @@ const CommunityContestsModal = () => {
                     <Icon ><EmojiEventsIcon /></Icon>
                 </Avatar>
                 <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
-                    {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
+                    {/* {[1,1,1,1,1,1,1,1,1,1,1,1].map((x,i) => 
                         <Grid item mt={1}>
-                            <ContestCard
-                                payload={{
-                                    contestName: 'A New Contest',
-                                    startDate: new Date(2022,10,31),
-                                    endDate: new Date(2022,11,5),
-                                    owner: 'Camposm',
-                                    participates: (Math.random() * 100)
-                                }}
-                            />    
-                        </Grid>)}
+                            <ContestCard c={x}/>    
+                        </Grid>)} */}
                 </Grid>                
             </Box>
             </DialogContent>
