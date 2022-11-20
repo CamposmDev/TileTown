@@ -14,7 +14,7 @@ import { AuthContext } from "src/context/auth"
 import EditForumPostModal from "./EditForumPostModal"
 import { SnackContext } from "src/context/snack"
 
-const ForumPostModal = () => {
+const ForumPostViewerModal = () => {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
     const auth = useContext(AuthContext)
@@ -167,4 +167,4 @@ const ForumPostModal = () => {
     )
 }
 
-export default ForumPostModal
+export default ForumPostViewerModal
