@@ -1,4 +1,4 @@
-import { Dialog } from "@mui/material"
+import { Box, Dialog } from "@mui/material"
 import { AppBar, Toolbar, Grid, Typography, Button, IconButton, Stack, Card, CardContent, TextField} from "@mui/material"
 import UserProfileBox from "../UserProfileBox"
 import CommentCard from "../card/CommentCard"
@@ -28,6 +28,7 @@ const ForumPostModal = () => {
     useEffect(() => {
         let userId: string | undefined = forum.getCurrentForumPost()?.author
         let aux = async () => {
+            console.log(forum.getCurrentForumPost()?.body)
             if (userId) {
                 await social.getUserById(userId).then(u => {
                     if (u) setUser({firstName: u.firstName, lastName: u.lastName, username: u.username})
@@ -65,6 +66,7 @@ const ForumPostModal = () => {
     let content = <div></div>
     let editButton = <div></div>
     let editModal = <div></div>
+    const NEW_LINE = '\n'
     if (forumPost) {
         let usr = auth.getUsr()
         if (usr) {
@@ -107,7 +109,7 @@ const ForumPostModal = () => {
                         </Stack>
                     </Grid>
                 </Grid>
-                <Typography>{forumPost?.body}</Typography>
+                {forumPost.body.split(NEW_LINE).map(x => <Typography paragraph>{x}</Typography>)}
             </CardContent>
     }
 

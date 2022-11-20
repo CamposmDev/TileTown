@@ -77,7 +77,7 @@ export default class MongooseForumDBM implements ForumDBM {
     protected fillForumPost(forum: ForumSchemaType & { _id: mongoose.Types.ObjectId}, partial: Partial<ForumPost>): void {
         forum.author = partial.author ? new mongoose.Types.ObjectId(partial.author) : forum.author;
         forum.title = partial.title ? partial.title : forum.title;
-        forum.body = partial.body ? partial.body : forum.body;
+        forum.body = partial.body ? forum.body + '\n' + partial.body : forum.body;
         forum.tags = partial.tags ? partial.tags : forum.tags;
         forum.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : forum.likes;
         forum.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : forum.dislikes;
