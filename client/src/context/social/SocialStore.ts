@@ -1,6 +1,6 @@
 import axios from "axios"
 import { CommentApi, CommunityApi, ContestApi, UserApi } from "src/api"
-import { Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
+import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
@@ -126,13 +126,24 @@ export class SocialStore {
         })
     }
 
-    public async getCommentById(commentId: string): Promise<void> {
-        CommentApi.getCommentById(commentId).then(res => {
+    public async getCommentById(commentId: string): Promise<{comment: Comment | undefined, user: User | undefined}> {
+        let comment: Comment | undefined = await CommentApi.getCommentById(commentId).then(res => {
             if (res.status === 200) {
-                let comment = res.data.comment
-                console.log(comment)
+                return res.data.comment
             }
         })
+        let user: User | undefined
+        if (comment) {
+            user = await UserApi.getUserById(comment.author).then(res => {
+                if (res.status === 200) {
+                    return res.data.user
+                }
+            })
+        }
+        return {
+            comment: comment,
+            user: user
+        }
     }
 
     public async clear(): Promise<void> {
@@ -145,11 +156,9 @@ export class SocialStore {
         switch (action.type) {
             case SocialActionType.getTilesetByName: {
                 throw new Error('Not Yet Implemented')
-                break
             }
             case SocialActionType.getTilemapByName: {
                 throw new Error('Not Yet Implemented')
-                break
             }
             case SocialActionType.getUserByUsername: {
                 this._setSocial({

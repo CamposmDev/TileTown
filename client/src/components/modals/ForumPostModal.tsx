@@ -28,7 +28,6 @@ const ForumPostModal = () => {
     useEffect(() => {
         let userId: string | undefined = forum.getCurrentForumPost()?.author
         let aux = async () => {
-            console.log(forum.getCurrentForumPost()?.body)
             if (userId) {
                 await social.getUserById(userId).then(u => {
                     if (u) setUser({firstName: u.firstName, lastName: u.lastName, username: u.username})
@@ -151,8 +150,8 @@ const ForumPostModal = () => {
                         />
                     </Grid>
                     <Grid container>
-                        {forumPost?.comments.map(x =>
-                            <Grid>
+                        {forumPost?.comments.slice().reverse().map(x =>
+                            <Grid item xs={12}>
                                 <CommentCard commentId={x} key={x}/>
                             </Grid>
                         )}
