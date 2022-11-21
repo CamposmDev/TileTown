@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { TilesetController } from "../controllers";
-import { Auth, Upload } from "../middleware";
+import { Auth, Upload, TilesetMW } from "../middleware";
 
 const router: Router = Router();
 
 // Tilemap - basic CRUD routes and publish
 router.get("/:id", Auth.verifyJWT, TilesetController.getTilesetById);
-router.post("/", Auth.verifyJWT, Upload.single('image'), TilesetController.createTileset);
+router.post("/", Auth.verifyJWT, Upload.single('image'), TilesetMW.createTileset(), TilesetController.createTileset);
 router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
 router.put("/:id", Auth.verifyJWT, Upload.single('image'), TilesetController.updateTilesetById);
 router.delete("/:id", Auth.verifyJWT, TilesetController.deleteTilesetById);

@@ -42,13 +42,13 @@ export default class TilesetController {
     }
 
     // Convert the tileset attribute to valid JSON
-    try {
-      req.body.tileset = JSON.parse(req.body.tileset);
-    } catch {
-      return res
-        .status(400)
-        .json({ messagee: "Tileset field is not valid JSON" });
-    }
+    // try {
+    //   req.body.tileset = JSON.parse(req.body.tileset);
+    // } catch {
+    //   return res
+    //     .status(400)
+    //     .json({ messagee: "Tileset field is not valid JSON" });
+    // }
 
     // Check if the tileset has a name
     if (!req.body.tileset.name) {
