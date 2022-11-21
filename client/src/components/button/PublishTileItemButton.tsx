@@ -1,29 +1,37 @@
 import { Publish, Send } from "@mui/icons-material"
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField, Typography } from "@mui/material"
-import { Box } from "@mui/system"
-import { editableInputTypes } from "@testing-library/user-event/dist/utils"
-import { useContext, useState } from "react"
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
+import { SocialContext } from "src/context/social"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
 interface Props {
+    id: string,
     name: string
-    callback: Function
 }
 
 const PublishTileItemButton = (props: Props) => {
     const auth = useContext(AuthContext)
+    const social = useContext(SocialContext)
     const [open, setOpen] = useState(false)
     const [desc, setDesc] = useState('')
+    const [options, setOptions] = useState<string[]>([])
     const [commOption, setCommOption] = useState('')
+
+    useEffect(() => {
+        let usr = auth.getUsr()
+        if (usr) {
+            social.getCommunityNames(usr.joinedCommunities).then(arr => {
+                setOptions(arr)
+            })
+        }
+    }, [])
 
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
 
     const publish = () => {
-        // props.callback(desc, [commName], [], [])
-        console.log(desc)
-        console.log(commOption)
+        social.publishTileset(props.id, desc, commOption, [], [])
         handleClose()
     }
 
@@ -33,11 +41,6 @@ const PublishTileItemButton = (props: Props) => {
         handleClose()
     }
 
-    let usr = auth.getUsr()
-    let comms: string[] = []
-    if (usr) {
-        comms = usr.joinedCommunities
-    }
     let dis = !(Boolean(desc))
 
     const modal = (
@@ -62,7 +65,7 @@ const PublishTileItemButton = (props: Props) => {
                         <Grid item xs={12}>
                             <Autocomplete
                                 fullWidth
-                                options={comms}
+                                options={options}
                                 onChange={(e,v) => { if (v) setCommOption(v) }}
                                 renderInput={(params) => 
                                     <TextField 

@@ -14,7 +14,7 @@ const TileSetSocialStatisticsSchema = new Schema<TilesetSocialSchemaType>({
     owner: { type: ObjectId, require: true},
     tags: { type: [String], require: true},
     description: { type: String, require: true},
-    community: { type: ObjectId, require: true},
+    community: { type: String },
     likes: { type: [ObjectId], require: true},
     dislikes: {type: [ObjectId], require: true},
     views: { type: Number, require: true},

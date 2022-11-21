@@ -61,7 +61,7 @@ export default class AxiosTilesetApi {
 
   public async publishTilesetById(id: string, payload: {
     description: string,
-    communities: string[],
+    communityName: string,
     permissions: string[],
     tags: string[]
   }) : Promise<AxiosResponse<PublishTilesetRes>> {

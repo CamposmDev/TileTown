@@ -161,10 +161,30 @@ export class SocialStore {
         }
     }
 
-    public async publishTileset(tilesetId: string, desc: string, communities: [], permissions: [], tags: []): Promise<void> {
+    public async getCommunityNames(ids: string[]): Promise<string[]> {
+        let arr: string[] = []
+        ids.forEach(id => {
+            this.getCommunityName(id).then(name => {
+                if (name) {
+                    arr.push(name)
+                }
+            })
+        })
+        return arr
+    }
+
+    public async getCommunityName(communityId: string): Promise<string | undefined> {
+        return CommunityApi.getCommunityName(communityId).then(res => {
+            if (res.status === 200) {
+                return res.data.name
+            }
+        })
+    }
+
+    public async publishTileset(tilesetId: string, desc: string, commName: string, permissions: [], tags: []): Promise<void> {
         TilesetApi.publishTilesetById(tilesetId, {
             description: desc,
-            communities: communities,
+            communityName: commName,
             permissions: permissions,
             tags: tags
         }).then(res => {
