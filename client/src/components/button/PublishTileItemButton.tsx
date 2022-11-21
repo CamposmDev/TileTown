@@ -2,6 +2,7 @@ import { Publish, Send } from "@mui/icons-material"
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
+import { ProfileContext } from "src/context/profile"
 import { SocialContext } from "src/context/social"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const PublishTileItemButton = (props: Props) => {
+    const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const [open, setOpen] = useState(false)
@@ -32,6 +34,7 @@ const PublishTileItemButton = (props: Props) => {
 
     const publish = () => {
         social.publishTileset(props.id, desc, commOption, [], [])
+        prof.viewPublishedTilesets()
         handleClose()
     }
 

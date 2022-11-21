@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SocialContext } from "src/context/social";
 import { SocialActionType } from "src/context/social/SocialAction";
-import { Community, Contest, Tileset } from "@types";
+import { Community, Contest, Tileset, TilesetSocial } from "@types";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
@@ -51,16 +51,24 @@ const UserProfileScreen = () => {
     const social = useContext(SocialContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
-    const [tilesets, setTilesets] = useState<Tileset[]>([])
+    const [tilesetIds, setTilesetIds] = useState<string[]>([])
     const [contests, setContests] = useState<Contest[]>([])
     const [communities, setCommunities] = useState<Community[]>([])
     useEffect(() => {
         if (!auth.isLoggedIn()) {
             nav('/')
         } else {
-            social.getTilesetsById(auth.getUsr()?.tilesets).then(arr => {
-                setTilesets(arr)
-            })
+            if (prof.state.viewUnpublishedTilesets) {
+                setValue(1)
+            }
+            let usr = auth.getUsr()
+            if (usr) {
+                social.getAllUserTilesets(usr.id).then(arr => {
+                    if (arr) {
+                        setTilesetIds(arr)
+                    }
+                })
+            }
             social.getContestsById(auth.getUsr()?.joinedContests).then(arr => {
                 setContests(arr)
             })
@@ -69,7 +77,7 @@ const UserProfileScreen = () => {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [prof])
     console.log(prof.state.viewUnpublishedTilesets)
     const [value, setValue] = useState(0)
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -87,10 +95,10 @@ const UserProfileScreen = () => {
             lastName={user.lastName}
             username={user.username}
         />
-        tilesetCards = tilesets.map(x => 
-            <Grid item key={x.id}>
+        tilesetCards = tilesetIds.map(x => 
+            <Grid item key={x}>
                 <TilesetCard
-                    tileset={x}
+                    tilesetId={x}
                 />
             </Grid>)
         contestCards = contests.map((x) =>
