@@ -14,4 +14,6 @@ CommunityRouter.delete('/:id', Auth.verifyJWT, CommunityController.deleteCommuni
 CommunityRouter.put('/join/:id', Auth.verifyJWT, CommunityController.joinCommunityById);
 CommunityRouter.put('/leave/:id', Auth.verifyJWT, CommunityController.leaveCommunityById);
 
+CommunityRouter.get('/name/:id', Auth.verifyJWT, CommunityController.getCommunityNameById)
+
 export default CommunityRouter;

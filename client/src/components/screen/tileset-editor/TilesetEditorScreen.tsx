@@ -149,8 +149,8 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name={edit.state.tileset.name} callback={() => {}}/>
-              <PublishTileItemButton name={edit.state.tileset.name} callback={(desc: string, comms: [], perms: [], tags: []) => social.publishTileset(edit.state.tileset.id, desc, comms, perms, tags)}/>
+              <DeleteTileItemButton name={edit.state.tileset.name} />
+              <PublishTileItemButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
             </Stack>
           </Grid>
         </Grid>
