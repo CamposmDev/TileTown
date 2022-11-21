@@ -5,6 +5,7 @@ import AxiosForumApi from "./axios/AxiosForumApi";
 import AxiosTilesetApi from "./axios/AxiosTilesetApi";
 import AxiosUserApi from "./axios/AxiosUserApi";
 import AxiosCommentApi from "./axios/AxiosCommentApi";
+import AxiosMediaApi from "./axios/AxiosMediaApi";
 
 axios.defaults.withCredentials = true
 
@@ -18,6 +19,7 @@ const ContestApi = new AxiosContestApi();
 const ForumApi = new AxiosForumApi();
 const TilesetApi = new AxiosTilesetApi();
 const CommentApi = new AxiosCommentApi();
+const MediaApi = new AxiosMediaApi();
 
 export { 
     CommunityApi, 
@@ -25,5 +27,6 @@ export {
     ContestApi,
     ForumApi,
     TilesetApi,
-    CommentApi
+    CommentApi,
+    MediaApi
 }

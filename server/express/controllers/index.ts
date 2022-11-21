@@ -6,7 +6,6 @@ import ExpressTilemapController from './ExpressTilemapController';
 import ExpressTilesetController from './ExpressTilesetController';
 import ExpressQueryController from './ExpressQueryController';
 
-
 const UserController: ExpressUserController = new ExpressUserController();
 const ForumController: ExpressForumController = new ExpressForumController();
 const ContestController: ExpressContestController = new ExpressContestController();
@@ -23,7 +22,7 @@ export {
     CommunityController,
     TilemapController,
     TilesetController,
-    QueryController
+    QueryController,
 }
 
 export { default as CommentController } from "./ExpressCommentController";

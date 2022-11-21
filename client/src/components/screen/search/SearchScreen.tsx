@@ -37,7 +37,7 @@ const SearchScreen = (props: Props) => {
                     spacing={1} 
                     mt={1}
                 >
-                    <Grid item>
+                    {/* <Grid item>
                         <TileItemCard
                             preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1.png'
                             tilemapName='McBendorjee vs Robots Debug'
@@ -48,14 +48,14 @@ const SearchScreen = (props: Props) => {
                             likes={Math.random() * 3000}
                             tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
                         />
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             break
         case SearchCategory.Tilesets:
             content = <Grid container 
                     spacing={1}
                     mt={1}>
-                <Grid item>
+                {/* <Grid item>
                     <TileItemCard
                         preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
                         tilemapName='McBendorjee vs Robots Tileset'
@@ -66,7 +66,7 @@ const SearchScreen = (props: Props) => {
                         likes={Math.random() * 3000}
                         tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
                     />
-                </Grid>
+                </Grid> */}
             </Grid>
             break
         case SearchCategory.Users:

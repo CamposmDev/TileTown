@@ -1,9 +1,10 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, ContestApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, MediaApi, TilesetApi, UserApi } from "src/api"
 import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
+import { Iron } from "@mui/icons-material"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -97,7 +98,21 @@ export class SocialStore {
         }
     }
 
-    
+    public async getTilesetsById(arr: string[] | undefined): Promise<Tileset[]> {
+        if (arr) {
+            let resultArr: Tileset[] = []
+            arr.forEach(id => {
+                let res = TilesetApi.getTilesetById(id)
+                res.then(res => {
+                    if (res.status === 200) {
+                        resultArr.push(res.data.tileset)
+                    }
+                })
+            })
+            return resultArr
+        }
+        return []
+    }
 
     public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)

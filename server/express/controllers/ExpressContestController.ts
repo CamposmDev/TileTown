@@ -123,7 +123,7 @@ export default class ContestController {
             return res.status(404).json({ message: `Contest with id ${req.params.id} not found` })
         }
 
-        let deletedContest = await db.contests.deleteContest(req.params.id);
+        let deletedContest = await db.contests.deleteContestById(req.params.id);
         if (deletedContest === null) {
             return res.status(500).json({ message: `Contest with id ${req.params}` });
         }

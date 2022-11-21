@@ -3,7 +3,6 @@ import { db } from "../../database/index";
 
 
 export default class CommentController {
-
     public static async getCommentById(req: Request, res: Response): Promise<Response> {
         if (!req || !req.params) {
             return res.status(400).json({ message: "Bad Request" });
