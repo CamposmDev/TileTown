@@ -31,10 +31,9 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tileSet: tilesetId,
             name: partial.name ? partial.name : "Tileset name",
             owner: partial.owner ? partial.owner : new mongoose.Types.ObjectId(),
-            ownerName: partial.ownerName ? partial.ownerName : "Owner",
             tags: partial.tags ? partial.tags : [],
             description: partial.description ? partial.description : "Description",
-            communities: partial.communities ? partial.communities : [],
+            community: partial.community ? partial.community : '',
             likes: [],
             dislikes: [],
             views: 0, 
@@ -62,10 +61,9 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tileset: social.tileSet.toString(),
             name: social.name,
             owner: social.owner.toString(),
-            ownerName: social.ownerName,
             tags: social.tags,
             description: social.description,
-            communities: social.communities.map(id => id.toString()),
+            community: social.community.toString(),
             likes: social.likes.map(id => id.toString()),
             dislikes: social.dislikes.map(id => id.toString()),
             views: social.views,
@@ -79,10 +77,9 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         social.tileSet = partial.tileset ? new mongoose.Types.ObjectId(partial.tileset) : social.tileSet;
         social.name = partial.name ? partial.name : social.name;
         social.owner = partial.owner ? new mongoose.Types.ObjectId(partial.owner) : social.owner;
-        social.ownerName = partial.ownerName ? partial.ownerName : social.ownerName;
         social.tags = partial.tags ? partial.tags : social.tags;
         social.description = partial.description ? partial.description : social.description;
-        social.communities = partial.communities ? partial.communities.map(id => new mongoose.Types.ObjectId(id)) : social.communities;
+        social.community = partial.community ? new mongoose.Types.ObjectId(partial.community) : social.community;
         social.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : social.likes;
         social.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : social.dislikes;
         social.views = partial.views ? partial.views : social.views;

@@ -5,10 +5,9 @@ export default interface TilesetSocialStatistics {
     tileset: string;
     name: string;
     owner: string;
-    ownerName: string;
     tags: string[];
     description: string;
-    communities: string[];
+    community: string;
     likes: string[];
     dislikes: string[];
     views: number;

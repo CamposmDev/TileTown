@@ -59,8 +59,13 @@ export default class AxiosTilesetApi {
     >(`/tileset/${id}`, payload);
   }
 
-  public async publishTilesetById(id: string) : Promise<AxiosResponse<PublishTilesetRes>> {
-    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`);
+  public async publishTilesetById(id: string, payload: {
+    description: string,
+    communities: string[],
+    permissions: string[],
+    tags: string[]
+  }) : Promise<AxiosResponse<PublishTilesetRes>> {
+    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`, payload);
   }
 
   public async getUnpublishedTilesets() : Promise<AxiosResponse<GetUnpublishedTilesetsRes>> {

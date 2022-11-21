@@ -161,6 +161,19 @@ export class SocialStore {
         }
     }
 
+    public async publishTileset(tilesetId: string, desc: string, communities: [], permissions: [], tags: []): Promise<void> {
+        TilesetApi.publishTilesetById(tilesetId, {
+            description: desc,
+            communities: communities,
+            permissions: permissions,
+            tags: tags
+        }).then(res => {
+            if (res.status === 200) {
+                
+            }
+        })
+    }
+
     public async clear(): Promise<void> {
         this.handleAction({
             type: SocialActionType.clear

@@ -42,13 +42,13 @@ export default class TilesetController {
     }
 
     // Convert the tileset attribute to valid JSON
-    try {
-      req.body.tileset = JSON.parse(req.body.tileset);
-    } catch {
-      return res
-        .status(400)
-        .json({ messagee: "Tileset field is not valid JSON" });
-    }
+    // try {
+    //   req.body.tileset = JSON.parse(req.body.tileset);
+    // } catch {
+    //   return res
+    //     .status(400)
+    //     .json({ messagee: "Tileset field is not valid JSON" });
+    // }
 
     // Check if the tileset has a name
     if (!req.body.tileset.name) {
@@ -286,8 +286,20 @@ export default class TilesetController {
     if (!req.params.id) {
       return res.status(400).json({ message: "Missing tileset id" });
     }
-    if (!req.body.social) {
-      return res.status(400).json({ message: "Missing social in body" });
+    if (!req.body) {
+      return res.status(400).json({ message: "Missing body" });
+    }
+    if (!req.body.description) {
+      return res.status(400).json({ message: "Missing description" })
+    }
+    if (!req.body.community) {
+      return res.status(400).json({ message: "Missing community" })
+    }
+    if (!req.body.permissions) {
+      return res.status(400).json({ message: "Missing permissions" })
+    }
+    if (!req.body.tags) {
+      return res.status(400).json({ message: "Missing tags" })
     }
 
     // Check tileset exists
@@ -311,7 +323,14 @@ export default class TilesetController {
     // Create the social data
     let social = await db.tilesetSocials.createTilesetSocial(
       tileset.id,
-      req.body.social
+      {
+        name: tileset.name,
+        owner: tileset.owner,
+        description: req.body.description,
+        community: req.body.community,
+        permissions: req.body.permissions,
+        tags: req.body.tags
+      }
     );
     if (social === null) {
       return res.status(500).json({
