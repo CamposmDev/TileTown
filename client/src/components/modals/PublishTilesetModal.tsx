@@ -32,11 +32,6 @@ const PublishTilesetModal = () => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Warning: Once a Tileset has been published, it cannot be unpublished. Your Tileset will be visible to the TileTown community. Other TileTown users will be able to copy, like, and comment on your tileset at will.
                 </Typography>
-                
-                
-        
-
-                
             </Box>
             <DialogActions>
                 <Button startIcon={<SendIcon />} variant="contained">Publish</Button>

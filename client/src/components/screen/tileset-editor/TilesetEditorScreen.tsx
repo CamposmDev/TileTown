@@ -28,10 +28,12 @@ import {
   TilesetEditControl,
   Color,
 } from "src/context/tilesetEditor/TilesetEditTypes";
+import { SocialContext } from "src/context/social";
 
 const TilesetEditorScreen = () => {
   const edit = useContext(TilesetEditContext);
   const snack = useContext(SnackContext);
+  const social = useContext(SocialContext)
 
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
@@ -147,8 +149,8 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name={edit.state.tileset.name} />
-              <PublishTileItemButton name={edit.state.tileset.name} />
+              <DeleteTileItemButton name={edit.state.tileset.name} callback={() => {}}/>
+              <PublishTileItemButton name={edit.state.tileset.name} callback={(desc: string, comms: [], perms: [], tags: []) => social.publishTileset(edit.state.tileset.id, desc, comms, perms, tags)}/>
             </Stack>
           </Grid>
         </Grid>

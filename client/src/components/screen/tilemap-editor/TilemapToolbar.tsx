@@ -212,14 +212,8 @@ const TilemapToolbar = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name={"this tilemap"} />
-              <PublishTileItemButton name={"this tilemap"} />
-              {/* <Button startIcon={<Delete />} color="error">
-                Delete
-              </Button> */}
-              {/* <Button startIcon={<Publish />} color="primary">
-                Publish
-              </Button> */}
+              <DeleteTileItemButton name={edit.state.Tilemap.name} callback={() => {}}/>
+              <PublishTileItemButton name={edit.state.Tilemap.name}  callback={() => {}}/>
             </Stack>
           </Grid>
         </Grid>
