@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Dialog, Modal } from '@mui/material';
+import { Dialog, DialogActions, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
@@ -32,25 +32,17 @@ const PublishTilesetModal = () => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Warning: Once a Tileset has been published, it cannot be unpublished. Your Tileset will be visible to the TileTown community. Other TileTown users will be able to copy, like, and comment on your tileset at will.
                 </Typography>
-                
-                
-        
-
-                <Button  
-                    startIcon={<SendIcon />}
-                    variant="contained"
-                >
-                    Publish
-                        </Button>
             </Box>
-            
+            <DialogActions>
+                <Button startIcon={<SendIcon />} variant="contained">Publish</Button>
+            </DialogActions>
         </Dialog>
     )
     return (
-        <>
+        <Box>
             <Button onClick={() => setIsOpen(!isOpen)}>Publish Tileset Modal</Button>
             {ui}
-        </>
+        </Box>
     )
 }
 
