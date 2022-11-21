@@ -10,7 +10,7 @@ export default interface TilesetSocialSchemaType {
     owner: ObjectId,
     tags: string[],
     description: string,
-    community: ObjectId,
+    community: string,
     likes: ObjectId[],
     dislikes: ObjectId[],
     views: number,

@@ -250,4 +250,16 @@ export default class CommunityController {
         return res.status(200).json({ message: "User left the community!", user: updatedUser, community: updatedCommunity});
     }
 
+    public async getCommunityNameById(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing community id"});
+        }
+
+        let community = await db.communities.getCommunityById(req.params.id)
+        if (!community) return res.status(400).json({ message: `Community with id ${req.params.id} not found` })
+        return res.status(200).json({ message: 'Found community', name: community.name })
+    }
 }

@@ -5,7 +5,6 @@ import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
 interface Props {
     name: string
-    callback: Function
 }
 
 const DeleteTileItemButton = (props: Props) => {
