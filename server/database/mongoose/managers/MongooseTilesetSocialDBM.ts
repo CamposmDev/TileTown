@@ -54,6 +54,11 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         let savedSocial = await social.save();
         return this.parseSocial(savedSocial);
     }
+    async getTilesetSocialsByUserId(userId: string): Promise<TilesetSocial[]> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) return [];
+        let socials = await TilesetSocialModel.find({owner: userId});
+        return socials.map(social => this.parseSocial(social));
+    }
 
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
         return {
