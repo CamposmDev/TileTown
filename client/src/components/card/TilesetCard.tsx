@@ -39,7 +39,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                 return (
                     <Card
                         onClick={() => {
-                            nav(`/create/tileset/${tileset?.id}`)
+                            nav(`/create/tileset/${tileset.id}`)
                         }}
                         sx={{boxShadow: 3}}>
                         <CardActionArea>
@@ -54,6 +54,11 @@ export default function TilesetCard(props: {tilesetId: string}) {
         }
         return (
             <Card
+                onClick={() => {
+                    if (!tileset.isPublished) {
+                        nav(`/create/tileset/${tileset.id}`)
+                    }
+                }}
                 sx={{boxShadow: 3}}>
                 <CardActionArea>
                     <ImageListItem>
