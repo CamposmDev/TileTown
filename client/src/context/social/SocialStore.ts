@@ -114,6 +114,14 @@ export class SocialStore {
         return []
     }
 
+    public async getTilesetById(tilesetId: string): Promise<Tileset | undefined> {
+        return TilesetApi.getTilesetById(tilesetId).then(res => {
+            if (res.status === 200) {
+                return res.data.tileset
+            }
+        })
+    }
+
     public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
@@ -190,6 +198,38 @@ export class SocialStore {
         }).then(res => {
             if (res.status === 200) {
                 
+            }
+        })
+    }
+
+    public async getUserPublishedTilesets(userId: string): Promise<TilesetSocial[]> {
+        let arr: TilesetSocial[] = []
+        UserApi.getUsersPublishedTilesets(userId).then(res => {
+            if (res.status === 200) {
+                console.log(res.data.socials)
+            }
+        })
+        return arr
+    }
+
+    /**
+     * Return arr of user's published tilesets
+     * @returns 
+     */
+    public async getUserTilesets(): Promise<Tileset[]> {
+        let arr: Tileset[] = []
+        TilesetApi.getUnpublishedTilesets().then(res => {
+            if (res.status === 200) {
+                console.log(res.data.tilesets)
+            }
+        })
+        return arr
+    }
+
+    public async getAllUserTilesets(userId: string): Promise<string[] | undefined> {
+        return UserApi.getUserById(userId).then(res => {
+            if (res.status === 200) {
+                return res.data.user.tilesets
             }
         })
     }
