@@ -68,6 +68,8 @@ export default class AxiosTilesetApi {
     return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`, payload);
   }
 
+  
+
   public async getUnpublishedTilesets() : Promise<AxiosResponse<GetUnpublishedTilesetsRes>> {
     return AxiosApi.get<GetUnpublishedTilesetsRes, AxiosResponse<GetUnpublishedTilesetsRes>>(`/user/tilesets/unpublished`);
   }
