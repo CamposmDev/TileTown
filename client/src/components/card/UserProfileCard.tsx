@@ -5,7 +5,7 @@ import { AuthContext } from "src/context/auth";
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
 import UserProfileBox from "../UserProfileBox";
-import { MENU_PAPER_PROPS, stringAvatar } from "../util/Constants";
+import { MENU_PAPER_PROPS } from "../util/Constants";
 
 
 interface Props {

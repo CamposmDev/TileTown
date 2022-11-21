@@ -528,4 +528,24 @@ export default class UserController {
 
         return res.status(200).json({ message: "Found users unpublished tilesets!", tilesets: tilesets});
     }
+    public async getPublishedTilesets(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        let user = await db.users.getUserById(req.params.id);
+        if (user === null) {
+            return res.status(404).json({ message: `User with id ${req.params.id}`});
+        }
+
+        let socials = await db.tilesetSocials.getTilesetSocialsByUserId(req.params.id);
+        if (socials.length === 0) {
+            return res.status(404).json({ message: "User has no unpublished tilesets"});
+        }
+
+        return res.status(200).json({ message: "Found users published tilesets!", socials: socials});
+    }
 }

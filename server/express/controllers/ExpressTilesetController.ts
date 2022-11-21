@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { is } from "typescript-is";
 import { db } from "../../database";
-import { SortBy, Tileset } from "@types";
+import { Community, SortBy, Tileset } from "@types";
 
 export default class TilesetController {
   public async getTilesetById(req: Request, res: Response): Promise<Response> {
@@ -292,9 +292,6 @@ export default class TilesetController {
     if (!req.body.description) {
       return res.status(400).json({ message: "Missing description" })
     }
-    if (!req.body.community) {
-      return res.status(400).json({ message: "Missing community" })
-    }
     if (!req.body.permissions) {
       return res.status(400).json({ message: "Missing permissions" })
     }
@@ -320,6 +317,11 @@ export default class TilesetController {
       });
     }
 
+    let community: Community | null = null
+    if (req.body.communityName) {
+      community = await db.communities.getCommunityByName(req.body.communityName)
+    }
+
     // Create the social data
     let social = await db.tilesetSocials.createTilesetSocial(
       tileset.id,
@@ -327,9 +329,10 @@ export default class TilesetController {
         name: tileset.name,
         owner: tileset.owner,
         description: req.body.description,
-        community: req.body.community,
+        community: community?.id,
         permissions: req.body.permissions,
-        tags: req.body.tags
+        tags: req.body.tags,
+        imageURL: tileset.image
       }
     );
     if (social === null) {

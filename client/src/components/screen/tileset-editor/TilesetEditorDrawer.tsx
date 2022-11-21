@@ -21,18 +21,29 @@ import {
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import { useState } from "react";
 import console from "console";
+import { SnackContext } from "src/context/snack";
 
 const TilesetEditorDrawer = () => {
   const edit = useContext(TilesetEditContext);
+  const snack = useContext(SnackContext);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [tilesetName, setTilesetName] = useState(edit.state.tileset.name);
+
   const [columns, setColumns] = useState(edit.state.tileset.columns);
   const [rows, setRows] = useState(edit.state.tileset.rows);
   const [tileHeight, setTileHeight] = useState(edit.state.tileset.tileHeight);
   const [tileWidth, setTileWidth] = useState(edit.state.tileset.tileWidth);
   const [penColor, setPenColor] = useState<Color>(edit.state.penColor);
   const [penSize, setPenSize] = useState(edit.state.penSize);
+
+  const [rowError, setRowError] = useState<boolean>(false);
+  const [columnError, setColumnError] = useState<boolean>(false);
+  const [tileHeightError, setTileHeightError] = useState<boolean>(false);
+  const [tileWidthError, setTileWidthError] = useState<boolean>(false);
+  const [penColorError, setPenColorError] = useState<boolean>(false);
+  const [penSizeError, setPenSizeError] = useState<boolean>(false);
+  const [zoomError, setZoomError] = useState<boolean>(false);
   const zoom = edit.state.zoom;
 
   const handleMenuOpen = () => setIsDrawerOpen(true);
@@ -62,10 +73,13 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateColumns = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1 || text > 64) {
       setColumns(edit.state.tileset.columns);
+      setColumnError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 64");
       return;
     }
+    setColumnError(false);
     edit.updateTileset({
       columns: Math.floor(text),
       imageWidth: Math.floor(text) * tileWidth,
@@ -78,10 +92,13 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateRows = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1 || text > 64) {
       setRows(edit.state.tileset.rows);
+      setRowError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 64");
       return;
     }
+    setRowError(false);
     edit.updateTileset({
       rows: Math.floor(text),
       imageHeight: Math.floor(text) * tileHeight,
@@ -105,10 +122,13 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateTileHeight = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1 || text > 100) {
       setTileHeight(edit.state.tileset.tileHeight);
+      setTileHeightError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 100");
       return;
     }
+    setTileHeightError(false);
     edit.updateTileset({
       tileHeight: Math.floor(text),
       imageHeight: rows * Math.floor(text),
@@ -127,10 +147,13 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateTileWidth = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1 || text > 100) {
       setTileWidth(edit.state.tileset.rows);
+      setTileWidthError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 100");
       return;
     }
+    setTileWidthError(false);
     edit.updateTileset({
       tileWidth: Math.floor(text),
       imageWidth: columns * Math.floor(text),
@@ -149,10 +172,13 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdatePenSize = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text)) {
+    if (isNaN(text) || text < 1 || text > 10) {
       setPenSize(edit.state.penSize);
+      setPenSizeError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 10");
       return;
     }
+    setPenSizeError(false);
     edit.updatePen(Math.floor(text), penColor);
   };
 
@@ -170,8 +196,13 @@ const TilesetEditorDrawer = () => {
     let text = event.target.value;
     if (!isColor(text)) {
       setPenColor(edit.state.penColor);
+      setPenColorError(true);
+      snack.showErrorMessage(
+        "Please Enter a Color In The Format `#000000` Or `rgb(00, 00, 00)`"
+      );
       return;
     }
+    setPenColorError(false);
     edit.updatePen(penSize, text as Color);
   };
 
@@ -187,9 +218,12 @@ const TilesetEditorDrawer = () => {
 
   const handleUpdateZoom = (event: any): void => {
     let text = event.target.value;
-    if (isNaN(text) || text < 1) {
+    if (isNaN(text) || text < 1 || text > 20) {
+      setZoomError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 And 20");
       return;
     }
+    setZoomError(false);
     edit.updateZoom(text);
   };
 
@@ -237,6 +271,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handleColumnsKeyPress}
             onChange={handleColumnsUpdateText}
             defaultValue={columns}
+            error={columnError}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">tiles</InputAdornment>
@@ -251,6 +286,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handleRowsKeyPress}
             onChange={handleRowsUpdateText}
             defaultValue={rows}
+            error={rowError}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">tiles</InputAdornment>
@@ -271,6 +307,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handleTileWidthKeyPress}
             onChange={handleTileWidthUpdateText}
             defaultValue={tileWidth}
+            error={tileWidthError}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">px</InputAdornment>
@@ -285,6 +322,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handleTileHeightKeyPress}
             onChange={handleTileHeightUpdateText}
             defaultValue={tileHeight}
+            error={tileHeightError}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">px</InputAdornment>
@@ -305,6 +343,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handleZoomKeyPress}
             onChange={handleUpdateZoom}
             defaultValue={edit.state.zoom}
+            error={zoomError}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">px</InputAdornment>
@@ -354,6 +393,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handlePenSizeKeyPress}
             onChange={handlePenSizeUpdateText}
             defaultValue={penSize}
+            error={penSizeError}
             fullWidth
             size="small"
           />
@@ -363,6 +403,7 @@ const TilesetEditorDrawer = () => {
             onKeyPress={handlePenColorKeyPress}
             onChange={handlePenColorUpdateText}
             defaultValue={penColor}
+            error={penColorError}
             fullWidth
             size="small"
           />

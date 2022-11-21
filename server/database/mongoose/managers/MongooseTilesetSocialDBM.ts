@@ -54,6 +54,11 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         let savedSocial = await social.save();
         return this.parseSocial(savedSocial);
     }
+    async getTilesetSocialsByUserId(userId: string): Promise<TilesetSocial[]> {
+        if (!mongoose.Types.ObjectId.isValid(userId)) return [];
+        let socials = await TilesetSocialModel.find({owner: userId});
+        return socials.map(social => this.parseSocial(social));
+    }
 
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
         return {
@@ -63,7 +68,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             owner: social.owner.toString(),
             tags: social.tags,
             description: social.description,
-            community: social.community.toString(),
+            community: social.community,
             likes: social.likes.map(id => id.toString()),
             dislikes: social.dislikes.map(id => id.toString()),
             views: social.views,
@@ -79,7 +84,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         social.owner = partial.owner ? new mongoose.Types.ObjectId(partial.owner) : social.owner;
         social.tags = partial.tags ? partial.tags : social.tags;
         social.description = partial.description ? partial.description : social.description;
-        social.community = partial.community ? new mongoose.Types.ObjectId(partial.community) : social.community;
+        social.community = partial.community ? partial.community : social.community;
         social.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : social.likes;
         social.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : social.dislikes;
         social.views = partial.views ? partial.views : social.views;

@@ -8,9 +8,9 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
+import AxiosApi from "../../api/axios/AxiosApi";
+import { AuthContext } from "../../context/auth/index";
 import { useContext } from 'react';
-import { AuthContext } from '../../context/auth';
-import AxiosApi from "../../api/axios/AxiosApi"
 
 
 
@@ -22,7 +22,11 @@ const PasswordResetModal = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        AxiosApi.post(`/user/reset/password`, { email: auth.usr?.email });
+        // console.log("Sending email request");
+        let formData = new FormData(e.currentTarget)
+        let email = formData.get('email')?.toString() 
+        // console.log("Email: " + email);
+        AxiosApi.put(`/user/reset/password`, { email: email });
     };
 
     let ui = (
