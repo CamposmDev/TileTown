@@ -21,12 +21,15 @@ import {
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import { useState } from "react";
 import console from "console";
+import { SnackContext } from "src/context/snack";
 
 const TilesetEditorDrawer = () => {
   const edit = useContext(TilesetEditContext);
+  const snack = useContext(SnackContext);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [tilesetName, setTilesetName] = useState(edit.state.tileset.name);
+
   const [columns, setColumns] = useState(edit.state.tileset.columns);
   const [rows, setRows] = useState(edit.state.tileset.rows);
   const [tileHeight, setTileHeight] = useState(edit.state.tileset.tileHeight);
@@ -73,6 +76,7 @@ const TilesetEditorDrawer = () => {
     if (isNaN(text) || text < 1 || text > 64) {
       setColumns(edit.state.tileset.columns);
       setColumnError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 64");
       return;
     }
     setColumnError(false);
@@ -91,6 +95,7 @@ const TilesetEditorDrawer = () => {
     if (isNaN(text) || text < 1 || text > 64) {
       setRows(edit.state.tileset.rows);
       setRowError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 64");
       return;
     }
     setRowError(false);
@@ -120,6 +125,7 @@ const TilesetEditorDrawer = () => {
     if (isNaN(text) || text < 1 || text > 100) {
       setTileHeight(edit.state.tileset.tileHeight);
       setTileHeightError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 100");
       return;
     }
     setTileHeightError(false);
@@ -144,6 +150,7 @@ const TilesetEditorDrawer = () => {
     if (isNaN(text) || text < 1 || text > 100) {
       setTileWidth(edit.state.tileset.rows);
       setTileWidthError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 100");
       return;
     }
     setTileWidthError(false);
@@ -168,6 +175,7 @@ const TilesetEditorDrawer = () => {
     if (isNaN(text) || text < 1 || text > 10) {
       setPenSize(edit.state.penSize);
       setPenSizeError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 and 10");
       return;
     }
     setPenSizeError(false);
@@ -189,6 +197,9 @@ const TilesetEditorDrawer = () => {
     if (!isColor(text)) {
       setPenColor(edit.state.penColor);
       setPenColorError(true);
+      snack.showErrorMessage(
+        "Please Enter a Color In The Format `#000000` Or `rgb(00, 00, 00)`"
+      );
       return;
     }
     setPenColorError(false);
@@ -209,6 +220,7 @@ const TilesetEditorDrawer = () => {
     let text = event.target.value;
     if (isNaN(text) || text < 1 || text > 20) {
       setZoomError(true);
+      snack.showErrorMessage("Please Enter A Number Between 1 And 20");
       return;
     }
     setZoomError(false);
