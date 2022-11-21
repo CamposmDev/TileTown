@@ -4,6 +4,7 @@ import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSo
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
+import { Iron } from "@mui/icons-material"
 
 export interface SocialState {
     currentUser: User | undefined
@@ -105,11 +106,9 @@ export class SocialStore {
                 res.then(res => {
                     if (res.status === 200) {
                         resultArr.push(res.data.tileset)
-                        let r = MediaApi.getImage(res.data.tileset.image)
                     }
                 })
             })
-            console.log(resultArr)
             return resultArr
         }
         return []

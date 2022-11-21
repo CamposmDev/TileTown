@@ -10,6 +10,7 @@ import ContestCard from "../card/ContestCard";
 import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
 import { CommunityContext } from "src/context/social/community";
+import TilesetCard from "../card/TilesetCard";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -85,9 +86,9 @@ const UserProfileScreen = () => {
         />
         tilesetCards = tilesets.map(x => 
             <Grid item key={x.id}>
-                {/* <TileItemCard
-                    preview=""
-                /> */}
+                <TilesetCard
+                    tileset={x}
+                />
             </Grid>)
         contestCards = contests.map((x) =>
             <Grid item key={x.id} xs={3}>
@@ -130,7 +131,7 @@ const UserProfileScreen = () => {
                             mt={1}
                         >
                             <Grid item>
-                                <TileItemCard
+                                {/* <TileItemCard
                                     preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1.png'
                                     tilemapName='McBendorjee vs Robots Debug'
                                     author='H8TER$HADE$'
@@ -139,7 +140,7 @@ const UserProfileScreen = () => {
                                     comments={Math.random() * 3000}
                                     likes={Math.random() * 3000}
                                     tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                                />
+                                /> */}
                             </Grid>
                         </Grid>
                     </TabPanel>
