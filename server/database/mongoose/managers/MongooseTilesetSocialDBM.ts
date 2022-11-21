@@ -18,7 +18,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         if (!mongoose.Types.ObjectId.isValid(tilesetId)) { 
             return null;
         }
-        let social = await TilesetSocialModel.findOne({tileset: tilesetId});
+        let social = await TilesetSocialModel.findOne({tileSet: tilesetId});
         if (social === null) { return null; }
         return this.parseSocial(social);
     }   

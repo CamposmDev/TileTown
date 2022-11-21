@@ -3,18 +3,18 @@ import React, { useContext } from "react"
 import { AuthContext } from "src/context/auth"
 import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
-import { SocialContext } from "src/context/social"
+import { ContestContext } from "src/context/social/contest"
 
 const DeleteContestModal = () => {
     const auth = useContext(AuthContext)
     const modal = useContext(ModalContext)
-    const social = useContext(SocialContext)
+    const contest = useContext(ContestContext)
     const snack = useContext(SnackContext)
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         let formData = new FormData(e.currentTarget)
         let contestName = formData.get('contest-name')?.toString()
-        social.deleteContestByName(auth.getUsr()?.id, contestName, snack)
+        contest.deleteContestByName(auth.getUsr()?.id, contestName, snack)
         modal.close()
     }
     let ui = (

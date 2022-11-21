@@ -71,6 +71,10 @@ export default class ForumController {
             return res.status(400).json({message: "Missing forum post data"});
         }
 
+        if (!req.body.forumPost.body) {
+            return res.status(400).json({message: "Missing forum post data"})
+        }
+
         // Update the forum post
         let forumPost = await db.forums.updateForumPost(req.params.id, {...req.body.forumPost, updatedDate: new Date(Date.now())});
         if (forumPost === null) {
@@ -219,7 +223,7 @@ export default class ForumController {
         }
 
         // Create the comment
-        let comment = await db.comments.createComment(user.id, forum.id, req.body.comment.body);
+        let comment = await db.comments.createComment(user.id, user.username, forum.id, req.body.comment.body);
         if (comment === null) {
             return res.status(500).json({message: "Server Error. Error occured while creating forum post comment"});
         }

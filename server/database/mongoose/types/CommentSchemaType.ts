@@ -9,4 +9,5 @@ export default interface CommentSchemaType {
     author: ObjectId,
     body: string,
     referenceId: ObjectId,
+    createdAt: Date
 }

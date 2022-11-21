@@ -13,4 +13,6 @@ export default interface Comment {
 
     /** The id of the commentee */
     referenceId: string
+
+    createdAt: Date
 }

@@ -45,6 +45,6 @@
 }
 
 .title-header, .forum-post-card {
-    text-overflow: ellipsis;
+    text-overflow: unset;
     overflow: hidden;
 }

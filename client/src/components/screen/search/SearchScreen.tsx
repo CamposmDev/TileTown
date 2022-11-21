@@ -3,8 +3,9 @@ import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { AuthContext } from "src/context/auth"
 import { SocialContext } from "src/context/social"
+import { CommunityContext } from "src/context/social/community"
+import { ContestContext } from "src/context/social/contest"
 import { ForumContext } from "src/context/social/forum"
-import { SocialActionType } from "src/context/social/SocialAction"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
@@ -20,18 +21,19 @@ interface Props {
 const SearchScreen = (props: Props) => {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
+    const comm  = useContext(CommunityContext)
+    const contest = useContext(ContestContext)
     const forum = useContext(ForumContext)
     const nav = useNavigate()
     useEffect(() => {
         if (!auth.isLoggedIn()) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    let items = <div/>
+    let content = <div/>
     switch (props.cat) {
         case SearchCategory.Tilemaps:
-            items = <Grid 
+            content = <Grid 
                     container 
-                    justifyContent={'center'}
                     spacing={1} 
                     mt={1}
                 >
@@ -50,8 +52,7 @@ const SearchScreen = (props: Props) => {
                 </Grid>
             break
         case SearchCategory.Tilesets:
-            items = <Grid container 
-                    justifyContent={'center'}
+            content = <Grid container 
                     spacing={1}
                     mt={1}>
                 <Grid item>
@@ -69,63 +70,44 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Users:
-            items = <Grid container 
-                justifyContent={'center'}
-                alignItems={'center'}
-                spacing={1}
-                mt={1}>
-                    {social.getUsers().map((x,i) => <Grid>
+            content = <Grid container 
+                        spacing={1}
+                        mt={1}>
+                    {social.getUsers().map((x) => 
+                    <Grid item key={x.id}>
                         <UserProfileCard 
+                            key={x.id}
                             userId={x.id}
-                            firstName={x.firstName}
-                            lastName={x.lastName}
-                            username={x.username}
                             fancy={true}
                         />
                     </Grid>)}
             </Grid>
             break
         case SearchCategory.Communities:
-            items = <Grid container 
-                justifyContent={'center'}
+            content = <Grid container 
                 spacing={1}
                 mt={1}>
-                    {social.getCommunities().map((x,i) => 
-                        <Grid item key={x.name}>
-                            <CommunityCard
-                                commName={x.name}
-                                commDesc={x.description}
-                                numOfMembers={x.members.length}
-                                numOfTilemaps={0}
-                                numOfTilesets={0}
-                            />
+                    {comm.getCommunities().map((x) => 
+                        <Grid xs={4} item key={x.name}>
+                            <CommunityCard comm={x}/>
                         </Grid>
                     )}
             </Grid>
             break
         case SearchCategory.Contests:
-            items = 
+            content = 
             <Grid container 
-                justifyContent={'center'}
                 spacing={1}
                 mt={1}>
-                    {social.getContests().map((x,i) => 
-                        <Grid item key={x.name}>
-                            <ContestCard
-                                payload={{
-                                    contestName: x.name,
-                                    startDate: new Date(x.startDate),
-                                    endDate: new Date(x.endDate),
-                                    owner: x.owner,
-                                    participates: x.participates.length
-                                }}
-                            />
+                    {contest.getContests().map(x => 
+                        <Grid xs={3} item key={x.name}>
+                            <ContestCard c={x}/>
                         </Grid>
                     )}
             </Grid>
             break
         case SearchCategory.Forums:
-            items = 
+            content = 
                 <Grid container spacing={1}>
                     {forum.getForums().map((x) => 
                         <Grid item key={x.id} xs={12}>
@@ -143,7 +125,7 @@ const SearchScreen = (props: Props) => {
                 <SearchToolbar category={props.cat}/>
             </Grid>
             <Grid item>
-                {items}
+                {content}
             </Grid>
         </Grid>
     )

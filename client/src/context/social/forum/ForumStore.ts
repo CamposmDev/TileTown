@@ -96,7 +96,7 @@ export class ForumStore {
         }
     }
 
-    public async comment(body: string): Promise<void> {
+    public async comment(body: string, snack?: SnackStore): Promise<void> {
         let forumPost = this._forum.currentForumPost
         if (forumPost) {
             ForumApi.commentForumById(forumPost.id, {
@@ -105,6 +105,7 @@ export class ForumStore {
                 }
             }).then(res => {
                 if (res.status === 201) {
+                    snack?.showSuccessMessage(res.data.message)
                     this.handleAction({
                         type: ForumActionType.commentForumPost,
                         payload: {
@@ -113,6 +114,29 @@ export class ForumStore {
                         }
                     })
                 }
+            })
+        }
+    }
+
+    public async append(body: string, snack?: SnackStore): Promise<void> {
+        let forumPost = this._forum.currentForumPost
+        if (forumPost) {
+            ForumApi.updateForumById(forumPost.id, { forumPost: { body: body } }).then(res => {
+                if (res.status === 200) {
+                    let newForumPost = res.data.forumPost
+                    if (newForumPost) {
+                        snack?.showSuccessMessage(res.data.message)
+                        this.handleAction({
+                            type: ForumActionType.updateForumPost,
+                            payload: {
+                                oldForumPost: forumPost,
+                                currentForumPost: newForumPost
+                            }
+                        })
+                    }
+                }
+            }).catch(e => {
+                if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
             })
         }
     }
@@ -166,6 +190,18 @@ export class ForumStore {
                 break
             }
             case ForumActionType.commentForumPost: {
+                let payload = action.payload
+                if (payload.oldForumPost) {
+                    let i = this._forum.forumPosts.indexOf(payload.oldForumPost)
+                    this._forum.forumPosts.splice(i, 1, payload.currentForumPost)
+                    this._setForum({
+                        currentForumPost: payload.currentForumPost,
+                        forumPosts: this._forum.forumPosts
+                    })
+                }
+                break
+            }
+            case ForumActionType.updateForumPost: {
                 let payload = action.payload
                 if (payload.oldForumPost) {
                     let i = this._forum.forumPosts.indexOf(payload.oldForumPost)

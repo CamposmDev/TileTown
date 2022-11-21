@@ -1,7 +1,11 @@
-import { EmojiEvents, Group } from "@mui/icons-material"
-import { Box, Grid, IconButton, Toolbar, Typography } from "@mui/material"
-import { Stack } from "@mui/system"
+import { ConstructionOutlined } from "@mui/icons-material"
+import { Grid, Toolbar, Typography } from "@mui/material"
+import userEvent from "@testing-library/user-event"
+import { useContext } from "react"
 import Carousel from "react-material-ui-carousel"
+import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
+import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import TileItemCard from "../card/TileItemCard"
 import CommunityContestsModal from "../modals/CommunityContestsModal"
@@ -70,64 +74,37 @@ let tilesets = [{
 }]
 
 const CommunityProfileScreen = () => {
-    const SIZE = 550
+    const auth = useContext(AuthContext)
+    const comm = useContext(CommunityContext)
+    const nav = useNavigate()
+    let c = comm.getCurrentCommunity()
+    const RES_SIZE = 550
+    let settings = <div/>
+    let usr = auth.getUsr()
+    if (usr && c) {
+        if (usr.id.localeCompare(c.owner) === 0) {
+            settings = <CommunitySettingsButton/>
+        }
+    }
     return (
         <Grid> 
             <Grid>
                 <Toolbar sx={{boxShadow: 1}}>
                     <Grid container alignItems='center'>
                         <Grid item>
-                            <Typography variant='h6'>RPGs Done Right</Typography>
-                            <Typography variant='body1'>We don't like streets or dungeon masters.</Typography>
+                            <Typography variant='h6'>{c?.name}</Typography>
+                            <Typography variant='body1'>{c?.description}</Typography>
                         </Grid>
                     </Grid>
                     <CommunityContestsModal/>
                     <CommunityMembersModal/>
-                    {/* <IconButton><EmojiEvents sx={{color: 'gold'}}/></IconButton>
-                    <IconButton><Group/></IconButton> */}
-                    <CommunitySettingsButton
-                        title='RPGs Done Right'
-                        desc="We don't like streets or dungeon or masters."
-                        visibility={'Private'}
-                        members= {[
-                            {
-                                firstName: 'Michael',
-                                lastName: 'Campos',
-                                username: 'Camposm'
-                            },
-                            {
-                                firstName: 'Peter',
-                                lastName: 'Walsh',
-                                username: 'PeteyLumpkins'
-                            },
-                            {
-                                firstName: 'Jonathan',
-                                lastName: 'Lemus',
-                                username: 'The Gamer'
-                            },
-                            {
-                                firstName: 'Kevin',
-                                lastName: 'Lemus',
-                                username: 'xKevzy'
-                            },
-                            {
-                                firstName: 'Tuyen',
-                                lastName: 'Vo',
-                                username: 'Emdoiqua'
-                            },
-                            {
-                                firstName: 'Hector',
-                                lastName: 'Lemus',
-                                username: 'SomeQuickGuy'
-                            }
-                        ]}
-                    />
+                    {settings}
                 </Toolbar>
             </Grid>
             <Grid container m={1} spacing={1} justifyContent='center'>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
-                    <Carousel sx={{width: SIZE, height: SIZE+30}}>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
                         {tilemaps.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
@@ -139,15 +116,15 @@ const CommunityProfileScreen = () => {
                                 tags={x.tags}
                                 tilemapName={x.tilemapName}
                                 views={x.views}
-                                width={SIZE}
-                                height={SIZE}
+                                width={RES_SIZE}
+                                height={RES_SIZE}
                             />
                         </Grid>)}
                     </Carousel>   
                 </Grid>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilesets</Typography>
-                    <Carousel sx={{width: SIZE, height: SIZE+30}}>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
                         {tilesets.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
@@ -159,8 +136,8 @@ const CommunityProfileScreen = () => {
                                 tags={x.tags}
                                 tilemapName={x.tilemapName}
                                 views={x.views}
-                                width={SIZE}
-                                height={SIZE}
+                                width={RES_SIZE}
+                                height={RES_SIZE}
                             /></Grid>)}
                     </Carousel>   
                 </Grid>

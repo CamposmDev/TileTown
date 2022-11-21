@@ -319,6 +319,11 @@ export default class TilesetController {
       });
     }
 
+    let updatedTileset = await db.tilesets.updateTilesetById(tileset.id, {isPublished: true});
+    if (updatedTileset === null) {
+        return res.status(500).json({ message: "Error updating tileset"});
+    }
+
     return res.status(200).json({
       message: "Tileset published! Social data created!",
       social: social,
@@ -476,6 +481,7 @@ export default class TilesetController {
     // Create the comment
     let comment = await db.comments.createComment(
       user.id,
+      user.username,
       social.id,
       req.body.comment.body
     );

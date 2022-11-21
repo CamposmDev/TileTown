@@ -1,13 +1,13 @@
-import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box, LinearProgress } from "@mui/material"
+import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box } from "@mui/material"
 import { Comment, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import { formatToSocialStr } from '../util/NumberUtils'
 import { parseDateToPostedStr } from '../util/DateUtils' 
-import './default.css'
 import { useContext, useEffect, useState } from "react"
 import ForumPost from "../../../../@types/ForumPost"
 import { ForumContext } from "src/context/social/forum"
 import { SocialContext } from "src/context/social"
 import { SnackContext } from "src/context/snack"
+import './default.css'
 
 interface Props {
     forumPost: ForumPost
@@ -31,27 +31,44 @@ const ForumPostCard = (props: Props) => {
         <Card sx={{boxShadow: 3}}>
             <CardActionArea onClick={handleClick}>
                 <CardContent>
-                    <Grid container alignItems='center'>
-                        <Grid item className='forum-post-card'>
-                            <Typography variant='h6'>{props.forumPost.title}</Typography>
-                            <Typography noWrap variant='caption'>{props.forumPost.body}</Typography>
+                    <Grid container>
+                        <Grid item className='forum-post-card' flexGrow={1}>
+                            <Typography noWrap variant='h6'>{props.forumPost.title}</Typography>
+                            <Typography noWrap>{props.forumPost.body}</Typography>
                             <Stack alignItems='center' direction='row'>
-                                    <Typography variant='caption'><b>By</b>:&ensp;{username},&ensp;</Typography>
-                                    <Typography variant='caption'>{parseDateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
+                                    <Typography><b>By</b>:&ensp;{username},&ensp;</Typography>
+                                    <Typography>{parseDateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
                             </Stack>
                         </Grid>
-                        <Box flexGrow={1} mr={3}/>
-                        <Grid item>
-                            <Stack spacing={1}>
-                                <Stack alignItems='center' direction='row'>
-                                    <Visibility/>
-                                    <Typography ml={1} variant='caption'>{formatToSocialStr(props.forumPost.views)}</Typography>
-                                </Stack>
-                                <Stack alignItems='center' direction='row'>
-                                    <Comment/>
-                                    <Typography ml={1} variant='caption'>{formatToSocialStr(props.forumPost.comments.length)}</Typography>
-                                </Stack> 
-                            </Stack>
+                        <Grid container item>
+                            <Grid container item spacing={1} xs={12}>
+                                <Grid item xs={2}>
+                                    <Stack direction='row'>
+                                        <Visibility/>
+                                        <Typography pl={1}>{formatToSocialStr(props.forumPost.views)}</Typography>
+                                    </Stack>
+                                </Grid>
+                                <Grid item >
+                                    <Stack direction='row'>
+                                        <Comment/>
+                                        <Typography pl={1}>{formatToSocialStr(props.forumPost.comments.length)}</Typography>
+                                    </Stack>
+                                </Grid>
+                            </Grid>
+                            <Grid container item spacing={1} xs={12}>
+                                <Grid item xs={2}>
+                                    <Stack alignItems='center' direction='row'>
+                                        <ThumbUp/>
+                                        <Typography pl={1}>{formatToSocialStr(props.forumPost.likes.length)}</Typography>
+                                    </Stack> 
+                                </Grid>
+                                <Grid item >
+                                    <Stack alignItems='center' direction='row'>
+                                        <ThumbDown/>
+                                        <Typography pl={1}>{formatToSocialStr(props.forumPost.dislikes.length)}</Typography>
+                                    </Stack> 
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </CardContent>

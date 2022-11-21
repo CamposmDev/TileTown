@@ -165,7 +165,7 @@ export default class UserController {
         let token: string = Auth.signJWT<string>(user.id);
 
         return res.status(200).
-            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 900000) }).
+            cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + (60 * 60 * 1000)) }).
             json({ message: "User successfully logged in!", user: user });
     }
     public async logoutUser(req: Request, res: Response): Promise<void> {
@@ -505,5 +505,21 @@ export default class UserController {
         // Return the updated user
         return res.status(200).json({message: "Friend removed!", user: updatedUser});
 
+    }
+
+    public async getUnpublishedTilesets(req: Request, res: Response): Promise<Response> {
+        if (!req) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        let tilesets = await db.tilesets.getTilesets({owner: req.userId, isPublished: false});
+        if (tilesets.length === 0) {
+            return res.status(404).json({ message: "User has no unpublished tilesets"});
+        }
+
+        return res.status(200).json({ message: "Found users unpublished tilesets!", tilesets: tilesets});
     }
 }

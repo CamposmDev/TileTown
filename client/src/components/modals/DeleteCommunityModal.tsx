@@ -3,19 +3,19 @@ import React, { useContext } from "react"
 import { AuthContext } from "src/context/auth"
 import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
-import { SocialContext } from "src/context/social"
+import { CommunityContext } from "src/context/social/community"
 
     const DeleteCommunityModal = () => {
         const auth = useContext(AuthContext)
         const modal = useContext(ModalContext)
-        const social = useContext(SocialContext)
+        const comm = useContext(CommunityContext)
         const snack = useContext(SnackContext)
         const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             let formData = new FormData(e.currentTarget)
             let commName = formData.get('comm-name')?.toString()  
             
-            social.deleteCommunityByName(auth.getUsr()?.id, commName, auth, snack)
+            comm.deleteCommunityByName(auth.getUsr()?.id, commName, auth, snack)
             modal.close()
         }
         let ui = (

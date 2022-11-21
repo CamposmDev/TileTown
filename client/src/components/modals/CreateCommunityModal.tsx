@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { SnackContext } from 'src/context/snack';
-import { SocialContext } from 'src/context/social';
 import { ModalContext } from 'src/context/modal';
 import { AuthContext } from 'src/context/auth';
+import { CommunityContext } from 'src/context/social/community';
 
 const CreateCommunityModal = () => {
     const auth = React.useContext(AuthContext)
     const modal = React.useContext(ModalContext)
+    const comm = React.useContext(CommunityContext)
     const snack = React.useContext(SnackContext)
-    const social = React.useContext(SocialContext)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [vis, setVis] = useState('public')
@@ -33,7 +33,7 @@ const CreateCommunityModal = () => {
         setVis(e.target.value)
     }
     const handleCreate = () => {
-        social.createCommunity(name, description, vis, auth, snack)
+        comm.createCommunity(name, description, vis, auth, snack)
         modal.close()
     }
 

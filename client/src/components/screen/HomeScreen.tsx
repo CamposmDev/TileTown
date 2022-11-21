@@ -81,7 +81,7 @@ const HomeScreen = () => {
         <Grid container spacing={1}>
             <Grid container m={1} justifyContent='space-evenly'>
                 
-                <Grid item>
+                {/* <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
                     <Carousel sx={{width: SIZE, height: SIZE+30}}>
                         {tilemaps.map((x,i) => 
@@ -159,7 +159,7 @@ const HomeScreen = () => {
                                 height={SIZE}
                             /></Grid>)}
                     </Carousel>   
-                </Grid>
+                </Grid> */}
             </Grid>         
         </Grid>
     )

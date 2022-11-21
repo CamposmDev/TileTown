@@ -126,8 +126,8 @@ const TileItemCard = (props: Props) => {
         </Tooltip>
     if (props.width && props.height) {
         return (
-            <div>
-                <Card onClick={() => setOpen(true)}>
+            <Grid item>
+                <Card onClick={() => setOpen(true)} sx={{boxShadow: 3}}>
                     <CardActionArea >
                         <ImageListItem>
                             <img style={{
@@ -146,12 +146,12 @@ const TileItemCard = (props: Props) => {
                     </CardActionArea>
                 </Card>
                 <TileItemModal tilemapProps={props} open={open} callback={handleClose}/>
-            </div>
+            </Grid>
         )
     }
     return (
-        <div>
-            <Card onClick={() => setOpen(true)}>
+        <Grid item>
+            <Card onClick={() => setOpen(true)} sx={{boxShadow: 3}}>
                 <CardActionArea >
                     <ImageListItem>
                         <img id={'tile-preview'} src={props.preview} alt=''
@@ -165,7 +165,7 @@ const TileItemCard = (props: Props) => {
                 </CardActionArea>
             </Card>
             <TileItemModal tilemapProps={props} open={open} callback={handleClose}/>
-        </div>
+        </Grid>
     )
 }
 

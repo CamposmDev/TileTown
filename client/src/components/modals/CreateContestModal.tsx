@@ -1,17 +1,19 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { ModalContext } from 'src/context/modal';
 import { SocialContext } from 'src/context/social';
 import { SnackContext } from 'src/context/snack';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 const CreateContestModal = () => {
     const modal = useContext(ModalContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
+
     const handleClose = () => {
         setContest({name: '', desc: '', endDate: new Date()})
         modal.close()
@@ -36,12 +38,14 @@ const CreateContestModal = () => {
 
         })
     }
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setContest({
-            name: contest.name,
-            desc: contest.desc,
-            endDate: new Date(e.target.value)
-        })
+    const handleDateChange = (e: Date | null) => {
+        if (e) {
+            setContest({
+                name: contest.name,
+                desc: contest.desc,
+                endDate: e
+            })
+        }
     }
     const handleCreate = () => {
         social.createContest(contest.name, contest.desc, contest.endDate, snack)
@@ -79,32 +83,14 @@ const CreateContestModal = () => {
                     multiline
                     rows={7}
                 />
-                <Grid container spacing={1} margin='dense'>
-                    {/* <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            margin='normal'
-                            fullWidth
-                            label="Theme"
-                            defaultValue="Any"
-                        />
-                    </Grid> */}
-                    <Grid item xs={12} sm={6}>
-                        <Stack component="form" noValidate spacing={3}>
-                            <TextField
-                                required
-                                margin='normal'
-                                label="Due Date"
-                                type="date"
-                                defaultValue={contest.endDate.getFullYear() + '-' + (contest.endDate.getUTCMonth()+1) + '-' + (contest.endDate.getUTCDate())}
-                                onChange={handleDateChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Stack>
-                    </Grid>
-                </Grid>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                        label="Due Date & Time"
+                        value={contest.endDate}
+                        onChange={handleDateChange}
+                        renderInput={(params) => <TextField margin='dense' {...params} />}
+                    />
+                </LocalizationProvider>
                 </DialogContent>
             <DialogActions>
                 <Button

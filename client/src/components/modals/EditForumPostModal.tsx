@@ -1,8 +1,7 @@
-import { PropaneSharp } from "@mui/icons-material"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material"
 import { useContext, useState } from "react"
-import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
+import { ForumContext } from "src/context/social/forum"
 import ForumPost from "../../../../@types/ForumPost"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 
@@ -13,13 +12,15 @@ interface Props {
 }
 
 const EditForumPostModal = (props: Props) => {
-    const auth = useContext(AuthContext)
+    const forum = useContext(ForumContext)
     const snack = useContext(SnackContext)
     const [text, setText] = useState('')
+    const handleClose = () => props.callback(false);
 
-    const handleAppend = () => {
-        throw new Error('Not Implemented Yet')
-        props.callback(false)
+
+    const handleAppend = (e: React.MouseEvent) => {
+        forum.append(text, snack)
+        handleClose()
     }
 
     return (
