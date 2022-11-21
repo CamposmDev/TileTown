@@ -32,6 +32,7 @@ import { ForumContextProvider } from "./context/social/forum";
 import ForumPostViewerModal from "./components/modals/ForumPostViewerModal";
 import { CommunityContextProvider } from "./context/social/community";
 import { ContestContextProvider } from "./context/social/contest";
+import { ProfileContextProvider } from "./context/profile";
 
 /**
  * Pixel Editors
@@ -69,6 +70,7 @@ const App = () => {
                 <CommunityContextProvider key={'community-context-provider'}>
                 <ContestContextProvider key={'contest-context-provider'}>
                 <ForumContextProvider key={'forum-context-provider'}>
+                <ProfileContextProvider key={'profile-context-provider'}>
                 <NavBar />
                 <Routes>
                   <Route path="/" element={<SplashScreen />} />
@@ -80,7 +82,9 @@ const App = () => {
                     path="/community/:id"
                     element={<CommunityProfileScreen />}
                   />
-                  <Route path="/profile" element={<UserProfileScreen />} />
+                  <Route path="/profile" element={
+                      <UserProfileScreen />
+                  } />
                   <Route
                     path="/search/tilemaps"
                     element={<SearchScreen cat={SearchCategory.Tilemaps} />}
@@ -129,6 +133,7 @@ const App = () => {
                 <CreateContestModal />
                 <DeleteCommunityModal />
                 <DeleteContestModal />
+                </ProfileContextProvider>
                 </ForumContextProvider>
                 </ContestContextProvider>
                 </CommunityContextProvider>

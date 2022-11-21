@@ -1,13 +1,16 @@
 import { Menu, MenuItem, MenuItemProps } from "@mui/material";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ModalContext } from "src/context/modal";
+import { ProfileContext } from "src/context/profile";
 import { MENU_PAPER_PROPS } from "../util/Constants";
 
 const CreateButton = (props: MenuItemProps) => {
+  const prof = useContext(ProfileContext)
   const modal = useContext(ModalContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const nav = useNavigate()
 
   const handleMenuOpen = (event: any) => setAnchorEl(event.currentTarget);
 
@@ -42,15 +45,13 @@ const CreateButton = (props: MenuItemProps) => {
       <MenuItem onClick={handleMenuClose} component={Link} to="/create/tilemap">
         Tilemap
       </MenuItem>
-      <MenuItem
-        onClick={showCreateTilesetModal}
-        // component={Link}
-        // to="/create/tileset"
-      >
-        Tileset
-      </MenuItem>
-      <MenuItem onClick={showCreateCommunityModal}>Create Community</MenuItem>
-      <MenuItem onClick={showCreateContestModal}>Create Contest</MenuItem>
+      <MenuItem onClick={showCreateTilesetModal}>Tileset</MenuItem>
+      <MenuItem onClick={() => {
+        prof.viewUnpublishedTilesets()
+        handleMenuClose()
+      }}>View Unpublished Tilesets</MenuItem>
+      <MenuItem onClick={showCreateCommunityModal}>Community</MenuItem>
+      <MenuItem onClick={showCreateContestModal}>Contest</MenuItem>
     </Menu>
   );
 
