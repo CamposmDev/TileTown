@@ -61,6 +61,7 @@ const TilesetCanvas = () => {
       canvas.width = canvasWidth;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
       if (ctx) {
+        console.log('hi')
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
         contextRef.current = ctx;
@@ -69,8 +70,11 @@ const TilesetCanvas = () => {
         canvasImage.onload = () => {
           ctx.drawImage(canvasImage, 0, 0, rectHeight, rectWidth);
           canvas.toBlob((blob) => {
-            if (blob !== null)
-                edit.saveImage(canvas.toDataURL("image/png"), blob);        
+            console.log('use effect')
+            if (blob !== null) {
+                console.log('not null')
+                edit.saveImage(canvas.toDataURL("image/png"), blob);    
+            }    
           });
         };
       }
@@ -168,8 +172,11 @@ const TilesetCanvas = () => {
       edit.updateCurrentTile({ x: null, y: null });
 
       canvas.toBlob((blob) => {
-        if (blob !== null)
-            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+        console.log('finish drawing')
+        if (blob !== null) {
+          console.log('fd-not-null')
+          edit.saveImage(canvas.toDataURL("image/png"), blob);        
+        }
       })
     }
   };
@@ -369,8 +376,11 @@ const TilesetCanvas = () => {
 
     edit.updateCurrentTile({ x: null, y: null });
     canvas.toBlob((blob) => {
-        if (blob !== null)
-            edit.saveImage(canvas.toDataURL("image/png"), blob);        
+        console.log('flood-fill')
+        if (blob !== null) {
+          console.log('flood-fill-not-null')
+          edit.saveImage(canvas.toDataURL("image/png"), blob);        
+        }
     });
     
   };

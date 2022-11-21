@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Dialog, Modal } from '@mui/material';
+import { Dialog, DialogActions, Modal } from '@mui/material';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
@@ -36,21 +36,18 @@ const PublishTilesetModal = () => {
                 
         
 
-                <Button  
-                    startIcon={<SendIcon />}
-                    variant="contained"
-                >
-                    Publish
-                        </Button>
+                
             </Box>
-            
+            <DialogActions>
+                <Button startIcon={<SendIcon />} variant="contained">Publish</Button>
+            </DialogActions>
         </Dialog>
     )
     return (
-        <>
+        <Box>
             <Button onClick={() => setIsOpen(!isOpen)}>Publish Tileset Modal</Button>
             {ui}
-        </>
+        </Box>
     )
 }
 

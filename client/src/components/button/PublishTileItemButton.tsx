@@ -1,5 +1,5 @@
 import { Publish, Send } from "@mui/icons-material"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material"
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useState } from "react"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
@@ -14,6 +14,11 @@ const PublishTileItemButton = (props: Props) => {
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
 
+    const publish = () => {
+        console.log('publishing...')
+        handleClose()
+    }
+
     const modal = (
         <Dialog open={open} onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <DialogTitle>Publish</DialogTitle>
@@ -21,18 +26,11 @@ const PublishTileItemButton = (props: Props) => {
                     <Typography>
                         {'Are you sure you want to publish ' + props.name + '?'}
                     </Typography>
-                    {/* <Typography>
-                        Warning: Once a Tileset has been published, it cannot be unpublished. Your Tileset will be visible to the TileTown community. Other TileTown users will be able to copy, like, and comment on your tileset at will.
-                    </Typography>                     */}
-                <DialogActions>
-                    <Button  
-                        startIcon={<Send />}
-                    >
-                        Publish
-                    </Button>
-                    <Button>Cancel</Button>
-                </DialogActions>
             </DialogContent>
+            <DialogActions>
+                    <Button onClick={publish} startIcon={<Send />}>Publish</Button>
+                    <Button onClick={handleClose}>Cancel</Button>
+                </DialogActions>
         </Dialog>
     )
     return (
