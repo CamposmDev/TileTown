@@ -1,4 +1,4 @@
-import { Box, Grid, scopedCssBaselineClasses, Stack, Tab, Tabs, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Button, Grid, scopedCssBaselineClasses, Stack, Tab, Tabs, Toolbar, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
@@ -11,6 +11,7 @@ import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
 import { CommunityContext } from "src/context/social/community";
 import TilesetCard from "../card/TilesetCard";
+import { ProfileContext } from "src/context/profile";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -45,6 +46,7 @@ function a11yProps(index: number) {
 }
 
 const UserProfileScreen = () => {
+    const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const comm = useContext(CommunityContext)
@@ -68,6 +70,7 @@ const UserProfileScreen = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    console.log(prof.state.viewUnpublishedTilesets)
     const [value, setValue] = useState(0)
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue)
@@ -146,33 +149,8 @@ const UserProfileScreen = () => {
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <Grid container 
-                            spacing={1}
-                            mt={1}>
+                            spacing={1}>
                                 {tilesetCards}
-                            {/* <Grid item>
-                                <TileItemCard
-                                    preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                                    tilemapName='McBendorjee vs Robots Tileset'
-                                    author='Emdoiqua'
-                                    publishDate={new Date(2022,11,5)}
-                                    views={Math.random() * 3000}
-                                    comments={Math.random() * 3000}
-                                    likes={Math.random() * 3000}
-                                    tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TileItemCard
-                                    preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level5/mc_tileset.png'
-                                    tilemapName='McBendorjee vs Robots Tileset'
-                                    author='Emdoiqua'
-                                    publishDate={new Date(2022,11,5)}
-                                    views={Math.random() * 3000}
-                                    comments={Math.random() * 3000}
-                                    likes={Math.random() * 3000}
-                                    tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                                />
-                            </Grid> */}
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
