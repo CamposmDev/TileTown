@@ -7,7 +7,7 @@ import {
 
 import { 
     LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes, UpdateEmailRes, 
-    UpdatePasswordRes, ResetPasswordRes
+    UpdatePasswordRes, ResetPasswordRes, GetPublishedTilesetsRes
 } from "@responses/user";
 
 import AxiosApi from './AxiosApi';
@@ -52,6 +52,10 @@ export default class AxiosUserApi  {
     }
     async resetPassword(email: string): Promise<AxiosResponse<ResetPasswordRes>> {
         return AxiosApi.put<ResetPasswordRes, AxiosResponse<ResetPasswordRes>, ResetPasswordReq>(`/user/reset/password`, { email: email});
+    }
+
+    async getUsersPublishedTilesets(userId: string): Promise<AxiosResponse<GetPublishedTilesetsRes>> {
+        return AxiosApi.get<GetPublishedTilesetsRes, AxiosResponse<GetPublishedTilesetsRes>>(`/user/tileset/published/${userId}`);
     }
 }
 
