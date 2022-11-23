@@ -26,6 +26,7 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import LayerSelector from "./LayerSelector";
 import TileSelectorCanvas from "./TileSelectorCanvas";
 
 const LayerDrawer = () => {
@@ -37,71 +38,7 @@ const LayerDrawer = () => {
       variant="permanent"
       PaperProps={{ sx: { mt: 15, overflow: "auto", height: "700px" } }}
     >
-      <Stack pl={1} pr={1} direction="row" alignItems="center">
-        <Typography flexGrow={1}>Layer</Typography>
-        <Tooltip title="Add Layer" arrow>
-          <IconButton color="primary">
-            <Add />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-      <Divider />
-      <Stack>
-        <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
-          <TextField label="Background" size="small" />
-          <Tooltip title="Hide/Show Layer" arrow>
-            <IconButton>
-              <Visibility></Visibility>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Duplicate Layer" arrow>
-            <IconButton color="primary">
-              <Layers />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete Layer" arrow>
-            <IconButton color="error">
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-        <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
-          <TextField label="Platforms" size="small" />
-          <Tooltip title="Hide/Show Layer" arrow>
-            <IconButton>
-              <Visibility></Visibility>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Duplicate Layer" arrow>
-            <IconButton color="primary">
-              <Layers />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete Layer" arrow>
-            <IconButton color="error">
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-        <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
-          <TextField label="Ladders" size="small" />
-          <Tooltip title="Hide/Show Layer" arrow>
-            <IconButton>
-              <Visibility></Visibility>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Duplicate Layer" arrow>
-            <IconButton color="primary">
-              <Layers />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete Layer" arrow>
-            <IconButton color="error">
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-      </Stack>
+      <LayerSelector></LayerSelector>
       <Stack p={1} spacing={2}></Stack>
       <Stack pl={1} pr={1} direction="row" alignItems="center">
         <Typography flexGrow={1}>

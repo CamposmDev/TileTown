@@ -10,6 +10,7 @@ import {
   TilemapEditorModalType,
   TilemapEditorActionType,
   TilemapEditorAction,
+  Layer,
 } from "./TilemapEditTypes";
 
 /**
@@ -50,15 +51,7 @@ export class TilemapEditStore {
       width: 12,
       layers: [
         {
-          data: [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0,
-          ],
+          data: [],
           name: "layer 1",
           height: 12,
           width: 12,
@@ -109,6 +102,20 @@ export class TilemapEditStore {
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA,
       payload: { currentTileIndex, updateData },
+    });
+  }
+
+  public async createNewLayer(
+    newName?: string,
+    newData?: number[]
+  ): Promise<void> {
+    const name = newName ? newName : "New Layer";
+    const data = newData
+      ? newData
+      : new Array(this.state.Tilemap.width * this.state.Tilemap.height).fill(0);
+    this.handleAction({
+      type: TilemapEditorActionType.CREATE_NEW_LAYER,
+      payload: { name, data },
     });
   }
 
@@ -186,16 +193,12 @@ export class TilemapEditStore {
         );
         break;
       }
+      case TilemapEditorActionType.CREATE_NEW_LAYER: {
+        this.handleCreateNewLayer(payload.name, payload.data);
+        break;
+      }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
         this.handleChangeEditControl(payload.editControl);
-        break;
-      }
-      case TilemapEditorActionType.OPEN_MODAL: {
-        this.handleOpenModal(payload.modal);
-        break;
-      }
-      case TilemapEditorActionType.CLOSE_MODAL: {
-        this.handleCloseModal();
         break;
       }
       case TilemapEditorActionType.UPDATE_CURRENT_TILE: {
@@ -212,10 +215,49 @@ export class TilemapEditStore {
       }
       default: {
         throw new Error(
-          `Unhandled action with type ${action} caught in auth reducer`
+          `Unhandled action with type ${action.type} caught in tilemap edit reducer`
         );
       }
     }
+  }
+  protected handleCreateNewLayer(name: string, data: number[]): void {
+    // const newLayer: Layer = {
+    //   name,
+    //   data,
+    //   height: this.state.Tilemap.height,
+    //   width: this.state.Tilemap.width,
+    //   opacity: 1,
+    //   properties: [],
+    //   visible: true,
+    //   x: 0,
+    //   y: 0,
+    // };
+    // const updatedLayers: Layer[] = [...this.state.Tilemap.layers, newLayer];
+    // const updatedTilemap: Tilemap = {
+    //   ...this.state.Tilemap,
+    //   layers: [...this.state.Tilemap.layers, newLayer],
+    // };
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: [
+          ...this.state.Tilemap.layers,
+          {
+            name,
+            data,
+            height: this.state.Tilemap.height,
+            width: this.state.Tilemap.width,
+            opacity: 1,
+            properties: [],
+            visible: true,
+            x: 0,
+            y: 0,
+          },
+        ],
+      },
+      isSaved: false,
+    });
   }
   protected handleUpdateCurrentLayerData(
     currentTileIndex: number,
@@ -226,220 +268,64 @@ export class TilemapEditStore {
     for (let i = 0; i < updateData.length; i++) {
       updatedLayerData[updateData[i]] = currentTileIndex;
     }
-    const updatedTileMap = this._state.Tilemap;
-    updatedTileMap.layers[this._state.currentLayerIndex].data =
+    const updatedTilemap = this._state.Tilemap;
+    updatedTilemap.layers[this._state.currentLayerIndex].data =
       updatedLayerData;
     this.setEdit({
-      Tilemap: updatedTileMap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: this._state.renderTilemapCanvas,
-      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
+      ...this._state,
+      Tilemap: updatedTilemap,
+      isSaved: false,
       renderCurrentLayerCanvas: true,
-      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
     });
   }
   protected handleRenderCurrentLayerCanvas(willRender: boolean): void {
     this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: this._state.renderTilemapCanvas,
-      renderTilemapGridCanvas: this._state.renderTilemapGridCanvas,
+      ...this._state,
       renderCurrentLayerCanvas: willRender,
-      renderTileSelectorCanvas: this._state.renderTileSelectorCanvas,
     });
   }
 
   protected handleUpdateSelection(currentSelection: number[]): void {
     this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
+      ...this._state,
       currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
     });
   }
   protected handleUpdateCurrentTile(currentTileIndex: number): void {
     this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
+      ...this._state,
       currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: true,
     });
   }
 
   protected handleCreateNewTilemap(Tilemap: Tilemap): void {
     this.setEdit({
+      ...this._state,
       Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: true,
-      renderTilemapGridCanvas: true,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
     });
   }
 
   protected handleUpdateTilemap(Tilemap: Partial<Tilemap>): void {
-    const updatedTilemap: Tilemap = {
-      id: this._state.Tilemap.id,
-      backgroundColor: Tilemap.backgroundColor
-        ? Tilemap.backgroundColor
-        : this._state.Tilemap.backgroundColor,
-      collaborators: this._state.Tilemap.collaborators,
-      collaboratorNames: this._state.Tilemap.collaboratorNames,
-      collaboratorSettings: Tilemap.collaboratorSettings
-        ? Tilemap.collaboratorSettings
-        : this._state.Tilemap.collaboratorSettings,
-      collaboratorIndex: Tilemap.collaboratorIndex
-        ? Tilemap.collaboratorIndex
-        : this._state.Tilemap.collaboratorIndex,
-      createDate: this._state.Tilemap.createDate,
-      lastSaveDate: this._state.Tilemap.lastSaveDate,
-      image: this._state.Tilemap.image,
-      height: Tilemap.height ? Tilemap.height : this._state.Tilemap.height,
-      width: Tilemap.width ? Tilemap.width : this._state.Tilemap.width,
-      layers: this._state.Tilemap.layers,
-      tileHeight: Tilemap.tileHeight
-        ? Tilemap.tileHeight
-        : this._state.Tilemap.tileHeight,
-      tileWidth: Tilemap.tileWidth
-        ? Tilemap.tileWidth
-        : this._state.Tilemap.tileWidth,
-      nextLayerId: this._state.Tilemap.nextLayerId,
-      nextObjectId: this._state.Tilemap.nextObjectId,
-      orientation: this._state.Tilemap.orientation,
-      name: Tilemap.name ? Tilemap.name : this._state.Tilemap.name,
-      owner: this._state.Tilemap.owner,
-      properties: this._state.Tilemap.properties,
-      tilesets: this._state.Tilemap.tilesets,
-      globalTileIDs: this._state.Tilemap.globalTileIDs,
-      renderOrder: this._state.Tilemap.renderOrder,
-      isPublished: false,
-    };
+    // const updatedTilemap: Tilemap = Object.assign(this._state.Tilemap, Tilemap);
 
     this.setEdit({
-      Tilemap: updatedTilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
+      ...this._state,
+      Tilemap: Object.assign(this._state.Tilemap, Tilemap),
+      isSaved: false,
     });
   }
 
   protected handleSaveTilemap(Tilemap: Tilemap): void {
     this.setEdit({
-      Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
+      ...this._state,
       isSaved: true,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
     });
   }
 
   protected handleChangeEditControl(editControl: TilemapEditControl): void {
     this.setEdit({
-      Tilemap: this._state.Tilemap,
+      ...this._state,
       currentEditControl: editControl,
-      Tilesets: this._state.Tilesets,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
-    });
-  }
-
-  protected handleCloseModal(): void {
-    this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType: TilemapEditorModalType.close,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
-    });
-  }
-
-  protected handleOpenModal(modalType: TilemapEditorModalType): void {
-    this.setEdit({
-      Tilemap: this._state.Tilemap,
-      Tilesets: this._state.Tilesets,
-      currentEditControl: this._state.currentEditControl,
-      currentLayerIndex: this._state.currentLayerIndex,
-      currentTilesetIndex: this._state.currentTilesetIndex,
-      currentTileIndex: this._state.currentTileIndex,
-      currentSelection: this._state.currentSelection,
-      modalType,
-      isSaved: this._state.isSaved,
-      renderTilemapCanvas: false,
-      renderTilemapGridCanvas: false,
-      renderCurrentLayerCanvas: false,
-      renderTileSelectorCanvas: false,
     });
   }
 }

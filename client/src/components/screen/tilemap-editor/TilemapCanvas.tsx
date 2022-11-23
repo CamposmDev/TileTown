@@ -2,13 +2,6 @@ import { Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
 import "./default.css";
-import {
-  Layer,
-  Color,
-  Property,
-  TilemapEditControl,
-} from "src/context/tilemapEditor/TilemapEditTypes";
-import { Type } from "./Type";
 
 const TilemapCanvas = () => {
   //tilemap edit store context
@@ -130,7 +123,8 @@ const TilemapCanvas = () => {
     scaledTileHeight: number
   ) => {
     for (let i = 0; i < edit.state.Tilemap.layers.length; i++) {
-      drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
+      if (i !== currentLayerIndex)
+        drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
   };
 
@@ -148,8 +142,8 @@ const TilemapCanvas = () => {
         const scaleX = canvasWidth / imageWidth;
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
         // edit.preventTilemapRender();
       }
     }

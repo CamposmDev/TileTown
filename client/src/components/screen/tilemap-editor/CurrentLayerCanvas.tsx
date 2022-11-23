@@ -28,7 +28,9 @@ const CurrentLayerCanvas = () => {
   const currentLayerIndex = edit.state.currentLayerIndex;
   const currentTilemap = edit.state.Tilemap;
   const currentTileIndex = edit.state.currentTileIndex;
-  const currentLayer = currentTilemap.layers[currentLayerIndex].data;
+  const currentLayer = currentTilemap.layers[currentLayerIndex]
+    ? currentTilemap.layers[currentLayerIndex].data
+    : [];
   let tilesetImages: HTMLImageElement[] = new Array(edit.state.Tilesets.length);
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;

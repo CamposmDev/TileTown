@@ -44,7 +44,7 @@ export interface Layer {
   /** A flag indicating whether this TileMapLayer should be visible or not */
   properties: Property[];
 
-  /** A flag indicating whether this TileSet has been published or not */
+  /** A flag indicating whether this Layer should be displayed or not*/
   visible: boolean;
 
   /** Horizontal layer offset in tiles. Always 0.*/
@@ -276,6 +276,7 @@ export enum TilemapEditorActionType {
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
   UPDATE_CURRENT_LAYER = "UPDATE_CURRENT_LAYER",
   UPDATE_CURRENT_LAYER_DATA = "UPDATE_CURRENT_LAYER_DATA",
+  CREATE_NEW_LAYER = "CREATE_NEW_LAYER",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
   PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
@@ -316,6 +317,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER;
       payload: { currentLayerIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.CREATE_NEW_LAYER;
+      payload: { name: string; data: number[] };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;
