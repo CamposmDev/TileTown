@@ -105,6 +105,23 @@ export class TilemapEditStore {
     });
   }
 
+  public async updateLayerInfo(
+    index: number,
+    name?: string,
+    visibility?: boolean
+  ): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.UPDATE_LAYER_INFO,
+      payload: {
+        name: name ? name : this._state.Tilemap.layers[index].name,
+        visibility: visibility
+          ? visibility
+          : this._state.Tilemap.layers[index].visible,
+        index,
+      },
+    });
+  }
+
   public async createNewLayer(
     newName?: string,
     newData?: number[]
@@ -193,6 +210,14 @@ export class TilemapEditStore {
         );
         break;
       }
+      case TilemapEditorActionType.UPDATE_LAYER_INFO: {
+        this.handleUpdateLayerInfo(
+          payload.name,
+          payload.visibility,
+          payload.index
+        );
+        break;
+      }
       case TilemapEditorActionType.CREATE_NEW_LAYER: {
         this.handleCreateNewLayer(payload.name, payload.data);
         break;
@@ -220,23 +245,26 @@ export class TilemapEditStore {
       }
     }
   }
+  protected handleUpdateLayerInfo(
+    name: string,
+    visibility: boolean,
+    index: number
+  ) {
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: this.state.Tilemap.layers.map((layer, currentIndex): Layer => {
+          if (index === currentIndex) {
+            layer.name = name;
+            layer.visible = visibility;
+          }
+          return layer;
+        }),
+      },
+    });
+  }
   protected handleCreateNewLayer(name: string, data: number[]): void {
-    // const newLayer: Layer = {
-    //   name,
-    //   data,
-    //   height: this.state.Tilemap.height,
-    //   width: this.state.Tilemap.width,
-    //   opacity: 1,
-    //   properties: [],
-    //   visible: true,
-    //   x: 0,
-    //   y: 0,
-    // };
-    // const updatedLayers: Layer[] = [...this.state.Tilemap.layers, newLayer];
-    // const updatedTilemap: Tilemap = {
-    //   ...this.state.Tilemap,
-    //   layers: [...this.state.Tilemap.layers, newLayer],
-    // };
     this.setEdit({
       ...this.state,
       Tilemap: {

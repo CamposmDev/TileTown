@@ -32,14 +32,28 @@ import {
 interface LayerProps {
   name: string;
   index: number;
+  visible: boolean;
 }
 
 const LayerField = (props: LayerProps) => {
   const edit = useContext(TilemapEditContext);
 
+  const updateLayerName = (event: any): void => {
+    edit.updateLayerInfo(props.index, event.target.value);
+  };
+
+  const updateLayerVisibility = (): void => {
+    edit.updateLayerInfo(props.index, props.name, !props.visible);
+  };
+
   return (
     <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
-      <TextField label={props.name} size="small" />
+      <TextField
+        label="Name"
+        size="small"
+        onBlur={updateLayerName}
+        onChange={updateLayerName}
+      />
       <Tooltip title="Hide/Show Layer" arrow>
         <IconButton>
           <Visibility></Visibility>

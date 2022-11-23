@@ -275,6 +275,7 @@ export enum TilemapEditorActionType {
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
   UPDATE_CURRENT_LAYER = "UPDATE_CURRENT_LAYER",
+  UPDATE_LAYER_INFO = "UPDATE_LAYER_INFO",
   UPDATE_CURRENT_LAYER_DATA = "UPDATE_CURRENT_LAYER_DATA",
   CREATE_NEW_LAYER = "CREATE_NEW_LAYER",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
@@ -317,6 +318,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER;
       payload: { currentLayerIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.UPDATE_LAYER_INFO;
+      payload: { name: string; visibility: boolean; index: number };
     }
   | {
       type: TilemapEditorActionType.CREATE_NEW_LAYER;
