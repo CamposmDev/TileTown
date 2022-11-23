@@ -13,4 +13,7 @@ export type { default as CommentTilesetRes } from "./CommentTilesetRes";
 export type { default as ViewTilemapRes } from "./ViewTilemapRes";
 export type { default as ViewTilesetRes } from "./ViewTilesetRes";
 
+export type { default as SearchTilemapRes } from "./SearchTilemapRes";
+export type { default as SearchTilesetRes } from "./SearchTilesetRes";
+
 
