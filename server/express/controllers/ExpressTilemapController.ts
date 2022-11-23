@@ -100,6 +100,9 @@ export default class TilemapController {
         if (!req.body.tilemap) {
             return res.status(400).json({ message: "No tilemap data provided" });
         }
+
+
+
         if (!req.body.tilemap.name) {
             return res.status(400).json({message: "All new tilemaps must have a unique 'name' field"});
         }
@@ -180,6 +183,13 @@ export default class TilemapController {
             return res.status(400).json({message: "Missing tilemap data in body"});
         }
 
+        // Convert the tilemap attribute to valid JSON
+        try {
+            req.body.tilemap = JSON.parse(req.body.tilemap);
+        } catch {
+            return res.status(400).json({ messagee: "Tilemap field is not valid JSON" });
+        }
+
         // Verify the user exists in the database
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
@@ -212,7 +222,7 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, createDate: new Date(Date.now())});
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, lastSaveDate: new Date(Date.now())});
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }

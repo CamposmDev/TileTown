@@ -3,8 +3,7 @@ import Tileset from "../../../@types/Tileset";
 
 export default class TilesetMW {
 
-
-    public static createTileset(): RequestHandler {
+    public static createTileset(opts: Readonly<CreateTilesetOptions> = CreateTilesetDefault): RequestHandler {
         const handler = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
             if (!req || !req.body) {
                 return res.status(400).json({ message: "Bad Request"} );
@@ -67,7 +66,7 @@ export default class TilesetMW {
             tileset.tileWidth = Math.floor(tileset.tileWidth);
             tileset.tileHeight = Math.floor(tileset.tileHeight);
 
-            /** Check for bad numeric values */
+            /** Check for lower limits */
 
             if (tileset.rows <= 0) {
                 return res.status(400).json({ message: "Tileset must have at least one row" });
@@ -82,11 +81,40 @@ export default class TilesetMW {
                 return res.status(400).json({ message: "Tile height must be greater than 0" })
             }
 
+            /** Check for upper limits */
+
+            if (tileset.rows > opts.maxRows) {
+                return res.status(400).json({ message: `Tileset must have fewer than ${opts.maxRows} rows`});
+            }
+            if (tileset.columns > opts.maxCols) {
+                return res.status(400).json({ message: `Tileset must have fewer than ${opts.maxCols} columns`});
+            }
+            if (tileset.tileWidth > opts.maxTileWidth) {
+                return res.status(400).json({ message: `Tileset tile width must be less than ${opts.maxTileWidth}`});
+            }
+            if (tileset.tileHeight > opts.maxTileHeight) {
+                return res.status(400).json({ message: `Tileset tile height must be less than ${opts.maxTileHeight}`});
+            }
+
             /** Go to the next function */
             next();
         }
         return handler;
     }
 
+}
 
+
+interface CreateTilesetOptions {
+    maxRows: number;
+    maxCols: number;
+    maxTileWidth: number;
+    maxTileHeight: number;
+}
+
+const CreateTilesetDefault: CreateTilesetOptions = {
+    maxRows: 64,
+    maxCols: 64,
+    maxTileWidth: 100,
+    maxTileHeight: 100,
 }
