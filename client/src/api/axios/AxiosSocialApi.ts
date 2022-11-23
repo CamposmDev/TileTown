@@ -44,12 +44,12 @@ export default class AxiosSocialApi {
         return AxiosApi.put<ViewTilesetRes, AxiosResponse<ViewTilesetRes>>(`tileset/view/${socialId}`);
     }
 
-    public static async commentTilemapById(socialId: string, comment: Comment): Promise<AxiosResponse<{}>> {
-        return AxiosApi.post<{}, AxiosResponse<{}>>(`tilemap/comment/${socialId}`, { comment: comment });
+    public static async commentTilemapById(socialId: string, comment: Comment): Promise<AxiosResponse<CommentTilemapRes>> {
+        return AxiosApi.post<CommentTilemapRes, AxiosResponse<CommentTilemapRes>>(`tilemap/comment/${socialId}`, { comment: comment });
     }
 
-    public static async commentTilesetById(socialId: string, comment: Comment): Promise<AxiosResponse<{}>> {
-        return AxiosApi.post<{}, AxiosResponse<{}>>(`tileset/comment/${socialId}`, { comment: comment });
+    public static async commentTilesetById(socialId: string, comment: Comment): Promise<AxiosResponse<CommentTilesetRes>> {
+        return AxiosApi.post<CommentTilesetRes, AxiosResponse<CommentTilesetRes>>(`tileset/comment/${socialId}`, { comment: comment });
     }
 
 }
