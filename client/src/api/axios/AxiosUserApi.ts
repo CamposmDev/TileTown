@@ -7,7 +7,8 @@ import {
 
 import { 
     LoginRes, RegisterRes, LogoutRes, UpdateUsernameRes, UpdateEmailRes, 
-    UpdatePasswordRes, ResetPasswordRes, GetPublishedTilesetsRes
+    UpdatePasswordRes, ResetPasswordRes, GetPublishedTilesetsRes,
+    UpdateProfileRes
 } from "@responses/user";
 
 import AxiosApi from './AxiosApi';
@@ -38,6 +39,13 @@ export default class AxiosUserApi  {
     async updatePassword(payload: UpdatePasswordReq): Promise<AxiosResponse<UpdatePasswordRes>> {
         return AxiosApi.put<UpdatePasswordRes, AxiosResponse<UpdatePasswordRes>, UpdatePasswordReq>('/user/password', payload)
     }
+
+    async updateProfile(userId: string, form: FormData): Promise<AxiosResponse<UpdateProfileRes>> {
+        return AxiosApi.putForm<UpdateProfileRes, AxiosResponse<UpdateProfileRes>, FormData>(`/user/profile/${userId}`, form);
+    }
+
+
+
     async getUserById(userId: string) {
         return AxiosApi.get(`/user/${userId}`)
     }
