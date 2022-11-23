@@ -158,7 +158,7 @@ const CurrentLayerCanvas = () => {
       }
     }
     edit.renderCurrentLayerRender(false);
-  }, [render]);
+  }, [render, currentLayerIndex]);
 
   const onMouseDown = ({ nativeEvent }: any): void => {
     switch (currentEditControl) {

@@ -136,6 +136,7 @@ const TilemapCanvas = () => {
       });
       if (ctx) {
         console.log("render tilemap");
+        console.log(currentLayerIndex);
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         const scaleY = canvasHeight / imageHeight;

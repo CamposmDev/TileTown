@@ -1,33 +1,7 @@
 import { useContext } from "react";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
-import {
-  Button,
-  Divider,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  List,
-  ListItem,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-  Grid,
-} from "@mui/material";
-import {
-  Add,
-  ControlPointDuplicate,
-  CopyAll,
-  Copyright,
-  Delete,
-  Layers,
-  Settings,
-  Visibility,
-} from "@mui/icons-material";
+import { IconButton, Stack, TextField, Tooltip, Checkbox } from "@mui/material";
+import { Delete, Layers, Visibility } from "@mui/icons-material";
 
 interface LayerProps {
   name: string;
@@ -46,14 +20,27 @@ const LayerField = (props: LayerProps) => {
     edit.updateLayerInfo(props.index, props.name, !props.visible);
   };
 
+  const toggleSelectLayer = (): void => {
+    const index =
+      edit.state.currentLayerIndex === props.index ? -1 : props.index;
+    edit.updateCurrentLayer(index);
+  };
+
   return (
     <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
       <TextField
         label="Name"
+        defaultValue={props.name}
         size="small"
         onBlur={updateLayerName}
         onChange={updateLayerName}
       />
+      <Tooltip title="Select/Unselect Layer" arrow>
+        <Checkbox
+          checked={edit.state.currentLayerIndex === props.index}
+          onChange={toggleSelectLayer}
+        ></Checkbox>
+      </Tooltip>
       <Tooltip title="Hide/Show Layer" arrow>
         <IconButton>
           <Visibility></Visibility>

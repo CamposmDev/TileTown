@@ -92,6 +92,15 @@ export class TilemapEditStore {
     });
   }
 
+  public async updateCurrentLayer(index: number): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.UPDATE_CURRENT_LAYER,
+      payload: {
+        currentLayerIndex: index,
+      },
+    });
+  }
+
   public async updateCurrentLayerData(
     currentTileIndex: number,
     currentSelection?: number[]
@@ -203,6 +212,10 @@ export class TilemapEditStore {
         this.handleSaveTilemap(payload.Tilemap);
         break;
       }
+      case TilemapEditorActionType.UPDATE_CURRENT_LAYER: {
+        this.handleUpdateCurrentLayer(payload.currentLayerIndex);
+        break;
+      }
       case TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA: {
         this.handleUpdateCurrentLayerData(
           payload.currentTileIndex,
@@ -244,6 +257,9 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleUpdateCurrentLayer(currentLayerIndex: number) {
+    this.setEdit({ ...this.state, currentLayerIndex });
   }
   protected handleUpdateLayerInfo(
     name: string,
