@@ -27,6 +27,13 @@ const LayerField = (props: LayerProps) => {
     edit.updateCurrentLayer(index);
   };
 
+  const duplicateLayer = (): void => {
+    edit.createNewLayer(
+      props.name,
+      edit.state.Tilemap.layers[props.index].data
+    );
+  };
+
   const visibilityIcon = props.visible ? (
     <Visibility></Visibility>
   ) : (
@@ -54,7 +61,7 @@ const LayerField = (props: LayerProps) => {
         </IconButton>
       </Tooltip>
       <Tooltip title="Duplicate Layer" arrow>
-        <IconButton color="primary">
+        <IconButton color="primary" onClick={duplicateLayer}>
           <Layers />
         </IconButton>
       </Tooltip>
