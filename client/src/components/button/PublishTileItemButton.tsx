@@ -34,7 +34,7 @@ const PublishTileItemButton = (props: Props) => {
 
     const publish = () => {
         social.publishTileset(props.id, desc, commOption, [], [])
-        prof.viewPublishedTilesets()
+        prof.viewPublishedTilesets(auth.getUsr()?.id)
         handleClose()
     }
 

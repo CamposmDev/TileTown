@@ -1,6 +1,7 @@
 import { MoreVert } from "@mui/icons-material";
 import { Box, Card, CardActionArea, CardContent, IconButton, Menu, MenuItem, Stack } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
@@ -24,6 +25,7 @@ const UserProfileCard = (props: Props) => {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
+    const nav = useNavigate()
     const handleMenuOpen = (e: any) => setAnchorEl(e.currentTarget)
     const handleMenuClose = () => setAnchorEl(null)
     const open = Boolean(anchorEl)
@@ -79,7 +81,9 @@ const UserProfileCard = (props: Props) => {
         </Box>
         
     let fancy = 
-        <Card>
+        <Card onClick={() => {
+            nav(`/profile/${state.userId}`)
+        }}>
             <CardActionArea>
                 <CardContent>
                     <UserProfileBox

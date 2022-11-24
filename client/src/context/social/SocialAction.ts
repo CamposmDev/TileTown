@@ -3,7 +3,6 @@ import { Community, Contest, User, ForumPost } from "@types"
 export type SocialAction =
 | GetTilemapByName
 | GetTilesetByName
-| GetUserByUsername
 | AddFriend
 | RemoveFriend
 | Clear
@@ -12,7 +11,6 @@ export enum SocialActionType {
     searchUsersByName = 'SEARCH_USERS_BY_NAME',
     getTilesetByName = 'GET_TILESET_BY_NAME',
     getTilemapByName = 'GET_TILEMAP_BY_NAME',
-    getUserByUsername = 'GET_USER_BY_NAME',
     addFriend = 'ADD_FRIEND',
     removeFriend = 'REMOVE_FRIEND',
     clear = 'CLEAR'
@@ -24,13 +22,6 @@ export type GetTilesetByName = {
 
 export type GetTilemapByName = {
     type: SocialActionType.getTilemapByName
-}
-
-export type GetUserByUsername = {
-    type: SocialActionType.getUserByUsername,
-    payload: {
-        users: User[]
-    }
 }
 
 export type AddFriend = {
