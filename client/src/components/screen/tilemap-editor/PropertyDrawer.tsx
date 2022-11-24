@@ -16,6 +16,7 @@ import {
   Typography,
   Checkbox,
 } from "@mui/material";
+import PropertySelector from "./PropertySelector";
 
 const PropertyDrawer = () => {
   const modal = useContext(ModalContext);
@@ -73,30 +74,7 @@ const PropertyDrawer = () => {
       </Stack>
       <Divider />
       <Stack p={1}>
-        <List>
-          <Stack spacing={2} direction="column">
-            <Stack
-              pl={1}
-              pr={1}
-              spacing={0.5}
-              direction="row"
-              alignItems="center"
-            >
-              <Typography flexGrow={1}>Collidable</Typography>
-              <Checkbox defaultChecked={true} />
-            </Stack>
-            <Stack
-              pl={1}
-              pr={1}
-              spacing={0.5}
-              direction="row"
-              alignItems="center"
-            >
-              <Typography flexGrow={1}>Damage</Typography>
-              <TextField />
-            </Stack>
-          </Stack>
-        </List>
+        <PropertySelector></PropertySelector>
       </Stack>
     </Drawer>
   );
