@@ -189,6 +189,23 @@ export class TilemapEditStore {
     });
   }
 
+  public async updateProperty(
+    property: Property,
+    index: number
+  ): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.UPDATE_PROPERTY,
+      payload: { property, index },
+    });
+  }
+
+  public async deleteProperty(index: number): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.DELETE_PROPERTY,
+      payload: { index },
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -295,6 +312,14 @@ export class TilemapEditStore {
         this.handleCreateProperty(payload.property);
         break;
       }
+      case TilemapEditorActionType.UPDATE_PROPERTY: {
+        this.handleUpdateProperty(payload.property, payload.index);
+        break;
+      }
+      case TilemapEditorActionType.DELETE_PROPERTY: {
+        this.handleDeleteProperty(payload.index);
+        break;
+      }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
         this.handleChangeEditControl(payload.editControl);
         break;
@@ -317,6 +342,78 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleDeleteProperty(index: number): void {
+    if (this.state.currentLayerIndex === -1) {
+      this.setEdit({
+        ...this.state,
+        Tilemap: {
+          ...this.state.Tilemap,
+          properties: [...this.state.Tilemap.properties].filter(
+            (currentProperty, currentIndex) => {
+              return currentIndex !== index;
+            }
+          ),
+        },
+        isSaved: false,
+      });
+      return;
+    }
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: [...this.state.Tilemap.layers].map((layer, index) => {
+          if (index === this.state.currentLayerIndex) {
+            layer.properties = [...layer.properties].filter(
+              (currentProperty, currentIndex) => {
+                return currentIndex !== index;
+              }
+            );
+            return layer;
+          }
+          return layer;
+        }),
+      },
+      isSaved: false,
+    });
+  }
+  protected handleUpdateProperty(property: Property, index: number): void {
+    if (this.state.currentLayerIndex === -1) {
+      this.setEdit({
+        ...this.state,
+        Tilemap: {
+          ...this.state.Tilemap,
+          properties: [...this.state.Tilemap.properties].map(
+            (currentProperty, currentIndex) => {
+              if (currentIndex === index) return property;
+              return currentProperty;
+            }
+          ),
+        },
+        isSaved: false,
+      });
+      return;
+    }
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: [...this.state.Tilemap.layers].map((layer, layerIndex) => {
+          if (layerIndex === this.state.currentLayerIndex) {
+            layer.properties = [...layer.properties].map(
+              (currentProperty, currentIndex) => {
+                if (currentIndex === index) return property;
+                return currentProperty;
+              }
+            );
+            return layer;
+          }
+          return layer;
+        }),
+      },
+      isSaved: false,
+    });
   }
   protected handleCreateProperty(property: Property): void {
     if (this.state.currentLayerIndex === -1) {
