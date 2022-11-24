@@ -72,7 +72,7 @@ const TilemapCanvas = () => {
     for (let i = 0; i < canvasWidth; i += scaledTileWidth) {
       const currentTileIndex =
         edit.state.Tilemap.layers[layerIndex].data[
-          i / scaledTileWidth + dataIndex
+          Math.round(i / scaledTileWidth + dataIndex)
         ];
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
@@ -122,7 +122,8 @@ const TilemapCanvas = () => {
     scaledTileWidth: number,
     scaledTileHeight: number
   ) => {
-    for (let i = 0; i < edit.state.Tilemap.layers.length; i++) {
+    for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
+      console.log(" i : " + i + " will render : " + (i !== currentLayerIndex));
       if (i !== currentLayerIndex)
         drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
