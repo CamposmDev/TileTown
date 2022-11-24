@@ -25,6 +25,12 @@ const CreatePropertyModal = () => {
   const [type, setType] = useState<Type>("bool");
   const [name, setName] = useState<string>("");
 
+  const handleKeyPress = (event: any) => {
+    if (event.code === "Enter") {
+      createProperty();
+    }
+  };
+
   const createProperty = () => {
     switch (type) {
       case "bool": {
@@ -44,10 +50,6 @@ const CreatePropertyModal = () => {
         break;
       }
       // Objects to not be implemented now since we are not implementing object layers
-      // case "object": {
-      //   edit.createProperty({ name, ptype: type, value: "{}" });
-      //   break;
-      // }
       case "color": {
         edit.createProperty({ name, ptype: type, value: "#000000" });
         break;
@@ -76,6 +78,7 @@ const CreatePropertyModal = () => {
           onBlur={(e) => {
             setName(e.target.value);
           }}
+          onKeyPress={handleKeyPress}
         ></TextField>
         <DialogContent>
           <DialogContentText>Please Select A Type</DialogContentText>
@@ -139,15 +142,6 @@ const CreatePropertyModal = () => {
               ></Radio>
               String
             </Grid>
-            {/* <Grid item xs={3}>
-              <Radio
-                checked={type === "object"}
-                onChange={() => {
-                  setType("object");
-                }}
-              ></Radio>
-              Object
-            </Grid> */}
             <Grid item xs={3}>
               <Radio
                 checked={type === "color"}

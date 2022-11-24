@@ -56,7 +56,12 @@ const ColorPropertyField = (props: ColorPropertyProps) => {
         }}
       ></TextField>
       <Tooltip title="Delete Property" arrow>
-        <IconButton color="error">
+        <IconButton
+          color="error"
+          onClick={() => {
+            edit.deleteProperty(props.index);
+          }}
+        >
           <Delete />
         </IconButton>
       </Tooltip>

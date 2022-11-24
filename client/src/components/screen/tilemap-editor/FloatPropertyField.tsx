@@ -48,7 +48,13 @@ const FloatPropertyField = (props: FloatPropertyProps) => {
           );
         }}
       ></TextField>
-      <Tooltip title="Delete Property" arrow>
+      <Tooltip
+        title="Delete Property"
+        onClick={() => {
+          edit.deleteProperty(props.index);
+        }}
+        arrow
+      >
         <IconButton color="error">
           <Delete />
         </IconButton>

@@ -200,6 +200,7 @@ export class TilemapEditStore {
   }
 
   public async deleteProperty(index: number): Promise<void> {
+    console.log(index);
     this.handleAction({
       type: TilemapEditorActionType.DELETE_PROPERTY,
       payload: { index },
@@ -363,8 +364,8 @@ export class TilemapEditStore {
       ...this.state,
       Tilemap: {
         ...this.state.Tilemap,
-        layers: [...this.state.Tilemap.layers].map((layer, index) => {
-          if (index === this.state.currentLayerIndex) {
+        layers: [...this.state.Tilemap.layers].map((layer, layerIndex) => {
+          if (layerIndex === this.state.currentLayerIndex) {
             layer.properties = [...layer.properties].filter(
               (currentProperty, currentIndex) => {
                 return currentIndex !== index;
