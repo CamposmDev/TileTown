@@ -34,6 +34,11 @@ const LayerField = (props: LayerProps) => {
     );
   };
 
+  const deleteLayer = (): void => {
+    console.log(props.index);
+    edit.deleteLayer(props.index);
+  };
+
   const visibilityIcon = props.visible ? (
     <Visibility></Visibility>
   ) : (
@@ -66,7 +71,7 @@ const LayerField = (props: LayerProps) => {
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete Layer" arrow>
-        <IconButton color="error">
+        <IconButton color="error" onClick={deleteLayer}>
           <Delete />
         </IconButton>
       </Tooltip>

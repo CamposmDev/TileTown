@@ -278,6 +278,7 @@ export enum TilemapEditorActionType {
   UPDATE_LAYER_INFO = "UPDATE_LAYER_INFO",
   UPDATE_CURRENT_LAYER_DATA = "UPDATE_CURRENT_LAYER_DATA",
   CREATE_NEW_LAYER = "CREATE_NEW_LAYER",
+  DELETE_LAYER = "DELETE_LAYER",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
   PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
@@ -304,14 +305,6 @@ export type TilemapEditorAction =
       payload: { Tilemap: Tilemap };
     }
   | {
-      type: TilemapEditorActionType.OPEN_MODAL;
-      payload: { modal: TilemapEditorModalType };
-    }
-  | {
-      type: TilemapEditorActionType.CLOSE_MODAL;
-      payload: {};
-    }
-  | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILE;
       payload: { currentTileIndex: number };
     }
@@ -326,6 +319,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.CREATE_NEW_LAYER;
       payload: { name: string; data: number[] };
+    }
+  | {
+      type: TilemapEditorActionType.DELETE_LAYER;
+      payload: { index: number; currentLayerIndex: number };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;

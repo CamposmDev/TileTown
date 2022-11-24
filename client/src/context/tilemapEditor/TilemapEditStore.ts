@@ -146,6 +146,18 @@ export class TilemapEditStore {
     });
   }
 
+  public async deleteLayer(index: number): Promise<void> {
+    let currentLayerIndex =
+      index === this.state.currentLayerIndex
+        ? -1
+        : this.state.currentLayerIndex;
+    if (index < currentLayerIndex) currentLayerIndex--;
+    this.handleAction({
+      type: TilemapEditorActionType.DELETE_LAYER,
+      payload: { index, currentLayerIndex },
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -232,6 +244,10 @@ export class TilemapEditStore {
         );
         break;
       }
+      case TilemapEditorActionType.DELETE_LAYER: {
+        this.handleDeleteLayer(payload.index, payload.currentLayerIndex);
+        break;
+      }
       case TilemapEditorActionType.CREATE_NEW_LAYER: {
         this.handleCreateNewLayer(payload.name, payload.data);
         break;
@@ -258,6 +274,18 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleDeleteLayer(index: number, currentLayerIndex: number) {
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: this.state.Tilemap.layers.filter((layer, currentIndex) => {
+          return currentIndex !== index;
+        }),
+      },
+      currentLayerIndex,
+    });
   }
   protected handleUpdateCurrentLayer(currentLayerIndex: number) {
     this.setEdit({ ...this.state, currentLayerIndex });
