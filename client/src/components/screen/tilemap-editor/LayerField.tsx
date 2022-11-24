@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
 import { IconButton, Stack, TextField, Tooltip, Checkbox } from "@mui/material";
-import { Delete, Layers, Visibility } from "@mui/icons-material";
+import { Delete, Layers, Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface LayerProps {
   name: string;
@@ -16,7 +16,8 @@ const LayerField = (props: LayerProps) => {
     edit.updateLayerInfo(props.index, event.target.value);
   };
 
-  const updateLayerVisibility = (): void => {
+  const toggleLayerVisibility = (): void => {
+    console.log("toggle visibility");
     edit.updateLayerInfo(props.index, props.name, !props.visible);
   };
 
@@ -25,6 +26,12 @@ const LayerField = (props: LayerProps) => {
       edit.state.currentLayerIndex === props.index ? -1 : props.index;
     edit.updateCurrentLayer(index);
   };
+
+  const visibilityIcon = props.visible ? (
+    <Visibility></Visibility>
+  ) : (
+    <VisibilityOff></VisibilityOff>
+  );
 
   return (
     <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
@@ -42,8 +49,8 @@ const LayerField = (props: LayerProps) => {
         ></Checkbox>
       </Tooltip>
       <Tooltip title="Hide/Show Layer" arrow>
-        <IconButton>
-          <Visibility></Visibility>
+        <IconButton onClick={toggleLayerVisibility}>
+          {visibilityIcon}
         </IconButton>
       </Tooltip>
       <Tooltip title="Duplicate Layer" arrow>

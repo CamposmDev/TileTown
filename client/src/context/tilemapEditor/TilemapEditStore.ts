@@ -123,9 +123,10 @@ export class TilemapEditStore {
       type: TilemapEditorActionType.UPDATE_LAYER_INFO,
       payload: {
         name: name ? name : this._state.Tilemap.layers[index].name,
-        visibility: visibility
-          ? visibility
-          : this._state.Tilemap.layers[index].visible,
+        visibility:
+          visibility !== undefined
+            ? visibility
+            : this._state.Tilemap.layers[index].visible,
         index,
       },
     });

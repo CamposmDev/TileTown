@@ -17,6 +17,12 @@ const TilemapCanvas = () => {
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
   const currentLayerIndex: number = edit.state.currentLayerIndex;
+  const visibilityChange: number = edit.state.Tilemap.layers.reduce<number>(
+    (acc, layer): number => {
+      return acc + Number(layer.visible);
+    },
+    0
+  );
 
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
   const render = edit.state.renderTilemapCanvas;
@@ -123,11 +129,7 @@ const TilemapCanvas = () => {
     scaledTileHeight: number
   ) => {
     for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
-      if (
-        currentLayerIndex == -1 ||
-        (i !== currentLayerIndex &&
-          edit.state.Tilemap.layers[currentLayerIndex].visible)
-      )
+      if (i !== currentLayerIndex && edit.state.Tilemap.layers[i].visible)
         drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
   };
@@ -151,7 +153,7 @@ const TilemapCanvas = () => {
         // edit.preventTilemapRender();
       }
     }
-  }, [currentLayerIndex]);
+  }, [currentLayerIndex, visibilityChange]);
 
   let root = (
     <canvas className="tilemap-canvas--no-input" ref={canvasRef}>
