@@ -140,6 +140,7 @@ const CurrentLayerCanvas = () => {
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
         let imagesLoaded = 0;
+        if (currentLayerIndex === -1) return;
         for (let i = 0; i < tilesetImages.length; i++) {
           tilesetImages[i] = new Image();
           tilesetImages[i].src = edit.state.Tilesets[i].image;

@@ -123,8 +123,11 @@ const TilemapCanvas = () => {
     scaledTileHeight: number
   ) => {
     for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
-      console.log(" i : " + i + " will render : " + (i !== currentLayerIndex));
-      if (i !== currentLayerIndex)
+      if (
+        currentLayerIndex == -1 ||
+        (i !== currentLayerIndex &&
+          edit.state.Tilemap.layers[currentLayerIndex].visible)
+      )
         drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
   };
@@ -137,7 +140,6 @@ const TilemapCanvas = () => {
       });
       if (ctx) {
         console.log("render tilemap");
-        console.log(currentLayerIndex);
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         const scaleY = canvasHeight / imageHeight;
