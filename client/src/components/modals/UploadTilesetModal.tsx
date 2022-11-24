@@ -252,6 +252,7 @@ const UploadTilesetModal = () => {
           </Grid>
         </Grid>
       </DialogContent>
+
       <DialogActions></DialogActions>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import { ThirteenMp } from "@mui/icons-material";
+import { ThirteenMp, ThreeGMobiledata } from "@mui/icons-material";
 import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
 import TilesetCanvas from "src/components/screen/tileset-editor/TilesetCanvas";
@@ -12,6 +12,7 @@ import {
   TilemapEditorActionType,
   TilemapEditorAction,
   Layer,
+  Property,
 } from "./TilemapEditTypes";
 
 /**
@@ -181,6 +182,13 @@ export class TilemapEditStore {
     });
   }
 
+  public async createProperty(property: Property): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.CREATE_PROPERTY,
+      payload: { property },
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -283,6 +291,10 @@ export class TilemapEditStore {
         this.handleCreateNewLayer(payload.name, payload.data);
         break;
       }
+      case TilemapEditorActionType.CREATE_PROPERTY: {
+        this.handleCreateProperty(payload.property);
+        break;
+      }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
         this.handleChangeEditControl(payload.editControl);
         break;
@@ -306,7 +318,37 @@ export class TilemapEditStore {
       }
     }
   }
-  protected handleSwapLayers(swapIndex: number, currentLayerIndex: number) {
+  protected handleCreateProperty(property: Property): void {
+    if (this.state.currentLayerIndex === -1) {
+      this.setEdit({
+        ...this.state,
+        Tilemap: {
+          ...this.state.Tilemap,
+          properties: [...this.state.Tilemap.properties, property],
+        },
+        isSaved: false,
+      });
+      return;
+    }
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: [...this.state.Tilemap.layers].map((layer, index) => {
+          if (index === this.state.currentLayerIndex) {
+            layer.properties = [...layer.properties, property];
+            return layer;
+          }
+          return layer;
+        }),
+      },
+      isSaved: false,
+    });
+  }
+  protected handleSwapLayers(
+    swapIndex: number,
+    currentLayerIndex: number
+  ): void {
     const temp1 = this.state.Tilemap.layers[swapIndex];
     const temp2 = this.state.Tilemap.layers[this.state.currentSwapIndex];
 
@@ -431,8 +473,6 @@ export class TilemapEditStore {
   }
 
   protected handleUpdateTilemap(Tilemap: Partial<Tilemap>): void {
-    // const updatedTilemap: Tilemap = Object.assign(this._state.Tilemap, Tilemap);
-
     this.setEdit({
       ...this._state,
       Tilemap: Object.assign(this._state.Tilemap, Tilemap),

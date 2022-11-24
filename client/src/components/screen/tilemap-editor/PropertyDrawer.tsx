@@ -1,4 +1,7 @@
 import { Add } from "@mui/icons-material";
+import { ModalContext } from "src/context/modal";
+import { TilemapEditContext } from "src/context/tilemapEditor";
+import { useContext } from "react";
 import {
   Button,
   Divider,
@@ -15,6 +18,9 @@ import {
 } from "@mui/material";
 
 const PropertyDrawer = () => {
+  const modal = useContext(ModalContext);
+  const edit = useContext(TilemapEditContext);
+  console.log(edit.state.Tilemap);
   return (
     <Drawer
       open={true}
@@ -55,7 +61,12 @@ const PropertyDrawer = () => {
       <Stack pl={1} pr={1} direction="row" alignItems="center">
         <Typography flexGrow={1}>Custom Properties</Typography>
         <Tooltip title="Add Property" arrow>
-          <IconButton color="primary">
+          <IconButton
+            color="primary"
+            onClick={() => {
+              modal.showCreatePropertyModal();
+            }}
+          >
             <Add />
           </IconButton>
         </Tooltip>

@@ -279,6 +279,7 @@ export enum TilemapEditorActionType {
   SWAP_LAYERS = "SWAP_LAYERS",
   CREATE_NEW_LAYER = "CREATE_NEW_LAYER",
   DELETE_LAYER = "DELETE_LAYER",
+  CREATE_PROPERTY = "CREATE_PROPERTY",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
   PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
@@ -339,6 +340,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET;
       payload: { currentTilesetIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.CREATE_PROPERTY;
+      payload: { property: Property };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION;

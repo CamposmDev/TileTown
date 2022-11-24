@@ -69,7 +69,7 @@ const LayerField = (props: LayerProps) => {
     props.index === edit.state.currentSwapIndex ? "#ADD8E6" : "#FFFFFF";
 
   return (
-    <Stack pl={1} pr={1} spacing={2} direction="row" alignItems="center">
+    <Stack pl={1} pr={1} spacing={0} direction="row" alignItems="center">
       <TextField
         label="Name"
         defaultValue={props.name}
