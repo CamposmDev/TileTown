@@ -1,7 +1,5 @@
-import { SnackContext } from "src/context/snack";
 import { TilemapEditContext } from "src/context/tilemapEditor";
-import { useContext, useState } from "react";
-import { Property } from "src/context/tilemapEditor/TilemapEditTypes";
+import { useContext } from "react";
 import {
   Checkbox,
   IconButton,
@@ -21,7 +19,6 @@ interface BoolPropertyProps {
 
 const BooleanPropertyField = (props: BoolPropertyProps) => {
   const edit = useContext(TilemapEditContext);
-  const snack = useContext(SnackContext);
 
   return (
     <Stack pl={1} pr={1} spacing={0.5} direction="row" alignItems="center">

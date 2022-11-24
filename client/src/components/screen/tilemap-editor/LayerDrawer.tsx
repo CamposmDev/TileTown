@@ -1,4 +1,14 @@
-import { Add, Delete, Settings } from "@mui/icons-material";
+import { TilemapEditContext } from "src/context/tilemapEditor";
+import { useContext } from "react";
+import {
+  Add,
+  ArrowBack,
+  ArrowBackIos,
+  ArrowForward,
+  ArrowForwardIos,
+  Delete,
+  Settings,
+} from "@mui/icons-material";
 import {
   Button,
   Divider,
@@ -22,6 +32,9 @@ import TileSelectorCanvas from "./TileSelectorCanvas";
 
 const LayerDrawer = () => {
   let numOfCollaborators = 2;
+
+  const edit = useContext(TilemapEditContext);
+
   return (
     <Drawer
       open={true}
@@ -114,11 +127,34 @@ const LayerDrawer = () => {
         <Grid
           container
           spacing={0}
-          direction="column"
+          direction="row"
           alignItems="center"
           justifyContent="center"
         >
+          <Tooltip title="Previous Tileset" arrow>
+            <IconButton
+              disabled={edit.state.currentTilesetIndex === 0}
+              onClick={() => {
+                edit.updateCurrentTileset(edit.state.currentTilesetIndex - 1);
+              }}
+            >
+              <ArrowBackIos></ArrowBackIos>
+            </IconButton>
+          </Tooltip>
           <TileSelectorCanvas></TileSelectorCanvas>
+          <Tooltip title="Next Tileset" arrow>
+            <IconButton
+              disabled={
+                edit.state.currentTilesetIndex ===
+                edit.state.Tilesets.length - 1
+              }
+              onClick={() => {
+                edit.updateCurrentTileset(edit.state.currentTilesetIndex + 1);
+              }}
+            >
+              <ArrowForwardIos></ArrowForwardIos>
+            </IconButton>
+          </Tooltip>
         </Grid>
         {/* <img src="/testTileset.png"></img> */}
       </Stack>

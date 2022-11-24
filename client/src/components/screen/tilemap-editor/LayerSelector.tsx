@@ -15,7 +15,6 @@ import { Layer } from "src/context/tilemapEditor/TilemapEditTypes";
 const LayerSelector = () => {
   const edit = useContext(TilemapEditContext);
   const layers = edit.state.Tilemap.layers;
-  console.log(layers);
 
   const layerFields = layers.map((layer: Layer, index: number) => (
     <LayerField

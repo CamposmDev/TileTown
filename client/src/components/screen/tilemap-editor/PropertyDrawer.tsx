@@ -21,7 +21,7 @@ import PropertySelector from "./PropertySelector";
 const PropertyDrawer = () => {
   const modal = useContext(ModalContext);
   const edit = useContext(TilemapEditContext);
-  console.log(edit.state.Tilemap);
+
   return (
     <Drawer
       open={true}

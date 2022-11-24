@@ -17,7 +17,6 @@ interface LayerProps {
 }
 
 const LayerField = (props: LayerProps) => {
-  console.log(props.name);
   const edit = useContext(TilemapEditContext);
 
   useEffect(() => {}, [props.name, props.visible, props.index]);
