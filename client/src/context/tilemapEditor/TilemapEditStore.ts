@@ -2,6 +2,7 @@ import { ThirteenMp } from "@mui/icons-material";
 import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
 import TilesetCanvas from "src/components/screen/tileset-editor/TilesetCanvas";
+import { textSpanIsEmpty } from "typescript";
 import {
   Color,
   Tilemap,
@@ -158,6 +159,28 @@ export class TilemapEditStore {
     });
   }
 
+  public async updateSwapIndex(swapIndex: number): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.UPDATE_SWAP_INDEX,
+      payload: { swapIndex },
+    });
+  }
+
+  public async swapLayers(swapIndex: number): Promise<void> {
+    let currentLayerIndex =
+      this.state.currentLayerIndex === swapIndex
+        ? this.state.currentSwapIndex
+        : this.state.currentLayerIndex;
+    currentLayerIndex =
+      this.state.currentLayerIndex === this.state.currentSwapIndex
+        ? swapIndex
+        : currentLayerIndex;
+    this.handleAction({
+      type: TilemapEditorActionType.SWAP_LAYERS,
+      payload: { swapIndex, currentLayerIndex },
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -248,6 +271,14 @@ export class TilemapEditStore {
         this.handleDeleteLayer(payload.index, payload.currentLayerIndex);
         break;
       }
+      case TilemapEditorActionType.UPDATE_SWAP_INDEX: {
+        this.handleUpdateSwapIndex(payload.swapIndex);
+        break;
+      }
+      case TilemapEditorActionType.SWAP_LAYERS: {
+        this.handleSwapLayers(payload.swapIndex, payload.currentLayerIndex);
+        break;
+      }
       case TilemapEditorActionType.CREATE_NEW_LAYER: {
         this.handleCreateNewLayer(payload.name, payload.data);
         break;
@@ -274,6 +305,27 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleSwapLayers(swapIndex: number, currentLayerIndex: number) {
+    const temp1 = this.state.Tilemap.layers[swapIndex];
+    const temp2 = this.state.Tilemap.layers[this.state.currentSwapIndex];
+
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        layers: [...this.state.Tilemap.layers].map((layer, index) => {
+          if (index === swapIndex) return temp2;
+          if (index === this.state.currentSwapIndex) return temp1;
+          return layer;
+        }),
+      },
+      currentLayerIndex,
+      currentSwapIndex: -1,
+    });
+  }
+  protected handleUpdateSwapIndex(currentSwapIndex: number) {
+    this.setEdit({ ...this.state, currentSwapIndex });
   }
   protected handleDeleteLayer(index: number, currentLayerIndex: number) {
     this.setEdit({

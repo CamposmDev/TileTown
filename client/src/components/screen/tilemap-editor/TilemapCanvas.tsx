@@ -23,6 +23,7 @@ const TilemapCanvas = () => {
     },
     0
   );
+  const currentSwapIndex: number = edit.state.currentSwapIndex;
 
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
   const render = edit.state.renderTilemapCanvas;
@@ -153,7 +154,7 @@ const TilemapCanvas = () => {
         // edit.preventTilemapRender();
       }
     }
-  }, [currentLayerIndex, visibilityChange]);
+  }, [currentLayerIndex, visibilityChange, currentSwapIndex]);
 
   let root = (
     <canvas className="tilemap-canvas--no-input" ref={canvasRef}>

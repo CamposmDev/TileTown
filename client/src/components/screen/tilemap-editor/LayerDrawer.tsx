@@ -1,13 +1,4 @@
-import {
-  Add,
-  ControlPointDuplicate,
-  CopyAll,
-  Copyright,
-  Delete,
-  Layers,
-  Settings,
-  Visibility,
-} from "@mui/icons-material";
+import { Add, Delete, Settings } from "@mui/icons-material";
 import {
   Button,
   Divider,
