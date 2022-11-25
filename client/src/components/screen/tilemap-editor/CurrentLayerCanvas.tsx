@@ -102,8 +102,10 @@ const CurrentLayerCanvas = () => {
           if (currentGlobalTileIDs[j] < currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
             currentTilesetIndex = j;
+            break;
           }
         }
+        console.log(currentTilesetIndex);
         const tilesetTileWidth =
           edit.state.Tilesets[currentTilesetIndex].tileWidth;
         const tilesetTileHeight =
