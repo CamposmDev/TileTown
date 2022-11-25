@@ -1,35 +1,48 @@
-import { Community, Contest, User, ForumPost } from "@types"
+import { Community, Contest, User, ForumPost, Tileset, Tilemap, TilesetSocial, TilemapSocial } from "@types"
 
 export type SocialAction =
-| GetTilemapByName
-| GetTilesetByName
-| AddFriend
-| RemoveFriend
+| SetCurrentTMS
+| SetCurrentTSS
+| GetTilemapsByName
+| GetTilesetsByName
 | Clear
 
 export enum SocialActionType {
-    searchUsersByName = 'SEARCH_USERS_BY_NAME',
-    getTilesetByName = 'GET_TILESET_BY_NAME',
-    getTilemapByName = 'GET_TILEMAP_BY_NAME',
+    setCurrentTMS = 'SET_CURRENT_TMS',
+    setCurrentTSS = 'SET_CURRENT_TSS',
+    getTilesetsByName = 'GET_TILESET_BY_NAME',
+    getTilemapsByName = 'GET_TILEMAP_BY_NAME',
     addFriend = 'ADD_FRIEND',
     removeFriend = 'REMOVE_FRIEND',
     clear = 'CLEAR'
 }
 
-export type GetTilesetByName = {
-    type: SocialActionType.getTilesetByName
+export type SetCurrentTMS = {
+    type: SocialActionType.setCurrentTMS,
+    payload: {
+        currentTMS: TilemapSocial
+    }
 }
 
-export type GetTilemapByName = {
-    type: SocialActionType.getTilemapByName
+export type SetCurrentTSS = {
+    type: SocialActionType.setCurrentTSS,
+    payload: {
+        currentTSS: TilesetSocial
+    }
 }
 
-export type AddFriend = {
-    type: SocialActionType.addFriend
+export type GetTilemapsByName = {
+    type: SocialActionType.getTilemapsByName,
+    payload: {
+        tilemaps: Tilemap[]
+    }
 }
 
-export type RemoveFriend = {
-    type: SocialActionType.removeFriend
+export type GetTilesetsByName = {
+    type: SocialActionType.getTilesetsByName,
+    payload: {
+        tilesets: Tileset[]
+    }
 }
 
 export type Clear = {

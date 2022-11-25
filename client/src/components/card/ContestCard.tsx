@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
 import Contest from "../../../../@types/Contest"
-import { parseDateToStr, calcTimeLeft } from '../util/DateUtils'
+import { dateToStr, calcTimeLeft } from '../util/DateUtils'
 
 interface Props {
     c: Contest
@@ -50,7 +50,7 @@ const ContestCard = (props: Props) => {
                         <Box flexGrow={1}/>
                         <Stack direction='column'>
                             <Typography variant='caption'><b>Started:&ensp;</b>
-                                {parseDateToStr(new Date(props.c.startDate))}
+                                {dateToStr(new Date(props.c.startDate))}
                             </Typography>
                             <Typography variant='caption'>
                                 <b>{props.c.participates.length}</b>&ensp;Participates

@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material"
 import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router"
+import TilesetCard from "src/components/card/TilesetCard"
 import { UserContext } from "src/context/social/user"
 import { AuthContext } from "../../../context/auth"
 import { SocialContext } from "../../../context/social"
@@ -57,6 +58,13 @@ const SearchScreen = (props: Props) => {
             content = <Grid container 
                     spacing={1}
                     mt={1}>
+                        {social.tilesets.map(x =>
+                            <Grid item key={x.id}>  
+                                <TilesetCard
+                                    tilesetId={x.id}
+                                />
+                            </Grid>
+                        )}
                 {/* <Grid item>
                     <TileItemCard
                         preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'

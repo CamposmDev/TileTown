@@ -188,6 +188,40 @@ export default class TilesetController {
       .json({ message: "Updating a tileset!", tileset: updatedTileset });
   }
 
+  public async getPublishedTilesetsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+        return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    if (!req.params.query || !req.params.sort) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    switch (req.params.sort) {
+      case 'none':
+        break
+      case 'name':
+        break
+      case 'most_popular':
+        break
+      case 'least_popular':
+        break
+      case 'published_newest':
+        break
+      case 'published_oldest':
+        break
+      case 'likes':
+        break
+      case 'dislikes':
+        break
+      case 'views':
+        break
+    }
+
+    let tilesets = await db.tilesets.getPublishedTilesetsByName(req.params.query)
+    return res.status(200).json({ message: `Found ${tilesets.length} tileset(s)`, tilesets: tilesets })
+  }
+
   public async getTilesetPartials(
     req: Request,
     res: Response
@@ -275,6 +309,21 @@ export default class TilesetController {
       .status(200)
       .json({ message: "Got tileset social data!", social: social });
   }
+
+  public async getTilesetSocialByTilesetId(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    let social = await db.tilesetSocials.getTilesetSocialByTilesetId(req.params.id)
+    if (social === null) {
+      return res.status(404).json({ message: `Tileset social data with tileset id ${req.params.id} not found`});
+    }
+    return res.status(200).json({ message: 'Got tileset social data!', social: social })
+  }
+
   public async publishTileset(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters
     if (!req || !res || !req.params || !req.body) {

@@ -33,6 +33,7 @@ const SearchToolbar = (props: Props) => {
                 case SearchCategory.Tilemaps:
                     break
                 case SearchCategory.Tilesets:
+                    social.getTilesetsByName(query, snack)
                     break
                 case SearchCategory.Users:
                     user.getUsersByUsername(query, snack)

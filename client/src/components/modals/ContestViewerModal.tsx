@@ -5,7 +5,7 @@ import { ContestContext } from "src/context/social/contest"
 import UserProfileCard from "../card/UserProfileCard"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { calcTimeLeft, parseDateToStr } from "../util/DateUtils"
+import { calcTimeLeft, dateToStr } from "../util/DateUtils"
 
 const ContestViewerModal = () => {
     const social = useContext(SocialContext)
@@ -46,7 +46,7 @@ const ContestViewerModal = () => {
                 </Grid>
                 <Grid item flexGrow={1}>
                     <Typography><b>Started:&ensp;</b>
-                        {parseDateToStr(new Date(c.startDate))}
+                        {dateToStr(new Date(c.startDate))}
                     </Typography>
                 </Grid>
                 <Grid item>

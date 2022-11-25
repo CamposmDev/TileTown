@@ -12,6 +12,7 @@ import { MENU_PAPER_PROPS } from "../util/Constants";
 interface Props {
     userId: string,
     fancy?: boolean
+    minimal?: boolean
 }
 
 const UserProfileCard = (props: Props) => {
@@ -48,7 +49,7 @@ const UserProfileCard = (props: Props) => {
             lastName={state.lastName}
             username={state.username}
         />
-    
+    if (props?.minimal) return card
 
     const removeFriend = () => {
         social.removeFriend(state.username, auth, snack)

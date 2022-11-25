@@ -4,7 +4,7 @@ import { MouseEventHandler, useContext, useState } from "react"
 import { AuthContext } from "src/context/auth"
 import Tileset from "../../../../@types/Tileset"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { parseDateToStr } from "../util/DateUtils"
+import { dateToStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import CommentCard from "./CommentCard"
 import './default.css'

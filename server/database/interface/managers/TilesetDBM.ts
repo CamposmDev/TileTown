@@ -10,6 +10,8 @@ export default interface TilesetDBM {
     getTilesetByName(name: string): Promise<Tileset | null>;
     getTilesets(tileset: Partial<Tileset>): Promise<Tileset[]>
 
+    getPublishedTilesetsByName(name: string): Promise<Tileset[]>
+
     createTileset(userId: string,
         tileset: Partial<Tileset>
     ): Promise<Tileset | null>;

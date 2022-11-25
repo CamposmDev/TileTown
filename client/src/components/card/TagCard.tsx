@@ -6,7 +6,7 @@ interface Props {
 
 const TagCard = (props: Props) => {
     return (
-        <Card sx={{borderRadius: 3, pr: 2, pl: 2}}>
+        <Card sx={{borderRadius: 3, pr: 2, pl: 2, boxShadow: 3}}>
             <Typography>{props.name}</Typography>
         </Card>
     )
