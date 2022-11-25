@@ -3,36 +3,28 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Typography from '@mui/material/Typography';
-import { Dialog, DialogContent, Grid, Icon, IconButton, Modal } from '@mui/material';
-import { useState } from 'react';
+import { Dialog, DialogContent, Drawer, Grid, Icon, IconButton, Modal } from '@mui/material';
+import { useContext, useState } from 'react';
 import { Group } from '@mui/icons-material';
 import UserProfileCard from '../card/UserProfileCard';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
+import { CommunityContext } from 'src/context/social/community';
 
 
 
 const CommunityMembersModal = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
-
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 1,
-        p: 4,
-        borderRadius: 2
-
-      };
-
+    let comm = cc.getCurrentCommunity()
+    let members: JSX.Element[] | undefined = undefined
+    if (comm)
+        members = comm.members.map(x => <Grid item><UserProfileCard userId={x} /></Grid>)
     let ui = (
-        <Dialog 
+        <Drawer 
             open={isOpen} 
             onClose={handleClose}
-            TransitionComponent={SLIDE_DOWN_TRANSITION}
+            anchor={'right'}
             >
             <DialogContent>
             <Box>
@@ -43,20 +35,12 @@ const CommunityMembersModal = () => {
                     <Icon ><PeopleAltIcon /></Icon>
                 </Avatar>
                 <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
-                {/* {[1,1,1,1,,1,1,1,1,1,1,1].map((x,i) => 
-                    <Grid item mt={1}>
-                        <UserProfileCard
-                        firstName='Michael'
-                        lastName="Campos"
-                        username="Camposm"
-                    />
-                    </Grid>
-                )} */}
+                    {members}
                 </Grid>        
             </Box>
             </DialogContent>
             
-        </Dialog>
+        </Drawer>
     )
     return (
         <>

@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box } from "@mui/material"
 import { Comment, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import { formatToSocialStr } from '../util/NumberUtils'
-import { parseDateToPostedStr } from '../util/DateUtils' 
+import { dateToPostedStr } from '../util/DateUtils' 
 import { useContext, useEffect, useState } from "react"
 import ForumPost from "../../../../@types/ForumPost"
 import { ForumContext } from "src/context/social/forum"
@@ -37,7 +37,7 @@ const ForumPostCard = (props: Props) => {
                             <Typography noWrap>{props.forumPost.body}</Typography>
                             <Stack alignItems='center' direction='row'>
                                     <Typography><b>By</b>:&ensp;{username},&ensp;</Typography>
-                                    <Typography>{parseDateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
+                                    <Typography>{dateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
                             </Stack>
                         </Grid>
                         <Grid container item>

@@ -11,7 +11,7 @@ interface Props {
     name: string
 }
 
-const PublishTileItemButton = (props: Props) => {
+export default function PublishTilesetButton(props: Props) {
     const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
@@ -34,7 +34,7 @@ const PublishTileItemButton = (props: Props) => {
 
     const publish = () => {
         social.publishTileset(props.id, desc, commOption, [], [])
-        prof.viewPublishedTilesets()
+        prof.viewPublishedTilesets(auth.getUsr()?.id)
         handleClose()
     }
 
@@ -96,5 +96,3 @@ const PublishTileItemButton = (props: Props) => {
         </div>
     )
 }
-
-export default PublishTileItemButton

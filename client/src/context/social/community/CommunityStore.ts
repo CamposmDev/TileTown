@@ -130,7 +130,7 @@ export class CommunityStore {
     }
 
     public async viewCommunity(comm: Community): Promise<void> {
-        this.nav(`/community/${comm.name}`)
+        this.nav(`/community/${comm.id}`)
         this.handleAction({
             type: CommunityActionType.viewCommunity,
             payload: {

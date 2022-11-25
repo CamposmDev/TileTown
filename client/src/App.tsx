@@ -34,6 +34,7 @@ import { CommunityContextProvider } from "./context/social/community";
 import { ContestContextProvider } from "./context/social/contest";
 import { ProfileContextProvider } from "./context/profile";
 import CreatePropertyModal from "./components/modals/CreatePropertyModal";
+import { UserContextProvider } from "./context/social/user";
 
 /**
  * Pixel Editors
@@ -68,6 +69,7 @@ const App = () => {
           <SnackContextProvider key={"snack-context-provider"}>
             <ModalContextProvider key={"modal-context-provider"}>
               <SocialContextProvider key={"social-context-provider"}>
+                <UserContextProvider key={"user-context-provider"}>
                 <CommunityContextProvider key={"community-context-provider"}>
                   <ContestContextProvider key={"contest-context-provider"}>
                     <ForumContextProvider key={"forum-context-provider"}>
@@ -90,7 +92,7 @@ const App = () => {
                             element={<CommunityProfileScreen />}
                           />
                           <Route
-                            path="/profile"
+                            path="/profile/:id"
                             element={<UserProfileScreen />}
                           />
                           <Route
@@ -158,6 +160,7 @@ const App = () => {
                     </ForumContextProvider>
                   </ContestContextProvider>
                 </CommunityContextProvider>
+                </UserContextProvider>
               </SocialContextProvider>
             </ModalContextProvider>
           </SnackContextProvider>

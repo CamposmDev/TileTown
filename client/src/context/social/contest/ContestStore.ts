@@ -42,6 +42,23 @@ export class ContestStore {
         })
     }
 
+    public async getContestsById(arr: string[] | undefined): Promise<Contest[]> {
+        if (arr) {
+            let resultArr: Contest[] = []
+            arr.map((id) => {
+                let res = ContestApi.getContestById(id)
+                res.then(res => {
+                    if (res.status === 200) {
+                        resultArr.push(res.data.contest)
+                    }
+                })
+            })
+            return resultArr
+        } else {
+            return []
+        }
+    }
+
     public async deleteContestById(contestId: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.deleteContestById(contestId)
         res.then((res) => {
