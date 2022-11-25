@@ -105,7 +105,6 @@ const CurrentLayerCanvas = () => {
             break;
           }
         }
-        console.log(currentTilesetIndex);
         const tilesetTileWidth =
           edit.state.Tilesets[currentTilesetIndex].tileWidth;
         const tilesetTileHeight =

@@ -84,10 +84,11 @@ const TilemapCanvas = () => {
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
-        for (let i = currentGlobalTileIDs.length - 1; i >= 0; i--) {
-          if (currentGlobalTileIDs[i] < currentTileIndex) {
-            currentGlobalTileID = currentGlobalTileIDs[i];
-            currentTilesetIndex = i;
+        for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
+          if (currentGlobalTileIDs[j] < currentTileIndex) {
+            currentGlobalTileID = currentGlobalTileIDs[j];
+            currentTilesetIndex = j;
+            break;
           }
         }
         const tilesetTileWidth =
