@@ -20,7 +20,7 @@ import { FaEraser } from "react-icons/fa";
 import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvasWrapper from "./TilesetCanvasWrapper";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
-import PublishTileItemButton from "../../button/PublishTileItemButton";
+import PublishTilesetButton from "../../button/PublishTilesetButton";
 import { useContext } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
 import { SnackContext } from "src/context/snack";
@@ -29,6 +29,7 @@ import {
   Color,
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import { SocialContext } from "src/context/social";
+import DeleteTilesetButton from "src/components/button/DeleteTilesetButton";
 
 const TilesetEditorScreen = () => {
   const edit = useContext(TilesetEditContext);
@@ -149,8 +150,8 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name={edit.state.tileset.name} />
-              <PublishTileItemButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
+              <DeleteTilesetButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
+              <PublishTilesetButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
             </Stack>
           </Grid>
         </Grid>

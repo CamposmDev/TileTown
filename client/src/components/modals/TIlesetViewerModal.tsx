@@ -14,12 +14,25 @@ import { FaCopy } from "react-icons/fa";
 import TagCard from "../card/TagCard";
 import UserProfileCard from "../card/UserProfileCard";
 import UserProfileBox from "../UserProfileBox";
+import ts from "typescript";
 
 export default function TilesetViewerModal() {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
+    const [commName, setCommName] = useState('None')
     const [comment, setComment] = useState<string>()
     const open = Boolean(social.state.currentTSS)
+
+    useEffect(() => {
+        let tss = social.state.currentTSS
+        if (tss && tss.community) {
+            social.getCommunityName(tss.community).then(name => {
+                if (name) setCommName(name)
+            })
+        } else {
+            setCommName('None')
+        }
+    }, [social.state.currentTSS])
 
     const like = () => {
         /** Call the like tileset social function from social */
@@ -53,7 +66,6 @@ export default function TilesetViewerModal() {
 
     const handleClose = () => {
         /** Clear the comment state and call the clear function from social */
-        
         social.clear()
     }
 
@@ -98,6 +110,8 @@ export default function TilesetViewerModal() {
                                             userId={tss.owner}
                                             minimal={true}
                                         />
+                                        {/* {tss.community ? <Typography>{tss.community}</Typography> : <Box/>} */}
+                                        <Typography variant='body2'>{`Community: ${commName}`}</Typography>
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
                                         <Typography variant='body2'>{tss.description}</Typography>
                                     </Grid>

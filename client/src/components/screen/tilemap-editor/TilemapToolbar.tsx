@@ -30,7 +30,7 @@ import LayerDrawer from "./LayerDrawer";
 import TilemapCanvas from "./TilemapCanvas";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTilesetModal from "../../modals/PublishTilesetModal";
-import PublishTileItemButton from "../../button/PublishTileItemButton";
+import PublishTilesetButton from "../../button/PublishTilesetButton";
 import {
   Color,
   TilemapEditControl,
@@ -213,7 +213,7 @@ const TilemapToolbar = () => {
           <Grid item>
             <Stack direction={"row"} spacing={1}>
               <DeleteTileItemButton name={edit.state.Tilemap.name}/>
-              <PublishTileItemButton id={edit.state.Tilemap.id} name={edit.state.Tilemap.name}/>
+              <PublishTilesetButton id={edit.state.Tilemap.id} name={edit.state.Tilemap.name}/>
             </Stack>
           </Grid>
         </Grid>

@@ -96,7 +96,7 @@ const CommunityProfileScreen = () => {
                             <Typography variant='body1'>{c?.description}</Typography>
                         </Grid>
                     </Grid>
-                    <CommunityContestsModal/>
+                    {/* <CommunityContestsModal/> */}
                     <CommunityMembersModal/>
                     {settings}
                 </Toolbar>
