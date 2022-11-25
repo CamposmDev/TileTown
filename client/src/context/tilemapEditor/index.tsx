@@ -82,7 +82,7 @@ function TilemapEditContextProvider(props: Record<string, any>) {
       nextLayerId: 2,
       nextObjectId: 0,
       orientation: "orthogonal",
-      name: "",
+      name: "My New Tilemap",
       owner: "",
       properties: [],
       tilesets: [],

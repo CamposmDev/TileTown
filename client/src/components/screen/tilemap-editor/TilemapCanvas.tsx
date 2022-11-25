@@ -99,7 +99,9 @@ const TilemapCanvas = () => {
 
         const image: HTMLImageElement = new Image();
         image.src = edit.state.Tilesets[currentTilesetIndex].image;
+
         image.onload = () => {
+          ctx.globalAlpha = edit.state.Tilemap.layers[layerIndex].opacity;
           ctx.drawImage(
             image,
             ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *

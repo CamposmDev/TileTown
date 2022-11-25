@@ -43,6 +43,10 @@ const CurrentLayerCanvas = () => {
     currentLayerIndex !== -1
       ? edit.state.Tilemap.layers[currentLayerIndex].visible
       : false;
+  const opacity: number =
+    currentLayerIndex !== -1
+      ? currentTilemap.layers[currentLayerIndex].opacity
+      : 1;
 
   /**
    *Draws a layer on the canvas row by row
@@ -113,6 +117,8 @@ const CurrentLayerCanvas = () => {
 
         const image: HTMLImageElement = tilesetImages[currentTilesetIndex];
 
+        ctx.globalAlpha = opacity;
+
         ctx.drawImage(
           image,
           ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
@@ -169,7 +175,7 @@ const CurrentLayerCanvas = () => {
       }
     }
     edit.renderCurrentLayerRender(false);
-  }, [render, currentLayerIndex, visible]);
+  }, [render, currentLayerIndex, visible, opacity]);
 
   const onMouseDown = ({ nativeEvent }: any): void => {
     if (!visible) {

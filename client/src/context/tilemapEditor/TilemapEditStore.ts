@@ -129,7 +129,8 @@ export class TilemapEditStore {
   public async updateLayerInfo(
     index: number,
     name?: string,
-    visibility?: boolean
+    visibility?: boolean,
+    opacity?: number
   ): Promise<void> {
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_LAYER_INFO,
@@ -139,6 +140,10 @@ export class TilemapEditStore {
           visibility !== undefined
             ? visibility
             : this._state.Tilemap.layers[index].visible,
+        opacity:
+          opacity !== undefined
+            ? opacity
+            : this.state.Tilemap.layers[index].opacity,
         index,
       },
     });
@@ -303,6 +308,7 @@ export class TilemapEditStore {
         this.handleUpdateLayerInfo(
           payload.name,
           payload.visibility,
+          payload.opacity,
           payload.index
         );
         break;
@@ -492,6 +498,7 @@ export class TilemapEditStore {
         layers: this.state.Tilemap.layers.filter((layer, currentIndex) => {
           return currentIndex !== index;
         }),
+        nextLayerId: this.state.Tilemap.nextLayerId - 1,
       },
       currentLayerIndex,
     });
@@ -502,6 +509,7 @@ export class TilemapEditStore {
   protected handleUpdateLayerInfo(
     name: string,
     visibility: boolean,
+    opacity: number,
     index: number
   ) {
     this.setEdit({
@@ -512,6 +520,7 @@ export class TilemapEditStore {
           if (index === currentIndex) {
             layer.name = name;
             layer.visible = visibility;
+            layer.opacity = opacity;
           }
           return layer;
         }),
@@ -537,6 +546,7 @@ export class TilemapEditStore {
             y: 0,
           },
         ],
+        nextLayerId: this.state.Tilemap.nextLayerId + 1,
       },
       isSaved: false,
     });

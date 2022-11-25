@@ -1,4 +1,4 @@
-import { ConstructionOutlined } from "@mui/icons-material";
+import { ConstructionOutlined, Opacity } from "@mui/icons-material";
 import { Tileset } from "../tilesetEditor/TilesetEditTypes";
 
 /**String of type of property**/
@@ -317,7 +317,12 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.UPDATE_LAYER_INFO;
-      payload: { name: string; visibility: boolean; index: number };
+      payload: {
+        name: string;
+        visibility: boolean;
+        opacity: number;
+        index: number;
+      };
     }
   | {
       type: TilemapEditorActionType.CREATE_NEW_LAYER;
