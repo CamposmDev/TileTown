@@ -7,14 +7,14 @@ import { ForumPost } from "@types"
 import { useContext, useEffect, useState } from "react"
 import { ForumContext } from "src/context/social/forum"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { parseDateToPostedStr } from "../util/DateUtils"
+import { dateToPostedStr } from "../util/DateUtils"
 import { formatToSocialStr } from "../util/NumberUtils"
 import { SocialContext } from "src/context/social"
 import { AuthContext } from "src/context/auth"
 import EditForumPostModal from "./EditForumPostModal"
 import { SnackContext } from "src/context/snack"
 
-const ForumPostViewerModal = () => {
+export default function ForumPostViewerModal() {
     const social = useContext(SocialContext)
     const forum = useContext(ForumContext)
     const auth = useContext(AuthContext)
@@ -90,7 +90,7 @@ const ForumPostViewerModal = () => {
                         />
                     </Grid>
                     <Grid item flexGrow={1}>
-                            <Typography>,&ensp;{parseDateToPostedStr(new Date(forumPost?.publishDate))}</Typography>
+                            <Typography>,&ensp;{dateToPostedStr(new Date(forumPost?.publishDate))}</Typography>
                     </Grid>
                     <Grid item>
                         <Stack direction='row' alignItems='center'>
@@ -101,13 +101,13 @@ const ForumPostViewerModal = () => {
                     <Grid item>
                         <Stack direction='row' alignItems='center'>
                             <IconButton disabled={disableLike} onClick={like}><ThumbUp/></IconButton>
-                            <Typography>{formatToSocialStr(forumPost.likes.length, '')}</Typography>    
+                            <Typography>{formatToSocialStr(forumPost.likes.length)}</Typography>    
                         </Stack>
                     </Grid>
                     <Grid item>
                         <Stack direction='row' alignItems='center'>
                             <IconButton disabled={disableDislike} onClick={dislike}><ThumbDown/></IconButton>
-                            <Typography>{formatToSocialStr(forumPost.dislikes.length, '')}</Typography>    
+                            <Typography>{formatToSocialStr(forumPost.dislikes.length)}</Typography>    
                         </Stack>
                     </Grid>
                 </Grid>
@@ -169,5 +169,3 @@ const ForumPostViewerModal = () => {
         </Box>
     )
 }
-
-export default ForumPostViewerModal

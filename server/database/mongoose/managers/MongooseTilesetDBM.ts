@@ -106,6 +106,14 @@ export default class MongooseTilesetDBM implements TilesetDBM {
     return this.parseTileset(tileset);
   }
 
+  async getPublishedTilesetsByName(name: string): Promise<Tileset[]> {
+  let tilesets = await TilesetModel.find({name: new RegExp(`^${name}`, "i"), isPublished: true})
+    return tilesets.map(x => {
+      let tileset = this.parseTileset(x)
+      return tileset
+    })
+  }
+
   async createTileset(
     userId: string,
     tileset: Partial<Tileset>

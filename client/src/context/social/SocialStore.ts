@@ -4,15 +4,17 @@ import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSo
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
-import { Iron } from "@mui/icons-material"
 
 export interface SocialState {
-    currentUser: User | undefined
-    tilesets: TilesetSocial[]
-    tilemaps: TilemapSocial[]
-    users: User[]
+    currentTMS: TilemapSocial | undefined
+    currentTSS: TilesetSocial | undefined
+    tilemaps: Tilemap[]
+    tilesets: Tileset[]
 }
 
+/**
+ * The purpose of this class is to store tilemap, tileset queried data, and other utility functions to communicate with the back-end server.
+ */
 export class SocialStore {
     private readonly _social: SocialState
     private readonly _setSocial: (social: SocialState) => void
@@ -22,8 +24,12 @@ export class SocialStore {
         this._setSocial = setSocial
     }
 
-    public getUsers(): User[] {
-        return this._social.users
+    public get state(): SocialState {
+        return this._social
+    }
+
+    public get tilesets(): Tileset[] {
+        return this._social.tilesets
     }
 
     public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {
@@ -37,23 +43,6 @@ export class SocialStore {
         })
         res.then((res) => {
             if (res.status === 201) snack?.showSuccessMessage(res.data.message)
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
-    public async getUserByUsername(query: string | undefined, snack?: SnackStore): Promise<void> {
-        let res = UserApi.getUsers({username: query})
-        res.then((res) => {
-            if (res.status === 200) {
-                snack?.showSuccessMessage(res.data.message)
-                this.handleAction({
-                    type: SocialActionType.getUserByUsername,
-                    payload: {
-                        users: res.data.users
-                    }
-                })
-            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
@@ -81,32 +70,12 @@ export class SocialStore {
         })
     }
 
-    public async getContestsById(arr: string[] | undefined): Promise<Contest[]> {
-        if (arr) {
-            let resultArr: Contest[] = []
-            arr.map((id) => {
-                let res = ContestApi.getContestById(id)
-                res.then(res => {
-                    if (res.status === 200) {
-                        resultArr.push(res.data.contest)
-                    }
-                })
-            })
-            return resultArr
-        } else {
-            return []
-        }
-    }
-
     public async getTilesetsById(arr: string[] | undefined): Promise<Tileset[]> {
         if (arr) {
             let resultArr: Tileset[] = []
             arr.forEach(id => {
-                let res = TilesetApi.getTilesetById(id)
-                res.then(res => {
-                    if (res.status === 200) {
-                        resultArr.push(res.data.tileset)
-                    }
+                this.getTilesetById(id).then(tileset => {
+                    if (tileset) resultArr.push(tileset)
                 })
             })
             return resultArr
@@ -118,6 +87,51 @@ export class SocialStore {
         return TilesetApi.getTilesetById(tilesetId).then(res => {
             if (res.status === 200) {
                 return res.data.tileset
+            }
+        })
+    }
+
+    public async getTilesetsByName(query: string, snack?: SnackStore): Promise<void> {
+        TilesetApi.getPublishedTilesetsByName(query, query).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: SocialActionType.getTilesetsByName,
+                    payload: {
+                        tilesets: res.data.tilesets
+                    }
+                })
+            }
+        })
+    }
+
+    public async getTilesetSocialByTilesetId(tilesetId: string): Promise<TilesetSocial | undefined> {
+        return TilesetApi.getTilesetSocialByTilesetId(tilesetId).then(res => {
+            if (res.status === 200) {
+               return res.data.social 
+            }
+        })
+    }
+
+    public viewTilemapSocial(social: TilemapSocial): void {
+        throw new Error('Not Yet Implemented')
+        // this.handleAction({
+        //     type: SocialActionType.setCurrentTMS,
+        //     payload: {
+        //         currentTMS: social
+        //     }
+        // })
+    }
+
+    public viewTilesetSocial(id: string): void {
+        TilesetApi.viewTilesetSocial(id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: SocialActionType.setCurrentTSS,
+                    payload: {
+                        currentTSS: res.data.social
+                    }
+                })      
             }
         })
     }
@@ -213,7 +227,7 @@ export class SocialStore {
     }
 
     /**
-     * Return arr of user's published tilesets
+     * Returns array of user's published tilesets
      * @returns 
      */
     public async getUserTilesets(): Promise<Tileset[]> {
@@ -242,27 +256,48 @@ export class SocialStore {
 
     protected handleAction(action: SocialAction): void {
         switch (action.type) {
-            case SocialActionType.getTilesetByName: {
-                throw new Error('Not Yet Implemented')
-            }
-            case SocialActionType.getTilemapByName: {
-                throw new Error('Not Yet Implemented')
-            }
-            case SocialActionType.getUserByUsername: {
+            case SocialActionType.setCurrentTMS: {
                 this._setSocial({
-                    currentUser: this._social.currentUser,
+                    currentTMS: action.payload.currentTMS,
+                    currentTSS: this._social.currentTSS,
                     tilemaps: this._social.tilemaps,
                     tilesets: this._social.tilesets,
-                    users: action.payload.users,
+                })
+                break
+            }
+            case SocialActionType.setCurrentTSS: {
+                this._setSocial({
+                    currentTMS: this._social.currentTMS,
+                    currentTSS: action.payload.currentTSS,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets,
+                })
+                break
+            }
+            case SocialActionType.getTilemapsByName: {
+                this._setSocial({
+                    currentTMS: this._social.currentTMS,
+                    currentTSS: this._social.currentTSS,
+                    tilemaps: action.payload.tilemaps,
+                    tilesets: this._social.tilesets
+                })
+                break
+            }
+            case SocialActionType.getTilesetsByName: {
+                this._setSocial({
+                    currentTMS: this._social.currentTMS,
+                    currentTSS: this._social.currentTSS,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: action.payload.tilesets
                 })
                 break
             }
             case SocialActionType.clear: {
                 this._setSocial({
-                    currentUser: this._social.currentUser,
-                    tilemaps: [],
-                    tilesets: [],
-                    users: [],
+                    currentTMS: undefined,
+                    currentTSS: undefined,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets
                 })
             }
         }

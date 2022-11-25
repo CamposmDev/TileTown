@@ -6,6 +6,7 @@ import { SocialContext } from "src/context/social"
 import { CommunityContext } from "src/context/social/community"
 import { ContestContext } from "src/context/social/contest"
 import { ForumContext } from "src/context/social/forum"
+import { UserContext } from "src/context/social/user"
 import CreateForumPostModal from "../../modals/CreateForumPostModal"
 import { MENU_PAPER_PROPS, SearchCategory } from '../../util/Constants'
 
@@ -15,6 +16,7 @@ interface Props {
 
 const SearchToolbar = (props: Props) => {
     const social = useContext(SocialContext)
+    const user = useContext(UserContext)
     const comm = useContext(CommunityContext)
     const contest = useContext(ContestContext)
     const forum = useContext(ForumContext)
@@ -31,9 +33,10 @@ const SearchToolbar = (props: Props) => {
                 case SearchCategory.Tilemaps:
                     break
                 case SearchCategory.Tilesets:
+                    social.getTilesetsByName(query, snack)
                     break
                 case SearchCategory.Users:
-                    social.getUserByUsername(query, snack)
+                    user.getUsersByUsername(query, snack)
                     break
                 case SearchCategory.Communities:
                     comm.getCommunitiesByName(query, snack)

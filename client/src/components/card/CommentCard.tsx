@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import UserProfileBox from "../UserProfileBox"
-import { parseDateToPostedStr } from "../util/DateUtils"
+import { dateToPostedStr } from "../util/DateUtils"
 import { useContext } from "react"
 import { SocialContext } from "src/context/social"
 
@@ -42,7 +42,7 @@ const CommentCard = (props: Props) => {
                 username={state.username}
             />
             <Box flexGrow={1}/>
-            <Typography>{parseDateToPostedStr(state.createdAt)}</Typography>
+            <Typography>{dateToPostedStr(state.createdAt)}</Typography>
             <Grid container mt={1}>
                 <Typography>{state.body}</Typography>
             </Grid>

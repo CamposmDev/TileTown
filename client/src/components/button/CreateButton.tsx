@@ -1,11 +1,13 @@
 import { Menu, MenuItem, MenuItemProps } from "@mui/material";
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "src/context/auth";
 import { ModalContext } from "src/context/modal";
 import { ProfileContext } from "src/context/profile";
 import { MENU_PAPER_PROPS } from "../util/Constants";
 
 const CreateButton = (props: MenuItemProps) => {
+  const auth = useContext(AuthContext)
   const prof = useContext(ProfileContext)
   const modal = useContext(ModalContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -47,7 +49,7 @@ const CreateButton = (props: MenuItemProps) => {
       </MenuItem>
       <MenuItem onClick={showCreateTilesetModal}>Tileset</MenuItem>
       <MenuItem onClick={() => {
-        prof.viewUnpublishedTilesets()
+        prof.viewUnpublishedTilesets(auth.getUsr()?.id)
         handleMenuClose()
       }}>View Unpublished Tilesets</MenuItem>
       <MenuItem onClick={showCreateCommunityModal}>Community</MenuItem>
