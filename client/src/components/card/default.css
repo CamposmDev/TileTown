@@ -29,9 +29,9 @@
 }
 
 #tile-large-preview {
-    width: 500px;
-    height: 500px;
-    object-fit: contain;
+    width: 768px;
+    height: 768px;
+    object-fit: cover;
     object-position: center;
 }
 

@@ -1,5 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
+import { SnackContext } from "src/context/snack";
 import { TilemapEditControl } from "src/context/tilemapEditor/TilemapEditTypes";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
 import "./default.css";
@@ -7,6 +8,7 @@ import "./default.css";
 const CurrentLayerCanvas = () => {
   //Tilemap edit store context
   const edit = useContext(TilemapEditContext);
+  const snack = useContext(SnackContext);
 
   const [mouseDown, setMouseDown] = useState(false);
   const [startingTile, setStartingTile] = useState<{
@@ -37,6 +39,14 @@ const CurrentLayerCanvas = () => {
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
   const currentEditControl: TilemapEditControl = edit.state.currentEditControl;
+  const visible: boolean =
+    currentLayerIndex !== -1
+      ? edit.state.Tilemap.layers[currentLayerIndex].visible
+      : false;
+  const opacity: number =
+    currentLayerIndex !== -1
+      ? currentTilemap.layers[currentLayerIndex].opacity
+      : 1;
 
   /**
    *Draws a layer on the canvas row by row
@@ -96,6 +106,7 @@ const CurrentLayerCanvas = () => {
           if (currentGlobalTileIDs[j] < currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
             currentTilesetIndex = j;
+            break;
           }
         }
         const tilesetTileWidth =
@@ -105,6 +116,8 @@ const CurrentLayerCanvas = () => {
         const tilesetWidth = edit.state.Tilesets[currentTilesetIndex].columns;
 
         const image: HTMLImageElement = tilesetImages[currentTilesetIndex];
+
+        ctx.globalAlpha = opacity;
 
         ctx.drawImage(
           image,
@@ -140,6 +153,10 @@ const CurrentLayerCanvas = () => {
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
         let imagesLoaded = 0;
+        if (!visible) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          return;
+        }
         for (let i = 0; i < tilesetImages.length; i++) {
           tilesetImages[i] = new Image();
           tilesetImages[i].src = edit.state.Tilesets[i].image;
@@ -158,9 +175,12 @@ const CurrentLayerCanvas = () => {
       }
     }
     edit.renderCurrentLayerRender(false);
-  }, [render]);
+  }, [render, currentLayerIndex, visible, opacity]);
 
   const onMouseDown = ({ nativeEvent }: any): void => {
+    if (!visible) {
+      return;
+    }
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         edit.updateCurrentLayerData(currentTileIndex);
@@ -195,6 +215,14 @@ const CurrentLayerCanvas = () => {
     }
   };
   const onMouseMove = ({ nativeEvent }: any): void => {
+    if (!visible) {
+      if (currentLayerIndex === -1) {
+        snack.showWarningMessage("Please Create And/Or Select A Layer To Edit");
+        return;
+      }
+      snack.showWarningMessage("Please Make Current Layer Visible To Edit");
+      return;
+    }
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         highlightTile({ nativeEvent });
@@ -226,6 +254,9 @@ const CurrentLayerCanvas = () => {
     }
   };
   const onMouseUp = ({ nativeEvent }: any): void => {
+    if (!visible) {
+      return;
+    }
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         break;
@@ -256,6 +287,9 @@ const CurrentLayerCanvas = () => {
   };
 
   const onMouseOut = ({ nativeEvent }: any): void => {
+    if (!visible) {
+      return;
+    }
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         edit.updateCurrentSelection([]);

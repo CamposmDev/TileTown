@@ -1,11 +1,13 @@
 import { Grid } from "@mui/material"
 import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router"
-import { AuthContext } from "src/context/auth"
-import { SocialContext } from "src/context/social"
-import { CommunityContext } from "src/context/social/community"
-import { ContestContext } from "src/context/social/contest"
-import { ForumContext } from "src/context/social/forum"
+import TilesetCard from "src/components/card/TilesetCard"
+import { UserContext } from "src/context/social/user"
+import { AuthContext } from "../../../context/auth"
+import { SocialContext } from "../../../context/social"
+import { CommunityContext } from "../../../context/social/community"
+import { ContestContext } from "../../../context/social/contest"
+import { ForumContext } from "../../../context/social/forum"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
@@ -21,6 +23,7 @@ interface Props {
 const SearchScreen = (props: Props) => {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
+    const user = useContext(UserContext)
     const comm  = useContext(CommunityContext)
     const contest = useContext(ContestContext)
     const forum = useContext(ForumContext)
@@ -55,6 +58,13 @@ const SearchScreen = (props: Props) => {
             content = <Grid container 
                     spacing={1}
                     mt={1}>
+                        {social.state.tilesets.map(x =>
+                            <Grid item key={x.id}>  
+                                <TilesetCard
+                                    tilesetId={x.id}
+                                />
+                            </Grid>
+                        )}
                 {/* <Grid item>
                     <TileItemCard
                         preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
@@ -73,7 +83,7 @@ const SearchScreen = (props: Props) => {
             content = <Grid container 
                         spacing={1}
                         mt={1}>
-                    {social.getUsers().map((x) => 
+                    {user.users.map((x) => 
                     <Grid item key={x.id}>
                         <UserProfileCard 
                             key={x.id}

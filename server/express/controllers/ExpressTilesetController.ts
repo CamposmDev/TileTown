@@ -114,12 +114,33 @@ export default class TilesetController {
       return res.status(400).json({ message: "No tileset id provided" });
     }
 
-    // Delete the tileset from the database
-    let tileset = await db.tilesets.deleteTilesetById(req.params.id);
+    let tileset = await db.tilesets.getTilesetById(req.params.id)
     if (tileset === null) {
       return res
         .status(500)
         .json({ message: "Server error. Error deleting tileset" });
+    }
+    // Check if tileset is published
+    if (tileset.isPublished) {
+      return res.status(400).json({ message: `Tileset ${tileset.id} cannot be deleted because it is published!`})
+    }
+
+    // Delete the tileset from the database
+    tileset = await db.tilesets.deleteTilesetById(req.params.id);
+    if (tileset === null) {
+      return res
+        .status(500)
+        .json({ message: "Server error. Error deleting tileset" });
+    }
+
+    // Delete tileset id from user's tilesets
+    let user = await db.users.getUserById(tileset.owner)
+    if (user) {
+      let i = user.tilesets.indexOf(req.params.id)
+      if (i !== -1) {
+        user.tilesets.splice(i, 1)
+        await db.users.updateUser(user.id, {tilesets: user.tilesets})
+      }
     }
 
     // Success - 200 - return the deleted tileset
@@ -186,6 +207,40 @@ export default class TilesetController {
     return res
       .status(200)
       .json({ message: "Updating a tileset!", tileset: updatedTileset });
+  }
+
+  public async getPublishedTilesetsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+        return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    if (!req.params.query || !req.params.sort) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    switch (req.params.sort) {
+      case 'none':
+        break
+      case 'name':
+        break
+      case 'most_popular':
+        break
+      case 'least_popular':
+        break
+      case 'published_newest':
+        break
+      case 'published_oldest':
+        break
+      case 'likes':
+        break
+      case 'dislikes':
+        break
+      case 'views':
+        break
+    }
+
+    let tilesets = await db.tilesets.getPublishedTilesetsByName(req.params.query)
+    return res.status(200).json({ message: `Found ${tilesets.length} tileset(s)`, tilesets: tilesets })
   }
 
   public async getTilesetPartials(
@@ -275,6 +330,21 @@ export default class TilesetController {
       .status(200)
       .json({ message: "Got tileset social data!", social: social });
   }
+
+  public async getTilesetSocialByTilesetId(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    let social = await db.tilesetSocials.getTilesetSocialByTilesetId(req.params.id)
+    if (social === null) {
+      return res.status(404).json({ message: `Tileset social data with tileset id ${req.params.id} not found`});
+    }
+    return res.status(200).json({ message: 'Got tileset social data!', social: social })
+  }
+
   public async publishTileset(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters
     if (!req || !res || !req.params || !req.body) {
@@ -528,7 +598,7 @@ export default class TilesetController {
     // Return the successfully created comment
     return res
       .status(201)
-      .json({ message: "Comment created!", comment: comment });
+      .json({ message: "Comment created!", tilesetSocial: updatedSocial });
   }
   public async viewTilesetById(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters

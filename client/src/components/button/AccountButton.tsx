@@ -16,7 +16,7 @@ const AccountButton = () => {
     const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
-    const navigate = useNavigate()
+    const nav = useNavigate()
     const open = Boolean(anchorEl)
 
     const handleMenuOpen = (event: any) => setAnchorEl(event.currentTarget)
@@ -45,12 +45,11 @@ const AccountButton = () => {
         handleMenuClose()
     }
 
-
-
+    let usr: User | null = auth.getUsr()
     let loggedInItems = (
         <Box>
             <MenuItem disabled={auth.isGuest()} onClick={() => {
-                prof.viewPublishedTilesets()
+                prof.viewPublishedTilesets(usr?.id)
                 handleMenuClose()
             }}>
                 <ListItemIcon><Person/></ListItemIcon>
@@ -115,9 +114,6 @@ const AccountButton = () => {
             {auth.isLoggedIn() ? loggedInItems : loggedOutItems}
         </Menu>
     )
-
-    let usr: User | null = auth.getUsr()
-
 
     const profile = auth.isLoggedIn() && usr ? (
         <Avatar {...stringAvatar(usr.firstName, usr.lastName)}/>

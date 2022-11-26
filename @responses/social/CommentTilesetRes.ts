@@ -1,6 +1,6 @@
+import { TilesetSocial } from "@types";
 import Response from "../Response";
-import { Comment } from "@types";
 
 export default interface CommentTilesetRes extends Response {
-    comment?: Comment
+    tilesetSocial: TilesetSocial
 }
