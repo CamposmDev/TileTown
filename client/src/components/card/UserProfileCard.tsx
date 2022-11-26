@@ -43,13 +43,14 @@ const UserProfileCard = (props: Props) => {
             }
         })
     }, [])
-    let card = 
+    let profileBox = 
         <UserProfileBox
             firstName={state.firstName}
             lastName={state.lastName}
             username={state.username}
         />
-    if (props?.minimal) return card
+    /** If minimal, then return a profile box */
+    if (props?.minimal) return profileBox
 
     const removeFriend = () => {
         social.removeFriend(state.username, auth, snack)
@@ -74,7 +75,7 @@ const UserProfileCard = (props: Props) => {
             {menu}
             <Card sx={{p: 1, boxShadow: 3}}>
                 <Stack direction='row' alignItems='center'>
-                    {card}
+                    {profileBox}
                     <Box flexGrow={1}/>
                     <IconButton onClick={handleMenuOpen} children={<MoreVert/>}/>
                 </Stack>

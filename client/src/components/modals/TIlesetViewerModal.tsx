@@ -8,7 +8,6 @@ import '../card/default.css'
 import axios from "axios";
 import AxiosApi from "src/api/axios/AxiosApi";
 import CommentCard from "../card/CommentCard";
-import { unmountComponentAtNode } from "react-dom";
 import { dateToStr } from "../util/DateUtils";
 import { FaCopy } from "react-icons/fa";
 import TagCard from "../card/TagCard";
@@ -19,7 +18,7 @@ import ts from "typescript";
 export default function TilesetViewerModal() {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
-    const [commName, setCommName] = useState('None')
+    const [commName, setCommName] = useState<string | undefined>(undefined)
     const [comment, setComment] = useState<string>()
     const open = Boolean(social.state.currentTSS)
 
@@ -30,7 +29,7 @@ export default function TilesetViewerModal() {
                 if (name) setCommName(name)
             })
         } else {
-            setCommName('None')
+            setCommName(undefined)
         }
     }, [social.state.currentTSS])
 
@@ -90,30 +89,28 @@ export default function TilesetViewerModal() {
         )
         let date = dateToStr(new Date(tss.publishDate))
         let imageURL = `${AxiosApi.getUri()}/media/${tss.imageURL}`
-        console.log(imageURL)
         let body = (
             <Grid container p={1} spacing={1}>
-                <Grid item xs={6}>
+                <Grid item>
                     <Card sx={{boxShadow: 3}}>
                         <ImageListItem>
                             <img id='tile-large-preview' src={imageURL} />
                         </ImageListItem>
                     </Card>
                 </Grid>
-                <Grid container item xs={6}>
+                <Grid item flexGrow={1} xs>
                     <Grid item xs={12}>
                         <Card sx={{boxShadow: 3}}>
                             <CardContent>
-                                <Grid container spacing={1}>
-                                    <Grid item flexGrow={1}>
+                                <Grid item>
+                                    <Grid item>
                                         <UserProfileCard
                                             userId={tss.owner}
                                             minimal={true}
                                         />
-                                        {/* {tss.community ? <Typography>{tss.community}</Typography> : <Box/>} */}
-                                        <Typography variant='body2'>{`Community: ${commName}`}</Typography>
+                                        {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
-                                        <Typography variant='body2'>{tss.description}</Typography>
+                                        <Typography variant='body2' flexWrap={"wrap"}>{tss.description}</Typography>
                                     </Grid>
                                     <Grid item>
                                         <Box>
@@ -131,8 +128,8 @@ export default function TilesetViewerModal() {
                                             </Tooltip>
                                         </Box>
                                     </Grid>
-                                    <Grid item container>
-                                        {tss.tags.map(x => <TagCard name={x} />)}
+                                    <Grid item container spacing={1}>
+                                        {tss.tags.map(x => <Grid item><TagCard name={x} /></Grid>)}
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -146,14 +143,14 @@ export default function TilesetViewerModal() {
                             onChange={(e) => setComment(e.target.value)}
                             onKeyUp={handlekeyUp}
                         />
-                        </Grid>
-                            <Grid item>
-                            {tss.comments.slice().map(x => 
-                                    <Grid item xs={12} key={x}>
-                                        <CommentCard commentId={x} />
-                                    </Grid>
-                                )} 
-                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        {tss.comments.slice().map(x => 
+                            <Grid item xs={12} key={x}>
+                                <CommentCard commentId={x} />
+                            </Grid>
+                        )} 
+                    </Grid>
                 </Grid>
             </Grid>
         )

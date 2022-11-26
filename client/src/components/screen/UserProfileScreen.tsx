@@ -71,7 +71,7 @@ const UserProfileScreen = () => {
                 }
             })
         }
-    }, [])
+    }, [id])
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue)

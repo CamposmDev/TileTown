@@ -41,7 +41,7 @@ const ForumPostCard = (props: Props) => {
                             </Stack>
                         </Grid>
                         <Grid container item>
-                            <Grid container item spacing={1} xs={12}>
+                            <Grid container spacing={1} xs={12}>
                                 <Grid item xs={2}>
                                     <Stack direction='row'>
                                         <Visibility/>
@@ -55,14 +55,14 @@ const ForumPostCard = (props: Props) => {
                                     </Stack>
                                 </Grid>
                             </Grid>
-                            <Grid container item spacing={1} xs={12}>
+                            <Grid item spacing={1} xs={12}>
                                 <Grid item xs={2}>
                                     <Stack alignItems='center' direction='row'>
                                         <ThumbUp/>
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.likes.length)}</Typography>
                                     </Stack> 
                                 </Grid>
-                                <Grid item >
+                                <Grid item>
                                     <Stack alignItems='center' direction='row'>
                                         <ThumbDown/>
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.dislikes.length)}</Typography>
