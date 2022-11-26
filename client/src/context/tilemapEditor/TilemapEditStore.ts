@@ -97,7 +97,6 @@ export class TilemapEditStore {
   public async updateCurrentTileset(
     currentTilesetIndex: number
   ): Promise<void> {
-    console.log(currentTilesetIndex);
     this.handleAction({
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET,
       payload: { currentTilesetIndex },
@@ -230,6 +229,13 @@ export class TilemapEditStore {
     });
   }
 
+  public async removeCollaborator(id: string, username: string): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.REMOVE_COLLABORATOR,
+      payload: { id, username },
+    });
+  }
+
   public async updateEditControl(
     editControl: TilemapEditControl
   ): Promise<void> {
@@ -353,6 +359,10 @@ export class TilemapEditStore {
         this.handleAddCollaborators(payload.collaborators);
         break;
       }
+      case TilemapEditorActionType.REMOVE_COLLABORATOR: {
+        this.handleRemoveCollaborator(payload.id, payload.username);
+        break;
+      }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
         this.handleChangeEditControl(payload.editControl);
         break;
@@ -375,6 +385,24 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleRemoveCollaborator(id: string, username: string) {
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        collaborators: [...this.state.Tilemap.collaborators].filter(
+          (collaborator) => {
+            return collaborator !== id;
+          }
+        ),
+        collaboratorNames: [...this.state.Tilemap.collaboratorNames].filter(
+          (currentUsername) => {
+            return currentUsername !== username;
+          }
+        ),
+      },
+    });
   }
   protected handleAddCollaborators(
     collaborators: { id: string; username: string }[]
