@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { Comment } from "@types";
 import AxiosApi from "./AxiosApi";
 
 import {
