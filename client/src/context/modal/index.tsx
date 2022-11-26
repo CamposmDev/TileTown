@@ -12,6 +12,7 @@ const ModalContext = createContext<ModalStore>(
       showUploadTilesetModal: false,
       showCreatePropertyModal: false,
       showAddCollaboratorModal: false,
+      showAddTilesetModal: false,
     },
     () => {}
   )
@@ -26,6 +27,7 @@ function ModalContextProvider(props: Record<string, any>) {
     showUploadTilesetModal: false,
     showCreatePropertyModal: false,
     showAddCollaboratorModal: false,
+    showAddTilesetModal: false,
   });
   const Modal = new ModalStore(modal, setModal);
   return (
