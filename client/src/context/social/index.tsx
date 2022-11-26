@@ -1,5 +1,6 @@
 import { useState, createContext } from "react"
-import TilesetViewerModal from "src/components/modals/TIlesetViewerModal";
+import { useNavigate } from "react-router";
+import TilesetViewerModal from "../../components/modals/TilesetViewerModal";
 import { SocialState, SocialStore } from "./SocialStore";
 
 const SocialContext = createContext<SocialStore>(new SocialStore(
@@ -8,7 +9,7 @@ const SocialContext = createContext<SocialStore>(new SocialStore(
         currentTSS: undefined,
         tilemaps: [],
         tilesets: [],
-    }, () => {}))
+    }, () => {}, () => {}))
 
 function SocialContextProvider(props: Record<string, any>) {
     const [social, setSocial] = useState<SocialState>(
@@ -18,7 +19,8 @@ function SocialContextProvider(props: Record<string, any>) {
             tilemaps: [],
             tilesets: [],
         })
-    const Social = new SocialStore(social, setSocial)
+    const nav = useNavigate()
+    const Social = new SocialStore(social, setSocial, nav)
     return (
         <SocialContext.Provider value={Social}>
             {props.children}

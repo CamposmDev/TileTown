@@ -4,6 +4,7 @@ import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSo
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
+import { NavigateFunction } from "react-router"
 
 export interface SocialState {
     currentTMS: TilemapSocial | undefined
@@ -18,18 +19,43 @@ export interface SocialState {
 export class SocialStore {
     private readonly _social: SocialState
     private readonly _setSocial: (social: SocialState) => void
+    private readonly nav: NavigateFunction
 
-    constructor(social: SocialState, setSocial: (social: SocialState) => void) {
+    constructor(social: SocialState, setSocial: (social: SocialState) => void, nav: NavigateFunction) {
         this._social = social
         this._setSocial = setSocial
+        this.nav = nav
     }
 
     public get state(): SocialState {
         return this._social
     }
 
-    public get tilesets(): Tileset[] {
-        return this._social.tilesets
+    public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
+        let res = UserApi.addFriend(userId)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                auth.addFriend(userId)
+            }
+        }).catch((e) => {
+            if (e.response) {
+                console.log(e.response.data.message)
+                snack?.showErrorMessage(e.response.data.message)
+            }
+        })
+    }
+
+    public async removeFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
+        let res = UserApi.removeFriend(userId)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                auth.removeFriend(userId)
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {
@@ -102,6 +128,12 @@ export class SocialStore {
                     }
                 })
             }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) {
+                if (e.response.status === 404) {
+                    snack?.showErrorMessage('Query cannot be empty!')
+                }
+            }
         })
     }
 
@@ -113,53 +145,32 @@ export class SocialStore {
         })
     }
 
-    public viewTilemapSocial(social: TilemapSocial): void {
-        throw new Error('Not Yet Implemented')
-        // this.handleAction({
-        //     type: SocialActionType.setCurrentTMS,
-        //     payload: {
-        //         currentTMS: social
-        //     }
-        // })
-    }
-
-    public viewTilesetSocial(id: string): void {
-        TilesetApi.viewTilesetSocial(id).then(res => {
+    public async getUserPublishedTilesets(userId: string): Promise<TilesetSocial[]> {
+        let arr: TilesetSocial[] = []
+        UserApi.getUsersPublishedTilesets(userId).then(res => {
             if (res.status === 200) {
-                this.handleAction({
-                    type: SocialActionType.setCurrentTSS,
-                    payload: {
-                        currentTSS: res.data.social
-                    }
-                })      
+                console.log(res.data.socials)
             }
         })
+        return arr
     }
 
-    public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
-        let res = UserApi.addFriend(userId)
-        res.then((res) => {
+    /** Returns array of the current user's published tilesets */
+    public async getUserTilesets(): Promise<Tileset[]> {
+        let arr: Tileset[] = []
+        TilesetApi.getUnpublishedTilesets().then(res => {
             if (res.status === 200) {
-                snack?.showSuccessMessage(res.data.message)
-                auth.addFriend(userId)
-            }
-        }).catch((e) => {
-            if (e.response) {
-                console.log(e.response.data.message)
-                snack?.showErrorMessage(e.response.data.message)
+                console.log(res.data.tilesets)
             }
         })
+        return arr
     }
 
-    public async removeFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
-        let res = UserApi.removeFriend(userId)
-        res.then((res) => {
+    public async getAllUserTilesets(userId: string): Promise<string[] | undefined> {
+        return UserApi.getUserById(userId).then(res => {
             if (res.status === 200) {
-                snack?.showSuccessMessage(res.data.message)
-                auth.removeFriend(userId)
+                return res.data.user.tilesets
             }
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 
@@ -183,9 +194,10 @@ export class SocialStore {
         }
     }
 
-    public async getCommunityNames(ids: string[]): Promise<string[]> {
+    /** Queries back-end to get an array of community names based on given array of community ids */
+    public async getCommunityNames(communityIds: string[]): Promise<string[]> {
         let arr: string[] = []
-        ids.forEach(id => {
+        communityIds.forEach(id => {
             this.getCommunityName(id).then(name => {
                 if (name) {
                     arr.push(name)
@@ -195,6 +207,7 @@ export class SocialStore {
         return arr
     }
 
+    /** Queries back-end to get a community name based on given community id */
     public async getCommunityName(communityId: string): Promise<string | undefined> {
         return CommunityApi.getCommunityName(communityId).then(res => {
             if (res.status === 200) {
@@ -203,7 +216,31 @@ export class SocialStore {
         })
     }
 
-    public async publishTileset(tilesetId: string, desc: string, commName: string, permissions: [], tags: []): Promise<void> {
+    public viewTilemapSocial(id: string): void {
+        throw new Error('Not Yet Implemented')
+        // this.handleAction({
+        //     type: SocialActionType.setCurrentTMS,
+        //     payload: {
+        //         currentTMS: social
+        //     }
+        // })
+    }
+
+    /** Increments tileset social view count and updates currentTSS state */
+    public viewTilesetSocial(id: string): void {
+        TilesetApi.viewTilesetSocial(id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: SocialActionType.setCurrentTSS,
+                    payload: {
+                        currentTSS: res.data.social
+                    }
+                })      
+            }
+        })
+    }
+
+    public async publishTileset(tilesetId: string, desc: string, commName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
         TilesetApi.publishTilesetById(tilesetId, {
             description: desc,
             communityName: commName,
@@ -211,40 +248,20 @@ export class SocialStore {
             tags: tags
         }).then(res => {
             if (res.status === 200) {
-                
+                snack?.showSuccessMessage(res.data.message)
             }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 
-    public async getUserPublishedTilesets(userId: string): Promise<TilesetSocial[]> {
-        let arr: TilesetSocial[] = []
-        UserApi.getUsersPublishedTilesets(userId).then(res => {
+    public async deleteTilesetById(id: string, snack?: SnackStore): Promise<void> {
+        TilesetApi.deleteTilesetById(id, {}).then(res => {
             if (res.status === 200) {
-                console.log(res.data.socials)
+                snack?.showSuccessMessage(res.data.message)
             }
-        })
-        return arr
-    }
-
-    /**
-     * Returns array of user's published tilesets
-     * @returns 
-     */
-    public async getUserTilesets(): Promise<Tileset[]> {
-        let arr: Tileset[] = []
-        TilesetApi.getUnpublishedTilesets().then(res => {
-            if (res.status === 200) {
-                console.log(res.data.tilesets)
-            }
-        })
-        return arr
-    }
-
-    public async getAllUserTilesets(userId: string): Promise<string[] | undefined> {
-        return UserApi.getUserById(userId).then(res => {
-            if (res.status === 200) {
-                return res.data.user.tilesets
-            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
 

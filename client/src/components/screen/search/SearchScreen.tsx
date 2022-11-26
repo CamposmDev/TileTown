@@ -58,7 +58,7 @@ const SearchScreen = (props: Props) => {
             content = <Grid container 
                     spacing={1}
                     mt={1}>
-                        {social.tilesets.map(x =>
+                        {social.state.tilesets.map(x =>
                             <Grid item key={x.id}>  
                                 <TilesetCard
                                     tilesetId={x.id}

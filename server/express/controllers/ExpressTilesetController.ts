@@ -122,6 +122,16 @@ export default class TilesetController {
         .json({ message: "Server error. Error deleting tileset" });
     }
 
+    // Delete tileset id from user's tilesets
+    let user = await db.users.getUserById(tileset.owner)
+    if (user) {
+      let i = user.tilesets.indexOf(req.params.id)
+      if (i !== -1) {
+        user.tilesets.splice(i, 1)
+        await db.users.updateUser(user.id, {tilesets: user.tilesets})
+      }
+    }
+
     // Success - 200 - return the deleted tileset
     return res
       .status(200)

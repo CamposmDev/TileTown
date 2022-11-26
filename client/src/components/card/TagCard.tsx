@@ -1,14 +1,8 @@
-import { Card, Typography } from "@mui/material"
+import { Chip } from "@mui/material"
 
-interface Props {
-    name: string
-}
-
-const TagCard = (props: Props) => {
+const TagCard = (props: { name: string }) => {
     return (
-        <Card sx={{borderRadius: 3, pr: 2, pl: 2, boxShadow: 3}}>
-            <Typography>{props.name}</Typography>
-        </Card>
+        <Chip variant='outlined' label={props.name} />
     )
 }
 
