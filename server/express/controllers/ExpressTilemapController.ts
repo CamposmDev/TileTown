@@ -100,6 +100,9 @@ export default class TilemapController {
         if (!req.body.tilemap) {
             return res.status(400).json({ message: "No tilemap data provided" });
         }
+
+
+
         if (!req.body.tilemap.name) {
             return res.status(400).json({message: "All new tilemaps must have a unique 'name' field"});
         }
@@ -180,6 +183,13 @@ export default class TilemapController {
             return res.status(400).json({message: "Missing tilemap data in body"});
         }
 
+        // Convert the tilemap attribute to valid JSON
+        try {
+            req.body.tilemap = JSON.parse(req.body.tilemap);
+        } catch {
+            return res.status(400).json({ messagee: "Tilemap field is not valid JSON" });
+        }
+
         // Verify the user exists in the database
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
@@ -212,7 +222,7 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, createDate: new Date(Date.now())});
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, lastSaveDate: new Date(Date.now())});
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }
@@ -241,22 +251,38 @@ export default class TilemapController {
             return res.status(404).json({ message: `Tilemap with id ${req.params.id} not found` });
         }
 
-        // Check if social data already exists for this tilemap
-        let existingSocial = await db.tilemapSocials.getTilemapSocialByTilemapId(tilemap.id);
-        if (existingSocial !== null) {
-            return res.status(400).json({ message: `Tilemap with id ${tilemap.id} has already been published!` });
-        }
-
         // Check the user/owner exists
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
             return res.status(400).json({ message: `User does not exist`});
         }
 
+        // Check if user owns the tilemap
+        if (tilemap.owner !== user.id) {
+            return res.status(400).json({ message: `User does not own this tilemap` });
+        }
+
+        // Check if tilemap has already been published 
+        if (tilemap.isPublished) {
+            return res.status(400).json({ message: `Tilemap with id ${tilemap.id} has already been published!` });
+        }
+
+        // Check if social data already exists for this tilemap
+        let existingSocial = await db.tilemapSocials.getTilemapSocialByTilemapId(tilemap.id);
+        if (existingSocial !== null) {
+            return res.status(400).json({ message: `Tilemap with id ${tilemap.id} has already been published!` });
+        }
+
         // Create the social data
         let social = await db.tilemapSocials.createTilemapSocial(tilemap.id, {...req.body.social, name: tilemap.name, owner: user.id, ownerName: user.username});
         if (social === null) {
             return res.status(500).json({ message: `Server Error. Error publishing tilemap with id ${tilemap.id}` });
+        }
+
+        // Update the actual tilemap
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {isPublished: true});
+        if (updatedTilemap === null) {
+            return res.status(500).json({ message: `Server Error. Error while trying to update tilemap`});
         }
 
         return res.status(200).json({ message: "Tilemap published!", social: social });
