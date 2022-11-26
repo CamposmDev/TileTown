@@ -7,6 +7,7 @@ export interface ModalState {
   showDeleteContestModal: boolean;
   showUploadTilesetModal: boolean;
   showCreatePropertyModal: boolean;
+  showAddCollaboratorModal: boolean;
 }
 
 export class ModalStore {
@@ -58,6 +59,12 @@ export class ModalStore {
     });
   }
 
+  public showAddCollaboratorModal() {
+    this.handleAction({
+      type: ModalActionType.showCollaborator,
+    });
+  }
+
   public close() {
     this._setModal({
       showCreateCommunityModal: false,
@@ -66,6 +73,7 @@ export class ModalStore {
       showDeleteContestModal: false,
       showUploadTilesetModal: false,
       showCreatePropertyModal: false,
+      showAddCollaboratorModal: false,
     });
   }
 
@@ -80,6 +88,7 @@ export class ModalStore {
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
         });
         break;
       case ModalActionType.showCreateContest:
@@ -90,6 +99,7 @@ export class ModalStore {
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
         });
         break;
       case ModalActionType.showDeleteCommunity:
@@ -100,6 +110,7 @@ export class ModalStore {
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
         });
         break;
       case ModalActionType.showDeleteContest:
@@ -110,6 +121,7 @@ export class ModalStore {
           showDeleteContestModal: true,
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
         });
         break;
       case ModalActionType.showUploadTileset:
@@ -120,6 +132,7 @@ export class ModalStore {
           showDeleteContestModal: false,
           showUploadTilesetModal: true,
           showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
         });
         break;
       case ModalActionType.showProperty:
@@ -130,6 +143,18 @@ export class ModalStore {
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
           showCreatePropertyModal: true,
+          showAddCollaboratorModal: false,
+        });
+        break;
+      case ModalActionType.showCollaborator:
+        this._setModal({
+          showCreateCommunityModal: false,
+          showCreateContestModal: false,
+          showDeleteCommunityModal: false,
+          showDeleteContestModal: false,
+          showUploadTilesetModal: false,
+          showCreatePropertyModal: false,
+          showAddCollaboratorModal: true,
         });
         break;
     }

@@ -179,11 +179,6 @@ const CurrentLayerCanvas = () => {
 
   const onMouseDown = ({ nativeEvent }: any): void => {
     if (!visible) {
-      if (currentLayerIndex === -1) {
-        snack.showWarningMessage("Please Create And/Or Select A Layer To Edit");
-        return;
-      }
-      snack.showWarningMessage("Please Make Current Layer Visible To Edit");
       return;
     }
     switch (currentEditControl) {
@@ -221,6 +216,11 @@ const CurrentLayerCanvas = () => {
   };
   const onMouseMove = ({ nativeEvent }: any): void => {
     if (!visible) {
+      if (currentLayerIndex === -1) {
+        snack.showWarningMessage("Please Create And/Or Select A Layer To Edit");
+        return;
+      }
+      snack.showWarningMessage("Please Make Current Layer Visible To Edit");
       return;
     }
     switch (currentEditControl) {
@@ -254,6 +254,9 @@ const CurrentLayerCanvas = () => {
     }
   };
   const onMouseUp = ({ nativeEvent }: any): void => {
+    if (!visible) {
+      return;
+    }
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         break;

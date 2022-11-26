@@ -35,6 +35,7 @@ import { ContestContextProvider } from "./context/social/contest";
 import { ProfileContextProvider } from "./context/profile";
 import CreatePropertyModal from "./components/modals/CreatePropertyModal";
 import { UserContextProvider } from "./context/social/user";
+import AddCollaboratorModal from "./components/modals/AddCollaboratorModal";
 
 /**
  * Pixel Editors
@@ -70,96 +71,101 @@ const App = () => {
             <ModalContextProvider key={"modal-context-provider"}>
               <SocialContextProvider key={"social-context-provider"}>
                 <UserContextProvider key={"user-context-provider"}>
-                <CommunityContextProvider key={"community-context-provider"}>
-                  <ContestContextProvider key={"contest-context-provider"}>
-                    <ForumContextProvider key={"forum-context-provider"}>
-                      <ProfileContextProvider key={"profile-context-provider"}>
-                        <NavBar />
-                        <Routes>
-                          <Route path="/" element={<SplashScreen />} />
-                          <Route path="/login" element={<LoginScreen />} />
-                          <Route
-                            path="/register"
-                            element={<RegisterScreen />}
-                          />
-                          <Route path="/home" element={<HomeScreen />} />
-                          <Route
-                            path="/settings"
-                            element={<AccountSettingsScreen />}
-                          />
-                          <Route
-                            path="/community/:id"
-                            element={<CommunityProfileScreen />}
-                          />
-                          <Route
-                            path="/profile/:id"
-                            element={<UserProfileScreen />}
-                          />
-                          <Route
-                            path="/search/tilemaps"
-                            element={
-                              <SearchScreen cat={SearchCategory.Tilemaps} />
-                            }
-                          />
-                          <Route
-                            path="/search/tilesets"
-                            element={
-                              <SearchScreen cat={SearchCategory.Tilesets} />
-                            }
-                          />
-                          <Route
-                            path="/search/users"
-                            element={
-                              <SearchScreen cat={SearchCategory.Users} />
-                            }
-                          />
-                          <Route
-                            path="/search/communities"
-                            element={
-                              <SearchScreen cat={SearchCategory.Communities} />
-                            }
-                          />
-                          <Route
-                            path="/search/contests"
-                            element={
-                              <SearchScreen cat={SearchCategory.Contests} />
-                            }
-                          />
-                          <Route
-                            path="/search/forums"
-                            element={
-                              <SearchScreen cat={SearchCategory.Forums} />
-                            }
-                          />
-                          <Route
-                            path="/create/tileset/:id"
-                            element={
-                              <TilesetEditContextProvider>
-                                <TilesetEditorScreen />
-                                <UploadTilesetModal />
-                              </TilesetEditContextProvider>
-                            }
-                          />
-                          <Route
-                            path="/create/tilemap"
-                            element={
-                              <TilemapEditContextProvider>
-                                <TilemapEditorScreen />
-                                <CreatePropertyModal />
-                              </TilemapEditContextProvider>
-                            }
-                          />
-                        </Routes>
-                        <NotificationSnack />
-                        <UploadTilesetModal />
-                        <CreateCommunityModal />
-                        <CreateContestModal />
-                        <DeleteCommunityModal />
-                        <DeleteContestModal />
-                      </ProfileContextProvider>
-                    </ForumContextProvider>
-                  </ContestContextProvider>
-                </CommunityContextProvider>
+                  <CommunityContextProvider key={"community-context-provider"}>
+                    <ContestContextProvider key={"contest-context-provider"}>
+                      <ForumContextProvider key={"forum-context-provider"}>
+                        <ProfileContextProvider
+                          key={"profile-context-provider"}
+                        >
+                          <NavBar />
+                          <Routes>
+                            <Route path="/" element={<SplashScreen />} />
+                            <Route path="/login" element={<LoginScreen />} />
+                            <Route
+                              path="/register"
+                              element={<RegisterScreen />}
+                            />
+                            <Route path="/home" element={<HomeScreen />} />
+                            <Route
+                              path="/settings"
+                              element={<AccountSettingsScreen />}
+                            />
+                            <Route
+                              path="/community/:id"
+                              element={<CommunityProfileScreen />}
+                            />
+                            <Route
+                              path="/profile/:id"
+                              element={<UserProfileScreen />}
+                            />
+                            <Route
+                              path="/search/tilemaps"
+                              element={
+                                <SearchScreen cat={SearchCategory.Tilemaps} />
+                              }
+                            />
+                            <Route
+                              path="/search/tilesets"
+                              element={
+                                <SearchScreen cat={SearchCategory.Tilesets} />
+                              }
+                            />
+                            <Route
+                              path="/search/users"
+                              element={
+                                <SearchScreen cat={SearchCategory.Users} />
+                              }
+                            />
+                            <Route
+                              path="/search/communities"
+                              element={
+                                <SearchScreen
+                                  cat={SearchCategory.Communities}
+                                />
+                              }
+                            />
+                            <Route
+                              path="/search/contests"
+                              element={
+                                <SearchScreen cat={SearchCategory.Contests} />
+                              }
+                            />
+                            <Route
+                              path="/search/forums"
+                              element={
+                                <SearchScreen cat={SearchCategory.Forums} />
+                              }
+                            />
+                            <Route
+                              path="/create/tileset/:id"
+                              element={
+                                <TilesetEditContextProvider>
+                                  <TilesetEditorScreen />
+                                  <UploadTilesetModal />
+                                </TilesetEditContextProvider>
+                              }
+                            />
+                            <Route
+                              path="/create/tilemap"
+                              element={
+                                <TilemapEditContextProvider>
+                                  <TilemapEditorScreen />
+                                  <CreatePropertyModal />
+                                  <AddCollaboratorModal />
+                                </TilemapEditContextProvider>
+                              }
+                            />
+                          </Routes>
+                          <NotificationSnack />
+                          <UploadTilesetModal />
+                          <CreateCommunityModal />
+                          <CreateContestModal />
+                          <DeleteCommunityModal />
+                          <DeleteContestModal />
+                        </ProfileContextProvider>
+                      </ForumContextProvider>
+                    </ContestContextProvider>
+                  </CommunityContextProvider>
                 </UserContextProvider>
               </SocialContextProvider>
             </ModalContextProvider>

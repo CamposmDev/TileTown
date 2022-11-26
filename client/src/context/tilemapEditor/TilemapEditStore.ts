@@ -215,10 +215,18 @@ export class TilemapEditStore {
   }
 
   public async deleteProperty(index: number): Promise<void> {
-    console.log(index);
     this.handleAction({
       type: TilemapEditorActionType.DELETE_PROPERTY,
       payload: { index },
+    });
+  }
+
+  public async addCollaborators(
+    collaborators: { id: string; username: string }[]
+  ): Promise<void> {
+    this.handleAction({
+      type: TilemapEditorActionType.ADD_COLLABORATORS,
+      payload: { collaborators },
     });
   }
 
@@ -341,6 +349,10 @@ export class TilemapEditStore {
         this.handleDeleteProperty(payload.index);
         break;
       }
+      case TilemapEditorActionType.ADD_COLLABORATORS: {
+        this.handleAddCollaborators(payload.collaborators);
+        break;
+      }
       case TilemapEditorActionType.CHANGE_EDIT_CONTROL: {
         this.handleChangeEditControl(payload.editControl);
         break;
@@ -363,6 +375,27 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleAddCollaborators(
+    collaborators: { id: string; username: string }[]
+  ): void {
+    const ids = collaborators.map((collaborator) => {
+      return collaborator.id;
+    });
+    const usernames = collaborators.map((collaborator) => {
+      return collaborator.username;
+    });
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        collaborators: [...this.state.Tilemap.collaborators, ...ids],
+        collaboratorNames: [
+          ...this.state.Tilemap.collaboratorNames,
+          ...usernames,
+        ],
+      },
+    });
   }
   protected handleUpdateCurrentTileset(currentTilesetIndex: number): void {
     this.setEdit({ ...this.state, currentTilesetIndex });

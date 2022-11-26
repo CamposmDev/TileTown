@@ -10,11 +10,13 @@ import {
 import { useContext } from "react";
 import { TilemapEditContext } from "src/context/tilemapEditor";
 import { SnackContext } from "src/context/snack";
+import { ModalContext } from "src/context/modal";
 import CollaboratorField from "./CollaboratorField";
 
 const CollaboratorSelector = () => {
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+  const modal = useContext(ModalContext);
 
   const collaborators = edit.state.Tilemap.collaborators;
   const collaboratorNames = edit.state.Tilemap.collaboratorNames;
@@ -26,7 +28,12 @@ const CollaboratorSelector = () => {
           Collaborators&ensp;({edit.state.Tilemap.collaborators.length})
         </Typography>
         <Tooltip title="Add Collaborator" arrow>
-          <IconButton color="primary">
+          <IconButton
+            color="primary"
+            onClick={() => {
+              modal.showAddCollaboratorModal();
+            }}
+          >
             <Add />
           </IconButton>
         </Tooltip>

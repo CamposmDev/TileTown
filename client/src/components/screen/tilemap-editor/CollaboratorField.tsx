@@ -11,7 +11,7 @@ interface CollabProps {
 const CollaboratorField = (props: CollabProps) => {
   return (
     <Stack pl={1} pr={1} direction="row" alignItems="center">
-      <Typography>props.name</Typography>
+      <Typography>{props.name}</Typography>
       <Tooltip title="Remove Collaborator" arrow>
         <IconButton color="error">
           <Delete />

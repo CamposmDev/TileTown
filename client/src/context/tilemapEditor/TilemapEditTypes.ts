@@ -282,6 +282,7 @@ export enum TilemapEditorActionType {
   CREATE_PROPERTY = "CREATE_PROPERTY",
   UPDATE_PROPERTY = "UPDATE_PROPERTY",
   DELETE_PROPERTY = "DELETE_PROPERTY",
+  ADD_COLLABORATORS = "ADD_COLLABORATORS",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
   PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
@@ -359,6 +360,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.DELETE_PROPERTY;
       payload: { index: number };
+    }
+  | {
+      type: TilemapEditorActionType.ADD_COLLABORATORS;
+      payload: { collaborators: { id: string; username: string }[] };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION;
