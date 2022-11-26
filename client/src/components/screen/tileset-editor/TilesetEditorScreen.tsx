@@ -32,19 +32,20 @@ import { SocialContext } from "src/context/social";
 import DeleteTilesetButton from "src/components/button/DeleteTilesetButton";
 import { AuthContext } from "src/context/auth";
 import { useNavigate } from "react-router";
+import ExitTilesetButton from "src/components/button/ExitTilesetButton";
 
 const TilesetEditorScreen = () => {
-  const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext);
   const snack = useContext(SnackContext);
-  const nav = useNavigate()
+  const nav = useNavigate();
   useEffect(() => {
     if (!auth.isLoggedIn()) {
-      snack.showErrorMessage('Credentials invalid or expired!')
-      nav('/')
+      snack.showErrorMessage("Credentials invalid or expired!");
+      nav("/");
     }
-  })
+  });
   const edit = useContext(TilesetEditContext);
-  const social = useContext(SocialContext)
+  const social = useContext(SocialContext);
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
   const selectedColor = "#ADD8E6";
@@ -159,8 +160,18 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTilesetButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
-              <PublishTilesetButton id={edit.state.tileset.id} name={edit.state.tileset.name} />
+              <ExitTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              ></ExitTilesetButton>
+              <DeleteTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              />
+              <PublishTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              />
             </Stack>
           </Grid>
         </Grid>
