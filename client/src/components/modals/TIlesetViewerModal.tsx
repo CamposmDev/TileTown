@@ -8,7 +8,6 @@ import '../card/default.css'
 import axios from "axios";
 import AxiosApi from "src/api/axios/AxiosApi";
 import CommentCard from "../card/CommentCard";
-import { unmountComponentAtNode } from "react-dom";
 import { dateToStr } from "../util/DateUtils";
 import { FaCopy } from "react-icons/fa";
 import TagCard from "../card/TagCard";
