@@ -114,8 +114,19 @@ export default class TilesetController {
       return res.status(400).json({ message: "No tileset id provided" });
     }
 
+    let tileset = await db.tilesets.getTilesetById(req.params.id)
+    if (tileset === null) {
+      return res
+        .status(500)
+        .json({ message: "Server error. Error deleting tileset" });
+    }
+    // Check if tileset is published
+    if (tileset.isPublished) {
+      return res.status(400).json({ message: `Tileset ${tileset.id} cannot be deleted because it is published!`})
+    }
+
     // Delete the tileset from the database
-    let tileset = await db.tilesets.deleteTilesetById(req.params.id);
+    tileset = await db.tilesets.deleteTilesetById(req.params.id);
     if (tileset === null) {
       return res
         .status(500)
@@ -587,7 +598,7 @@ export default class TilesetController {
     // Return the successfully created comment
     return res
       .status(201)
-      .json({ message: "Comment created!", comment: comment });
+      .json({ message: "Comment created!", tilesetSocial: updatedSocial });
   }
   public async viewTilesetById(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters

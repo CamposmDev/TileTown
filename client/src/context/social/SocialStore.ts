@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, ContestApi, MediaApi, TilesetApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, MediaApi, SocialApi, TilesetApi, UserApi } from "src/api"
 import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -145,7 +145,8 @@ export class SocialStore {
         })
     }
 
-    public async getUserPublishedTilesets(userId: string): Promise<TilesetSocial[]> {
+    /** Returns array of user's published tileset socials */
+    public async getUserTilesetSocials(userId: string): Promise<TilesetSocial[]> {
         let arr: TilesetSocial[] = []
         UserApi.getUsersPublishedTilesets(userId).then(res => {
             if (res.status === 200) {
@@ -156,7 +157,7 @@ export class SocialStore {
     }
 
     /** Returns array of the current user's published tilesets */
-    public async getUserTilesets(): Promise<Tileset[]> {
+    public async getUserUnpublishedTilesets(): Promise<Tileset[]> {
         let arr: Tileset[] = []
         TilesetApi.getUnpublishedTilesets().then(res => {
             if (res.status === 200) {
@@ -216,14 +217,136 @@ export class SocialStore {
         })
     }
 
+    public async likeTMS(): Promise<void> {
+        let currentTMS = this._social.currentTMS
+        if (currentTMS) {
+            SocialApi.likeTilemapById(currentTMS.id).then(res => {
+                if (res.status === 200) {
+                    let tms = res.data.social
+                    if (tms) {
+                        this.handleAction({
+                            type: SocialActionType.setCurrentTMS,
+                            payload: {
+                                currentTMS: tms
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    public async dislikeTMS(): Promise<void> {
+        let currentTMS = this._social.currentTMS
+        if (currentTMS) {
+            SocialApi.dislikeTilemapById(currentTMS.id).then(res => {
+                if (res.status === 200) {
+                    let tms = res.data.social
+                    if (tms) {
+                        this.handleAction({
+                            type: SocialActionType.setCurrentTMS,
+                            payload: {
+                                currentTMS: tms
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    public async commentTMS(body: string): Promise<void> {
+        let currentTMS = this._social.currentTMS
+        if (currentTMS) {
+            SocialApi.commentTilemapById(currentTMS.id, {comment:{body: body}}).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: SocialActionType.setCurrentTMS,
+                        payload: {
+                            currentTMS: res.data.tilemapSocial
+                        }
+                    })
+                }
+            })
+        }
+    }
+
     public viewTilemapSocial(id: string): void {
-        throw new Error('Not Yet Implemented')
-        // this.handleAction({
-        //     type: SocialActionType.setCurrentTMS,
-        //     payload: {
-        //         currentTMS: social
-        //     }
-        // })
+        let currentTMS = this._social.currentTMS
+        if (currentTMS) {
+            SocialApi.viewTilemapById(currentTMS.id).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({ 
+                        type: SocialActionType.setCurrentTMS,
+                        payload: {
+                            currentTMS: res.data.social
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    public async publishTilemap(tilemapId: string, desc: string, commName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
+        /** TODO */
+    }
+
+    public async deleteTilemapById(id: string, snack?: SnackStore): Promise<void> {
+        /** TODO */
+    }
+
+    public async likeTSS(): Promise<void> {
+        let currentTSS = this._social.currentTSS
+        if (currentTSS) {
+            SocialApi.likeTilesetById(currentTSS.id).then(res => {
+                if (res.status === 200) {
+                    let tss = res.data.social
+                    if (tss) {
+                        this.handleAction({
+                            type: SocialActionType.setCurrentTSS,
+                            payload: {
+                                currentTSS: tss
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    public async dislikeTSS(): Promise<void> {
+        let currentTSS = this._social.currentTSS
+        if (currentTSS) {
+            SocialApi.dislikeTilesetById(currentTSS.id).then(res => {
+                if (res.status === 200) {
+                    let tss = res.data.social
+                    if (tss) {
+                        this.handleAction({
+                            type: SocialActionType.setCurrentTSS,
+                            payload: {
+                                currentTSS: tss
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    public async commentTSS(body: string, snack?: SnackStore): Promise<void> {
+        let currentTSS = this._social.currentTSS
+        if (currentTSS) {
+            SocialApi.commentTilesetById(currentTSS.id, {comment: { body: body }}).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: SocialActionType.setCurrentTSS,
+                        payload: {
+                            currentTSS: res.data.tilesetSocial
+                        }
+                    })
+                }
+            })
+        }
     }
 
     /** Increments tileset social view count and updates currentTSS state */

@@ -1,6 +1,6 @@
+import { TilemapSocial } from "@types";
 import Response from "../Response";
-import { Comment } from "@types";
 
 export default interface CommentTilemapRes extends Response {
-    comment?: Comment
+    tilemapSocial: TilemapSocial    
 }

@@ -488,7 +488,7 @@ export default class TilemapController {
         }
 
         // Return the successfully created comment
-        return res.status(201).json({message: "Comment created!", comment: comment});
+        return res.status(201).json({message: "Comment created!", tilemapSocial: updatedSocial});
     }
     public async viewTilemapById(req: Request, res: Response): Promise<Response> {
         // Check for bad request and missing parameters
