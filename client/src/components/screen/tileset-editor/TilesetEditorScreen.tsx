@@ -21,7 +21,7 @@ import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvasWrapper from "./TilesetCanvasWrapper";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTilesetButton from "../../button/PublishTilesetButton";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
 import { SnackContext } from "src/context/snack";
 import {
@@ -30,12 +30,21 @@ import {
 } from "src/context/tilesetEditor/TilesetEditTypes";
 import { SocialContext } from "src/context/social";
 import DeleteTilesetButton from "src/components/button/DeleteTilesetButton";
+import { AuthContext } from "src/context/auth";
+import { useNavigate } from "react-router";
 
 const TilesetEditorScreen = () => {
-  const edit = useContext(TilesetEditContext);
+  const auth = useContext(AuthContext)
   const snack = useContext(SnackContext);
+  const nav = useNavigate()
+  useEffect(() => {
+    if (!auth.isLoggedIn()) {
+      snack.showErrorMessage('Credentials invalid or expired!')
+      nav('/')
+    }
+  })
+  const edit = useContext(TilesetEditContext);
   const social = useContext(SocialContext)
-
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
   const selectedColor = "#ADD8E6";
