@@ -464,7 +464,7 @@ export default class TilesetController {
       return res.status(500);
     }
 
-    return res.status(200).json({ social: updatedSocial });
+    return res.status(200).json({ message: `Tileset liked!`, social: updatedSocial });
   }
   public async dislikeTilesetById(
     req: Request,

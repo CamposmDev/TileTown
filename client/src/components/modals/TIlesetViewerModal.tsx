@@ -32,11 +32,12 @@ export default function TilesetViewerModal() {
 
     const like = () => {
         /** Call the like tileset social function from social */
-        social.likeTSS()
+        social.likeTSS(snack)
     }
 
     const dislike = () => {
         /** Call the dislike tileset social function from social */
+        social.dislikeTSS(snack)
     }
 
     const download = () => {

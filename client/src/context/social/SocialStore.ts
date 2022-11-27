@@ -284,7 +284,7 @@ export class SocialStore {
         /** TODO */
     }
 
-    public async likeTSS(): Promise<void> {
+    public async likeTSS(snack?: SnackStore): Promise<void> {
         let currentTSS = this._social.currentTSS
         if (currentTSS) {
             SocialApi.likeTilesetById(currentTSS.id).then(res => {
@@ -299,12 +299,13 @@ export class SocialStore {
                             }
                         })
                     }
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }
     }
 
-    public async dislikeTSS(): Promise<void> {
+    public async dislikeTSS(snack?: SnackStore): Promise<void> {
         let currentTSS = this._social.currentTSS
         if (currentTSS) {
             SocialApi.dislikeTilesetById(currentTSS.id).then(res => {
@@ -319,6 +320,7 @@ export class SocialStore {
                             }
                         })
                     }
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }
