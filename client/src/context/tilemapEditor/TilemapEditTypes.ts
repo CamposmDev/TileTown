@@ -269,6 +269,7 @@ export enum TilemapEditorActionType {
   CREATE_NEW_TILEMAP = "CREATE_NEW_TILEMAP",
   UPDATE_TILEMAP = "UPDATE_TILEMAP",
   SAVE_TILEMAP = "SAVE_TILEMAP",
+  ADD_TILESET = "ADD_TILESET",
   CHANGE_EDIT_CONTROL = "CHANGE_EDIT_CONTROL",
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
@@ -308,6 +309,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.SAVE_TILEMAP;
       payload: { Tilemap: Tilemap };
+    }
+  | {
+      type: TilemapEditorActionType.ADD_TILESET;
+      payload: { tileset: Tileset };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILE;

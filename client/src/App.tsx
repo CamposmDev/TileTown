@@ -35,6 +35,7 @@ import { ProfileContextProvider } from "./context/profile";
 import CreatePropertyModal from "./components/modals/CreatePropertyModal";
 import { UserContextProvider } from "./context/social/user";
 import AddCollaboratorModal from "./components/modals/AddCollaboratorModal";
+import AddTilesetModal from "./components/modals/AddTilesetModal";
 
 /**
  * Pixel Editors
@@ -151,6 +152,7 @@ const App = () => {
                                   <TilemapEditorScreen />
                                   <CreatePropertyModal />
                                   <AddCollaboratorModal />
+                                  <AddTilesetModal />
                                 </TilemapEditContextProvider>
                               }
                             />

@@ -1,8 +1,4 @@
-import { ThirteenMp, ThreeGMobiledata } from "@mui/icons-material";
-import { Action } from "@remix-run/router";
 import { NavigateFunction } from "react-router";
-import TilesetCanvas from "src/components/screen/tileset-editor/TilesetCanvas";
-import { textSpanIsEmpty } from "typescript";
 import {
   Color,
   Tilemap,
@@ -14,6 +10,10 @@ import {
   Layer,
   Property,
 } from "./TilemapEditTypes";
+import { TilesetApi } from "src/api";
+import axios from "axios";
+import { SnackStore } from "../snack/SnackStore";
+import { Tileset } from "../tilesetEditor/TilesetEditTypes";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
@@ -92,6 +92,24 @@ export class TilemapEditStore {
         Tilemap,
       },
     });
+  }
+
+  public async addTileset(id: string, snack?: SnackStore): Promise<void> {
+    TilesetApi.getTilesetById(id)
+      .then((res) => {
+        if (res.status === 200) {
+          this.handleAction({
+            type: TilemapEditorActionType.ADD_TILESET,
+            payload: { tileset: res.data.tileset },
+          });
+          snack?.showSuccessMessage(res.data.message);
+        }
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e) && e.response) {
+          snack?.showErrorMessage(e.response.data.message);
+        }
+      });
   }
 
   public async updateCurrentTileset(
@@ -276,6 +294,7 @@ export class TilemapEditStore {
       payload: {},
     });
   }
+
   public async renderCurrentLayerRender(willRender: boolean): Promise<void> {
     this.handleAction({
       type: TilemapEditorActionType.RENDER_CURRENT_LAYER_CANVAS_RENDER,
@@ -301,6 +320,10 @@ export class TilemapEditStore {
       }
       case TilemapEditorActionType.SAVE_TILEMAP: {
         this.handleSaveTilemap(payload.Tilemap);
+        break;
+      }
+      case TilemapEditorActionType.ADD_TILESET: {
+        this.handleAddTileset(payload.tileset);
         break;
       }
       case TilemapEditorActionType.UPDATE_CURRENT_TILESET: {
@@ -385,6 +408,28 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleAddTileset(tileset: Tileset) {
+    const prevTileset =
+      this.state.Tilesets.length > 0
+        ? this.state.Tilesets[this.state.Tilesets.length - 1]
+        : null;
+    const nextGlobalId =
+      prevTileset !== null
+        ? this.state.Tilemap.globalTileIDs[
+            this.state.Tilemap.globalTileIDs.length - 1
+          ] +
+          prevTileset.columns * prevTileset.rows
+        : 1;
+    this.setEdit({
+      ...this.state,
+      Tilemap: {
+        ...this.state.Tilemap,
+        tilesets: [...this.state.Tilemap.tilesets, tileset.id],
+        globalTileIDs: [...this.state.Tilemap.globalTileIDs, nextGlobalId],
+      },
+      Tilesets: [...this.state.Tilesets, tileset],
+    });
   }
   protected handleRemoveCollaborator(id: string, username: string) {
     this.setEdit({

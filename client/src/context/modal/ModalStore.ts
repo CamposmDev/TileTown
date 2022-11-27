@@ -8,6 +8,7 @@ export interface ModalState {
   showUploadTilesetModal: boolean;
   showCreatePropertyModal: boolean;
   showAddCollaboratorModal: boolean;
+  showAddTilesetModal: boolean;
 }
 
 export class ModalStore {
@@ -65,6 +66,12 @@ export class ModalStore {
     });
   }
 
+  public showAddTilesetModal() {
+    this.handleAction({
+      type: ModalActionType.showAddTileset,
+    });
+  }
+
   public close() {
     this._setModal({
       showCreateCommunityModal: false,
@@ -74,6 +81,7 @@ export class ModalStore {
       showUploadTilesetModal: false,
       showCreatePropertyModal: false,
       showAddCollaboratorModal: false,
+      showAddTilesetModal: false,
     });
   }
 
@@ -89,6 +97,7 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showCreateContest:
@@ -100,6 +109,7 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showDeleteCommunity:
@@ -111,6 +121,7 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showDeleteContest:
@@ -122,6 +133,7 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showUploadTileset:
@@ -133,6 +145,7 @@ export class ModalStore {
           showUploadTilesetModal: true,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showProperty:
@@ -144,6 +157,7 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: true,
           showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
       case ModalActionType.showCollaborator:
@@ -155,6 +169,19 @@ export class ModalStore {
           showUploadTilesetModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: true,
+          showAddTilesetModal: false,
+        });
+        break;
+      case ModalActionType.showAddTileset:
+        this._setModal({
+          showCreateCommunityModal: false,
+          showCreateContestModal: false,
+          showDeleteCommunityModal: false,
+          showDeleteContestModal: false,
+          showUploadTilesetModal: false,
+          showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
+          showAddTilesetModal: true,
         });
         break;
     }

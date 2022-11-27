@@ -5,7 +5,8 @@ export type ModalAction =
   | ShowDeleteContest
   | ShowUploadTileset
   | ShowProperty
-  | ShowCollaborator;
+  | ShowCollaborator
+  | ShowAddTileset;
 
 export enum ModalActionType {
   showCreateCommunity = "SHOW_CREATE_COMMUNITY",
@@ -15,6 +16,7 @@ export enum ModalActionType {
   showUploadTileset = "SHOW_UPLOAD_TILESET",
   showProperty = "SHOW_PROPERTY",
   showCollaborator = "SHOW_COLLABORATOR",
+  showAddTileset = "SHOW_ADD_TILESET",
 }
 
 export type ShowCreateCommunity = {
@@ -43,4 +45,8 @@ export type ShowProperty = {
 
 export type ShowCollaborator = {
   type: ModalActionType.showCollaborator;
+};
+
+export type ShowAddTileset = {
+  type: ModalActionType.showAddTileset;
 };
