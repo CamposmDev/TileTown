@@ -635,4 +635,73 @@ export default class TilesetController {
       .status(200)
       .json({ message: "Tileset social updated!", social: updatedSocial });
   }
+
+  public async favoriteTilesetById(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+        return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.id) {
+        return res.status(400).json({ message: "Missing tilemap id" });
+    }
+    if (!req.userId) {
+        return res.status(400).json({ message: "Missing user id"});
+    }
+
+    let user = await db.users.getUserById(req.userId);
+    if (user === null) {
+        return res.status(404).json({ message: `User ${req.userId} not found`});
+    }
+    let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+    if (social === null) {
+        return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
+    }
+
+    let tilesetIndex = user.favoriteTileSets.indexOf(social.id);
+    if (tilesetIndex > -1) {
+        return res.status(400).json({ message: `User ${user.id} has already favorited tilemap ${social.id}`});
+    }
+
+    user.favoriteTileSets.push(social.id);
+
+    let updatedUser = await db.users.updateUser(user.id, {favoriteTileSets: user.favoriteTileSets});
+    if (updatedUser === null) {
+        return res.status(500).json({ message: "Failed to add tilemap to users favorited tilemaps"});
+    }
+
+    return res.status(200).json({ message: "Favorited a tilemap!", user: updatedUser });
+}
+
+public async unfavoriteTilesetById(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+        return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.id) {
+        return res.status(400).json({ message: "Missing tileset id" });
+    }
+    if (!req.userId) {
+        return res.status(400).json({ message: "Missing user id"});
+    }
+
+    let user = await db.users.getUserById(req.userId);
+    if (user === null) {
+        return res.status(404).json({ message: `User ${req.userId} not found`});
+    }
+    let social = await db.tilesetSocials.getTilesetSocialById(req.params.id);
+    if (social === null) {
+        return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
+    }
+
+    let tilesetIndex = user.favoriteTileSets.indexOf(social.id);
+    if (tilesetIndex === -1) {
+        return res.status(400).json({ message: `User ${user.id} has already unfavorited tilemap ${social.id}`});
+    }
+
+    user.favoriteTileMaps.splice(tilesetIndex, 1);
+
+    let updatedUser = await db.users.updateUser(user.id, {favoriteTileSets: user.favoriteTileSets});
+    if (updatedUser === null) {
+        return res.status(500).json({ message: "Failed to add tilemap to users favorited tilemaps"});
+    }
+    return res.status(200).json({ message: "Favorited a tilemap!", user: updatedUser });
+}
 }

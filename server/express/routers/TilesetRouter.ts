@@ -22,6 +22,9 @@ router.put("/like/:id", Auth.verifyJWT, TilesetController.likeTilesetById);
 router.put("/dislike/:id", Auth.verifyJWT, TilesetController.dislikeTilesetById);
 router.put("/view/:id", TilesetController.viewTilesetById);
 
+router.put('/favorite/:id', Auth.verifyJWT, TilesetController.favoriteTilesetById);
+router.put('/unfavorite/:id', Auth.verifyJWT, TilesetController.unfavoriteTilesetById);
+
 router.get('/social/tsid/:id', TilesetController.getTilesetSocialByTilesetId)
 
 
