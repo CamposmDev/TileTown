@@ -330,7 +330,7 @@ export class SocialStore {
         let currentTSS = this._social.currentTSS
         if (currentTSS) {
             SocialApi.commentTilesetById(currentTSS.id, {comment: { body: body }}).then(res => {
-                if (res.status === 200) {
+                if (res.status === 201) {
                     this.handleAction({
                         type: SocialActionType.setCurrentTSS,
                         payload: {
@@ -338,6 +338,7 @@ export class SocialStore {
                             oldTSS: currentTSS
                         }
                     })
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }

@@ -16,7 +16,7 @@ export default function TilesetViewerModal() {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const [commName, setCommName] = useState<string | undefined>(undefined)
-    const [comment, setComment] = useState<string>()
+    const [comment, setComment] = useState<string>('')
     const open = Boolean(social.state.currentTSS)
 
     useEffect(() => {
@@ -41,11 +41,11 @@ export default function TilesetViewerModal() {
     }
 
     const download = () => {
-
+        /** Andrew help me */
     }
 
     const clone = () => {
-
+        /** Andrew help me */
     }
     
     const favorite = () => {
@@ -57,7 +57,7 @@ export default function TilesetViewerModal() {
             /** Calls the comment function in social
              * Then clear the comment state
              */
-            console.log(comment)
+            social.commentTSS(comment, snack)
             setComment('')
         }
     }
