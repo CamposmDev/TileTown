@@ -2,13 +2,6 @@ import { Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
 import "./default.css";
-import {
-  Layer,
-  Color,
-  Property,
-  TilemapEditControl,
-} from "src/context/tilemapEditor/TilemapEditTypes";
-import { Type } from "./Type";
 
 const TilemapCanvas = () => {
   //tilemap edit store context
@@ -24,6 +17,13 @@ const TilemapCanvas = () => {
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
   const currentLayerIndex: number = edit.state.currentLayerIndex;
+  const visibilityChange: number = edit.state.Tilemap.layers.reduce<number>(
+    (acc, layer): number => {
+      return acc + Number(layer.visible);
+    },
+    0
+  );
+  const currentSwapIndex: number = edit.state.currentSwapIndex;
 
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
   const render = edit.state.renderTilemapCanvas;
@@ -79,15 +79,16 @@ const TilemapCanvas = () => {
     for (let i = 0; i < canvasWidth; i += scaledTileWidth) {
       const currentTileIndex =
         edit.state.Tilemap.layers[layerIndex].data[
-          i / scaledTileWidth + dataIndex
+          Math.round(i / scaledTileWidth + dataIndex)
         ];
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
-        for (let i = currentGlobalTileIDs.length - 1; i >= 0; i--) {
-          if (currentGlobalTileIDs[i] < currentTileIndex) {
-            currentGlobalTileID = currentGlobalTileIDs[i];
-            currentTilesetIndex = i;
+        for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
+          if (currentGlobalTileIDs[j] < currentTileIndex) {
+            currentGlobalTileID = currentGlobalTileIDs[j];
+            currentTilesetIndex = j;
+            break;
           }
         }
         const tilesetTileWidth =
@@ -98,7 +99,9 @@ const TilemapCanvas = () => {
 
         const image: HTMLImageElement = new Image();
         image.src = edit.state.Tilesets[currentTilesetIndex].image;
+
         image.onload = () => {
+          ctx.globalAlpha = edit.state.Tilemap.layers[layerIndex].opacity;
           ctx.drawImage(
             image,
             ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
@@ -129,8 +132,9 @@ const TilemapCanvas = () => {
     scaledTileWidth: number,
     scaledTileHeight: number
   ) => {
-    for (let i = 0; i < edit.state.Tilemap.layers.length; i++) {
-      drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
+    for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
+      if (i !== currentLayerIndex && edit.state.Tilemap.layers[i].visible)
+        drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
   };
 
@@ -148,12 +152,12 @@ const TilemapCanvas = () => {
         const scaleX = canvasWidth / imageWidth;
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
         // edit.preventTilemapRender();
       }
     }
-  }, [currentLayerIndex]);
+  }, [currentLayerIndex, visibilityChange, currentSwapIndex]);
 
   let root = (
     <canvas className="tilemap-canvas--no-input" ref={canvasRef}>

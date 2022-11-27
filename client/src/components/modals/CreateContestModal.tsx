@@ -8,10 +8,11 @@ import { SocialContext } from 'src/context/social';
 import { SnackContext } from 'src/context/snack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { ContestContext } from 'src/context/social/contest';
 
 const CreateContestModal = () => {
     const modal = useContext(ModalContext)
-    const social = useContext(SocialContext)
+    const cc = useContext(ContestContext)
     const snack = useContext(SnackContext)
 
     const handleClose = () => {
@@ -48,7 +49,7 @@ const CreateContestModal = () => {
         }
     }
     const handleCreate = () => {
-        social.createContest(contest.name, contest.desc, contest.endDate, snack)
+        cc.createContest(contest.name, contest.desc, contest.endDate, snack)
         modal.close()
     }
 

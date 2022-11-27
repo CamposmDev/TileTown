@@ -14,7 +14,7 @@ import {
   GetTilesetRes,
   UpdateTilesetRes,
   PublishTilesetRes,
-  GetUnpublishedTilesetsRes
+  GetUnpublishedTilesetsRes,
 } from "@responses/tileset";
 import Tileset from "../../../../@types/Tileset";
 
@@ -42,10 +42,10 @@ export default class AxiosTilesetApi {
     id: string,
     formData: FormData
   ): Promise<AxiosResponse<UpdateTilesetRes>> {
-    return AxiosApi.putForm<
-      UpdateTilesetRes,
-      AxiosResponse<UpdateTilesetRes>
-    >(`/tileset/${id}`, formData);
+    return AxiosApi.putForm<UpdateTilesetRes, AxiosResponse<UpdateTilesetRes>>(
+      `/tileset/${id}`,
+      formData
+    );
   }
 
   public async deleteTilesetById(
@@ -59,11 +59,43 @@ export default class AxiosTilesetApi {
     >(`/tileset/${id}`, payload);
   }
 
-  public async publishTilesetById(id: string) : Promise<AxiosResponse<PublishTilesetRes>> {
-    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`);
+  public async publishTilesetById(
+    id: string,
+    payload: {
+      description: string;
+      communityName: string;
+      permissions: string[];
+      tags: string[];
+    }
+  ): Promise<AxiosResponse<PublishTilesetRes>> {
+    return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(
+      `/tileset/publish/${id}`,
+      payload
+    );
   }
 
-  public async getUnpublishedTilesets() : Promise<AxiosResponse<GetUnpublishedTilesetsRes>> {
-    return AxiosApi.get<GetUnpublishedTilesetsRes, AxiosResponse<GetUnpublishedTilesetsRes>>(`/user/tilesets/unpublished`);
+  /**
+   * @deprecated
+   * @returns {message: string, tilesets: Tileset[]}
+   */
+  public async getPublishedTilesetsByName(query: string, sort: string) {
+    return AxiosApi.get(`/tileset/search/${query}/${sort}`)
+  }
+
+  public async getUnpublishedTilesets(): Promise<
+    AxiosResponse<GetUnpublishedTilesetsRes>
+  > {
+    return AxiosApi.get<
+      GetUnpublishedTilesetsRes,
+      AxiosResponse<GetUnpublishedTilesetsRes>
+    >(`/user/tilesets/unpublished`);
+  }
+
+  public async getTilesetSocialByTilesetId(tilesetId: string) {
+    return AxiosApi.get(`/tileset/social/tsid/${tilesetId}`);
+  }
+
+  public async viewTilesetSocial(tilesetSocialId: string) {
+    return AxiosApi.put(`/tileset/view/${tilesetSocialId}`);
   }
 }

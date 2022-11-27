@@ -1,6 +1,6 @@
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-const parseDateToStr = (date: Date): string => {
+const dateToStr = (date: Date): string => {
     let month = months[date.getUTCMonth()]
     let day = date.getUTCDate()
     let year = date.getUTCFullYear()
@@ -50,7 +50,7 @@ const calcTimeLeft = (startDate: Date, endDate: Date): string => {
     return yrLeft + ' Years Left'
 }
 
-const parseDateToPostedStr = (date: Date | undefined): string => {
+const dateToPostedStr = (date: Date | undefined): string => {
     if (!date) return 'Failed to Parse Date'
     let currentDate = new Date()
     let timeInterval = currentDate.getTime() - date.getTime()
@@ -90,4 +90,13 @@ const parseDateToPostedStr = (date: Date | undefined): string => {
     return yrLeft + ' Years Ago'
 }
 
-export { parseDateToStr, calcTimeLeft, parseDateToPostedStr }
+/**
+ * Returns the date as a pretty string: Month XX, Year (X Time Ago)
+ * @param d 
+ * @returns 
+ */
+const dateToPrettyString = (d: Date): string => {
+    return `${dateToStr(d)} (${dateToPostedStr(d)})`
+}
+
+export { dateToStr, calcTimeLeft, dateToPostedStr, dateToPrettyString }

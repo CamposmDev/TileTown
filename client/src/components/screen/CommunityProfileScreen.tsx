@@ -96,7 +96,7 @@ const CommunityProfileScreen = () => {
                             <Typography variant='body1'>{c?.description}</Typography>
                         </Grid>
                     </Grid>
-                    <CommunityContestsModal/>
+                    {/* <CommunityContestsModal/> */}
                     <CommunityMembersModal/>
                     {settings}
                 </Toolbar>
@@ -105,7 +105,7 @@ const CommunityProfileScreen = () => {
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
                     <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
-                        {tilemaps.map((x,i) => 
+                        {/* {tilemaps.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
                                 author={x.author}
@@ -119,13 +119,13 @@ const CommunityProfileScreen = () => {
                                 width={RES_SIZE}
                                 height={RES_SIZE}
                             />
-                        </Grid>)}
+                        </Grid>)} */}
                     </Carousel>   
                 </Grid>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilesets</Typography>
                     <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
-                        {tilesets.map((x,i) => 
+                        {/* {tilesets.map((x,i) => 
                         <Grid item>
                             <TileItemCard key={i}
                                 author={x.author}
@@ -138,7 +138,7 @@ const CommunityProfileScreen = () => {
                                 views={x.views}
                                 width={RES_SIZE}
                                 height={RES_SIZE}
-                            /></Grid>)}
+                            /></Grid>)} */}
                     </Carousel>   
                 </Grid>
             </Grid>            

@@ -20,7 +20,7 @@ export default interface ContestDBM {
      */
     getContestById(contestId: string): Promise<Contest | null>;
     getContestsById(contestIds: string[]): Promise<Contest[]>;
-    getContests(name: string): Promise<Contest[]>;
+    getContests(name: string, sort: string): Promise<Contest[]>;
     getContestByName(name: string): Promise<Contest | null>;
 
     /**
@@ -89,5 +89,5 @@ export default interface ContestDBM {
      * @param contestId the id of the contest in the DBMS
      * @return if successful, true; false otherwise.
      */
-    deleteContest(contestId: string): Promise<Contest | null>;
+    deleteContestById(contestId: string): Promise<Contest | null>;
 }

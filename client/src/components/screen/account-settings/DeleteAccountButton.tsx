@@ -21,7 +21,6 @@ const DeleteAccountButton = () => {
     }
     const handleVerifyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let verifyText = e.target.value
-        console.log(verifyText)
         setVerifyText(verifyText)
     }
     const deleteAccount = () => {

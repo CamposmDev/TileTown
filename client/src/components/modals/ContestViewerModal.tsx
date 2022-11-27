@@ -5,7 +5,7 @@ import { ContestContext } from "src/context/social/contest"
 import UserProfileCard from "../card/UserProfileCard"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { calcTimeLeft, parseDateToStr } from "../util/DateUtils"
+import { calcTimeLeft, dateToStr } from "../util/DateUtils"
 
 const ContestViewerModal = () => {
     const social = useContext(SocialContext)
@@ -16,7 +16,7 @@ const ContestViewerModal = () => {
         lastName: '',
         username: ''
     })
-    let c = contest.getCurrentContest()
+    let c = contest.state.currentContest
     useEffect(() => {
         if (c) {
             social.getUserById(c.owner).then(u => {
@@ -30,8 +30,8 @@ const ContestViewerModal = () => {
                 }
             })
         }
-    }, [contest.getCurrentContest()])
-    const open = Boolean(contest.getCurrentContest())
+    }, [contest.state.currentContest])
+    const open = Boolean(contest.state.currentContest)
     let content = <div></div>
     if (c) {
         const timeLeft = calcTimeLeft(new Date(c.startDate), new Date(c.endDate))
@@ -46,7 +46,7 @@ const ContestViewerModal = () => {
                 </Grid>
                 <Grid item flexGrow={1}>
                     <Typography><b>Started:&ensp;</b>
-                        {parseDateToStr(new Date(c.startDate))}
+                        {dateToStr(new Date(c.startDate))}
                     </Typography>
                 </Grid>
                 <Grid item>
@@ -72,7 +72,7 @@ const ContestViewerModal = () => {
             onClose={() => contest.clear()}
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
-            <DialogTitle>{contest.getCurrentContest()?.name}</DialogTitle>
+            <DialogTitle>{contest.state.currentContest?.name}</DialogTitle>
             <DialogContent>
                 {content}
             </DialogContent>

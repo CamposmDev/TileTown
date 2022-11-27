@@ -74,7 +74,7 @@ export class CommunityStore {
     }
 
     public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, auth?: AuthStore, snack?: SnackStore): Promise<void> {
-        let res = CommunityApi.getCommunities(commName)
+        let res = CommunityApi.getCommunities(commName, 'none')
         res.then((res) => {
             if (res.status === 200 && res.data.communities) {
                 let comms = res.data.communities
@@ -110,8 +110,8 @@ export class CommunityStore {
         }
     }
 
-    public async getCommunitiesByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = CommunityApi.getCommunities(query)
+    public async getCommunitiesByName(query: string, sort: string, snack?: SnackStore): Promise<void> {
+        let res = CommunityApi.getCommunities(query, sort)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
@@ -130,7 +130,7 @@ export class CommunityStore {
     }
 
     public async viewCommunity(comm: Community): Promise<void> {
-        this.nav(`/community/${comm.name}`)
+        this.nav(`/community/${comm.id}`)
         this.handleAction({
             type: CommunityActionType.viewCommunity,
             payload: {

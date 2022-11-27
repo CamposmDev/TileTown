@@ -33,7 +33,8 @@ export default class ContestController {
         }
 
         let name = req.query.name ? req.query.name.toString() : "";
-        let contests = await db.contests.getContests(name);
+        let sort = req.query.sort ? req.query.sort.toString() : 'none';
+        let contests = await db.contests.getContests(name, sort);
         if (contests.length === 0) {
             return res.status(404).json({ message: `No contests found with name "${name}"`});
         }
@@ -123,7 +124,7 @@ export default class ContestController {
             return res.status(404).json({ message: `Contest with id ${req.params.id} not found` })
         }
 
-        let deletedContest = await db.contests.deleteContest(req.params.id);
+        let deletedContest = await db.contests.deleteContestById(req.params.id);
         if (deletedContest === null) {
             return res.status(500).json({ message: `Contest with id ${req.params}` });
         }

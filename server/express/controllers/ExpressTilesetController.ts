@@ -1,9 +1,29 @@
 import { Request, Response } from "express";
 import { is } from "typescript-is";
 import { db } from "../../database";
-import { SortBy, Tileset } from "@types";
+import { Community, SortBy, Tileset, TilesetSocial } from "@types";
 
 export default class TilesetController {
+  public async getTilesetSocialsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.query) {
+      return res.status(400).json({ message: 'Missing query' })
+    }
+    // if (!req.params.sort) {
+    //   return res.status(400).json({ message: 'Missing sort' })
+    // }
+    // if (!req.params.tags) {
+    //   return res.status(400).json({ message: 'Missing tags'})
+    // }
+    let query = JSON.parse(req.params.query)
+    if (query.name == null) return res.status(400).json({ message: 'Query: Name is null or undefined!'})
+    if (!query.sort) return res.status(400).json({ message: 'Query: Sort is missing!'})
+    if (!query.tags) return res.status(400).json({ message: 'Query: Tags is missing!'})
+    let tilesetSocials: TilesetSocial[] = await db.tilesetSocials.getTilesetSocialsByName(query.name, query.sort, query.tags)
+    return res.status(200).json({ message: `Found ${tilesetSocials.length} tileset(s)`, tilesets: tilesetSocials })
+  }
   public async getTilesetById(req: Request, res: Response): Promise<Response> {
     // Check to see if a request body was sent
     if (!req || !res || !req.params) {
@@ -42,13 +62,13 @@ export default class TilesetController {
     }
 
     // Convert the tileset attribute to valid JSON
-    try {
-      req.body.tileset = JSON.parse(req.body.tileset);
-    } catch {
-      return res
-        .status(400)
-        .json({ messagee: "Tileset field is not valid JSON" });
-    }
+    // try {
+    //   req.body.tileset = JSON.parse(req.body.tileset);
+    // } catch {
+    //   return res
+    //     .status(400)
+    //     .json({ messagee: "Tileset field is not valid JSON" });
+    // }
 
     // Check if the tileset has a name
     if (!req.body.tileset.name) {
@@ -114,12 +134,33 @@ export default class TilesetController {
       return res.status(400).json({ message: "No tileset id provided" });
     }
 
-    // Delete the tileset from the database
-    let tileset = await db.tilesets.deleteTilesetById(req.params.id);
+    let tileset = await db.tilesets.getTilesetById(req.params.id)
     if (tileset === null) {
       return res
         .status(500)
         .json({ message: "Server error. Error deleting tileset" });
+    }
+    // Check if tileset is published
+    if (tileset.isPublished) {
+      return res.status(400).json({ message: `Tileset ${tileset.id} cannot be deleted because it is published!`})
+    }
+
+    // Delete the tileset from the database
+    tileset = await db.tilesets.deleteTilesetById(req.params.id);
+    if (tileset === null) {
+      return res
+        .status(500)
+        .json({ message: "Server error. Error deleting tileset" });
+    }
+
+    // Delete tileset id from user's tilesets
+    let user = await db.users.getUserById(tileset.owner)
+    if (user) {
+      let i = user.tilesets.indexOf(req.params.id)
+      if (i !== -1) {
+        user.tilesets.splice(i, 1)
+        await db.users.updateUser(user.id, {tilesets: user.tilesets})
+      }
     }
 
     // Success - 200 - return the deleted tileset
@@ -186,6 +227,19 @@ export default class TilesetController {
     return res
       .status(200)
       .json({ message: "Updating a tileset!", tileset: updatedTileset });
+  }
+
+  public async getPublishedTilesetsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+        return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    if (!req.params.query || !req.params.sort) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+
+    let tilesets: Tileset[] = await db.tilesets.getPublishedTilesetsByName(req.params.query, req.params.sort)
+    return res.status(200).json({ message: `Found ${tilesets.length} tileset(s)`, tilesets: tilesets })
   }
 
   public async getTilesetPartials(
@@ -275,6 +329,21 @@ export default class TilesetController {
       .status(200)
       .json({ message: "Got tileset social data!", social: social });
   }
+
+  public async getTilesetSocialByTilesetId(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    let social = await db.tilesetSocials.getTilesetSocialByTilesetId(req.params.id)
+    if (social === null) {
+      return res.status(404).json({ message: `Tileset social data with tileset id ${req.params.id} not found`});
+    }
+    return res.status(200).json({ message: 'Got tileset social data!', social: social })
+  }
+
   public async publishTileset(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters
     if (!req || !res || !req.params || !req.body) {
@@ -286,8 +355,17 @@ export default class TilesetController {
     if (!req.params.id) {
       return res.status(400).json({ message: "Missing tileset id" });
     }
-    if (!req.body.social) {
-      return res.status(400).json({ message: "Missing social in body" });
+    if (!req.body) {
+      return res.status(400).json({ message: "Missing body" });
+    }
+    if (!req.body.description) {
+      return res.status(400).json({ message: "Missing description" })
+    }
+    if (!req.body.permissions) {
+      return res.status(400).json({ message: "Missing permissions" })
+    }
+    if (!req.body.tags) {
+      return res.status(400).json({ message: "Missing tags" })
     }
 
     // Check tileset exists
@@ -308,10 +386,23 @@ export default class TilesetController {
       });
     }
 
+    let community: Community | null = null
+    if (req.body.communityName) {
+      community = await db.communities.getCommunityByName(req.body.communityName)
+    }
+
     // Create the social data
     let social = await db.tilesetSocials.createTilesetSocial(
       tileset.id,
-      req.body.social
+      {
+        name: tileset.name,
+        owner: tileset.owner,
+        description: req.body.description,
+        community: community?.id,
+        permissions: req.body.permissions,
+        tags: req.body.tags,
+        imageURL: tileset.image
+      }
     );
     if (social === null) {
       return res.status(500).json({
@@ -506,7 +597,7 @@ export default class TilesetController {
     // Return the successfully created comment
     return res
       .status(201)
-      .json({ message: "Comment created!", comment: comment });
+      .json({ message: "Comment created!", tilesetSocial: updatedSocial });
   }
   public async viewTilesetById(req: Request, res: Response): Promise<Response> {
     // Check for bad request and missing parameters

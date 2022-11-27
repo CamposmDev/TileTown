@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import { Tileset, SortBy } from "@types";
 import { TilesetDBM } from "../../interface";
-import { TilesetModel } from "../schemas";
+import { TilesetModel, TilesetSocialModel } from "../schemas";
 import { TilesetSchemaType, PropertySchemaType } from "../types";
 
 /**
@@ -104,6 +104,14 @@ export default class MongooseTilesetDBM implements TilesetDBM {
       return null;
     }
     return this.parseTileset(tileset);
+  }
+
+  async getPublishedTilesetsByName(name: string): Promise<Tileset[]> {
+    let tilesets = await TilesetModel.find({name: new RegExp(`^${name}`, "i"), isPublished: true})
+    return tilesets.map(x => {
+      let tileset = this.parseTileset(x)
+      return tileset
+    })
   }
 
   async createTileset(

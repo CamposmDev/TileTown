@@ -7,11 +7,10 @@ type ObjectId = mongoose.Types.ObjectId;
 export default interface TilesetSocialSchemaType {
     tileSet: ObjectId,
     name: string,
-    owner: ObjectId
-    ownerName: string,  
+    owner: ObjectId,
     tags: string[],
     description: string,
-    communities: ObjectId[],
+    community: string,
     likes: ObjectId[],
     dislikes: ObjectId[],
     views: number,

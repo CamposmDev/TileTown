@@ -20,19 +20,32 @@ import { FaEraser } from "react-icons/fa";
 import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvasWrapper from "./TilesetCanvasWrapper";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
-import PublishTileItemButton from "../../button/PublishTileItemButton";
-import { useContext } from "react";
+import PublishTilesetButton from "../../button/PublishTilesetButton";
+import { useContext, useEffect } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";
 import { SnackContext } from "src/context/snack";
 import {
   TilesetEditControl,
   Color,
 } from "src/context/tilesetEditor/TilesetEditTypes";
+import { SocialContext } from "src/context/social";
+import DeleteTilesetButton from "src/components/button/DeleteTilesetButton";
+import { AuthContext } from "src/context/auth";
+import { useNavigate } from "react-router";
+import ExitTilesetButton from "src/components/button/ExitTilesetButton";
 
 const TilesetEditorScreen = () => {
-  const edit = useContext(TilesetEditContext);
+  const auth = useContext(AuthContext);
   const snack = useContext(SnackContext);
-
+  const nav = useNavigate();
+  useEffect(() => {
+    if (!auth.isLoggedIn()) {
+      snack.showErrorMessage("Credentials invalid or expired!");
+      nav("/");
+    }
+  });
+  const edit = useContext(TilesetEditContext);
+  const social = useContext(SocialContext);
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
   const selectedColor = "#ADD8E6";
@@ -147,14 +160,18 @@ const TilesetEditorScreen = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTileItemButton name="this tileset" />
-              <PublishTileItemButton name="this tileset" />
-              {/* <Button startIcon={<Delete />} color="error">
-                Delete
-              </Button>
-              <Button startIcon={<Publish />} color="primary">
-                Publish
-              </Button> */}
+              <ExitTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              ></ExitTilesetButton>
+              <DeleteTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              />
+              <PublishTilesetButton
+                id={edit.state.tileset.id}
+                name={edit.state.tileset.name}
+              />
             </Stack>
           </Grid>
         </Grid>

@@ -15,6 +15,7 @@ import { CommunityContext } from 'src/context/social/community';
 const CommunityMembersModal = () => {
     const comm = useContext(CommunityContext)
     const [isOpen, setIsOpen] = useState(false)
+    const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
     let c = comm.getCurrentCommunity()
     let members: JSX.Element | JSX.Element[] = <div/>

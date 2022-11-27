@@ -9,7 +9,6 @@ interface Props {
 
 const DeleteTileItemButton = (props: Props) => {
     const [open, setOpen] = useState(false)
-
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
 
@@ -18,12 +17,11 @@ const DeleteTileItemButton = (props: Props) => {
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogContent>
                 <Typography>{'Are you sure you want to delete ' + props.name + '?'}</Typography>
-                
-                <DialogActions>
-                    <Button>Yes</Button>
-                    <Button onClick={handleClose}>No</Button>
-                </DialogActions>
             </DialogContent>
+            <DialogActions>
+                <Button>Yes</Button>
+                <Button onClick={handleClose}>No</Button>
+            </DialogActions>
         </Dialog>
     )
     return (

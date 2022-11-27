@@ -13,7 +13,8 @@ export default class CommunityController {
         }
 
         let name = req.query.name ? req.query.name.toString() : "";
-        let communities = await db.communities.getCommunities(name);
+        let sort = req.query.sort ? req.query.sort.toString() : "none";
+        let communities = await db.communities.getCommunities(name, sort);
         if (communities.length === 0) {
             return res.status(404).json({ message: `No communities found with name "${name}"`});
         }
@@ -250,4 +251,16 @@ export default class CommunityController {
         return res.status(200).json({ message: "User left the community!", user: updatedUser, community: updatedCommunity});
     }
 
+    public async getCommunityNameById(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing community id"});
+        }
+
+        let community = await db.communities.getCommunityById(req.params.id)
+        if (!community) return res.status(400).json({ message: `Community with id ${req.params.id} not found` })
+        return res.status(200).json({ message: 'Found community', name: community.name })
+    }
 }

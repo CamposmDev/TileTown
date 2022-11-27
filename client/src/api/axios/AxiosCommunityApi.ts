@@ -18,6 +18,7 @@ import {
     DeleteCommunityRes,
     GetCommunitiesRes
 } from "@responses/community";
+import GetCommunityNameRes from "@responses/community/GetCommunityNameRes";
 
 
 export default class AxiosCommunityApi {
@@ -46,8 +47,11 @@ export default class AxiosCommunityApi {
         return AxiosApi.get(`/community/${id}`)
     }
 
-    public async getCommunities(name: string | undefined): Promise<AxiosResponse<GetCommunitiesRes>> {
-        return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name }});
+    public async getCommunities(name: string | undefined, sort: string): Promise<AxiosResponse<GetCommunitiesRes>> {
+        return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name, sort: sort }});
     }
 
+    public async getCommunityName(communityId: string): Promise<AxiosResponse<GetCommunityNameRes>> {
+        return AxiosApi.get(`/community/name/${communityId}`)
+    }
 }

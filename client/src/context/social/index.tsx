@@ -1,26 +1,30 @@
 import { useState, createContext } from "react"
+import { useNavigate } from "react-router";
+import TilesetViewerModal from "src/components/modals/TIlesetViewerModal";
 import { SocialState, SocialStore } from "./SocialStore";
 
 const SocialContext = createContext<SocialStore>(new SocialStore(
     {
-        currentUser: undefined,
+        currentTMS: undefined,
+        currentTSS: undefined,
         tilemaps: [],
         tilesets: [],
-        users: [],
-    }, () => {}))
+    }, () => {}, () => {}))
 
 function SocialContextProvider(props: Record<string, any>) {
     const [social, setSocial] = useState<SocialState>(
         {
-            currentUser: undefined,
+            currentTMS: undefined,
+            currentTSS: undefined,
             tilemaps: [],
             tilesets: [],
-            users: [],
         })
-    const Social = new SocialStore(social, setSocial)
+    const nav = useNavigate()
+    const Social = new SocialStore(social, setSocial, nav)
     return (
         <SocialContext.Provider value={Social}>
             {props.children}
+            <TilesetViewerModal/>
         </SocialContext.Provider>
     )
 }

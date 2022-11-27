@@ -20,7 +20,7 @@ export default interface CommunityDBM {
    */
   getCommunityById(communityId: string): Promise<Community | null>;
   getCommunityByName(name: string): Promise<Community | null>;
-  getCommunities(name: string): Promise<Community[]>;
+  getCommunities(name: string, sort: string): Promise<Community[]>;
   getCommunitiesById(communityIds: string[]): Promise<Community[]>;
 
   /**
@@ -128,5 +128,4 @@ export default interface CommunityDBM {
      * @return if successful, the id of the deleted community; null otherwise
      */
      deleteCommunityById(communityId: string): Promise<Community | null>;
-
 }

@@ -51,15 +51,18 @@ export default class UserController {
         if (!req.body) {
             return res.status(400).json({message: "No query options"});
         }
+        if (req.body.sort) {
+            let username = req.body.username ? req.body.username.toString() : ""
+            let users = await db.users.getUsers(username, req.body.sort)
+            if (users.length === 0) return res.status(404).json({message: `No users found with username ${username}`})
+            return res.status(200).json({message: `Found ${users.length} user(s)`, users: users})
+        }
         if (!req.body.username) {
             return res.status(400).json({message: "Query cannot be empty!"})
         }
-
         let username = req.body.username ? req.body.username.toString() : "";
         let users = await db.users.getUsers(username);
-        if (users.length === 0) {
-            return res.status(404).json({message: `No users found with username "${username}"`});
-        }
+        if (users.length === 0) return res.status(404).json({message: `No users found with username "${username}"`});
         return res.status(200).json({message: `Found ${users.length} user(s)!`, users: users});
     }
 
@@ -387,6 +390,12 @@ export default class UserController {
             return;
         }
 
+        user.tilemaps.forEach(id => db.tilemaps.deleteTilemapById(id))
+        user.tilesets.forEach(id => db.tilesets.deleteTilesetById(id))
+        user.joinedCommunities.forEach(id => db.communities.deleteCommunityById(id))
+        user.joinedContests.forEach(id => db.contests.deleteContestById(id))
+        db.comments.deleteUserComments(user.id)        
+
         // If user exists, try deleting the user
         let deleted = await db.users.deleteUser(req.userId);
         if (!deleted) {
@@ -521,5 +530,25 @@ export default class UserController {
         }
 
         return res.status(200).json({ message: "Found users unpublished tilesets!", tilesets: tilesets});
+    }
+    public async getPublishedTilesets(req: Request, res: Response): Promise<Response> {
+        if (!req || !req.params) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        let user = await db.users.getUserById(req.params.id);
+        if (user === null) {
+            return res.status(404).json({ message: `User with id ${req.params.id}`});
+        }
+
+        let socials = await db.tilesetSocials.getTilesetSocialsByUserId(req.params.id);
+        if (socials.length === 0) {
+            return res.status(404).json({ message: "User has no unpublished tilesets"});
+        }
+
+        return res.status(200).json({ message: "Found users published tilesets!", socials: socials});
     }
 }

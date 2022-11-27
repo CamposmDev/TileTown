@@ -8,12 +8,26 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 
+import AxiosApi from "../../api/axios/AxiosApi";
+import { AuthContext } from "../../context/auth/index";
+import { useContext } from 'react';
+
 
 
 const PasswordResetModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
+    const { auth } = useContext(AuthContext);
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        // console.log("Sending email request");
+        let formData = new FormData(e.currentTarget)
+        let email = formData.get('email')?.toString() 
+        // console.log("Email: " + email);
+        AxiosApi.put(`/user/reset/password`, { email: email });
+    };
 
     let ui = (
         <Dialog 
@@ -21,7 +35,7 @@ const PasswordResetModal = () => {
             onClose={handleClose}
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
-            <Box textAlign='center' mt={2} ml={2} mr={2}>   
+            <Box component={'form'} textAlign='center' mt={2} ml={2} mr={2} onSubmit={handleSubmit}>   
                 <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
                     <Icon><LockIcon/></Icon>
                 </Avatar>

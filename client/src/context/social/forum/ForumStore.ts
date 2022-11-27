@@ -26,8 +26,8 @@ export class ForumStore {
         return this._forum.forumPosts
     }
 
-    public async getForumPostsByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = ForumApi.getForums(query)
+    public async getForumPostsByName(query: string, sort: string, snack?: SnackStore): Promise<void> {
+        let res = ForumApi.getForums(query, sort)
         res.then(res => {
             if (res.status === 200) {
                 let arr = res.data.forumPosts
