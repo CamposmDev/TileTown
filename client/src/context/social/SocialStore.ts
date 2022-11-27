@@ -206,7 +206,7 @@ export class SocialStore {
         })
     }
 
-    public async likeTMS(): Promise<void> {
+    public async likeTMS(snack?: SnackStore): Promise<void> {
         let currentTMS = this._social.currentTMS
         if (currentTMS) {
             SocialApi.likeTilemapById(currentTMS.id).then(res => {
@@ -216,16 +216,18 @@ export class SocialStore {
                         this.handleAction({
                             type: SocialActionType.setCurrentTMS,
                             payload: {
-                                currentTMS: tms
+                                newTMS: tms,
+                                oldTMS: currentTMS
                             }
                         })
                     }
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }
     }
 
-    public async dislikeTMS(): Promise<void> {
+    public async dislikeTMS(snack?: SnackStore): Promise<void> {
         let currentTMS = this._social.currentTMS
         if (currentTMS) {
             SocialApi.dislikeTilemapById(currentTMS.id).then(res => {
@@ -235,45 +237,47 @@ export class SocialStore {
                         this.handleAction({
                             type: SocialActionType.setCurrentTMS,
                             payload: {
-                                currentTMS: tms
+                                newTMS: tms,
+                                oldTMS: currentTMS
                             }
                         })
                     }
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }
     }
 
-    public async commentTMS(body: string): Promise<void> {
+    public async commentTMS(body: string, snack?: SnackStore): Promise<void> {
         let currentTMS = this._social.currentTMS
         if (currentTMS) {
             SocialApi.commentTilemapById(currentTMS.id, {comment:{body: body}}).then(res => {
-                if (res.status === 200) {
+                if (res.status === 201) {
                     this.handleAction({
                         type: SocialActionType.setCurrentTMS,
                         payload: {
-                            currentTMS: res.data.tilemapSocial
+                            newTMS: res.data.tilemapSocial,
+                            oldTMS: currentTMS
                         }
                     })
+                    snack?.showSuccessMessage(res.data.message)
                 }
             })
         }
     }
 
-    public viewTilemapSocial(id: string): void {
-        let currentTMS = this._social.currentTMS
-        if (currentTMS) {
-            SocialApi.viewTilemapById(currentTMS.id).then(res => {
-                if (res.status === 200) {
-                    this.handleAction({ 
-                        type: SocialActionType.setCurrentTMS,
-                        payload: {
-                            currentTMS: res.data.social
-                        }
-                    })
-                }
-            })
-        }
+    public viewTilemapSocial(tms: TilemapSocial): void {
+        SocialApi.viewTilemapById(tms.id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: SocialActionType.setCurrentTMS,
+                    payload: {
+                        newTMS: res.data.social,
+                        oldTMS: tms
+                    }
+                })
+            }
+        })
     }
 
     public async publishTilemap(tilemapId: string, desc: string, commName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
@@ -393,12 +397,18 @@ export class SocialStore {
     protected handleAction(action: SocialAction): void {
         switch (action.type) {
             case SocialActionType.setCurrentTMS: {
-                this._setSocial({
-                    currentTMS: action.payload.currentTMS,
-                    currentTSS: this._social.currentTSS,
-                    tilemaps: this._social.tilemaps,
-                    tilesets: this._social.tilesets,
-                })
+                let payload = action.payload
+                if (!payload.oldTMS) return
+                let i = this._social.tilemaps.indexOf(payload.oldTMS)
+                if (i !== -1) {
+                    this._social.tilemaps.splice(i, 1, payload.newTMS)
+                    this._setSocial({
+                        currentTMS: action.payload.newTMS,
+                        currentTSS: this._social.currentTSS,
+                        tilemaps: this._social.tilemaps,
+                        tilesets: this._social.tilesets
+                    })
+                }
                 break
             }
             case SocialActionType.setCurrentTSS: {
@@ -411,7 +421,7 @@ export class SocialStore {
                         currentTMS: this._social.currentTMS,
                         currentTSS: payload.newTSS,
                         tilemaps: this._social.tilemaps,
-                        tilesets: this._social.tilesets,
+                        tilesets: this._social.tilesets
                     })
                 }
                 break

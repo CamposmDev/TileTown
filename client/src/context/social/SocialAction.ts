@@ -10,7 +10,6 @@ export type SocialAction =
 export enum SocialActionType {
     setCurrentTMS = 'SET_CURRENT_TMS',
     setCurrentTSS = 'SET_CURRENT_TSS',
-    likeCurrentTSS = 'LIKE_CURRENT_TSS',
     getTilesetsByName = 'GET_TILESET_BY_NAME',
     getTilemapsByName = 'GET_TILEMAP_BY_NAME',
     addFriend = 'ADD_FRIEND',
@@ -21,7 +20,8 @@ export enum SocialActionType {
 export type SetCurrentTMS = {
     type: SocialActionType.setCurrentTMS,
     payload: {
-        currentTMS: TilemapSocial
+        newTMS: TilemapSocial,
+        oldTMS: TilemapSocial | undefined
     }
 }
 
