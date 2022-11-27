@@ -5,16 +5,13 @@ import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
 import '../card/default.css'
-import axios from "axios";
 import AxiosApi from "src/api/axios/AxiosApi";
 import CommentCard from "../card/CommentCard";
 import { dateToStr } from "../util/DateUtils";
-import { FaCopy } from "react-icons/fa";
 import TagCard from "../card/TagCard";
 import UserProfileCard from "../card/UserProfileCard";
-import UserProfileBox from "../UserProfileBox";
-import ts from "typescript";
 
+/** Displays the info of a clicked tileset social */
 export default function TilesetViewerModal() {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
@@ -35,6 +32,7 @@ export default function TilesetViewerModal() {
 
     const like = () => {
         /** Call the like tileset social function from social */
+        social.likeTSS()
     }
 
     const dislike = () => {
@@ -94,7 +92,7 @@ export default function TilesetViewerModal() {
                 <Grid item>
                     <Card sx={{boxShadow: 3}}>
                         <ImageListItem>
-                            <img id='tile-large-preview' src={imageURL} />
+                            <img id='tile-large-preview' src={imageURL} alt={tss.name}/>
                         </ImageListItem>
                     </Card>
                 </Grid>
@@ -129,7 +127,7 @@ export default function TilesetViewerModal() {
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>
-                                        {tss.tags.map(x => <Grid item><TagCard name={x} /></Grid>)}
+                                        {tss.tags.map(x => <Grid item key={x}><TagCard name={x} /></Grid>)}
                                     </Grid>
                                 </Grid>
                             </CardContent>
