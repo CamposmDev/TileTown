@@ -16,8 +16,33 @@ export default class MongooseContestDBM implements ContestDBM {
         return this.parseContest(contest);
     }
 
-    public async getContests(name: string): Promise<Contest[]> {
-        let contests = await ContestModel.find({name: new RegExp(`^${name}`, "i")});
+    public async getContests(name: string, sort: string): Promise<Contest[]> {
+        let filter: mongoose.FilterQuery<any> = {
+            name: new RegExp(`^${name}`, 'i')
+        }
+        let contests = []
+        switch (sort) {
+            case 'a-z':
+                contests = await ContestModel.find(filter).sort({name: 1})
+                break
+            case 'z-a':
+                contests = await ContestModel.find(filter).sort({name: -1})
+                break
+            case 'time_newest':
+                contests = await ContestModel.find(filter).sort({startDate: -1})
+                break
+            case 'time_ending_soonest':
+                contests = await ContestModel.find(filter).sort({endDate: 1})
+                break
+            case 'most_participates':
+                contests = await ContestModel.find(filter).sort({participates: -1})
+                break
+            case 'least_participates':
+                contests = await ContestModel.find(filter).sort({participates: 1})
+                break
+            default:
+                contests = await ContestModel.find(filter);
+        }
         return contests.map(c => this.parseContest(c));
     }
 

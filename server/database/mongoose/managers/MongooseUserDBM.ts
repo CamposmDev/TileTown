@@ -32,8 +32,21 @@ export default class MongooseUserDBM implements UserDBM {
         if (user === null) return null;
         return this.parseUser(user);
     }
-    async getUsers(username: string): Promise<User[]> {
-        let users = await UserModel.find({username: new RegExp(`^${username}`, "i")});
+    async getUsers(username: string, sort?: string): Promise<User[]> {
+        let filter: mongoose.FilterQuery<any> = {
+            username: new RegExp(`^${username}`, 'i'),
+        }
+        let users = []
+        switch (sort) {
+            case 'most_friends':
+                users = await UserModel.find({username: new RegExp(`^${username}`, "i")}).sort({friends: -1})
+                break
+            case 'least_friends':
+                users = await UserModel.find({username: new RegExp(`^${username}`, "i")}).sort({friends: 1})
+                break
+            default:
+                users = await UserModel.find({username: new RegExp(`^${username}`, "i")});
+        }
         return users.map(user => this.parseUser(user));
     }
 

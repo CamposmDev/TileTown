@@ -1,22 +1,24 @@
 import { Settings } from "@mui/icons-material"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, DialogActions, DialogContent, DialogTitle, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import { useContext, useState } from "react"
+import { SnackContext } from "src/context/snack"
 import { CommunityContext } from "src/context/social/community"
 import UserProfileCard from "../card/UserProfileCard"
 
 const CommunitySettingsButton = () => {
     const comm = useContext(CommunityContext)
+    const snack = useContext(SnackContext)
     const [open, setOpen] = useState(false)
-    const [title, setTitle] = useState(comm.getCurrentCommunity()?.name)
-    const [vis, setVis] = useState(comm.getCurrentCommunity()?.visibility);
-    const [desc, setDesc] = useState(comm.getCurrentCommunity()?.description)
+    const [name, setName] = useState<string>(comm.getCurrentCommunity()?.name as string)
+    const [desc, setDesc] = useState<string>(comm.getCurrentCommunity()?.description as string)
+    const [vis, setVis] = useState<string>(comm.getCurrentCommunity()?.visibility as string)
 
     const handleChange = (event: SelectChangeEvent) => {
         setVis(event.target.value as string)
     }
 
     const handleTitleChange = (e: any) => {
-        setTitle(e.target.value as string)
+        setName(e.target.value as string)
     }
 
     const handleDescChange = (e: any) => {
@@ -24,15 +26,24 @@ const CommunitySettingsButton = () => {
     }
 
     const handleDelete = () => {
+        /** Show confirm delete modal */
         handleModalClose()
     }
 
     const handleUpdate = () => {
+        comm.updateCurrentCommunity(name, desc, vis, snack)
         handleModalClose()
     }
 
-    const handleModalOpen = () => setOpen(true)
-    const handleModalClose = () => setOpen(false)
+    const handleModalOpen = () => {
+        setName(comm.getCurrentCommunity()?.name as string)
+        setDesc(comm.getCurrentCommunity()?.description as string)
+        setVis(comm.getCurrentCommunity()?.visibility as string)
+        setOpen(true)
+    }
+    const handleModalClose = () => {
+        setOpen(false)
+    }
 
     let visSelector = 
         <FormControl margin="dense">
@@ -60,7 +71,7 @@ const CommunitySettingsButton = () => {
             <DialogTitle>Community Settings</DialogTitle>
             <DialogContent>
                 <Stack>
-                    <TextField value={title} onChange={handleTitleChange} label='Community Name' margin='dense'/>
+                    <TextField value={name} onChange={handleTitleChange} label='Community Name' margin='dense'/>
                     <TextField value={desc} onChange={handleDescChange} label='Description' margin='dense'/>
                     {visSelector}
                 </Stack>

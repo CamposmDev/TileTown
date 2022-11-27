@@ -18,12 +18,8 @@ export class ContestStore {
         this._setContest = setContest
     }
 
-    public getCurrentContest(): Contest | undefined {
-        return this._contest.currentContest
-    }
-
-    public getContests(): Contest[] {
-        return this._contest.contests
+    public get state(): ContestState {
+        return this._contest
     }
 
     public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {
@@ -36,7 +32,15 @@ export class ContestStore {
             }
         })
         res.then((res) => {
-            if (res.status === 201) snack?.showSuccessMessage(res.data.message)
+            if (res.status === 201) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: ContestActionType.viewContest,
+                    payload: {
+                        currentContest: res.data.contest
+                    }
+                })
+            }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
@@ -77,7 +81,7 @@ export class ContestStore {
     }
 
     public async deleteContestByName(userId: string | undefined, contestName: string | undefined, snack?: SnackStore): Promise<void> {
-        let res = ContestApi.getContests(contestName)
+        let res = ContestApi.getContests(contestName, 'none')
         res.then((res) => {
             if (res.status === 200 && res.data.contests) {
                 let contests = res.data.contests
@@ -97,8 +101,8 @@ export class ContestStore {
         })
     }
 
-    public async getContestByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = ContestApi.getContests(query)
+    public async getContestByName(query: string, sort: string, snack?: SnackStore): Promise<void> {
+        let res = ContestApi.getContests(query, sort)
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)

@@ -1,7 +1,9 @@
-import { Grid } from "@mui/material"
-import { useContext, useEffect } from "react"
+import { Archive, Favorite, Restore } from "@mui/icons-material"
+import { BottomNavigation, BottomNavigationAction, Grid, Paper } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import TilesetCard from "src/components/card/TilesetCard"
+import TilemapSocialCard from "src/components/card/TilemapSocialCard"
+import TilesetSocialCard from "src/components/card/TilesetSocialCard"
 import { UserContext } from "src/context/social/user"
 import { AuthContext } from "../../../context/auth"
 import { SocialContext } from "../../../context/social"
@@ -11,7 +13,6 @@ import { ForumContext } from "../../../context/social/forum"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
-import TileItemCard from "../../card/TileItemCard"
 import UserProfileCard from "../../card/UserProfileCard"
 import { SearchCategory } from "../../util/Constants"
 import SearchToolbar from "./SearchToolbar"
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const SearchScreen = (props: Props) => {
+    const [value, setValue] = useState(0)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const user = useContext(UserContext)
@@ -40,18 +42,14 @@ const SearchScreen = (props: Props) => {
                     spacing={1} 
                     mt={1}
                 >
-                    {/* <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1.png'
-                            tilemapName='McBendorjee vs Robots Debug'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid> */}
+                    {social.state.tilemaps.map(x => 
+                        <Grid item key={`${x.id}-${x.name}`}>
+                            <TilemapSocialCard
+                                key={x.id}
+                                tms={x}
+                            />
+                        </Grid>
+                    )}
                 </Grid>
             break
         case SearchCategory.Tilesets:
@@ -59,24 +57,13 @@ const SearchScreen = (props: Props) => {
                     spacing={1}
                     mt={1}>
                         {social.state.tilesets.map(x =>
-                            <Grid item key={x.id}>  
-                                <TilesetCard
-                                    tilesetId={x.id}
+                            <Grid item key={`${x.id}-${x.name}`}>  
+                                <TilesetSocialCard 
+                                    key={x.id}
+                                    tss={x}
                                 />
                             </Grid>
                         )}
-                {/* <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid> */}
             </Grid>
             break
         case SearchCategory.Users:
@@ -84,7 +71,7 @@ const SearchScreen = (props: Props) => {
                         spacing={1}
                         mt={1}>
                     {user.users.map((x) => 
-                    <Grid item key={x.id}>
+                    <Grid item key={`${x.id}-${x.username}`}>
                         <UserProfileCard 
                             key={x.id}
                             userId={x.id}
@@ -98,7 +85,7 @@ const SearchScreen = (props: Props) => {
                 spacing={1}
                 mt={1}>
                     {comm.getCommunities().map((x) => 
-                        <Grid xs={4} item key={x.name}>
+                        <Grid xs={4} item key={x.id}>
                             <CommunityCard comm={x}/>
                         </Grid>
                     )}
@@ -109,8 +96,8 @@ const SearchScreen = (props: Props) => {
             <Grid container 
                 spacing={1}
                 mt={1}>
-                    {contest.getContests().map(x => 
-                        <Grid xs={3} item key={x.name}>
+                    {contest.state.contests.map(x => 
+                        <Grid xs={3} item key={x.id}>
                             <ContestCard c={x}/>
                         </Grid>
                     )}
@@ -137,6 +124,19 @@ const SearchScreen = (props: Props) => {
             <Grid item>
                 {content}
             </Grid>
+            {/* <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                <BottomNavigation
+                showLabels
+                value={value}
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                }}
+                >
+                <BottomNavigationAction label="Recents" icon={<Restore />} />
+                <BottomNavigationAction label="Favorites" icon={<Favorite />} />
+                <BottomNavigationAction label="Archive" icon={<Archive />} />
+                </BottomNavigation>
+            </Paper> */}
         </Grid>
     )
 }

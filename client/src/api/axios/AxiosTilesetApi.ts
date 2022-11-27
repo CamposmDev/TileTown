@@ -74,8 +74,12 @@ export default class AxiosTilesetApi {
     );
   }
 
+  /**
+   * @deprecated
+   * @returns {message: string, tilesets: Tileset[]}
+   */
   public async getPublishedTilesetsByName(query: string, sort: string) {
-    return AxiosApi.get(`/tileset/search/${query}/${sort}`);
+    return AxiosApi.get(`/tileset/search/${query}/${sort}`)
   }
 
   public async getUnpublishedTilesets(): Promise<

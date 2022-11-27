@@ -1,10 +1,60 @@
 import mongoose from "mongoose";
-import { Tileset, TilesetSocial } from "@types";
+import { SortBy, Tileset, TilesetSocial } from "@types";
 import TilesetSocialDBM from "../../interface/managers/TilesetSocialDBM";
 import { TilesetSocialModel } from "../schemas/TilesetSocialModel";
 import TilesetSocialSchemaType from "../types/TilesetSocialSchemaType";
 
 export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
+    async getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<TilesetSocial[]> {
+        let arr: (mongoose.Document<unknown, any, TilesetSocialSchemaType> & TilesetSocialSchemaType & { _id: mongoose.Types.ObjectId })[] = []
+        let filter: mongoose.FilterQuery<any> = {
+            name: new RegExp(`^${name}`, 'i')
+        }
+        if (tags.length > 0) {
+            filter = {
+                name: new RegExp(`^${name}`, 'i'),
+                tags: {$all: tags }
+            }
+        }
+        switch (sort) {
+            case 'publish_date_newest':
+                arr = await TilesetSocialModel.find(filter).sort({publishDate: -1})
+                break
+            case 'publish_date_oldest':
+                arr = await TilesetSocialModel.find(filter).sort({publishDate: 1})
+                break
+            case 'most_likes':
+                arr = await TilesetSocialModel.find(filter).sort({likes: -1})
+                break
+            case 'least_likes':
+                arr = await TilesetSocialModel.find(filter).sort({likes: 1})
+                break
+            case 'most_dislikes':
+                arr = await TilesetSocialModel.find(filter).sort({dislikes: -1})
+                break
+            case 'least_dislikes':
+                arr = await TilesetSocialModel.find(filter).sort({dislikes: 1})
+                break
+            case 'most_views':
+                arr = await TilesetSocialModel.find(filter).sort({views: -1})
+                break
+            case 'least_views':
+                arr = await TilesetSocialModel.find(filter).sort({views: 1})
+                break
+            case 'most_comments':
+                arr = await TilesetSocialModel.find(filter).sort({comments: -1})
+                break
+            case 'least_comments':
+                arr = await TilesetSocialModel.find(filter).sort({comments: 1})
+                break
+            default:
+                arr = await TilesetSocialModel.find(filter)
+        }
+        return arr.map(x => {
+            let tss = this.parseSocial(x)
+            return tss
+        })
+    }
 
     async getTilesetSocialById(socialId: string): Promise<TilesetSocial | null> {
         if (!mongoose.Types.ObjectId.isValid(socialId)) {

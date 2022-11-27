@@ -55,6 +55,66 @@ export class CommunityStore {
         })
     }
 
+    public async getCommunitiesById(arr: string[] | undefined): Promise<Community[]> {
+        if (arr) {
+            let resultArr: Community[] = []
+            arr.map(x => {
+                CommunityApi.getCommunityById(x).then(res => {
+                    if (res.status === 200) {
+                        resultArr.push(res.data.community)
+                    }
+                }).catch(e => console.log('uh oh'))
+            })
+            return resultArr
+        } else {
+            return []
+        }
+    }
+
+    public async getCommunitiesByName(query: string, sort: string, snack?: SnackStore): Promise<void> {
+        let res = CommunityApi.getCommunities(query, sort)
+        res.then((res) => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                if (res.data.communities) {
+                    this.handleAction({
+                        type: CommunityActionType.getCommunities,
+                        payload: {
+                            communities: res.data.communities
+                        }
+                    })
+                }
+            }
+        }).catch((e) => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
+    }
+
+    public async updateCurrentCommunity(name: string, desc: string, vis: string, snack?: SnackStore): Promise<void> {
+        let cc = this._comm.currentCommunity
+        if (cc) {
+            CommunityApi.updateCommunity(cc.id, {community: { name: name, description: desc, visibility: vis}})
+            .then(res => {
+                if (res.status === 200) {
+                    snack?.showSuccessMessage(res.data.message)
+                    this.viewCommunity(res.data.community)
+                }
+            }).catch(e => {
+                if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            })
+        }
+    }
+
+    public async viewCommunity(comm: Community): Promise<void> {
+        this.nav(`/community/${comm.id}`)
+        this.handleAction({
+            type: CommunityActionType.viewCommunity,
+            payload: {
+                currentCommunity: comm
+            }
+        })
+    }
+
     public async deleteCommunityById(communityId: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
@@ -74,7 +134,7 @@ export class CommunityStore {
     }
 
     public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, auth?: AuthStore, snack?: SnackStore): Promise<void> {
-        let res = CommunityApi.getCommunities(commName)
+        let res = CommunityApi.getCommunities(commName, 'none')
         res.then((res) => {
             if (res.status === 200 && res.data.communities) {
                 let comms = res.data.communities
@@ -91,51 +151,6 @@ export class CommunityStore {
             }
         }).catch((e) => {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
-    public async getCommunitiesById(arr: string[] | undefined): Promise<Community[]> {
-        if (arr) {
-            let resultArr: Community[] = []
-            arr.map(x => {
-                CommunityApi.getCommunityById(x).then(res => {
-                    if (res.status === 200) {
-                        resultArr.push(res.data.community)
-                    }
-                }).catch(e => console.log('uh oh'))
-            })
-            return resultArr
-        } else {
-            return []
-        }
-    }
-
-    public async getCommunitiesByName(query: string, snack?: SnackStore): Promise<void> {
-        let res = CommunityApi.getCommunities(query)
-        res.then((res) => {
-            if (res.status === 200) {
-                snack?.showSuccessMessage(res.data.message)
-                if (res.data.communities) {
-                    this.handleAction({
-                        type: CommunityActionType.getCommunities,
-                        payload: {
-                            communities: res.data.communities
-                        }
-                    })
-                }
-            }
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
-    public async viewCommunity(comm: Community): Promise<void> {
-        this.nav(`/community/${comm.id}`)
-        this.handleAction({
-            type: CommunityActionType.viewCommunity,
-            payload: {
-                currentCommunity: comm
-            }
         })
     }
 

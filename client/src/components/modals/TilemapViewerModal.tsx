@@ -1,43 +1,41 @@
 import { CopyAll, Download, Star, ThumbDown, ThumbUp } from "@mui/icons-material";
-import { AppBar, Box, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
-import { useContext, useState, useEffect } from "react"
+import { AppBar, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { useContext, useEffect, useState } from "react";
+import AxiosApi from "src/api/axios/AxiosApi";
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
-import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
-import '../card/default.css'
-import AxiosApi from "src/api/axios/AxiosApi";
 import CommentCard from "../card/CommentCard";
-import { dateToStr } from "../util/DateUtils";
 import TagCard from "../card/TagCard";
 import UserProfileCard from "../card/UserProfileCard";
+import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
+import { dateToStr } from "../util/DateUtils";
 
-/** Displays the info of a clicked tileset social */
-export default function TilesetViewerModal() {
+/** Displays the info of a clicked tilemap social */
+export default function TilemapViewerModal() {
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const [commName, setCommName] = useState<string | undefined>(undefined)
     const [comment, setComment] = useState<string>('')
-    const open = Boolean(social.state.currentTSS)
+    const open = Boolean(social.state.currentTMS)
 
     useEffect(() => {
-        let tss = social.state.currentTSS
-        if (tss && tss.community) {
-            social.getCommunityName(tss.community).then(name => {
+        let tms = social.state.currentTMS
+        if (tms && tms.communities) {
+            social.getCommunityName(tms.communities[0]).then(name => {
                 if (name) setCommName(name)
             })
         } else {
             setCommName(undefined)
         }
-    }, [social.state.currentTSS])
+    }, [social.state.currentTMS])
 
     const like = () => {
-        /** Call the like tileset social function from social */
-        social.likeTSS(snack)
+        /** Call the like tilemap social function from social */
     }
 
     const dislike = () => {
-        /** Call the dislike tileset social function from social */
-        social.dislikeTSS(snack)
+        /** Call the dislike tilemap social function from social */
     }
 
     const download = () => {
@@ -47,9 +45,9 @@ export default function TilesetViewerModal() {
     const clone = () => {
         /** Andrew help me */
     }
-    
+
     const favorite = () => {
-        /** Handles favorite or unfavoriting tileset */
+        /** Hanldes favorite or unfavoriting tilemap */
     }
 
     const handlekeyUp = (e: React.KeyboardEvent) => {
@@ -57,7 +55,7 @@ export default function TilesetViewerModal() {
             /** Calls the comment function in social
              * Then clear the comment state
              */
-            social.commentTSS(comment, snack)
+            // Call function here
             setComment('')
         }
     }
@@ -67,14 +65,14 @@ export default function TilesetViewerModal() {
         social.clear()
     }
 
-    let tss = social.state.currentTSS
-    if (tss) {
+    let tms = social.state.currentTMS
+    if (tms) {
         let header = (
             <AppBar position='relative'> 
                 <Toolbar>
                     <Grid container alignItems='center' spacing={1}>
                         <Grid item flexGrow={1}>
-                            <Typography variant="h6">{tss.name}</Typography>
+                            <Typography variant="h6">{tms.name}</Typography>
                         </Grid>
                         <Grid item>
                             <IconButton onClick={favorite}><Star/></IconButton>
@@ -86,14 +84,14 @@ export default function TilesetViewerModal() {
                 </Toolbar>
             </AppBar>
         )
-        let date = dateToStr(new Date(tss.publishDate))
-        let imageURL = `${AxiosApi.getUri()}/media/${tss.imageURL}`
+        let date = dateToStr(new Date(tms.publishDate))
+        let imageURL = `${AxiosApi.getUri()}/media/${tms.imageURL}`
         let body = (
             <Grid container p={1} spacing={1}>
                 <Grid item>
                     <Card sx={{boxShadow: 3}}>
                         <ImageListItem>
-                            <img id='tile-large-preview' src={imageURL} alt={tss.id}/>
+                            <img id='tile-large-preview' src={imageURL} alt={tms.id}/>
                         </ImageListItem>
                     </Card>
                 </Grid>
@@ -104,19 +102,19 @@ export default function TilesetViewerModal() {
                                 <Grid item>
                                     <Grid item>
                                         <UserProfileCard
-                                            userId={tss.owner}
+                                            userId={tms.owner}
                                             minimal={true}
                                         />
                                         {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
-                                        <Typography variant='body2' flexWrap={"wrap"}>{tss.description}</Typography>
+                                        <Typography variant='body2' flexWrap={"wrap"}>{tms.description}</Typography>
                                     </Grid>
                                     <Grid item>
                                         <Box>
-                                            <Tooltip title={tss.likes.length}>
+                                            <Tooltip title={tms.likes.length}>
                                                 <IconButton onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
-                                            <Tooltip title={tss.dislikes.length}>
+                                            <Tooltip title={tms.dislikes.length}>
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             <Tooltip title={'Download'}>
@@ -128,7 +126,7 @@ export default function TilesetViewerModal() {
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>
-                                        {tss.tags.map(x => <Grid item key={x}><TagCard name={x} /></Grid>)}
+                                        {tms.tags.map(x => <Grid item key={x}><TagCard name={x} /></Grid>)}
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -144,7 +142,7 @@ export default function TilesetViewerModal() {
                         />
                     </Grid>
                     <Grid item>
-                        {tss.comments.slice().map(x => 
+                        {tms.comments.slice().map(x => 
                             <Grid item xs={12} key={x}>
                                 <CommentCard commentId={x} />
                             </Grid>

@@ -48,14 +48,14 @@ const ForumPostCard = (props: Props) => {
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.views)}</Typography>
                                     </Stack>
                                 </Grid>
-                                <Grid item >
+                                <Grid item>
                                     <Stack direction='row'>
                                         <Comment/>
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.comments.length)}</Typography>
                                     </Stack>
                                 </Grid>
                             </Grid>
-                            <Grid item spacing={1} xs={12}>
+                            <Grid container item spacing={1} xs={12}>
                                 <Grid item xs={2}>
                                     <Stack alignItems='center' direction='row'>
                                         <ThumbUp/>

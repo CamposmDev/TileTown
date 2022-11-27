@@ -9,10 +9,12 @@ import { User } from '@types'
 import { SnackContext } from "src/context/snack";
 import { ModalContext } from "src/context/modal";
 import { ProfileContext } from "src/context/profile";
+import { SocialContext } from "src/context/social";
 
 const AccountButton = () => {
     const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
+    const social = useContext(SocialContext)
     const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -27,6 +29,7 @@ const AccountButton = () => {
 
     const handleLogout = () => {
         auth.logoutUser(snack)
+        social.clear()
         handleMenuClose()
     }
 
