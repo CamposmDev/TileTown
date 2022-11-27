@@ -81,7 +81,17 @@ export class SocialStore {
     }
 
     public async getTilemapSocialsByName(query: string, sort: string, tags: string[], snack?: SnackStore): Promise<void> {
-        
+        // SocialApi.getTilemapSocialsByName(query, sort, tags).then(res => {
+        //     if (res.status === 200) {
+        //         snack?.showSuccessMessage(res.data.message)
+        //         this.handleAction({
+        //             type: SocialActionType.getTilemapsByName,
+        //             payload: {
+        //                 tilemaps: res.data.tilemaps
+        //             }
+        //         })
+        //     }
+        // })
     }
 
     public async getTilesetsById(arr: string[] | undefined): Promise<Tileset[]> {
@@ -109,7 +119,6 @@ export class SocialStore {
         SocialApi.getTilesetSocialsByName(query, sort, tags).then(res => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
-                console.log(res.data.tilesets)
                 this.handleAction({
                     type: SocialActionType.getTilesetsByName,
                     payload: {

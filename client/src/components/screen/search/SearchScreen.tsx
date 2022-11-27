@@ -2,6 +2,7 @@ import { Archive, Favorite, Restore } from "@mui/icons-material"
 import { BottomNavigation, BottomNavigationAction, Grid, Paper } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
+import TilemapSocialCard from "src/components/card/TilemapSocialCard"
 import TilesetSocialCard from "src/components/card/TilesetSocialCard"
 import { UserContext } from "src/context/social/user"
 import { AuthContext } from "../../../context/auth"
@@ -12,7 +13,6 @@ import { ForumContext } from "../../../context/social/forum"
 import CommunityCard from "../../card/CommunityCard"
 import ContestCard from "../../card/ContestCard"
 import ForumPostCard from "../../card/ForumPostCard"
-import TileItemCard from "../../card/TileItemCard"
 import UserProfileCard from "../../card/UserProfileCard"
 import { SearchCategory } from "../../util/Constants"
 import SearchToolbar from "./SearchToolbar"
@@ -42,18 +42,14 @@ const SearchScreen = (props: Props) => {
                     spacing={1} 
                     mt={1}
                 >
-                    {/* <Grid item>
-                        <TileItemCard
-                            preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1.png'
-                            tilemapName='McBendorjee vs Robots Debug'
-                            author='H8TER$HADE$'
-                            publishDate={new Date(2022,11,5)}
-                            views={Math.random() * 3000}
-                            comments={Math.random() * 3000}
-                            likes={Math.random() * 3000}
-                            tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                        />
-                    </Grid> */}
+                    {social.state.tilemaps.map(x => 
+                        <Grid item key={`${x.id}-${x.name}`}>
+                            <TilemapSocialCard
+                                key={x.id}
+                                tms={x}
+                            />
+                        </Grid>
+                    )}
                 </Grid>
             break
         case SearchCategory.Tilesets:
@@ -62,7 +58,8 @@ const SearchScreen = (props: Props) => {
                     mt={1}>
                         {social.state.tilesets.map(x =>
                             <Grid item key={`${x.id}-${x.name}`}>  
-                                <TilesetSocialCard key={x.id}
+                                <TilesetSocialCard 
+                                    key={x.id}
                                     tss={x}
                                 />
                             </Grid>
