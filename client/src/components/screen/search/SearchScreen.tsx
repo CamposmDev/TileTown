@@ -61,8 +61,8 @@ const SearchScreen = (props: Props) => {
                     spacing={1}
                     mt={1}>
                         {social.state.tilesets.map(x =>
-                            <Grid item key={x.id}>  
-                                <TilesetSocialCard
+                            <Grid item key={`${x.id}-${x.name}`}>  
+                                <TilesetSocialCard key={x.id}
                                     tss={x}
                                 />
                             </Grid>
@@ -74,7 +74,7 @@ const SearchScreen = (props: Props) => {
                         spacing={1}
                         mt={1}>
                     {user.users.map((x) => 
-                    <Grid item key={x.id}>
+                    <Grid item key={`${x.id}-${x.username}`}>
                         <UserProfileCard 
                             key={x.id}
                             userId={x.id}
@@ -88,7 +88,7 @@ const SearchScreen = (props: Props) => {
                 spacing={1}
                 mt={1}>
                     {comm.getCommunities().map((x) => 
-                        <Grid xs={4} item key={x.name}>
+                        <Grid xs={4} item key={x.id}>
                             <CommunityCard comm={x}/>
                         </Grid>
                     )}
@@ -100,7 +100,7 @@ const SearchScreen = (props: Props) => {
                 spacing={1}
                 mt={1}>
                     {contest.state.contests.map(x => 
-                        <Grid xs={3} item key={x.name}>
+                        <Grid xs={3} item key={x.id}>
                             <ContestCard c={x}/>
                         </Grid>
                     )}
