@@ -10,6 +10,14 @@ import {
 } from "@responses/social"
 
 export default class AxiosSocialApi {
+    public async getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<AxiosResponse> {
+        let params = {
+            name: name,
+            sort: sort,
+            tags: tags
+        }
+        return AxiosApi.get(`tileset/search/${JSON.stringify(params)}`)
+    }
 
     public async getTilemapSocialById(socialId: string): Promise<AxiosResponse<GetTilemapRes>> {
         return AxiosApi.get<GetTilemapRes, AxiosResponse<GetTilemapRes>>(`tilemap/social/${socialId}`);

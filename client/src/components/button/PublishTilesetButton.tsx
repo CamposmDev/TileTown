@@ -6,10 +6,7 @@ import { ProfileContext } from "src/context/profile"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-
-const DESC_CHAR_LIMIT = 300
-const TAG_LIMIT = 10
-const TAG_CHAR_LIMIT = 30
+import { TAG_LIMIT, TAG_CHAR_LIMIT, DESC_CHAR_LIMIT } from "../util/Constants"
 
 export default function PublishTilesetButton(props: { id: string, name: string }) {
     const prof = useContext(ProfileContext)
@@ -48,25 +45,29 @@ export default function PublishTilesetButton(props: { id: string, name: string }
             /** If the user presses enter, then try to 
              * add the tag to the tags array. 
              */
-            if (tags.length >= TAG_LIMIT) {
-                snack.showErrorMessage(`You've reached the maxmimum amount of tags you can have!`)
+            addTag()
+        }
+    }
+
+    const addTag = () => {
+        if (tags.length >= TAG_LIMIT) {
+            snack.showErrorMessage(`You've reached the maxmimum amount of tags you can have!`)
+            return
+        }
+        if (tag) {
+            if (tag.length > TAG_CHAR_LIMIT) {
+                snack.showErrorMessage(`You're tag can't be more than ${TAG_CHAR_LIMIT} characters!`)
                 return
             }
-            if (tag) {
-                if (tag.length > TAG_CHAR_LIMIT) {
-                    snack.showErrorMessage(`You're tag can't be more than ${TAG_CHAR_LIMIT} characters!`)
-                    return
-                }
-                if (tags.indexOf(tag) === -1) {
-                    tags.push(tag)
-                    setTags(tags)
-                    setTag('')
-                } else {
-                    snack.showErrorMessage('You already have that tag added!')
-                }
+            if (tags.indexOf(tag) === -1) {
+                tags.push(tag)
+                setTags(tags)
+                setTag('')
             } else {
-                snack.showErrorMessage('Tag can\'t be empty!')
+                snack.showErrorMessage('You already have that tag added!')
             }
+        } else {
+            snack.showErrorMessage('Tag can\'t be empty!')
         }
     }
 

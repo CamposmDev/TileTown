@@ -40,8 +40,8 @@ export class UserStore {
         return this._user.users
     }
 
-    public async getUsersByUsername(query: string | undefined, snack?: SnackStore): Promise<void> {
-        UserApi.getUsers({ username: query }).then(res => {
+    public async getUsersByUsername(query: string | undefined, sort?: string, snack?: SnackStore): Promise<void> {
+        UserApi.getUsers({ username: query, sort: sort }).then(res => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
                 this.handleAction({

@@ -34,14 +34,14 @@ export type SetCurrentTSS = {
 export type GetTilemapsByName = {
     type: SocialActionType.getTilemapsByName,
     payload: {
-        tilemaps: Tilemap[]
+        tilemaps: TilemapSocial[]
     }
 }
 
 export type GetTilesetsByName = {
     type: SocialActionType.getTilesetsByName,
     payload: {
-        tilesets: Tileset[]
+        tilesets: TilesetSocial[]
     }
 }
 

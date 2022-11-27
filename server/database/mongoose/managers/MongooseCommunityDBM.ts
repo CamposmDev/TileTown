@@ -10,8 +10,44 @@ import { CommunitySchemaType } from "../types";
  */
 export default class MongooseCommunityDBM implements CommunityDBM {
 
-    public async getCommunities(name: string): Promise<Community[]> {
-        let communities = await CommunityModel.find({name: new RegExp(`^${name}`, "i"), visibility: 'public'});
+    public async getCommunities(name: string, sort: string): Promise<Community[]> {
+        let filter: mongoose.FilterQuery<any> = {
+            name: new RegExp(`^${name}`, 'i'),
+            visibility: 'public'
+        }
+        let communities = []
+        switch (sort) {
+            case 'a-z':
+                communities = await CommunityModel.find(filter).sort({name: 1})
+                break
+            case 'z-a':
+                communities = await CommunityModel.find(filter).sort({name: -1})
+                break
+            case 'most_members':
+                communities = await CommunityModel.find(filter).sort({members: -1})
+                break
+            case 'least_members':
+                communities = await CommunityModel.find(filter).sort({members: 1})
+                break
+            case 'most_tilemaps':
+                communities = await CommunityModel.find(filter)
+                // communities = await CommunityModel.find(filter).sort({name: -1})
+                break
+            case 'least_tilemaps':
+                communities = await CommunityModel.find(filter)
+                // communities = await CommunityModel.find(filter).sort({name: -1})
+                break
+            case 'most_tilesets':
+                communities = await CommunityModel.find(filter)
+                // communities = await CommunityModel.find(filter).sort({name: -1})
+                break
+            case 'least_tilesets':
+                communities = await CommunityModel.find(filter)
+                // communities = await CommunityModel.find(filter).sort({name: -1})
+                break
+            default:
+                communities = await CommunityModel.find(filter)
+        }
         return communities.map(c => this.parseCommunity(c));
     }
 

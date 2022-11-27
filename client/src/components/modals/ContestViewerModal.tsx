@@ -16,7 +16,7 @@ const ContestViewerModal = () => {
         lastName: '',
         username: ''
     })
-    let c = contest.getCurrentContest()
+    let c = contest.state.currentContest
     useEffect(() => {
         if (c) {
             social.getUserById(c.owner).then(u => {
@@ -30,8 +30,8 @@ const ContestViewerModal = () => {
                 }
             })
         }
-    }, [contest.getCurrentContest()])
-    const open = Boolean(contest.getCurrentContest())
+    }, [contest.state.currentContest])
+    const open = Boolean(contest.state.currentContest)
     let content = <div></div>
     if (c) {
         const timeLeft = calcTimeLeft(new Date(c.startDate), new Date(c.endDate))
@@ -72,7 +72,7 @@ const ContestViewerModal = () => {
             onClose={() => contest.clear()}
             TransitionComponent={SLIDE_DOWN_TRANSITION}
         >
-            <DialogTitle>{contest.getCurrentContest()?.name}</DialogTitle>
+            <DialogTitle>{contest.state.currentContest?.name}</DialogTitle>
             <DialogContent>
                 {content}
             </DialogContent>

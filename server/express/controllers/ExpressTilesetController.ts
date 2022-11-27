@@ -1,9 +1,29 @@
 import { Request, Response } from "express";
 import { is } from "typescript-is";
 import { db } from "../../database";
-import { Community, SortBy, Tileset } from "@types";
+import { Community, SortBy, Tileset, TilesetSocial } from "@types";
 
 export default class TilesetController {
+  public async getTilesetSocialsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.query) {
+      return res.status(400).json({ message: 'Missing query' })
+    }
+    // if (!req.params.sort) {
+    //   return res.status(400).json({ message: 'Missing sort' })
+    // }
+    // if (!req.params.tags) {
+    //   return res.status(400).json({ message: 'Missing tags'})
+    // }
+    let query = JSON.parse(req.params.query)
+    if (query.name == null) return res.status(400).json({ message: 'Query: Name is null or undefined!'})
+    if (!query.sort) return res.status(400).json({ message: 'Query: Sort is missing!'})
+    if (!query.tags) return res.status(400).json({ message: 'Query: Tags is missing!'})
+    let tilesetSocials: TilesetSocial[] = await db.tilesetSocials.getTilesetSocialsByName(query.name, query.sort, query.tags)
+    return res.status(200).json({ message: `Found ${tilesetSocials.length} tileset(s)`, tilesets: tilesetSocials })
+  }
   public async getTilesetById(req: Request, res: Response): Promise<Response> {
     // Check to see if a request body was sent
     if (!req || !res || !req.params) {
@@ -218,28 +238,7 @@ export default class TilesetController {
       return res.status(400).json({ message: 'Bad Request' })
     }
 
-    switch (req.params.sort) {
-      case 'none':
-        break
-      case 'name':
-        break
-      case 'most_popular':
-        break
-      case 'least_popular':
-        break
-      case 'published_newest':
-        break
-      case 'published_oldest':
-        break
-      case 'likes':
-        break
-      case 'dislikes':
-        break
-      case 'views':
-        break
-    }
-
-    let tilesets = await db.tilesets.getPublishedTilesetsByName(req.params.query)
+    let tilesets: Tileset[] = await db.tilesets.getPublishedTilesetsByName(req.params.query, req.params.sort)
     return res.status(200).json({ message: `Found ${tilesets.length} tileset(s)`, tilesets: tilesets })
   }
 

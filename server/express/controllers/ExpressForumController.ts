@@ -28,7 +28,8 @@ export default class ForumController {
         }
 
         let title = req.query.title ? req.query.title.toString() : "";
-        let forums = await db.forums.searchForumPost(title);
+        let sort = req.query.sort ? req.query.sort.toString() : 'none'
+        let forums = await db.forums.searchForumPost(title, sort);
         if (forums.length === 0) {
             return res.status(404).json({message: `No forum posts found with title "${title}"`});
         }
