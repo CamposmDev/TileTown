@@ -294,7 +294,8 @@ export class SocialStore {
                         this.handleAction({
                             type: SocialActionType.setCurrentTSS,
                             payload: {
-                                currentTSS: tss
+                                newTSS: tss,
+                                oldTSS: currentTSS
                             }
                         })
                     }
@@ -313,7 +314,8 @@ export class SocialStore {
                         this.handleAction({
                             type: SocialActionType.setCurrentTSS,
                             payload: {
-                                currentTSS: tss
+                                newTSS: tss,
+                                oldTSS: currentTSS
                             }
                         })
                     }
@@ -330,7 +332,8 @@ export class SocialStore {
                     this.handleAction({
                         type: SocialActionType.setCurrentTSS,
                         payload: {
-                            currentTSS: res.data.tilesetSocial
+                            newTSS: res.data.tilesetSocial,
+                            oldTSS: currentTSS
                         }
                     })
                 }
@@ -339,13 +342,14 @@ export class SocialStore {
     }
 
     /** Increments tileset social view count and updates currentTSS state */
-    public viewTilesetSocial(id: string): void {
-        TilesetApi.viewTilesetSocial(id).then(res => {
+    public viewTilesetSocial(tss: TilesetSocial): void {
+        TilesetApi.viewTilesetSocial(tss.id).then(res => {
             if (res.status === 200) {
                 this.handleAction({
                     type: SocialActionType.setCurrentTSS,
                     payload: {
-                        currentTSS: res.data.social
+                        newTSS: res.data.social,
+                        oldTSS: tss
                     }
                 })      
             }
@@ -395,12 +399,18 @@ export class SocialStore {
                 break
             }
             case SocialActionType.setCurrentTSS: {
-                this._setSocial({
-                    currentTMS: this._social.currentTMS,
-                    currentTSS: action.payload.currentTSS,
-                    tilemaps: this._social.tilemaps,
-                    tilesets: this._social.tilesets,
-                })
+                let payload = action.payload
+                if (!payload.oldTSS) return
+                let i = this._social.tilesets.indexOf(payload.oldTSS)
+                if (i !== -1) {
+                    this._social.tilesets.splice(i, 1, payload.newTSS)
+                    this._setSocial({
+                        currentTMS: this._social.currentTMS,
+                        currentTSS: payload.newTSS,
+                        tilemaps: this._social.tilemaps,
+                        tilesets: this._social.tilesets,
+                    })
+                }
                 break
             }
             case SocialActionType.getTilemapsByName: {
