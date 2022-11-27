@@ -51,4 +51,12 @@ export default class AxiosSocialApi {
         return AxiosApi.post<CommentTilesetRes, AxiosResponse<CommentTilesetRes>>(`tileset/comment/${socialId}`, payload);
     }
 
+    public async favoriteTilemapSocial(socialId: string): Promise<AxiosResponse<{}>> {
+        return AxiosApi.post<{}>(`/tilemap/favorite/${socialId}`);
+    }
+
+    public async unfavoriteTilemapSocial(socialId: string): Promise<AxiosResponse<{}>> {
+        return AxiosApi.post<{}>(`/tilemap/unfavorite/${socialId}`);
+    }
+
 }

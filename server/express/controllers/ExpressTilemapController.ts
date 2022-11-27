@@ -304,17 +304,17 @@ export default class TilemapController {
         if (user === null) {
             return res.status(404).json({ message: `User ${req.userId} not found`});
         }
-        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
-        if (tilemap === null) {
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) {
             return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
         }
 
-        let tilemapIndex = user.favoriteTileMaps.indexOf(tilemap.id);
+        let tilemapIndex = user.favoriteTileMaps.indexOf(social.id);
         if (tilemapIndex > -1) {
-            return res.status(400).json({ message: `User ${user.id} has already favorited tilemap ${tilemap.id}`});
+            return res.status(400).json({ message: `User ${user.id} has already favorited tilemap ${social.id}`});
         }
 
-        user.favoriteTileMaps.push(tilemap.id);
+        user.favoriteTileMaps.push(social.id);
 
         let updatedUser = await db.users.updateUser(user.id, {favoriteTileMaps: user.favoriteTileMaps});
         if (updatedUser === null) {
@@ -338,14 +338,14 @@ export default class TilemapController {
         if (user === null) {
             return res.status(404).json({ message: `User ${req.userId} not found`});
         }
-        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
-        if (tilemap === null) {
+        let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
+        if (social === null) {
             return res.status(404).json({ message: `Tilemap ${req.params.id} not found`});
         }
 
-        let tilemapIndex = user.favoriteTileMaps.indexOf(tilemap.id);
+        let tilemapIndex = user.favoriteTileMaps.indexOf(social.id);
         if (tilemapIndex === -1) {
-            return res.status(400).json({ message: `User ${user.id} has already unfavorited tilemap ${tilemap.id}`});
+            return res.status(400).json({ message: `User ${user.id} has already unfavorited tilemap ${social.id}`});
         }
 
         user.favoriteTileMaps.splice(tilemapIndex, 1);
