@@ -13,33 +13,33 @@ import { CommunityContext } from 'src/context/social/community';
 
 
 const CommunityMembersModal = () => {
+    const comm = useContext(CommunityContext)
     const [isOpen, setIsOpen] = useState(false)
     const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
-    let comm = cc.getCurrentCommunity()
-    let members: JSX.Element[] | undefined = undefined
-    if (comm)
-        members = comm.members.map(x => <Grid item><UserProfileCard userId={x} /></Grid>)
+    let c = comm.getCurrentCommunity()
+    let members: JSX.Element | JSX.Element[] = <div/>
+    if (c) {
+        members = c.members.map(x =>
+            <Grid container item>
+                <UserProfileCard userId={x} />
+            </Grid>
+        )
+    }
     let ui = (
         <Drawer 
             open={isOpen} 
             onClose={handleClose}
-            anchor={'right'}
-            >
+            anchor='right'
+        >
             <DialogContent>
             <Box>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    RPGs Done Right Members
-                </Typography>
-                <Avatar sx={{ bgcolor: 'secondary.main', justifyItems: 'center', margin: 'auto'}}>
-                    <Icon ><PeopleAltIcon /></Icon>
-                </Avatar>
+                <Typography variant="h6">Members</Typography>
                 <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
                     {members}
                 </Grid>        
             </Box>
             </DialogContent>
-            
         </Drawer>
     )
     return (
