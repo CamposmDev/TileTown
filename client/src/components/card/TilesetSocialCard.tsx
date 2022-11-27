@@ -27,12 +27,10 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
         </Tooltip>
     )
     let socialBox = <SocialBox comments={props.tss.comments.length} likes={props.tss.likes.length} views={props.tss.views} />
-    const content = <img id='tile-preview' src={imageURL}/>
+    const content = <img id='tile-preview' src={imageURL} alt={props.tss.id}/>
     return (
         <Card
-            onClick={() => {
-                social.viewTilesetSocial(props.tss.id)
-            }}
+            onClick={() => social.viewTilesetSocial(props.tss)}
             sx={{boxShadow: 3}}>
             <CardActionArea>
                 <ImageListItem>

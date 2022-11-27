@@ -20,14 +20,16 @@ export enum SocialActionType {
 export type SetCurrentTMS = {
     type: SocialActionType.setCurrentTMS,
     payload: {
-        currentTMS: TilemapSocial
+        newTMS: TilemapSocial,
+        oldTMS: TilemapSocial | undefined
     }
 }
 
 export type SetCurrentTSS = {
     type: SocialActionType.setCurrentTSS,
     payload: {
-        currentTSS: TilesetSocial
+        newTSS: TilesetSocial,
+        oldTSS: TilesetSocial | undefined
     }
 }
 
