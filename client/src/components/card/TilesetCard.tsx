@@ -86,7 +86,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
             <Card
                 onClick={() => {
                     if (tileset.isPublished) {
-                        if (tilesetSocial) social.viewTilesetSocial(tilesetSocial.id)
+                        if (tilesetSocial) social.viewTilesetSocial(tilesetSocial)
                     } else {
                         nav(`/create/tileset/${tileset.id}`)
                     }

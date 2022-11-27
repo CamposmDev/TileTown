@@ -31,7 +31,7 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
     return (
         <Card
             onClick={() => {
-                social.viewTilesetSocial(props.tss.id)
+                social.viewTilesetSocial(props.tss)
             }}
             sx={{boxShadow: 3}}>
             <CardActionArea>
