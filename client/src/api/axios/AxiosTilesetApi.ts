@@ -68,9 +68,9 @@ export default class AxiosTilesetApi {
     return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(`/tileset/publish/${id}`, payload);
   }
 
-  public async getPublishedTilesetsByName(query: string, sort: string) {
-    return AxiosApi.get(`/tileset/search/${query}/${sort}`)
-  }
+  // public async getPublishedTilesetsByName(query: string, sort: string) {
+  //   return AxiosApi.get(`/tileset/search/${query}/${sort}`)
+  // }
 
   public async getUnpublishedTilesets() : Promise<AxiosResponse<GetUnpublishedTilesetsRes>> {
     return AxiosApi.get<GetUnpublishedTilesetsRes, AxiosResponse<GetUnpublishedTilesetsRes>>(`/user/tilesets/unpublished`);

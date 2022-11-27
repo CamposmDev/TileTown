@@ -11,9 +11,10 @@ router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
 router.put("/:id", Auth.verifyJWT, Upload.single('image'), TilesetController.updateTilesetById);
 router.delete("/:id", Auth.verifyJWT, TilesetController.deleteTilesetById);
 
-router.get("/search/:query/:sort", Auth.verifyJWT, TilesetController.getPublishedTilesetsByName);
+// router.get("/search/:query/:sort", Auth.verifyJWT, TilesetController.getPublishedTilesetsByName);
 
 // SocialStatistics routes
+router.get("/search/:query", TilesetController.getTilesetSocialsByName)
 router.get("/social/:id", TilesetController.getTilesetSocialById);
 router.get("/pairs/:search/:sort", Auth.verifyJWT, TilesetController.getTilesetPartials);
 router.post("/comment/:id", Auth.verifyJWT, TilesetController.commentTilesetById);

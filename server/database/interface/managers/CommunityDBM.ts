@@ -20,7 +20,7 @@ export default interface CommunityDBM {
    */
   getCommunityById(communityId: string): Promise<Community | null>;
   getCommunityByName(name: string): Promise<Community | null>;
-  getCommunities(name: string): Promise<Community[]>;
+  getCommunities(name: string, sort: string): Promise<Community[]>;
   getCommunitiesById(communityIds: string[]): Promise<Community[]>;
 
   /**

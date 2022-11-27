@@ -1,5 +1,5 @@
-import { CopyAll, CopyAllOutlined, CopyAllRounded, CopyAllTwoTone, Copyright, Download, Forum, Star, StarBorder, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
-import { AppBar, Box, Button, Card, CardContent, Dialog, Grid, Icon, IconButton, ImageListItem, LinearProgress, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { CopyAll, Download, Star, ThumbDown, ThumbUp } from "@mui/icons-material";
+import { AppBar, Box, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useContext, useState, useEffect } from "react"
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";

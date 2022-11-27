@@ -1,7 +1,8 @@
-import { Grid } from "@mui/material"
-import { useContext, useEffect } from "react"
+import { Archive, Favorite, Restore } from "@mui/icons-material"
+import { BottomNavigation, BottomNavigationAction, Grid, Paper } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import TilesetCard from "src/components/card/TilesetCard"
+import TilesetSocialCard from "src/components/card/TilesetSocialCard"
 import { UserContext } from "src/context/social/user"
 import { AuthContext } from "../../../context/auth"
 import { SocialContext } from "../../../context/social"
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const SearchScreen = (props: Props) => {
+    const [value, setValue] = useState(0)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const user = useContext(UserContext)
@@ -60,23 +62,11 @@ const SearchScreen = (props: Props) => {
                     mt={1}>
                         {social.state.tilesets.map(x =>
                             <Grid item key={x.id}>  
-                                <TilesetCard
-                                    tilesetId={x.id}
+                                <TilesetSocialCard
+                                    tss={x}
                                 />
                             </Grid>
                         )}
-                {/* <Grid item>
-                    <TileItemCard
-                        preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/level1and2tileset.png'
-                        tilemapName='McBendorjee vs Robots Tileset'
-                        author='Emdoiqua'
-                        publishDate={new Date(2022,11,5)}
-                        views={Math.random() * 3000}
-                        comments={Math.random() * 3000}
-                        likes={Math.random() * 3000}
-                        tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                    />
-                </Grid> */}
             </Grid>
             break
         case SearchCategory.Users:
@@ -109,7 +99,7 @@ const SearchScreen = (props: Props) => {
             <Grid container 
                 spacing={1}
                 mt={1}>
-                    {contest.getContests().map(x => 
+                    {contest.state.contests.map(x => 
                         <Grid xs={3} item key={x.name}>
                             <ContestCard c={x}/>
                         </Grid>
@@ -137,6 +127,19 @@ const SearchScreen = (props: Props) => {
             <Grid item>
                 {content}
             </Grid>
+            {/* <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                <BottomNavigation
+                showLabels
+                value={value}
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                }}
+                >
+                <BottomNavigationAction label="Recents" icon={<Restore />} />
+                <BottomNavigationAction label="Favorites" icon={<Favorite />} />
+                <BottomNavigationAction label="Archive" icon={<Archive />} />
+                </BottomNavigation>
+            </Paper> */}
         </Grid>
     )
 }

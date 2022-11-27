@@ -28,6 +28,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "../@requests", "../@responses"  ]
+    "src", 
+    "../@requests", 
+    "../@responses"
+  ]
 }

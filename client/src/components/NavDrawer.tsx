@@ -9,15 +9,14 @@ import { AuthContext } from 'src/context/auth'
 export default function NavDrawer() {
   const auth = useContext(AuthContext)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const navigate = useNavigate()
 
-  const handleMenuClose = () => {
+  const handleClose = () => {
     setIsDrawerOpen(false)
   }
 
   const initMenuItem = (text: string, path: string) => {
     return (
-      <MenuItem onClick={handleMenuClose} component={Link} to={path}>{text}</MenuItem>
+      <MenuItem onClick={handleClose} component={Link} to={path}>{text}</MenuItem>
     )
   }
 

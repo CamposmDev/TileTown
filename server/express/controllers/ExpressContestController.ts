@@ -33,7 +33,8 @@ export default class ContestController {
         }
 
         let name = req.query.name ? req.query.name.toString() : "";
-        let contests = await db.contests.getContests(name);
+        let sort = req.query.sort ? req.query.sort.toString() : 'none';
+        let contests = await db.contests.getContests(name, sort);
         if (contests.length === 0) {
             return res.status(404).json({ message: `No contests found with name "${name}"`});
         }

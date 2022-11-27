@@ -1,6 +1,6 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, ContestApi, MediaApi, SocialApi, TilesetApi, UserApi } from "src/api"
-import { Comment, Community, Contest, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
+import { CommentApi, CommunityApi, SocialApi, TilesetApi, UserApi } from "src/api"
+import { Comment, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
 import { AuthStore } from "../auth/AuthStore"
@@ -9,8 +9,8 @@ import { NavigateFunction } from "react-router"
 export interface SocialState {
     currentTMS: TilemapSocial | undefined
     currentTSS: TilesetSocial | undefined
-    tilemaps: Tilemap[]
-    tilesets: Tileset[]
+    tilemaps: TilemapSocial[]
+    tilesets: TilesetSocial[]
 }
 
 /**
@@ -58,22 +58,6 @@ export class SocialStore {
         })
     }
 
-    public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {
-        let res = ContestApi.createContest({
-            contest: {
-                name: name,
-                description: description,
-                isPublished: true,
-                endDate: endDate
-            }
-        })
-        res.then((res) => {
-            if (res.status === 201) snack?.showSuccessMessage(res.data.message)
-        }).catch((e) => {
-            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
-        })
-    }
-
     public async getUserById(userId: string): Promise<User | null> {
         let res = UserApi.getUserById(userId)
         return res.then((res) => {
@@ -86,7 +70,7 @@ export class SocialStore {
     }
 
     public async getUsersByUsername(query: string | undefined): Promise<User[] | null> {
-        let res = UserApi.getUsers({username: query})
+        let res = UserApi.getUsers({username: query, sort: 'none'})
         return res.then((res) => {
             if (res.status === 200) {
                 return res.data.users
@@ -94,6 +78,10 @@ export class SocialStore {
         }).catch((e) => {
             return null
         })
+    }
+
+    public async getTilemapSocialsByName(query: string, sort: string, tags: string[], snack?: SnackStore): Promise<void> {
+        
     }
 
     public async getTilesetsById(arr: string[] | undefined): Promise<Tileset[]> {
@@ -117,10 +105,11 @@ export class SocialStore {
         })
     }
 
-    public async getTilesetsByName(query: string, snack?: SnackStore): Promise<void> {
-        TilesetApi.getPublishedTilesetsByName(query, query).then(res => {
+    public async getTilesetSocialsByName(query: string, sort: string, tags: string[], snack?: SnackStore): Promise<void> {
+        SocialApi.getTilesetSocialsByName(query, sort, tags).then(res => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
+                console.log(res.data.tilesets)
                 this.handleAction({
                     type: SocialActionType.getTilesetsByName,
                     payload: {

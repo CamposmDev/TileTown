@@ -43,13 +43,10 @@ export default class AxiosUserApi  {
     async updateProfile(userId: string, form: FormData): Promise<AxiosResponse<UpdateProfileRes>> {
         return AxiosApi.putForm<UpdateProfileRes, AxiosResponse<UpdateProfileRes>, FormData>(`/user/profile/${userId}`, form);
     }
-
-
-
     async getUserById(userId: string) {
         return AxiosApi.get(`/user/${userId}`)
     }
-    async getUsers(payload: {username: string | undefined}) {
+    async getUsers(payload: {username: string | undefined, sort?: string}) {
         return AxiosApi.post('/user/users', payload)
     }
     async addFriend(userId: string) {

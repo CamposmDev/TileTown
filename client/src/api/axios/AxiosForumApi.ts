@@ -29,9 +29,8 @@ export default class AxiosForumApi {
         return AxiosApi.delete<DeleteForumRes, AxiosResponse<DeleteForumRes>>(`/forum/${forumId}`);
     }
 
-    public async getForums(name: string): Promise<AxiosResponse<GetForumsRes>> {
-        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { title: name } });
-
+    public async getForums(name: string, sort: string): Promise<AxiosResponse<GetForumsRes>> {
+        return AxiosApi.get<GetForumsRes, AxiosResponse<GetForumsRes>, GetForumsReq>(`/forum`, { params: { title: name, sort: sort } });
     }
 
     public async updateForumById(forumId: string, payload: UpdateForumReq): Promise<AxiosResponse<UpdateForumRes>> {

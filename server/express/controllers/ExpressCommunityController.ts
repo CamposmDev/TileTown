@@ -13,7 +13,8 @@ export default class CommunityController {
         }
 
         let name = req.query.name ? req.query.name.toString() : "";
-        let communities = await db.communities.getCommunities(name);
+        let sort = req.query.sort ? req.query.sort.toString() : "none";
+        let communities = await db.communities.getCommunities(name, sort);
         if (communities.length === 0) {
             return res.status(404).json({ message: `No communities found with name "${name}"`});
         }

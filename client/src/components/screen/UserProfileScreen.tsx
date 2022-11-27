@@ -111,32 +111,19 @@ const UserProfileScreen = () => {
                         spacing={1} 
                         mt={1}
                     >
-                        <Grid item>
-                            {/* <TileItemCard
-                                preview='https://raw.githubusercontent.com/CamposmDev/CSE380-Group-Project/master/public/res/tilemaps/level1/Level1_1.png'
-                                tilemapName='McBendorjee vs Robots Debug'
-                                author='H8TER$HADE$'
-                                publishDate={new Date(2022,11,5)}
-                                views={Math.random() * 3000}
-                                comments={Math.random() * 3000}
-                                likes={Math.random() * 3000}
-                                tags={['classroom', 'school', 'university', 'lecture hall', 'sbu', 'mckenna', 'cse380']}
-                            /> */}
-                        </Grid>
+                        
                     </Grid>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <Grid container 
                         spacing={1}>
-                            {user.tilesets.map(x => {
-                                let usr = auth.getUsr()
-                                return (
+                            {user.tilesets.map(x =>
                                     <Grid item key={x}>
                                         <TilesetCard
                                             tilesetId={x}
                                         />
                                     </Grid>
-                            )})}
+                            )}
                     </Grid>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
@@ -145,7 +132,7 @@ const UserProfileScreen = () => {
                         mt={1}
                     >
                         {contests.map(x => 
-                            <Grid item key={x.id}>
+                            <Grid item key={x.id} xs={3}>
                                 <ContestCard
                                     c={x}
                                 />
@@ -158,7 +145,7 @@ const UserProfileScreen = () => {
                         mt={1}
                     >
                         {comms.map(x => 
-                            <Grid item key={x.id}>
+                            <Grid item key={x.id} xs={3}>
                                 <CommunityCard
                                     comm={x}
                                 />
