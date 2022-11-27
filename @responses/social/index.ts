@@ -13,4 +13,8 @@ export type { default as CommentTilesetRes } from "./CommentTilesetRes";
 export type { default as ViewTilemapRes } from "./ViewTilemapRes";
 export type { default as ViewTilesetRes } from "./ViewTilesetRes";
 
+export type { default as FavoriteTilemapRes } from "./FavoriteTilemapRes";
+export type { default as FavoriteTilesetRes } from "./FavoriteTilesetRes";
 
+export type { default as UnFavoriteTilemapRes } from "./UnFavoriteTilemapRes";
+export type { default as UnFavoriteTilesetRes } from "./UnFavoriteTilesetRes";
