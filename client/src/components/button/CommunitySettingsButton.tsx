@@ -1,13 +1,17 @@
 import { Settings } from "@mui/icons-material"
 import { Box, Button, DialogActions, DialogContent, DialogTitle, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import { useContext, useState } from "react"
+import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
 import { CommunityContext } from "src/context/social/community"
-import UserProfileCard from "../card/UserProfileCard"
+import MemberCard from "../card/MemberCard"
 
 const CommunitySettingsButton = () => {
+    const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
     const snack = useContext(SnackContext)
+    const nav = useNavigate()
     const [open, setOpen] = useState(false)
     const [name, setName] = useState<string>(comm.currCommunity?.name as string)
     const [desc, setDesc] = useState<string>(comm.currCommunity?.description as string)
@@ -27,6 +31,13 @@ const CommunitySettingsButton = () => {
 
     const handleDelete = () => {
         /** Show confirm delete modal */
+        let id = comm.currCommunity?.id
+        if (!id) return
+        comm.deleteCommunityById(id, snack).then(() => {
+            auth.refreshUser().then(() => {
+                nav(`/profile/${auth.usr?.id}`)
+            })
+        })
         handleModalClose()
     }
 
@@ -62,7 +73,7 @@ const CommunitySettingsButton = () => {
     if (c) {
         moderators = c.members.map(x =>
             <Grid item xs={12}>
-                <UserProfileCard userId={x} />
+                <MemberCard usrId={x} />
             </Grid>
         )
     }
