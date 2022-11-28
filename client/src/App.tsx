@@ -65,7 +65,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
+      <CssBaseline/>
         <AuthContextProvider key={"auth-context-provider"}>
           <SnackContextProvider key={"snack-context-provider"}>
             <ModalContextProvider key={"modal-context-provider"}>
@@ -77,7 +77,7 @@ const App = () => {
                         <ProfileContextProvider
                           key={"profile-context-provider"}
                         >
-                          <NavBar />
+                          <NavBar/>
                           <Routes>
                             <Route path="/" element={<SplashScreen />} />
                             <Route path="/login" element={<LoginScreen />} />

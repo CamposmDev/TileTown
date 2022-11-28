@@ -1,5 +1,5 @@
-import { AppBar, Box, Button, Grid, LinearProgress, scopedCssBaselineClasses, Skeleton, Stack, Tab, Tabs, Toolbar, Typography } from "@mui/material"
-import { useContext, useEffect, useState } from "react";
+import { AppBar, Box, Button, Fade, Grid, LinearProgress, scopedCssBaselineClasses, Skeleton, Stack, Tab, TabProps, Tabs, TextField, Toolbar, Typography } from "@mui/material"
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SocialContext } from "src/context/social";
@@ -14,14 +14,17 @@ import TilesetCard from "../card/TilesetCard";
 import { ProfileContext } from "src/context/profile";
 import { useParams } from "react-router";
 import { ContestContext } from "src/context/social/contest";
+import TilemapSocialCard from "../card/TilemapSocialCard";
+import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader";
+import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader";
 
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
-  }
+}
   
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props: TabPanelProps): JSX.Element {
     const { children, value, index, ...other } = props;
     return (
         <div
@@ -32,7 +35,7 @@ function TabPanel(props: TabPanelProps) {
             {...other}
         >
         {value === index && (
-            <Box sx={{ p: 3 }}>
+            <Box sx={{  }}>
             <Typography>{children}</Typography>
             </Box>
         )}
@@ -40,7 +43,12 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-function a11yProps(index: number) {
+/**
+ * Returns 
+ * @param index 
+ * @returns 
+ */
+function a11yProps(index: number): TabProps {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
@@ -57,25 +65,38 @@ const UserProfileScreen = () => {
     const contest = useContext(ContestContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
-    const [value, setValue] = useState(0)
-    
+    const [mainIdx, setMainIdx] = useState<number>(0)
+    const [favorIdx, setFavorIdx] = useState<number>(0)
     useEffect(() => {
         if (!id || !auth.isLoggedIn()) {
             nav('/')
         } else {
             social.getUserById(id).then(user => {
+                
                 if (user) {
-                    setUser(user)
-                    contest.getContestsById(user.joinedContests).then(arr => setContests(arr))
-                    comm.getCommunitiesById(user.joinedCommunities).then(arr => setComms(arr))            
+                    let aux = () => {
+                        setUser(user)
+                        contest.getContestsById(user.joinedContests).then(arr => setContests(arr))
+                        comm.getCommunitiesById(user.joinedCommunities).then(arr => setComms(arr))           
+                    }
+                    let you = auth.getUsr()
+                    if (you) {
+                        if (you.id.localeCompare(user.id) === 0) {
+                            auth.refreshUser().then(() => {
+                                aux()
+                            })
+                        } else {
+                            aux()
+                        }
+                    }
+                     
                 }
             })
         }
     }, [id])
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue)
-    }
+    const handleMainTabChange = (e: React.SyntheticEvent, newValue: number) => setMainIdx(newValue)
+    const handleFavorTabChange = (e: React.SyntheticEvent, newValue: number) => setFavorIdx(newValue)
 
     if (user) {
         let profileCard = (
@@ -87,71 +108,130 @@ const UserProfileScreen = () => {
         )
         let header = (
             <Toolbar sx={{boxShadow: 3}}>
-                <Box mt={1} mb={1} mr={1}>
+                <Box m={1}>
                     {profileCard}
                 </Box>
                 <Tabs
-                    value={value}
-                    onChange={handleTabChange}
+                    value={mainIdx}
+                    onChange={handleMainTabChange}
+                    variant='scrollable'
+                    allowScrollButtonsMobile
                     textColor="primary"
                     indicatorColor="primary"
                 >
-                    <Tab label="Tilemaps" />
-                    <Tab label="Tilesets" />
-                    <Tab label="Contests & Partcipation" />
-                    <Tab label='Communities' />
+                    <Tab label={`Tilemaps`} {...a11yProps(0)}/>
+                    <Tab label={`Tilesets`} {...a11yProps(1)}/>
+                    <Tab label={`Communities`} {...a11yProps(2)}/>
+                    <Tab label={`Contests & Partcipation`} {...a11yProps(3)}/>
+                    <Tab label='Favorites' {...a11yProps(4)}/>
                 </Tabs>
             </Toolbar>
         )
+        let tilemapTP = (
+            <TabPanel value={mainIdx} index={0}>
+                <Grid 
+                    container 
+                    spacing={1} 
+                >
+                    {user.tilemaps.map(x => 
+                        <Grid item key={x}>
+                            {/* <TilemapCard tilemapId={x}/> */}
+                        </Grid>
+                    )}   
+                </Grid>
+            </TabPanel>
+        )
+        let tilesetTP = (
+            <TabPanel value={mainIdx} index={1}>
+                <Grid 
+                    container 
+                    spacing={1}
+                >
+                    {user.tilesets.map(x =>
+                        <Grid item key={x}>
+                            <TilesetCard
+                                tilesetId={x}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
+            </TabPanel>
+        )
+        let communityTP = (
+            <TabPanel value={mainIdx} index={2}>
+                <Grid container 
+                    spacing={1}
+                >
+                    {comms.map(x => 
+                        <Grid item key={x.id} xs={3}>
+                            <CommunityCard
+                                comm={x}
+                            />
+                        </Grid>)}
+                </Grid>
+            </TabPanel>
+        )
+        let contestTP = (
+            <TabPanel value={mainIdx} index={3}>
+                <Grid container 
+                    spacing={1}
+                >
+                    {contests.map(x => 
+                        <Grid item key={x.id} xs={3}>
+                            <ContestCard
+                                c={x}
+                            />
+                        </Grid>)}
+                </Grid>
+            </TabPanel>
+        )
+        let favoritesTP = (
+            <TabPanel value={mainIdx} index={4}>
+                <Toolbar sx={{boxShadow: 0}}>
+                    <Stack direction='row' spacing={2} alignItems='center'>
+                        <Tabs
+                            value={favorIdx}
+                            onChange={handleFavorTabChange}
+                            allowScrollButtonsMobile
+                            textColor="primary"
+                            indicatorColor="primary"
+                        >
+                            <Tab label={`Tilemaps (${user.favoriteTileMaps.length})`} {...a11yProps(0)}/>
+                            <Tab label={`Tilesets (${user.favoriteTileSets.length})`} {...a11yProps(1)}/>
+                        </Tabs>
+                        <TextField label='Filter by name' size='small'/>
+                    </Stack>
+                    
+                </Toolbar>
+                <TabPanel value={favorIdx} index={0}>
+                    <Grid container spacing={1}>
+                        {user.favoriteTileMaps.map(x => {
+                            return (
+                                <Grid item key={x}>
+                                    <TilemapSocialCardLoader tmsId={x}/>
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                </TabPanel>
+                <TabPanel value={favorIdx} index={1}>
+                    <Grid container spacing={1}>
+                        {user.favoriteTileSets.map(x => 
+                            <Grid item key={x}>
+                                <TilesetSocialCardLoader tssId={x}/>
+                            </Grid>    
+                        )}
+                    </Grid>
+                </TabPanel>
+            </TabPanel>
+        )
         let body = (
             <Box>
-                <TabPanel value={value} index={0}>
-                    <Grid 
-                        container 
-                        spacing={1} 
-                        mt={1}
-                    >
-                        
-                    </Grid>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    <Grid container 
-                        spacing={1}>
-                            {user.tilesets.map(x =>
-                                    <Grid item key={x}>
-                                        <TilesetCard
-                                            tilesetId={x}
-                                        />
-                                    </Grid>
-                            )}
-                    </Grid>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    <Grid container 
-                        spacing={1}
-                        mt={1}
-                    >
-                        {contests.map(x => 
-                            <Grid item key={x.id} xs={3}>
-                                <ContestCard
-                                    c={x}
-                                />
-                            </Grid>)}
-                    </Grid>
-                </TabPanel>
-                <TabPanel value={value} index={3}>
-                    <Grid container 
-                        spacing={1}
-                        mt={1}
-                    >
-                        {comms.map(x => 
-                            <Grid item key={x.id} xs={3}>
-                                <CommunityCard
-                                    comm={x}
-                                />
-                            </Grid>)}
-                    </Grid>
-                </TabPanel>
+                {tilemapTP}
+                {tilesetTP}
+                {communityTP}
+                {contestTP}
+                {favoritesTP}
             </Box>
         )
         return (

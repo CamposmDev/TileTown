@@ -50,7 +50,7 @@ export default class AxiosSocialApi {
     public async viewTilesetById(socialId: string): Promise<AxiosResponse<ViewTilesetRes>> {
         return AxiosApi.put<ViewTilesetRes, AxiosResponse<ViewTilesetRes>>(`tileset/view/${socialId}`);
     }
-
+    
     public async commentTilemapById(socialId: string, payload: { comment: { body: string } }): Promise<AxiosResponse<CommentTilemapRes>> {
         return AxiosApi.post<CommentTilemapRes, AxiosResponse<CommentTilemapRes>>(`tilemap/comment/${socialId}`, payload);
     }

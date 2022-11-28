@@ -10,7 +10,7 @@ const NavBar = () => {
     const auth = useContext(AuthContext)
     return (
         <Box sx={{flexGrow: 1}}>
-            <AppBar position='relative'>
+            <AppBar position='sticky'>
                 <Toolbar>
                      {auth.isLoggedIn() ? <UserMenu/> : <WelcomeMenu/>}
                 </Toolbar>

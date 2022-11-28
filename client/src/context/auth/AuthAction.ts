@@ -5,6 +5,7 @@ export type AuthAction =
 | LoginUser 
 | LogoutUser
 | LoginAsGuest
+| RefreshUser
 | ChangeUsername
 | ChangePassword
 | ChangeEmail
@@ -22,6 +23,8 @@ export enum AuthActionType {
     getLoggedIn = "GET_LOGGED_IN",
 
     loginAsGuest = 'LOGIN_AS_GUEST',
+
+    refreshUser = 'REFRESH_USER',
 
     changeUsername = "CHANGE_USERNAME",
     changePassword = "CHANGE_PASSWORD",
@@ -63,6 +66,13 @@ export type LogoutUser = {
 
 export type LoginAsGuest = {
     type: AuthActionType.loginAsGuest
+}
+
+export type RefreshUser = {
+    type: AuthActionType.refreshUser,
+    payload: {
+        user: User
+    }
 }
 
 export type ChangeUsername = {
