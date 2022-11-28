@@ -49,7 +49,7 @@ const CreateButton = (props: MenuItemProps) => {
       </MenuItem>
       <MenuItem onClick={showCreateTilesetModal}>Tileset</MenuItem>
       <MenuItem onClick={() => {
-        prof.viewUnpublishedTilesets(auth.getUsr()?.id)
+        prof.viewUnpublishedTilesets(auth.usr?.id)
         handleMenuClose()
       }}>View Unpublished Tilesets</MenuItem>
       <MenuItem onClick={showCreateCommunityModal}>Community</MenuItem>

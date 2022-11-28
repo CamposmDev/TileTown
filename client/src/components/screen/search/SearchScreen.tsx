@@ -31,7 +31,7 @@ const SearchScreen = (props: Props) => {
     const forum = useContext(ForumContext)
     const nav = useNavigate()
     useEffect(() => {
-        if (!auth.isLoggedIn()) nav('/')
+        if (!auth.isLoggedIn) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     let content = <div/>

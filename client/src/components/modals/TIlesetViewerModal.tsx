@@ -13,6 +13,12 @@ import UserProfileCard from "../card/UserProfileCard";
 import { formatToSocialStr } from "../util/NumberUtils";
 import { AuthContext } from "src/context/auth";
 
+function containsTSS(arr: string[], id: string): boolean {
+    let i = arr.indexOf(id)
+    console.log(i)
+    return Boolean(i !== -1)
+}
+
 /** Displays the info of a clicked tileset social */
 export default function TilesetViewerModal() {
     const auth = useContext(AuthContext)
@@ -28,10 +34,11 @@ export default function TilesetViewerModal() {
             social.getCommunityName(tss.community).then(name => {
                 if (name) setCommName(name)
             })
+            
         } else {
             setCommName(undefined)
         }
-    }, [social.state.currentTSS])
+    }, [social.state.currentTSS, auth.usr])
 
     const like = () => {
         /** Call the like tileset social function from social */
@@ -44,8 +51,22 @@ export default function TilesetViewerModal() {
     }
 
     const favorite = () => {
-        /** Call the favorite function to decide whether to add or remove */
-        if (tss) social.favoriteTSS(tss.id).then(() => auth.refreshUser())
+        /** Call the favorite/unfavorite function to decide whether to add or remove */
+        let usr = auth.usr
+        if (!tss || !usr) return
+        if (containsTSS(usr.favoriteTileSets, tss.id)) {
+            social.unfavoriteTSS(tss.id, snack).then(usr => {
+                if (usr) {
+                    auth.refreshUser(usr)
+                }
+            })
+        } else {
+            social.favoriteTSS(tss.id, snack).then(usr => {
+                if (usr) {
+                    auth.refreshUser(usr)
+                }
+            })
+        }
     }
 
     const download = () => {
@@ -72,11 +93,11 @@ export default function TilesetViewerModal() {
     }
 
     let tss = social.state.currentTSS
+    let usr = auth.usr
     if (tss) {
-        let usr = auth.getUsr()
         let starSX = {}
-        if (usr) {
-            if (usr.favoriteTileSets.indexOf(tss.id) !== -1) starSX = {color: 'gold'}
+        if (usr && containsTSS(usr.favoriteTileSets, tss.id)) {
+            starSX = {color: 'gold'}
         }
         let header = (
             <AppBar position='relative'> 

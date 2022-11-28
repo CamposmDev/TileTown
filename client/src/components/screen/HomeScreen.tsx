@@ -73,7 +73,7 @@ const HomeScreen = () => {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
     useEffect(() => {
-        if (!auth.isLoggedIn()) navigate('/')
+        if (!auth.isLoggedIn) navigate('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const SIZE = 512

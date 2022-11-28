@@ -32,7 +32,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
         aux()
     }, [social])
     if (tileset) {
-        let usr = auth.getUsr()
+        let usr = auth.usr
         /** If I'm not the owner of the tileset and it's not published, then don't show it */
         if (usr) {
             if (usr.id.localeCompare(tileset.owner) !== 0 && !tileset.isPublished) {

@@ -15,7 +15,7 @@ const AccountSettingsScreen = () => {
     const auth = useContext(AuthContext)
     const nav = useNavigate()
     useEffect(() => {
-        if (!auth.isLoggedIn()) nav('/')
+        if (!auth.isLoggedIn) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -28,7 +28,7 @@ const AccountSettingsScreen = () => {
     }
 
     const SIZE = 128
-    let user: User | null = auth.getUsr()
+    let user: User | null = auth.usr
     return (
         <Container>
             <NotificationSnack/>

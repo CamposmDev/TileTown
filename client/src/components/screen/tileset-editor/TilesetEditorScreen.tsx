@@ -39,7 +39,7 @@ const TilesetEditorScreen = () => {
   const snack = useContext(SnackContext);
   const nav = useNavigate();
   useEffect(() => {
-    if (!auth.isLoggedIn()) {
+    if (!auth.isLoggedIn) {
       snack.showErrorMessage("Credentials invalid or expired!");
       nav("/");
     }

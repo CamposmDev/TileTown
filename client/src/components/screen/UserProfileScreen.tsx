@@ -68,32 +68,31 @@ const UserProfileScreen = () => {
     const [mainIdx, setMainIdx] = useState<number>(0)
     const [favorIdx, setFavorIdx] = useState<number>(0)
     useEffect(() => {
-        if (!id || !auth.isLoggedIn()) {
+        if (!id || !auth.isLoggedIn) {
             nav('/')
         } else {
             social.getUserById(id).then(user => {
-                
                 if (user) {
                     let aux = () => {
                         setUser(user)
                         contest.getContestsById(user.joinedContests).then(arr => setContests(arr))
                         comm.getCommunitiesById(user.joinedCommunities).then(arr => setComms(arr))           
                     }
-                    let you = auth.getUsr()
-                    if (you) {
-                        if (you.id.localeCompare(user.id) === 0) {
-                            auth.refreshUser().then(() => {
-                                aux()
-                            })
-                        } else {
-                            aux()
-                        }
-                    }
-                     
+                    aux()
+                    // let you = auth.usr
+                    // if (you) {
+                    //     if (you.id.localeCompare(user.id) === 0) {
+                    //         auth.refreshUser().then(() => {
+                    //             aux()
+                    //         })
+                    //     } else {
+                    //         aux()
+                    //     }
+                    // }
                 }
             })
         }
-    }, [id])
+    }, [id, auth])
 
     const handleMainTabChange = (e: React.SyntheticEvent, newValue: number) => setMainIdx(newValue)
     const handleFavorTabChange = (e: React.SyntheticEvent, newValue: number) => setFavorIdx(newValue)
