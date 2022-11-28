@@ -12,6 +12,7 @@ import { Box } from "@mui/system";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
+import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
 
@@ -21,13 +22,14 @@ export default function DeleteTilesetButton(props: {
 }) {
   const auth = useContext(AuthContext);
   const social = useContext(SocialContext);
+  const snack = useContext(SnackContext)
   const nav = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleDelete = () => {
-    social.deleteTilesetById(props.id).then(() => {
+    social.deleteTilesetById(props.id, snack).then(() => {
       auth.refreshUser().then(() => {
         nav(`/profile/${auth.usr?.id}`);
       })

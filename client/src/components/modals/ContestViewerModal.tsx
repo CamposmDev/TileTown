@@ -1,8 +1,7 @@
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material"
+import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
-import UserProfileCard from "../card/UserProfileCard"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { calcTimeLeft, dateToStr } from "../util/DateUtils"
@@ -34,7 +33,9 @@ const ContestViewerModal = () => {
     const open = Boolean(contest.state.currentContest)
     let content = <div></div>
     if (c) {
-        const timeLeft = calcTimeLeft(new Date(c.startDate), new Date(c.endDate))
+        const startDate = new Date(c.startDate)
+        const endDate = new Date(c.endDate)
+        const timeLeft = calcTimeLeft(endDate)
         content = (
             <Grid container spacing={1}>
                 <Grid container item>
@@ -46,13 +47,20 @@ const ContestViewerModal = () => {
                 </Grid>
                 <Grid item flexGrow={1}>
                     <Typography><b>Started:&ensp;</b>
-                        {dateToStr(new Date(c.startDate))}
+                        {`${dateToStr(startDate)} ${startDate.toLocaleTimeString()}`}
                     </Typography>
                 </Grid>
                 <Grid item>
                     <Card sx={{borderRadius: 3, pl: 2, pr: 2, bgcolor: 'secondary.main', color: 'white'}}>
                         <Typography>{timeLeft}</Typography>
                     </Card>
+                </Grid>
+                <Grid container item>
+                    <Grid item>
+                        <Typography><b>Ends:&ensp;</b>
+                            {`${dateToStr(endDate)} ${endDate.toLocaleTimeString()}`}
+                        </Typography>
+                    </Grid>
                 </Grid>
                 <Grid container item>
                     <Typography><b>Participates</b>&ensp;{c.participates.length}</Typography>

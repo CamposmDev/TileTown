@@ -18,7 +18,7 @@ const ContestCard = (props: Props) => {
         lastName: '',
         username: ''
     })
-    const timeLeft = calcTimeLeft(new Date(props.c.startDate), new Date(props.c.endDate))
+    const timeLeft = calcTimeLeft(new Date(props.c.endDate))
     useEffect(() => {
         social.getUserById(props.c.owner).then(u => {
             if (u) {

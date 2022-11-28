@@ -19,7 +19,6 @@ import {
 import { FaEraser } from "react-icons/fa";
 import TilesetEditorDrawer from "./TilesetEditorDrawer";
 import TilesetCanvasWrapper from "./TilesetCanvasWrapper";
-import DeleteTileItemButton from "../../button/DeleteTileItemButton";
 import PublishTilesetButton from "../../button/PublishTilesetButton";
 import { useContext, useEffect } from "react";
 import { TilesetEditContext } from "../../../context/tilesetEditor";

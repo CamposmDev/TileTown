@@ -30,7 +30,9 @@ export class CommunityStore {
         return this._comm.communities
     }
 
-    public async joinCommunity(commId: string, snack?: SnackStore): Promise<User | undefined> {
+    public async joinCommunity(snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
         return CommunityApi.joinCommunity(commId, {}).then(res => {
             if (res.status === 200) {
                 this.handleAction({
@@ -47,7 +49,9 @@ export class CommunityStore {
         })
     }
 
-    public async leaveCommunity(commId: string, snack?: SnackStore): Promise<User | undefined> {
+    public async leaveCommunity(snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
         return CommunityApi.leaveCommunity(commId, {}).then(res => {
             if (res.status === 200) {
                 this.handleAction({
@@ -149,12 +153,11 @@ export class CommunityStore {
         })
     }
 
-    public async deleteCommunityById(communityId: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityById(communityId: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
-                auth?.deleteCommunity(communityId)
                 this.handleAction({
                     type: CommunityActionType.getCommunities,
                     payload: {
@@ -167,7 +170,7 @@ export class CommunityStore {
         })
     }
 
-    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, auth?: AuthStore, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.getCommunities(commName, 'none')
         res.then((res) => {
             if (res.status === 200 && res.data.communities) {
@@ -176,7 +179,7 @@ export class CommunityStore {
                     if (userId && commName && x.name.localeCompare(commName) === 0) {
                         let commId = x.id
                         if (x.owner.localeCompare(userId) === 0) {
-                            this.deleteCommunityById(commId, auth, snack)
+                            this.deleteCommunityById(commId, snack)
                         } else {
                             snack?.showErrorMessage(`You do not own community '${x.name}'`)
                         }

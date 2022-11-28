@@ -7,12 +7,11 @@ const dateToStr = (date: Date): string => {
     return month + ' ' + day + ' ' + year
 }
 
-const calcTimeLeft = (startDate: Date, endDate: Date): string => {
+const calcTimeLeft = (endDate: Date): string => {
     /** Retrieve the times of start and end date in unix time */
-    let startTime = startDate.getTime()
     let endTime = endDate.getTime()
     /** Compute the time left in unix time (milliseconds) */
-    let timeLeft = endTime - startTime
+    let timeLeft = endTime - new Date().getTime()
     /** Compute the seconds left  from ms left*/
     let secLeft = Math.floor(timeLeft / 1000)
     if (secLeft <= 59) {
