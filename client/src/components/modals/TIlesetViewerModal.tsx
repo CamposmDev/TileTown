@@ -15,7 +15,6 @@ import { AuthContext } from "src/context/auth";
 
 function containsTSS(arr: string[], id: string): boolean {
     let i = arr.indexOf(id)
-    console.log(i)
     return Boolean(i !== -1)
 }
 
