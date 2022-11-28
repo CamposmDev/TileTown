@@ -70,7 +70,7 @@ export default function ForumPostViewerModal() {
     let editButton = <div></div>
     let editModal = <div></div>
     if (forumPost) {
-        let usr = auth.getUsr()
+        let usr = auth.usr
         if (usr) {
             disableLike = !Boolean(forumPost.likes.indexOf(usr.id))
             disableDislike = !Boolean(forumPost.dislikes.indexOf(usr.id))

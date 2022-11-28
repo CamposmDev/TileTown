@@ -9,7 +9,7 @@ const AddTilesetModal = () => {
   const modal = useContext(ModalContext);
   const auth = useContext(AuthContext);
 
-  const user = auth.getUsr();
+  const user = auth.usr;
 
   const handleClose = () => {
     modal.close();

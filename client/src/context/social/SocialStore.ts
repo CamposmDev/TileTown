@@ -58,12 +58,58 @@ export class SocialStore {
         })
     }
 
-    public async favoriteTMS(tmsId: string): Promise<void> {
-        /** TODO */
+    public async favoriteTMS(tmsId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.favoriteTilemapSocial(tmsId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) {
+                snack?.showErrorMessage(e.response.data.message)
+                return undefined
+            }
+        })
+
     }
 
-    public async favoriteTSS(tssId: string): Promise<void> {
-        /** TODO */
+    public async unfavoriteTMS(tmsId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.unfavoriteTilemapSocial(tmsId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) {
+                snack?.showErrorMessage(e.response.data.message)
+                return undefined
+            }
+        })
+
+    }
+
+    public async favoriteTSS(tssId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.favoriteTilesetSocial(tssId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
+    public async unfavoriteTSS(tssId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.unfavoriteTilesetSocial(tssId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
     }
 
     public async getUserById(userId: string): Promise<User | null> {

@@ -80,7 +80,7 @@ const CommunityProfileScreen = () => {
     let c = comm.getCurrentCommunity()
     const RES_SIZE = 550
     let settings = <div/>
-    let usr = auth.getUsr()
+    let usr = auth.usr
     if (usr && c) {
         if (usr.id.localeCompare(c.owner) === 0) {
             settings = <CommunitySettingsButton/>
