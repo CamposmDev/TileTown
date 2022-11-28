@@ -29,7 +29,6 @@ import PropertyDrawer from "./PropertyDrawer";
 import LayerDrawer from "./LayerDrawer";
 import TilemapCanvas from "./TilemapCanvas";
 import DeleteTileItemButton from "../../button/DeleteTileItemButton";
-import PublishTilesetModal from "../../modals/PublishTilesetModal";
 import PublishTilesetButton from "../../button/PublishTilesetButton";
 import {
   Color,
