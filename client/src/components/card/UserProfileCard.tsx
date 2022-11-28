@@ -53,7 +53,7 @@ const UserProfileCard = (props: Props) => {
     if (props?.minimal) return profileBox
 
     const removeFriend = () => {
-        social.removeFriend(state.username, auth, snack)
+        social.removeFriend(state.userId, auth, snack)
         handleMenuClose()
     }
 
