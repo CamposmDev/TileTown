@@ -21,7 +21,7 @@ export default function NavDrawer() {
   }
 
   let initFriendCards = () => {
-    let user = auth.getUsr()
+    let user = auth.usr
     if (user && user.friends) {
       return user.friends.map((x,i) => {
         return <Grid item key={x} mb={1}>

@@ -21,7 +21,7 @@ export default function PublishTilesetButton(props: { id: string, name: string }
     const [tags, setTags] = useState<string[]>([])
 
     useEffect(() => {
-        let usr = auth.getUsr()
+        let usr = auth.usr
         if (usr) {
             social.getCommunityNames(usr.joinedCommunities).then(arr => {
                 setOptions(arr)
@@ -86,7 +86,7 @@ export default function PublishTilesetButton(props: { id: string, name: string }
 
     const publish = () => {
         social.publishTileset(props.id, desc, commOption, [], tags, snack)
-        prof.viewPublishedTilesets(auth.getUsr()?.id)
+        prof.viewPublishedTilesets(auth.usr?.id)
         handleClose()
     }
 

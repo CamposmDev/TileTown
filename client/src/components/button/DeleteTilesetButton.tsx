@@ -29,7 +29,7 @@ export default function DeleteTilesetButton(props: {
   const handleDelete = () => {
     social.deleteTilesetById(props.id).then(() => {
       auth.refreshUser().then(() => {
-        nav(`/profile/${auth.getUsr()?.id}`);
+        nav(`/profile/${auth.usr?.id}`);
       })
     });
     handleClose();

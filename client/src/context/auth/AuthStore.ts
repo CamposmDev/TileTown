@@ -39,7 +39,7 @@ export class AuthStore {
     public get auth(): AuthState { return this._auth; }
     public get setAuth(): (auth: AuthState) => void { return this._setAuth; }
 
-    public isLoggedIn(): boolean {
+    public get isLoggedIn(): boolean {
         return this._auth.loggedIn
     }
 
@@ -47,11 +47,30 @@ export class AuthStore {
         return (this._auth.usr === null) && (this._auth.loggedIn)
     }
 
-    public getUsr(): User | null {
+    public get usr(): User | null {
         return this._auth.usr
     }
 
-    public async refreshUser(): Promise<void> {
+    /**
+     * Fetches the user's data or is given user data to update the store
+     * 
+     * @remarks
+     * The purpose of the function is to keep the usr field up to date with any changes in the back-end for that usr.
+     * The should should be called if anything related to the usr's field is changed (i.e. favoriting tilesets)
+     * 
+     * @param user - used to update the usr field in the store
+     * @returns Nothing
+     */
+    public async refreshUser(user?: User): Promise<void> {
+        if (user) {
+            this.handleAction({
+                type: AuthActionType.refreshUser,
+                payload: {
+                    user: user
+                }
+            })
+            return
+        }
         let usr = this.auth.usr
         if (usr) {
             UserApi.getUserById(usr.id).then(res => {

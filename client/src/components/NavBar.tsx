@@ -12,7 +12,7 @@ const NavBar = () => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position='sticky'>
                 <Toolbar>
-                     {auth.isLoggedIn() ? <UserMenu/> : <WelcomeMenu/>}
+                     {auth.isLoggedIn ? <UserMenu/> : <WelcomeMenu/>}
                 </Toolbar>
             </AppBar>
         </Box>

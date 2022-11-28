@@ -14,7 +14,7 @@ const DeleteContestModal = () => {
         e.preventDefault()
         let formData = new FormData(e.currentTarget)
         let contestName = formData.get('contest-name')?.toString()
-        contest.deleteContestByName(auth.getUsr()?.id, contestName, snack)
+        contest.deleteContestByName(auth.usr?.id, contestName, snack)
         modal.close()
     }
     let ui = (
