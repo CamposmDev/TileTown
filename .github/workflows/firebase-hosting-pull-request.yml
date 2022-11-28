@@ -7,14 +7,14 @@ jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm --prefix client install
-      - run: CI="" npm --prefix client run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          entryPoint: "./client"
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TILETOWN_1CE10 }}'
-          projectId: tiletown-1ce10
-          channelId: live
+    # steps:
+    #   - uses: actions/checkout@v3
+    #   - run: npm --prefix client install
+    #   - run: CI="" npm --prefix client run build
+    #   - uses: FirebaseExtended/action-hosting-deploy@v0
+    #     with:
+    #       entryPoint: "./client"
+    #       repoToken: '${{ secrets.GITHUB_TOKEN }}'
+    #       firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TILETOWN_1CE10 }}'
+    #       projectId: tiletown-1ce10
+    #       channelId: live
