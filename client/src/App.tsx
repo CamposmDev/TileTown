@@ -74,9 +74,7 @@ const App = () => {
                   <CommunityContextProvider key={"community-context-provider"}>
                     <ContestContextProvider key={"contest-context-provider"}>
                       <ForumContextProvider key={"forum-context-provider"}>
-                        <ProfileContextProvider
-                          key={"profile-context-provider"}
-                        >
+                        <ProfileContextProvider key={"profile-context-provider"}>
                           <NavBar/>
                           <Routes>
                             <Route path="/" element={<SplashScreen />} />
