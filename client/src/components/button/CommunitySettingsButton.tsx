@@ -72,7 +72,7 @@ const CommunitySettingsButton = () => {
     let moderators: JSX.Element | JSX.Element[] = <Typography>None</Typography>
     if (c) {
         moderators = c.members.map(x =>
-            <Grid item xs={12}>
+            <Grid item xs={12} key={x}>
                 <MemberCard usrId={x} />
             </Grid>
         )

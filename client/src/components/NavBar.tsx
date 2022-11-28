@@ -9,13 +9,11 @@ import WelcomeMenu from './menu/WelcomeMenu'
 const NavBar = () => {
     const auth = useContext(AuthContext)
     return (
-        <Box sx={{flexGrow: 1}}>
-            <AppBar position='sticky'>
-                <Toolbar>
-                     {auth.isLoggedIn ? <UserMenu/> : <WelcomeMenu/>}
-                </Toolbar>
-            </AppBar>
-        </Box>
+        <AppBar position='relative'>
+            <Toolbar>
+                    {auth.isLoggedIn ? <UserMenu/> : <WelcomeMenu/>}
+            </Toolbar>
+        </AppBar>
     )
 }
 

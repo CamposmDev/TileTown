@@ -26,7 +26,7 @@ const SocialBox = (props: Props) => {
         spacing: 0.5
     }
     return (
-        <Stack className='tile-social-statistics-card' spacing={0.5}>
+        <Stack color='primary.main' className='tile-social-statistics-card' spacing={0.5}>
             <Stack {...stackProps}>
                 <Visibility fontSize="small" />
                 <Typography variant="caption">{formatToSocialStr(props.views)}</Typography>

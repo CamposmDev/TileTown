@@ -26,6 +26,7 @@ export class ContestStore {
     public async joinContest(id: string, snack?: SnackStore): Promise<User | undefined> {
         return ContestApi.joinContest(id).then(res => {
             if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
                 this.handleAction({
                     type: ContestActionType.viewContest,
                     payload: {
@@ -43,6 +44,7 @@ export class ContestStore {
     public async leaveContest(id: string, snack?: SnackStore): Promise<User | undefined> {
         return ContestApi.leaveContest(id).then(res => {
             if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
                 this.handleAction({
                     type: ContestActionType.viewContest,
                     payload: {
@@ -142,7 +144,6 @@ export class ContestStore {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
                 if (res.data.contests) {
-                    console.log(res.data.contests)
                     this.handleAction({
                         type: ContestActionType.getContests,
                         payload: {

@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { Box, Card, CardActionArea, CardContent, Fade, Grid, Stack, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
@@ -35,13 +35,14 @@ const ContestCard = (props: Props) => {
         contest.viewContest(props.c)
     }
     return (
+        <Fade in={true} timeout={1000}>
         <Card onClick={handleClick} sx={{boxShadow: 3}}>
             <CardActionArea>
                 <CardContent>
                     <Typography>{props.c.name}</Typography>
                     <Grid container direction='row'>
                         <Stack direction='column' mr={1}>
-                            <Card sx={{borderRadius: 3, pl: 1, pr: 1, bgcolor: 'secondary.main', color: 'white'}}>
+                            <Card sx={{borderRadius: 3, pl: 1, pr: 1, bgcolor: 'primary.main', color: 'white'}}>
                                 <Typography variant='caption'>{timeLeft}</Typography>
                             </Card>
                             <Box flexGrow={1}/>
@@ -60,6 +61,7 @@ const ContestCard = (props: Props) => {
                 </CardContent>
             </CardActionArea>
         </Card>
+        </Fade>
     )
 }
 

@@ -36,7 +36,7 @@ function TabPanel(props: TabPanelProps): JSX.Element {
         >
         {value === index && (
             <Box sx={{  }}>
-            <Typography>{children}</Typography>
+            <Typography component={'span'}>{children}</Typography>
             </Box>
         )}
         </div>

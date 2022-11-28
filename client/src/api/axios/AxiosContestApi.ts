@@ -32,11 +32,11 @@ export default class AxiosContestApi {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name, sort: sort }});
     }
 
-    public async joinContest(id: string): Promise<AxiosResponse<{user: User, contest: Contest}>> {
+    public async joinContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/join/${id}`)
     }
 
-    public async leaveContest(id: string): Promise<AxiosResponse<{user: User, contest: Contest}>> {
+    public async leaveContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/leave/${id}`)
     }
 }

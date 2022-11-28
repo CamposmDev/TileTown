@@ -1,4 +1,4 @@
-import { Card, CardActionArea, ImageListItem, Typography } from "@mui/material";
+import { Card, CardActionArea, Fade, ImageListItem, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { TilesetSocial } from "@types";
 import { useState, useEffect, useContext } from "react"
@@ -28,7 +28,8 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
     let socialBox = <SocialBox comments={props.tss.comments.length} likes={props.tss.likes.length} views={props.tss.views} />
     const content = <img id='tile-preview' src={imageURL} alt={props.tss.id}/>
     return (
-        <Card
+        <Fade in={true} timeout={1000}>
+            <Card
             onClick={() => social.viewTilesetSocial(props.tss)}
             sx={{boxShadow: 3}}>
             <CardActionArea>
@@ -39,5 +40,6 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
                 </ImageListItem>
             </CardActionArea>
         </Card>
+        </Fade>
     )
 }

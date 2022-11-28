@@ -1,5 +1,5 @@
 import { MoreVert } from "@mui/icons-material";
-import { Box, Card, CardActionArea, CardContent, IconButton, Menu, MenuItem, Stack } from "@mui/material"
+import { Box, Card, CardActionArea, CardContent, Fade, IconButton, Menu, MenuItem, Stack } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
@@ -52,6 +52,11 @@ const UserProfileCard = (props: Props) => {
     /** If minimal, then return a profile box */
     if (props?.minimal) return profileBox
 
+    const viewProfile = () => {
+        nav(`/profile/${state.userId}`)
+        handleMenuClose()
+    }
+
     const removeFriend = () => {
         social.removeFriend(state.userId, auth, snack)
         handleMenuClose()
@@ -66,6 +71,7 @@ const UserProfileCard = (props: Props) => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
+            <MenuItem onClick={viewProfile}>View Profile</MenuItem>
             <MenuItem onClick={removeFriend}>Remove Friend</MenuItem>
         </Menu>
     )
@@ -83,6 +89,7 @@ const UserProfileCard = (props: Props) => {
         </Box>
         
     let fancy = 
+        <Fade in={true} timeout={1000}>
         <Card onClick={() => {
             nav(`/profile/${state.userId}`)
         }}>
@@ -97,6 +104,7 @@ const UserProfileCard = (props: Props) => {
                 </CardContent>
             </CardActionArea>
         </Card>
+        </Fade>
     return props.fancy ? fancy : minimal
 }
 

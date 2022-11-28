@@ -1,4 +1,4 @@
-import { createTheme, CssBaseline } from "@mui/material";
+import { createTheme, CssBaseline, Paper } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -57,7 +57,19 @@ import AddTilesetModal from "./components/modals/AddTilesetModal";
 
 const theme = createTheme({
   palette: {
-    mode: "light",
+    // mode: "light"
+    mode: "dark",
+    background: {
+      default: '#282828',
+      // paper: '#181818'
+    },
+    primary: {
+      main: "#26a27b"
+      // main: "#39ace7"
+    },
+    secondary: {
+      main: "#fafafa"
+    }
   },
 });
 
@@ -74,9 +86,7 @@ const App = () => {
                   <CommunityContextProvider key={"community-context-provider"}>
                     <ContestContextProvider key={"contest-context-provider"}>
                       <ForumContextProvider key={"forum-context-provider"}>
-                        <ProfileContextProvider
-                          key={"profile-context-provider"}
-                        >
+                        <ProfileContextProvider key={"profile-context-provider"}>
                           <NavBar/>
                           <Routes>
                             <Route path="/" element={<SplashScreen />} />
@@ -101,39 +111,38 @@ const App = () => {
                             <Route
                               path="/search/tilemaps"
                               element={
-                                <SearchScreen cat={SearchCategory.Tilemaps} />
+                                <SearchScreen key={'search-tilemaps'} cat={SearchCategory.Tilemaps} />
                               }
                             />
                             <Route
                               path="/search/tilesets"
                               element={
-                                <SearchScreen cat={SearchCategory.Tilesets} />
+                                <SearchScreen key={'search-tilesets'} cat={SearchCategory.Tilesets} />
                               }
                             />
                             <Route
                               path="/search/users"
                               element={
-                                <SearchScreen cat={SearchCategory.Users} />
+                                <SearchScreen key={'search-users'} cat={SearchCategory.Users} />
                               }
                             />
                             <Route
                               path="/search/communities"
                               element={
-                                <SearchScreen
-                                  cat={SearchCategory.Communities}
+                                <SearchScreen key={'search-communities'} cat={SearchCategory.Communities}
                                 />
                               }
                             />
                             <Route
                               path="/search/contests"
                               element={
-                                <SearchScreen cat={SearchCategory.Contests} />
+                                <SearchScreen key={'search-contests'} cat={SearchCategory.Contests} />
                               }
                             />
                             <Route
                               path="/search/forums"
                               element={
-                                <SearchScreen cat={SearchCategory.Forums} />
+                                <SearchScreen key={'search-forums'} cat={SearchCategory.Forums} />
                               }
                             />
                             <Route
