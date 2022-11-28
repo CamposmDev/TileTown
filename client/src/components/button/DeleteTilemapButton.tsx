@@ -1,5 +1,5 @@
-import { Publish } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
@@ -44,11 +44,11 @@ export default function DeleteTilemapButton(props: {id: string, name: string}) {
         </Dialog>
     );
     return (
-        <div>
-            <Button startIcon={<Publish />} onClick={handleOpen} color="primary">
-                Publish
-              </Button>
-              {modal}
-        </div>
+        <Box>
+            <Button startIcon={<Delete />} color="error" onClick={handleOpen}>
+                Delete
+            </Button>
+            {modal}
+        </Box>
     )
 }
