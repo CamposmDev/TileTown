@@ -17,7 +17,7 @@ const CommunityMembersModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
-    let c = comm.getCurrentCommunity()
+    let c = comm.currCommunity
     let members: JSX.Element | JSX.Element[] = <div/>
     if (c) {
         members = c.members.map(x =>

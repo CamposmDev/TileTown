@@ -2,6 +2,7 @@ import axios from "axios"
 import { ContestApi } from "src/api"
 import { SnackStore } from "src/context/snack/SnackStore"
 import Contest from "../../../../../@types/Contest"
+import User from "../../../../../@types/User"
 import { ContestAction, ContestActionType } from "./ContestAction"
 
 export interface ContestState {
@@ -20,6 +21,40 @@ export class ContestStore {
 
     public get state(): ContestState {
         return this._contest
+    }
+
+    public async joinContest(id: string, snack?: SnackStore): Promise<User | undefined> {
+        return ContestApi.joinContest(id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: ContestActionType.viewContest,
+                    payload: {
+                        currentContest: res.data.contest
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
+    public async leaveContest(id: string, snack?: SnackStore): Promise<User | undefined> {
+        return ContestApi.leaveContest(id).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: ContestActionType.viewContest,
+                    payload: {
+                        currentContest: res.data.contest
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
     }
 
     public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {

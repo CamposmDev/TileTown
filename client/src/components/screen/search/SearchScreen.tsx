@@ -84,7 +84,7 @@ const SearchScreen = (props: Props) => {
             content = <Grid container 
                 spacing={1}
                 mt={1}>
-                    {comm.getCommunities().map((x) => 
+                    {comm.communities.map((x) => 
                         <Grid xs={4} item key={x.id}>
                             <CommunityCard comm={x}/>
                         </Grid>

@@ -77,7 +77,7 @@ const CommunityProfileScreen = () => {
     const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
-    let c = comm.getCurrentCommunity()
+    let c = comm.currCommunity
     const RES_SIZE = 550
     let settings = <div/>
     let usr = auth.usr

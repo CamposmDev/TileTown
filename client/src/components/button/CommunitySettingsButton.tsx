@@ -9,9 +9,9 @@ const CommunitySettingsButton = () => {
     const comm = useContext(CommunityContext)
     const snack = useContext(SnackContext)
     const [open, setOpen] = useState(false)
-    const [name, setName] = useState<string>(comm.getCurrentCommunity()?.name as string)
-    const [desc, setDesc] = useState<string>(comm.getCurrentCommunity()?.description as string)
-    const [vis, setVis] = useState<string>(comm.getCurrentCommunity()?.visibility as string)
+    const [name, setName] = useState<string>(comm.currCommunity?.name as string)
+    const [desc, setDesc] = useState<string>(comm.currCommunity?.description as string)
+    const [vis, setVis] = useState<string>(comm.currCommunity?.visibility as string)
 
     const handleChange = (event: SelectChangeEvent) => {
         setVis(event.target.value as string)
@@ -36,9 +36,9 @@ const CommunitySettingsButton = () => {
     }
 
     const handleModalOpen = () => {
-        setName(comm.getCurrentCommunity()?.name as string)
-        setDesc(comm.getCurrentCommunity()?.description as string)
-        setVis(comm.getCurrentCommunity()?.visibility as string)
+        setName(comm.currCommunity?.name as string)
+        setDesc(comm.currCommunity?.description as string)
+        setVis(comm.currCommunity?.visibility as string)
         setOpen(true)
     }
     const handleModalClose = () => {
@@ -57,7 +57,7 @@ const CommunitySettingsButton = () => {
                     <MenuItem value={'private'}>Private</MenuItem>
                 </Select>
         </FormControl>
-    let c = comm.getCurrentCommunity()
+    let c = comm.currCommunity
     let moderators: JSX.Element | JSX.Element[] = <Typography>None</Typography>
     if (c) {
         moderators = c.members.map(x =>

@@ -1,4 +1,4 @@
-import { Community } from "@types"
+import { Community, User } from "@types"
 import axios from "axios"
 import { NavigateFunction } from "react-router"
 import { CommunityApi } from "src/api"
@@ -22,12 +22,46 @@ export class CommunityStore {
         this.nav = nav
     }
 
-    public getCurrentCommunity(): Community | undefined {
+    public get currCommunity(): Community | undefined {
         return this._comm.currentCommunity
     }
 
-    public getCommunities(): Community[] {
+    public get communities(): Community[] {
         return this._comm.communities
+    }
+
+    public async joinCommunity(commId: string, snack?: SnackStore): Promise<User | undefined> {
+        return CommunityApi.joinCommunity(commId, {}).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
+    public async leaveCommunity(commId: string, snack?: SnackStore): Promise<User | undefined> {
+        return CommunityApi.leaveCommunity(commId, {}).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
     }
 
     public async createCommunity(name: string, description: string, vis: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
