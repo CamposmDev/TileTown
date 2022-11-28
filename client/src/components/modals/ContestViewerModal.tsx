@@ -1,14 +1,18 @@
 import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "src/context/auth"
+import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { calcTimeLeft, dateToStr } from "../util/DateUtils"
+import { calcTimeLeft, dateToStr, isExpired } from "../util/DateUtils"
 
 const ContestViewerModal = () => {
+    const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
+    const snack = useContext(SnackContext)
     const [user, setUser] = useState({
         userId: '',
         firstName: '',
@@ -30,6 +34,27 @@ const ContestViewerModal = () => {
             })
         }
     }, [contest.state.currentContest])
+
+    const join = () => {
+        if (c) contest.joinContest(c.id, snack).then(usr => {
+            if (usr) auth.refreshUser(usr)
+        })
+    }
+
+    const leave = () => {
+        if (c) contest.leaveContest(c.id, snack).then(usr => {
+            if (usr) auth.refreshUser(usr)
+        })
+    }
+
+    const start = () => {
+
+    }
+
+    const chooseWinner = () => {
+
+    }
+
     const open = Boolean(contest.state.currentContest)
     let content = <div></div>
     if (c) {
@@ -71,9 +96,27 @@ const ContestViewerModal = () => {
             </Grid>
         )
     }
-    let controls = (
-        <Button>Start</Button>
-    )
+    let joinButton = <Button onClick={join}>Join</Button>
+    let leaveButton = <Button onClick={leave}>Leave</Button>
+    let startButton = <Button onClick={start}>Start</Button>
+    let chooseWinnerButton = <Button onClick={chooseWinner}>Choose Winner</Button>
+    let theControl = <Typography>Come back later to decide the winner!</Typography>
+    let usr = auth.usr
+    if (usr && c) {
+        if (usr.id === c.owner) {
+            let endDate = new Date(c.endDate)
+            if (isExpired(endDate)) {
+                theControl = chooseWinnerButton
+            }
+        } else {
+            if (c.participates.indexOf(usr.id) === -1) {
+                theControl = joinButton
+            } else {
+                theControl = leaveButton
+            }
+        }
+    }
+    
     return (
         <Dialog 
             open={open} 
@@ -85,7 +128,8 @@ const ContestViewerModal = () => {
                 {content}
             </DialogContent>
             <DialogActions>
-                {controls}
+                {theControl}
+                {(theControl === leaveButton) ? startButton : <div/>}
             </DialogActions>
         </Dialog>
     )
