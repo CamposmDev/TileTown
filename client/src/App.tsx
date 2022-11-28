@@ -99,25 +99,25 @@ const App = () => {
                             <Route
                               path="/search/tilemaps"
                               element={
-                                <SearchScreen cat={SearchCategory.Tilemaps} />
+                                <SearchScreen key={'search-tilemaps'} cat={SearchCategory.Tilemaps} />
                               }
                             />
                             <Route
                               path="/search/tilesets"
                               element={
-                                <SearchScreen cat={SearchCategory.Tilesets} />
+                                <SearchScreen key={'search-tilesets'} cat={SearchCategory.Tilesets} />
                               }
                             />
                             <Route
                               path="/search/users"
                               element={
-                                <SearchScreen cat={SearchCategory.Users} />
+                                <SearchScreen key={'search-users'} cat={SearchCategory.Users} />
                               }
                             />
                             <Route
                               path="/search/communities"
                               element={
-                                <SearchScreen
+                                <SearchScreen key={'search-communities'}
                                   cat={SearchCategory.Communities}
                                 />
                               }
@@ -125,13 +125,13 @@ const App = () => {
                             <Route
                               path="/search/contests"
                               element={
-                                <SearchScreen cat={SearchCategory.Contests} />
+                                <SearchScreen key={'search-contests'} cat={SearchCategory.Contests} />
                               }
                             />
                             <Route
                               path="/search/forums"
                               element={
-                                <SearchScreen cat={SearchCategory.Forums} />
+                                <SearchScreen key={'search-forums'} cat={SearchCategory.Forums} />
                               }
                             />
                             <Route

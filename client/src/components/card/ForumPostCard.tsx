@@ -41,7 +41,7 @@ const ForumPostCard = (props: Props) => {
                             </Stack>
                         </Grid>
                         <Grid container item>
-                            <Grid container spacing={1} xs={12}>
+                            <Grid container item spacing={1} xs={12}>
                                 <Grid item xs={2}>
                                     <Stack direction='row'>
                                         <Visibility/>

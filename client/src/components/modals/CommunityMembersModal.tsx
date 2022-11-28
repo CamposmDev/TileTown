@@ -31,7 +31,7 @@ const CommunityMembersModal = () => {
             <DialogContent>
             <Box>
                 <Typography variant="h6">Community Members</Typography>
-                <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
+                <Grid container sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
                     {members}
                 </Grid>        
             </Box>

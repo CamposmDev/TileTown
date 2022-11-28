@@ -36,23 +36,33 @@ const ContestViewerModal = () => {
     }, [contest.state.currentContest])
 
     const join = () => {
+        /** Call the join function from contest store */
         if (c) contest.joinContest(c.id, snack).then(usr => {
             if (usr) auth.refreshUser(usr)
         })
     }
 
     const leave = () => {
+        /** Call the leave function from contest store */
         if (c) contest.leaveContest(c.id, snack).then(usr => {
             if (usr) auth.refreshUser(usr)
         })
     }
 
     const start = () => {
-
+        /** 
+         * Only the participant can do this (not the owner)
+         * When the user clicks the start button
+         *  - then a tilemap/tileset create modal should show up where they are given
+         *  - the user should no longer be able to leave the contest once they started
+         */
     }
 
     const chooseWinner = () => {
-
+        /** 
+         * Only the owner of the contest can do this
+         * When the owner clicks the choose winner button
+         */
     }
 
     const open = Boolean(contest.state.currentContest)

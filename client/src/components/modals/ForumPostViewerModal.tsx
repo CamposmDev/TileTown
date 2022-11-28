@@ -157,8 +157,8 @@ export default function ForumPostViewerModal() {
                         </Grid>
                         <Grid container>
                             {forumPost?.comments.slice().reverse().map(x =>
-                                <Grid item xs={12}>
-                                    <CommentCard commentId={x} key={x}/>
+                                <Grid item xs={12} key={x}>
+                                    <CommentCard commentId={x} />
                                 </Grid>
                             )}
                         </Grid>

@@ -144,7 +144,6 @@ export class ContestStore {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
                 if (res.data.contests) {
-                    console.log(res.data.contests)
                     this.handleAction({
                         type: ContestActionType.getContests,
                         payload: {

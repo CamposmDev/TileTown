@@ -85,7 +85,7 @@ const SearchScreen = (props: Props) => {
                 spacing={1}
                 mt={1}>
                     {comm.communities.map((x) => 
-                        <Grid xs={4} item key={x.id}>
+                        <Grid item key={x.id} xs={4}>
                             <CommunityCard comm={x}/>
                         </Grid>
                     )}
@@ -97,7 +97,7 @@ const SearchScreen = (props: Props) => {
                 spacing={1}
                 mt={1}>
                     {contest.state.contests.map(x => 
-                        <Grid xs={3} item key={x.id}>
+                        <Grid item key={x.id} xs={3}>
                             <ContestCard c={x}/>
                         </Grid>
                     )}

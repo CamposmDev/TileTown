@@ -68,7 +68,7 @@ const CommunityProfileScreen = () => {
     return (
         <Grid> 
             {header}
-            <Grid container m={1} spacing={1} justifyContent='center'>
+            <Grid container mt={1} spacing={1} justifyContent='center'>
                 <Grid item>
                     <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
                     <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
