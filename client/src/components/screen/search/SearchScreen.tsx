@@ -1,5 +1,4 @@
-import { Archive, Favorite, Restore } from "@mui/icons-material"
-import { BottomNavigation, BottomNavigationAction, Grid, Paper } from "@mui/material"
+import { Grid, GridProps } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import TilemapSocialCard from "src/components/card/TilemapSocialCard"
@@ -34,14 +33,15 @@ const SearchScreen = (props: Props) => {
         if (!auth.isLoggedIn) nav('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    let displayProps: GridProps = {
+        container: true,
+        spacing: 1,
+        mt: 1
+    }
     let content = <div/>
     switch (props.cat) {
         case SearchCategory.Tilemaps:
-            content = <Grid 
-                    container 
-                    spacing={1} 
-                    mt={1}
-                >
+            content = <Grid {...displayProps}>
                     {social.state.tilemaps.map(x => 
                         <Grid item key={`${x.id}-${x.name}`}>
                             <TilemapSocialCard
@@ -53,9 +53,7 @@ const SearchScreen = (props: Props) => {
                 </Grid>
             break
         case SearchCategory.Tilesets:
-            content = <Grid container 
-                    spacing={1}
-                    mt={1}>
+            content = <Grid {...displayProps}>
                         {social.state.tilesets.map(x =>
                             <Grid item key={`${x.id}-${x.name}`}>  
                                 <TilesetSocialCard 
@@ -67,9 +65,7 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Users:
-            content = <Grid container 
-                        spacing={1}
-                        mt={1}>
+            content = <Grid {...displayProps}>
                     {user.users.map((x) => 
                     <Grid item key={`${x.id}-${x.username}`}>
                         <UserProfileCard 
@@ -81,9 +77,7 @@ const SearchScreen = (props: Props) => {
             </Grid>
             break
         case SearchCategory.Communities:
-            content = <Grid container 
-                spacing={1}
-                mt={1}>
+            content = <Grid {...displayProps}>
                     {comm.communities.map((x) => 
                         <Grid item key={x.id} xs={4}>
                             <CommunityCard comm={x}/>
@@ -93,9 +87,7 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Contests:
             content = 
-            <Grid container 
-                spacing={1}
-                mt={1}>
+            <Grid {...displayProps}>
                     {contest.state.contests.map(x => 
                         <Grid item key={x.id} xs={3}>
                             <ContestCard c={x}/>
@@ -105,7 +97,7 @@ const SearchScreen = (props: Props) => {
             break
         case SearchCategory.Forums:
             content = 
-                <Grid container spacing={1}>
+                <Grid {...displayProps}>
                     {forum.getForums().map((x) => 
                         <Grid item key={x.id} xs={12}>
                             <ForumPostCard
@@ -121,7 +113,7 @@ const SearchScreen = (props: Props) => {
             <Grid item>
                 <SearchToolbar category={props.cat}/>
             </Grid>
-            <Grid item>
+            <Grid container item pl={1} pr={1}>
                 {content}
             </Grid>
             {/* <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>

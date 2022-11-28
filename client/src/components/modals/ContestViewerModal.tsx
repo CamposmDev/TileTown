@@ -49,20 +49,30 @@ const ContestViewerModal = () => {
         })
     }
 
+    /**
+     * SIDE NOTE
+     * - It would be epic that once the contest is over, the modal will change to a full screen 
+     * modal where it will display the tileset/tilemap submissions from other users
+     */
+
+    /** 
+     * Only the participant can do this (not the owner)
+     * When the user clicks the start button:
+     *  - the appropiate (tileset/tilemap) create modal should show up where the user can start 
+     * working on their creation. 
+     *  
+     */
     const start = () => {
-        /** 
-         * Only the participant can do this (not the owner)
-         * When the user clicks the start button
-         *  - then a tilemap/tileset create modal should show up where they are given
-         *  - the user should no longer be able to leave the contest once they started
-         */
+        
     }
 
+    /** 
+     * Only the owner of the contest can do this
+     * When the owner clicks the choose winner button, the owner will be promoted to enter the username of the winner
+     * Press 'Enter' and the back-end will validate if the entered username is indeed part of this contest
+     */
     const chooseWinner = () => {
-        /** 
-         * Only the owner of the contest can do this
-         * When the owner clicks the choose winner button
-         */
+        
     }
 
     const open = Boolean(contest.state.currentContest)
@@ -86,7 +96,7 @@ const ContestViewerModal = () => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Card sx={{borderRadius: 3, pl: 2, pr: 2, bgcolor: 'secondary.main', color: 'white'}}>
+                    <Card sx={{borderRadius: 3, pl: 2, pr: 2, bgcolor: 'primary.main', color: 'white'}}>
                         <Typography>{timeLeft}</Typography>
                     </Card>
                 </Grid>

@@ -1,4 +1,4 @@
-import { createTheme, CssBaseline } from "@mui/material";
+import { createTheme, CssBaseline, Paper } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -57,7 +57,19 @@ import AddTilesetModal from "./components/modals/AddTilesetModal";
 
 const theme = createTheme({
   palette: {
-    mode: "light",
+    // mode: "light"
+    mode: "dark",
+    background: {
+      default: '#282828',
+      // paper: '#181818'
+    },
+    primary: {
+      main: "#26a27b"
+      // main: "#39ace7"
+    },
+    secondary: {
+      main: "#fafafa"
+    }
   },
 });
 
@@ -117,8 +129,7 @@ const App = () => {
                             <Route
                               path="/search/communities"
                               element={
-                                <SearchScreen key={'search-communities'}
-                                  cat={SearchCategory.Communities}
+                                <SearchScreen key={'search-communities'} cat={SearchCategory.Communities}
                                 />
                               }
                             />

@@ -17,9 +17,10 @@ export default class MongooseContestDBM implements ContestDBM {
     }
 
     public async getContests(name: string, sort: string): Promise<Contest[]> {
+        let currentDate = new Date()
         let filter: mongoose.FilterQuery<any> = {
             name: new RegExp(`^${name}`, 'i'),
-            endDate: {$gte: new Date()}
+            endDate: {$gte: currentDate}
         }
         let contests = []
         switch (sort) {

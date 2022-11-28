@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box } from "@mui/material"
+import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box, Fade } from "@mui/material"
 import { Comment, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import { formatToSocialStr } from '../util/NumberUtils'
 import { dateToPostedStr } from '../util/DateUtils' 
@@ -28,6 +28,7 @@ const ForumPostCard = (props: Props) => {
         forum.viewForumPost(props.forumPost, snack)
     }
     return (
+        <Fade in={true} timeout={1000}>
         <Card sx={{boxShadow: 3}}>
             <CardActionArea onClick={handleClick}>
                 <CardContent>
@@ -74,6 +75,7 @@ const ForumPostCard = (props: Props) => {
                 </CardContent>
             </CardActionArea>  
         </Card>
+        </Fade>
     )
 }
 

@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, ImageListItem, LinearProgress, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Fade, ImageListItem, LinearProgress, Tooltip, Typography } from "@mui/material";
 import { Tileset, TilesetSocial } from "@types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -53,6 +53,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                 return <div/>
             } else {
                 return (
+                    <Fade in={true} timeout={1500}>
                     <Card
                         onClick={() => {
                             nav(`/create/tileset/${tileset.id}`)
@@ -65,6 +66,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                             </ImageListItem>
                         </CardActionArea>
                     </Card>
+                    </Fade>
                 )
             }
         }
@@ -83,6 +85,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
             socialBox = <SocialBox comments={tilesetSocial.comments.length} likes={tilesetSocial.likes.length} views={tilesetSocial.views} />
         }
         return (
+            <Fade in={true} timeout={1000}>
             <Card
                 onClick={() => {
                     if (tileset.isPublished) {
@@ -100,6 +103,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                     </ImageListItem>
                 </CardActionArea>
             </Card>
+            </Fade>
         )
     }
     return <LinearProgress/>
