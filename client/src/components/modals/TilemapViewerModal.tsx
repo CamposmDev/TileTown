@@ -1,5 +1,5 @@
 import { CopyAll, Download, Star, ThumbDown, ThumbUp } from "@mui/icons-material";
-import { AppBar, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext, useEffect, useState } from "react";
 import AxiosApi from "src/api/axios/AxiosApi";
@@ -158,5 +158,8 @@ export default function TilemapViewerModal() {
             </Dialog>
         )
     }
-    return <div/>
+    return <Dialog open={Boolean(open)} fullScreen onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
+            <AppBar><Toolbar/></AppBar>
+            <LinearProgress/>
+        </Dialog>
 }

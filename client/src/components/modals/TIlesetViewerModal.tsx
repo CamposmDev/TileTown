@@ -1,5 +1,5 @@
-import { CopyAll, Download, Star, ThumbDown, ThumbUp } from "@mui/icons-material";
-import { AppBar, Box, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { CopyAll, Download, Star, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
+import { AppBar, Box, Button, Card, CardContent, Dialog, Grid, Icon, IconButton, ImageListItem, LinearProgress, Skeleton, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useContext, useState, useEffect } from "react"
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
@@ -10,9 +10,12 @@ import CommentCard from "../card/CommentCard";
 import { dateToStr } from "../util/DateUtils";
 import TagCard from "../card/TagCard";
 import UserProfileCard from "../card/UserProfileCard";
+import { formatToSocialStr } from "../util/NumberUtils";
+import { AuthContext } from "src/context/auth";
 
 /** Displays the info of a clicked tileset social */
 export default function TilesetViewerModal() {
+    const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const [commName, setCommName] = useState<string | undefined>(undefined)
@@ -40,16 +43,17 @@ export default function TilesetViewerModal() {
         social.dislikeTSS(snack)
     }
 
+    const favorite = () => {
+        /** Call the favorite function to decide whether to add or remove */
+        if (tss) social.favoriteTSS(tss.id).then(() => auth.refreshUser())
+    }
+
     const download = () => {
         /** Andrew help me */
     }
 
     const clone = () => {
         /** Andrew help me */
-    }
-    
-    const favorite = () => {
-        /** Handles favorite or unfavoriting tileset */
     }
 
     const handlekeyUp = (e: React.KeyboardEvent) => {
@@ -69,6 +73,11 @@ export default function TilesetViewerModal() {
 
     let tss = social.state.currentTSS
     if (tss) {
+        let usr = auth.getUsr()
+        let starSX = {}
+        if (usr) {
+            if (usr.favoriteTileSets.indexOf(tss.id) !== -1) starSX = {color: 'gold'}
+        }
         let header = (
             <AppBar position='relative'> 
                 <Toolbar>
@@ -77,7 +86,7 @@ export default function TilesetViewerModal() {
                             <Typography variant="h6">{tss.name}</Typography>
                         </Grid>
                         <Grid item>
-                            <IconButton onClick={favorite}><Star/></IconButton>
+                            <IconButton onClick={favorite}><Star sx={starSX} /></IconButton>
                         </Grid>
                         <Grid item>
                             <Button color='inherit' onClick={handleClose}>Close</Button>
@@ -113,12 +122,18 @@ export default function TilesetViewerModal() {
                                     </Grid>
                                     <Grid item>
                                         <Box>
-                                            <Tooltip title={tss.likes.length}>
+                                            <Tooltip title='Views'>
+                                                <IconButton disableFocusRipple disableRipple sx={{cursor: 'default'}}><Visibility/></IconButton>
+                                            </Tooltip>
+                                            {formatToSocialStr(tss.views)}
+                                            <Tooltip title={'Like'}>
                                                 <IconButton onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
-                                            <Tooltip title={tss.dislikes.length}>
+                                            {formatToSocialStr(tss.likes.length)}
+                                            <Tooltip title={'Dislike'}>
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
+                                            {formatToSocialStr(tss.dislikes.length)}
                                             <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
                                             </Tooltip>
@@ -144,7 +159,7 @@ export default function TilesetViewerModal() {
                         />
                     </Grid>
                     <Grid item>
-                        {tss.comments.slice().map(x => 
+                        {tss.comments.slice().reverse().map(x => 
                             <Grid item xs={12} key={x}>
                                 <CommentCard commentId={x} />
                             </Grid>
@@ -160,5 +175,8 @@ export default function TilesetViewerModal() {
             </Dialog>
         )
     }
-    return <div/>
+    return <Dialog open={Boolean(open)} fullScreen onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
+        <AppBar><Toolbar/></AppBar>
+        <LinearProgress/>
+    </Dialog>
 }

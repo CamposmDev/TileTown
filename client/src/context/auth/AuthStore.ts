@@ -10,7 +10,7 @@ import { SocialStore } from '../social/SocialStore';
 import { 
     AuthActionType, AuthAction, RegisterUser, LoginUser, 
     LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
-    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend, DeleteCommunity, AddCommunity
+    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend, DeleteCommunity, AddCommunity, RefreshUser
 } from "./AuthAction"; 
 
 /**
@@ -49,6 +49,22 @@ export class AuthStore {
 
     public getUsr(): User | null {
         return this._auth.usr
+    }
+
+    public async refreshUser(): Promise<void> {
+        let usr = this.auth.usr
+        if (usr) {
+            UserApi.getUserById(usr.id).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: AuthActionType.refreshUser,
+                        payload: {
+                            user: res.data.user
+                        }
+                    })
+                }
+            })
+        }
     }
 
     public addFriend(userId: string) {
@@ -333,6 +349,10 @@ export class AuthStore {
                 this.handleLoginAsGuest(action)
                 break;
             }
+            case AuthActionType.refreshUser: {
+                this.handleRefreshUser(action)
+                break;
+            }
             case AuthActionType.changePassword: {
                 this.handleChangePassword(action);
                 break;
@@ -395,6 +415,12 @@ export class AuthStore {
         this.setAuth({
             usr: null,
             loggedIn: true
+        })
+    }
+    protected handleRefreshUser(action: RefreshUser): void {
+        this.setAuth({
+            usr: action.payload.user,
+            loggedIn: this.auth.loggedIn
         })
     }
     protected handleChangePassword(action: ChangePassword): void {
