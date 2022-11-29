@@ -3,6 +3,11 @@ import { db } from "../../database";
 import { SortBy, Tilemap } from "@types";
 import { is } from "typescript-is";
 
+// Need fs for creating the download file for Tilemaps
+import * as fs from 'fs';
+import path from "path";
+import AdmZip from 'adm-zip';
+
 export default class TilemapController {
 
     public async getTilemapById(req: Request, res: Response): Promise<Response> {
@@ -190,6 +195,8 @@ export default class TilemapController {
             return res.status(400).json({ messagee: "Tilemap field is not valid JSON" });
         }
 
+        console.log(req.body.tilemap);
+
         // Verify the user exists in the database
         let user = await db.users.getUserById(req.userId);
         if (user === null) {
@@ -222,12 +229,16 @@ export default class TilemapController {
         }
 
         // Try updating the tilemap
-        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {...tilemap, lastSaveDate: new Date(Date.now())});
+        let updatedTilemap = await db.tilemaps.updateTilemapById(req.params.id, {
+            ...req.body.tilemap, 
+            lastSaveDate: new Date(Date.now()),
+            image: req.file?.filename
+        });
         if (updatedTilemap === null) {
             return res.status(500).json({message: "Server Error. Failed to update tilemap."});
         }
 
-        return res.status(200).json({ message: "Updating a tilemap!", tilemap: tilemap});
+        return res.status(200).json({ message: "Updating a tilemap!", tilemap: updatedTilemap});
     }
 
     public async publishTilemap(req: Request, res: Response): Promise<Response> {
@@ -286,6 +297,49 @@ export default class TilemapController {
         }
 
         return res.status(200).json({ message: "Tilemap published!", social: social });
+
+    }
+
+    public async downloadTiledTilemap(req: Request, res: Response): Promise<Response | void> {
+        if (!req || !req.params) {
+            return res.status(400)
+        } 
+        if (!req.params.id) {
+            return res.status(400)
+        }
+        
+        let tilemap = await db.tilemaps.getTilemapById(req.params.id);
+        if (tilemap === null) {
+            return res.status(404)
+        }
+        let tilesets = await db.tilesets.getTilesetsById(tilemap.tilesets);
+
+        // Get the directories for the tilemaps and tilesets
+        const mapdir = path.join(__dirname, tilemap.name + Date.now().toString());
+        const imgdir = path.join(__dirname, "..", "middleware", "images");
+        const tmfile = path.join(mapdir, tilemap.name + ".json");
+        const zipfile = path.join(mapdir, tilemap.name + ".zip");
+
+        try {
+            // Make a new directory for the tilemap
+            fs.mkdirSync(mapdir);
+            // Copy the contents of the tilemap as a JSON file
+            fs.writeFileSync(tmfile, JSON.stringify(tilemap));
+
+            // Copy the contents of all the image files to the new map directory
+            for (let tileset of tilesets) {
+                fs.copyFileSync(path.join(imgdir, tileset.image), path.join(mapdir, tileset.image));
+            }
+
+            const zip = new AdmZip();
+            zip.addLocalFolder(mapdir);
+            
+            res.setHeader('Content-Type', 'application/zip').send(zip.toBuffer());
+        } catch (e) {
+            console.log(e)
+        } finally {
+            fs.rmSync(mapdir, { recursive: true });
+        }
 
     }
 

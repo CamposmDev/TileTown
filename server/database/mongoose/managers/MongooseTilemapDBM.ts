@@ -106,6 +106,8 @@ export default class MongooseTilemapDBM implements TilemapDBM {
             return null;
         }
 
+        console.log("Tilesets in DB update: " + partial?.tilesets);
+
         let tilemap = await TilemapModel.findById(tilemapId);
         if (tilemap === null) return null;
 
@@ -173,6 +175,7 @@ export default class MongooseTilemapDBM implements TilemapDBM {
         tilemap.globalTileIDs = partial.globalTileIDs ? partial.globalTileIDs : tilemap.globalTileIDs;
         tilemap.createdAt = partial.createDate ? partial.createDate : tilemap.createdAt;
         tilemap.updatedAt = partial.createDate ? partial.createDate : tilemap.updatedAt;
+        tilemap.tilesets = partial.tilesets ? partial.tilesets.map(id => new mongoose.Types.ObjectId(id)) : tilemap.tilesets;
     }
     
 }
