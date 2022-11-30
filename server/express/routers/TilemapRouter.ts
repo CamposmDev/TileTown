@@ -23,4 +23,6 @@ router.put("/like/:id", Auth.verifyJWT, TilemapController.likeTilemapSocialById)
 router.put("/dislike/:id", Auth.verifyJWT, TilemapController.dislikeTilemapById);
 router.put("/view/:id", TilemapController.viewTilemapById);
 
+router.get("/download/tiled/:id", TilemapController.downloadTiledTilemap);
+
 export default router;
