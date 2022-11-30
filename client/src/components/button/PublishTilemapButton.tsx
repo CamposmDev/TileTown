@@ -1,14 +1,13 @@
 import { Publish, Send } from "@mui/icons-material"
-import { Autocomplete, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, InputAdornment, snackbarClasses, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, InputAdornment, TextField } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
 import { ProfileContext } from "src/context/profile"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
-import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
-import { TAG_LIMIT, TAG_CHAR_LIMIT, DESC_CHAR_LIMIT } from "../util/Constants"
+import { DESC_CHAR_LIMIT, SLIDE_DOWN_TRANSITION, TAG_CHAR_LIMIT, TAG_LIMIT } from "../util/Constants"
 
-export default function PublishTilesetButton(props: { id: string, name: string }) {
+export default function PublishTilemapButton(props: {id: string, name: string}) {
     const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
@@ -85,7 +84,7 @@ export default function PublishTilesetButton(props: { id: string, name: string }
     }
 
     const publish = () => {
-        social.publishTileset(props.id, desc, commOption, [], tags, snack)
+        social.publishTilemap(props.id, desc, commOption, [], tags, snack)
         prof.viewPublishedTilesets(auth.usr?.id)
         handleClose()
     }

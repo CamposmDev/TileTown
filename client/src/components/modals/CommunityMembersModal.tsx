@@ -1,28 +1,24 @@
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Typography from '@mui/material/Typography';
-import { Dialog, DialogContent, Drawer, Grid, Icon, IconButton, Modal } from '@mui/material';
+import { DialogContent, Drawer, Grid, IconButton } from '@mui/material';
 import { useContext, useState } from 'react';
 import { Group } from '@mui/icons-material';
-import UserProfileCard from '../card/UserProfileCard';
-import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { CommunityContext } from 'src/context/social/community';
-
-
+import MemberCard from '../card/MemberCard';
 
 const CommunityMembersModal = () => {
     const comm = useContext(CommunityContext)
     const [isOpen, setIsOpen] = useState(false)
     const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
-    let c = comm.getCurrentCommunity()
+    let c = comm.currCommunity
     let members: JSX.Element | JSX.Element[] = <div/>
     if (c) {
         members = c.members.map(x =>
-            <Grid container item>
-                <UserProfileCard userId={x} />
+            <Grid item key={x} xs={12}>
+                <MemberCard usrId={x} />
             </Grid>
         )
     }
@@ -34,8 +30,8 @@ const CommunityMembersModal = () => {
         >
             <DialogContent>
             <Box>
-                <Typography variant="h6">Members</Typography>
-                <Grid sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
+                <Typography variant="h6">Community Members</Typography>
+                <Grid container sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
                     {members}
                 </Grid>        
             </Box>

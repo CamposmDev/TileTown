@@ -22,7 +22,7 @@ export default class AxiosTilemapApi {
         return AxiosApi.delete<DeleteTilemapRes, AxiosResponse<DeleteTilemapRes>>(`/tilemaptileset/${id}`);
     }
     
-    public async publishTilesetById(id: string, payload: PublishTilemapReq): Promise<AxiosResponse<PublishTilemapRes>> {
+    public async publishTilemapById(id: string, payload: PublishTilemapReq): Promise<AxiosResponse<PublishTilemapRes>> {
         return AxiosApi.post<PublishTilemapRes, AxiosResponse<PublishTilemapRes>>(`/tilemap/publish/${id}`, payload);
     }
     

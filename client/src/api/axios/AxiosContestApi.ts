@@ -8,7 +8,7 @@ import {
 import { 
     GetContestRes, DeleteContestRes, CreateContestRes, UpdateContestRes, GetContestsRes
 } from "@responses/contest";
-
+import { User, Contest } from '@types'
 
 export default class AxiosContestApi {
 
@@ -30,5 +30,13 @@ export default class AxiosContestApi {
 
     public async getContests(name: string | undefined, sort: string): Promise<AxiosResponse<GetContestsRes>> {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name, sort: sort }});
+    }
+
+    public async joinContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
+        return AxiosApi.put(`/contest/join/${id}`)
+    }
+
+    public async leaveContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
+        return AxiosApi.put(`/contest/leave/${id}`)
     }
 }

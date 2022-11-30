@@ -48,7 +48,7 @@ const AccountButton = () => {
         handleMenuClose()
     }
 
-    let usr: User | null = auth.getUsr()
+    let usr: User | null = auth.usr
     let loggedInItems = (
         <Box>
             <MenuItem disabled={auth.isGuest()} onClick={() => {
@@ -114,11 +114,11 @@ const AccountButton = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            {auth.isLoggedIn() ? loggedInItems : loggedOutItems}
+            {auth.isLoggedIn ? loggedInItems : loggedOutItems}
         </Menu>
     )
 
-    const profile = auth.isLoggedIn() && usr ? (
+    const profile = auth.isLoggedIn && usr ? (
         <Avatar {...stringAvatar(usr.firstName, usr.lastName)}/>
     ) : (
         <Avatar sx={{bgcolor: 'primary.main'}}/>

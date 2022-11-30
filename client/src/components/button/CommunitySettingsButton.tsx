@@ -1,17 +1,21 @@
 import { Settings } from "@mui/icons-material"
 import { Box, Button, DialogActions, DialogContent, DialogTitle, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import { useContext, useState } from "react"
+import { useNavigate } from "react-router"
+import { AuthContext } from "src/context/auth"
 import { SnackContext } from "src/context/snack"
 import { CommunityContext } from "src/context/social/community"
-import UserProfileCard from "../card/UserProfileCard"
+import MemberCard from "../card/MemberCard"
 
 const CommunitySettingsButton = () => {
+    const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
     const snack = useContext(SnackContext)
+    const nav = useNavigate()
     const [open, setOpen] = useState(false)
-    const [name, setName] = useState<string>(comm.getCurrentCommunity()?.name as string)
-    const [desc, setDesc] = useState<string>(comm.getCurrentCommunity()?.description as string)
-    const [vis, setVis] = useState<string>(comm.getCurrentCommunity()?.visibility as string)
+    const [name, setName] = useState<string>(comm.currCommunity?.name as string)
+    const [desc, setDesc] = useState<string>(comm.currCommunity?.description as string)
+    const [vis, setVis] = useState<string>(comm.currCommunity?.visibility as string)
 
     const handleChange = (event: SelectChangeEvent) => {
         setVis(event.target.value as string)
@@ -27,6 +31,13 @@ const CommunitySettingsButton = () => {
 
     const handleDelete = () => {
         /** Show confirm delete modal */
+        let id = comm.currCommunity?.id
+        if (!id) return
+        comm.deleteCommunityById(id, snack).then(() => {
+            auth.refreshUser().then(() => {
+                nav(`/profile/${auth.usr?.id}`)
+            })
+        })
         handleModalClose()
     }
 
@@ -36,9 +47,9 @@ const CommunitySettingsButton = () => {
     }
 
     const handleModalOpen = () => {
-        setName(comm.getCurrentCommunity()?.name as string)
-        setDesc(comm.getCurrentCommunity()?.description as string)
-        setVis(comm.getCurrentCommunity()?.visibility as string)
+        setName(comm.currCommunity?.name as string)
+        setDesc(comm.currCommunity?.description as string)
+        setVis(comm.currCommunity?.visibility as string)
         setOpen(true)
     }
     const handleModalClose = () => {
@@ -57,12 +68,12 @@ const CommunitySettingsButton = () => {
                     <MenuItem value={'private'}>Private</MenuItem>
                 </Select>
         </FormControl>
-    let c = comm.getCurrentCommunity()
+    let c = comm.currCommunity
     let moderators: JSX.Element | JSX.Element[] = <Typography>None</Typography>
     if (c) {
         moderators = c.members.map(x =>
-            <Grid item xs={12}>
-                <UserProfileCard userId={x} />
+            <Grid item xs={12} key={x}>
+                <MemberCard usrId={x} />
             </Grid>
         )
     }

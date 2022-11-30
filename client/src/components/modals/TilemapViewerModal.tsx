@@ -1,8 +1,9 @@
-import { CopyAll, Download, Star, ThumbDown, ThumbUp } from "@mui/icons-material";
-import { AppBar, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { CopyAll, Download, Star, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
+import { AppBar, Button, Card, CardContent, Dialog, Grid, IconButton, ImageListItem, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext, useEffect, useState } from "react";
 import AxiosApi from "src/api/axios/AxiosApi";
+import { AuthContext } from "src/context/auth";
 import { SnackContext } from "src/context/snack";
 import { SocialContext } from "src/context/social";
 import CommentCard from "../card/CommentCard";
@@ -10,9 +11,16 @@ import TagCard from "../card/TagCard";
 import UserProfileCard from "../card/UserProfileCard";
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
 import { dateToStr } from "../util/DateUtils";
+import { formatToSocialStr } from "../util/NumberUtils";
+
+function containsTMS(arr: string[], id: string): boolean {
+    let i = arr.indexOf(id)
+    return Boolean(i !== -1)
+}
 
 /** Displays the info of a clicked tilemap social */
 export default function TilemapViewerModal() {
+    const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
     const [commName, setCommName] = useState<string | undefined>(undefined)
@@ -28,7 +36,7 @@ export default function TilemapViewerModal() {
         } else {
             setCommName(undefined)
         }
-    }, [social.state.currentTMS])
+    }, [social.state.currentTMS, auth.usr])
 
     const like = () => {
         /** Call the like tilemap social function from social */
@@ -48,6 +56,21 @@ export default function TilemapViewerModal() {
 
     const favorite = () => {
         /** Hanldes favorite or unfavoriting tilemap */
+        let usr = auth.usr
+        if (!tms || !usr) return
+        if (containsTMS(usr.favoriteTileMaps, tms.id)) {
+            social.unfavoriteTMS(tms.id, snack).then(usr => {
+                if (usr) {
+                    auth.refreshUser(usr)
+                }
+            })
+        } else {
+            social.favoriteTMS(tms.id, snack).then(usr => {
+                if (usr) {
+                    auth.refreshUser(usr)
+                }
+            })
+        }
     }
 
     const handlekeyUp = (e: React.KeyboardEvent) => {
@@ -65,8 +88,13 @@ export default function TilemapViewerModal() {
         social.clear()
     }
 
+    let usr = auth.usr
     let tms = social.state.currentTMS
     if (tms) {
+        let starSX = {}
+        if (usr && containsTMS(usr.favoriteTileSets, tms.id)) {
+            starSX = {color: 'gold'}
+        }
         let header = (
             <AppBar position='relative'> 
                 <Toolbar>
@@ -75,7 +103,7 @@ export default function TilemapViewerModal() {
                             <Typography variant="h6">{tms.name}</Typography>
                         </Grid>
                         <Grid item>
-                            <IconButton onClick={favorite}><Star/></IconButton>
+                            <IconButton onClick={favorite}><Star sx={starSX} /></IconButton>
                         </Grid>
                         <Grid item>
                             <Button color='inherit' onClick={handleClose}>Close</Button>
@@ -111,12 +139,18 @@ export default function TilemapViewerModal() {
                                     </Grid>
                                     <Grid item>
                                         <Box>
-                                            <Tooltip title={tms.likes.length}>
+                                            <Tooltip title='Views'>
+                                                <IconButton disableFocusRipple disableRipple sx={{cursor: 'default'}}><Visibility/></IconButton>
+                                            </Tooltip>
+                                            {formatToSocialStr(tms.views)}
+                                            <Tooltip title={'Like'}>
                                                 <IconButton onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
-                                            <Tooltip title={tms.dislikes.length}>
+                                            {formatToSocialStr(tms.likes.length)}
+                                            <Tooltip title={'Dislike'}>
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
+                                            {formatToSocialStr(tms.dislikes.length)}
                                             <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
                                             </Tooltip>
@@ -158,5 +192,8 @@ export default function TilemapViewerModal() {
             </Dialog>
         )
     }
-    return <div/>
+    return <Dialog open={Boolean(open)} fullScreen onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
+            <AppBar><Toolbar/></AppBar>
+            <LinearProgress/>
+        </Dialog>
 }

@@ -58,6 +58,60 @@ export class SocialStore {
         })
     }
 
+    public async favoriteTMS(tmsId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.favoriteTilemapSocial(tmsId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) {
+                snack?.showErrorMessage(e.response.data.message)
+                return undefined
+            }
+        })
+
+    }
+
+    public async unfavoriteTMS(tmsId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.unfavoriteTilemapSocial(tmsId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) {
+                snack?.showErrorMessage(e.response.data.message)
+                return undefined
+            }
+        })
+
+    }
+
+    public async favoriteTSS(tssId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.favoriteTilesetSocial(tssId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
+    public async unfavoriteTSS(tssId: string, snack?: SnackStore): Promise<User | undefined> {
+        return SocialApi.unfavoriteTilesetSocial(tssId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
     public async getUserById(userId: string): Promise<User | null> {
         let res = UserApi.getUserById(userId)
         return res.then((res) => {
@@ -81,6 +135,7 @@ export class SocialStore {
     }
 
     public async getTilemapSocialsByName(query: string, sort: string, tags: string[], snack?: SnackStore): Promise<void> {
+        
         // SocialApi.getTilemapSocialsByName(query, sort, tags).then(res => {
         //     if (res.status === 200) {
         //         snack?.showSuccessMessage(res.data.message)
@@ -92,6 +147,14 @@ export class SocialStore {
         //         })
         //     }
         // })
+    }
+
+    public async getTilemapSocialById(id: string): Promise<TilemapSocial | undefined> {
+        return SocialApi.getTilemapSocialById(id).then(res => {
+            if (res.status === 200) {
+                return res.data.social
+            }
+        })
     }
 
     public async getTilesetsById(arr: string[] | undefined): Promise<Tileset[]> {
@@ -131,6 +194,14 @@ export class SocialStore {
                 if (e.response.status === 404) {
                     snack?.showErrorMessage('Query cannot be empty!')
                 }
+            }
+        })
+    }
+
+    public async getTilesetSocialById(id: string): Promise<TilesetSocial | undefined> {
+        return SocialApi.getTilesetSocialById(id).then(res => {
+            if (res.status === 200) {
+                return res.data.social
             }
         })
     }
@@ -424,15 +495,13 @@ export class SocialStore {
                 let payload = action.payload
                 if (!payload.oldTSS) return
                 let i = this._social.tilesets.indexOf(payload.oldTSS)
-                if (i !== -1) {
-                    this._social.tilesets.splice(i, 1, payload.newTSS)
-                    this._setSocial({
-                        currentTMS: this._social.currentTMS,
-                        currentTSS: payload.newTSS,
-                        tilemaps: this._social.tilemaps,
-                        tilesets: this._social.tilesets
-                    })
-                }
+                if (i !== -1) this._social.tilesets.splice(i, 1, payload.newTSS)
+                this._setSocial({
+                    currentTMS: this._social.currentTMS,
+                    currentTSS: payload.newTSS,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets
+                })
                 break
             }
             case SocialActionType.getTilemapsByName: {

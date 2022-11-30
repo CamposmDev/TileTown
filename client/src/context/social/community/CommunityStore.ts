@@ -1,4 +1,4 @@
-import { Community } from "@types"
+import { Community, User } from "@types"
 import axios from "axios"
 import { NavigateFunction } from "react-router"
 import { CommunityApi } from "src/api"
@@ -22,12 +22,50 @@ export class CommunityStore {
         this.nav = nav
     }
 
-    public getCurrentCommunity(): Community | undefined {
+    public get currCommunity(): Community | undefined {
         return this._comm.currentCommunity
     }
 
-    public getCommunities(): Community[] {
+    public get communities(): Community[] {
         return this._comm.communities
+    }
+
+    public async joinCommunity(snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
+        return CommunityApi.joinCommunity(commId, {}).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+
+    public async leaveCommunity(snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
+        return CommunityApi.leaveCommunity(commId, {}).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
     }
 
     public async createCommunity(name: string, description: string, vis: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
@@ -115,12 +153,11 @@ export class CommunityStore {
         })
     }
 
-    public async deleteCommunityById(communityId: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityById(communityId: string, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.deleteCommunity(communityId, {})
         res.then((res) => {
             if (res.status === 200) {
                 snack?.showSuccessMessage(res.data.message)
-                auth?.deleteCommunity(communityId)
                 this.handleAction({
                     type: CommunityActionType.getCommunities,
                     payload: {
@@ -133,7 +170,7 @@ export class CommunityStore {
         })
     }
 
-    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, auth?: AuthStore, snack?: SnackStore): Promise<void> {
+    public async deleteCommunityByName(userId: string | undefined, commName: string | undefined, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.getCommunities(commName, 'none')
         res.then((res) => {
             if (res.status === 200 && res.data.communities) {
@@ -142,7 +179,7 @@ export class CommunityStore {
                     if (userId && commName && x.name.localeCompare(commName) === 0) {
                         let commId = x.id
                         if (x.owner.localeCompare(userId) === 0) {
-                            this.deleteCommunityById(commId, auth, snack)
+                            this.deleteCommunityById(commId, snack)
                         } else {
                             snack?.showErrorMessage(`You do not own community '${x.name}'`)
                         }

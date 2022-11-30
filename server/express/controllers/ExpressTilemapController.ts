@@ -406,9 +406,9 @@ export default class TilemapController {
 
         let updatedUser = await db.users.updateUser(user.id, {favoriteTileMaps: user.favoriteTileMaps});
         if (updatedUser === null) {
-            return res.status(500).json({ message: "Failed to add tilemap to users favorited tilemaps"});
+            return res.status(500).json({ message: "Failed to remove tilemap from user's favorited tilemaps"});
         }
-        return res.status(200).json({ message: "Favorited a tilemap!", user: updatedUser });
+        return res.status(200).json({ message: "Unfavorited a tilemap!", user: updatedUser });
     }
 
     public async getTilemapSocialById(req: Request, res: Response): Promise<Response> {

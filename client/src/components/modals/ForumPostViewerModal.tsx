@@ -70,7 +70,7 @@ export default function ForumPostViewerModal() {
     let editButton = <div></div>
     let editModal = <div></div>
     if (forumPost) {
-        let usr = auth.getUsr()
+        let usr = auth.usr
         if (usr) {
             disableLike = !Boolean(forumPost.likes.indexOf(usr.id))
             disableDislike = !Boolean(forumPost.dislikes.indexOf(usr.id))
@@ -157,8 +157,8 @@ export default function ForumPostViewerModal() {
                         </Grid>
                         <Grid container>
                             {forumPost?.comments.slice().reverse().map(x =>
-                                <Grid item xs={12}>
-                                    <CommentCard commentId={x} key={x}/>
+                                <Grid item xs={12} key={x}>
+                                    <CommentCard commentId={x} />
                                 </Grid>
                             )}
                         </Grid>

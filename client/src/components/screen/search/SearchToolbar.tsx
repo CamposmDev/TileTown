@@ -1,5 +1,5 @@
 import { Search, Sort } from "@mui/icons-material"
-import { Box, Chip, Fade, Grid, IconButton, InputAdornment, Menu, MenuItem, Popover, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
+import { Box, Chip, Fade, Grid, IconButton, InputAdornment, Menu, MenuItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import { useEffect } from "react"
 import { useContext, useState } from "react"
 import { SnackContext } from "src/context/snack"
@@ -110,65 +110,66 @@ const SearchToolbar = (props: {category: SearchCategory}) => {
         case SearchCategory.Tilemaps:
         case SearchCategory.Tilesets:
             menuItems = [
-                <MenuItem onClick={() => handleSort(SortType.publishDateNewest)}>Publish Date (Newest)</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.publishDateOldest)}>Publish Date (Oldest)</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostLikes)}>Most Likes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastLikes)}>Least Likes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostDislikes)}>Most Dislikes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastDislikes)}>Least Dislikes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostViews)}>Most Views</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastViews)}>Least Views</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostComments)}>Most Comments</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastComments)}>Least Comments</MenuItem>,
+                <MenuItem key={'sort-tile-pub-date-new'} onClick={() => handleSort(SortType.publishDateNewest)}>Publish Date (Newest)</MenuItem>,
+                <MenuItem key={'sort-tile-pub-date-old'} onClick={() => handleSort(SortType.publishDateOldest)}>Publish Date (Oldest)</MenuItem>,
+                <MenuItem key={'sort-tile-most-likes'} onClick={() => handleSort(SortType.mostLikes)}>Most Likes</MenuItem>,
+                <MenuItem key={'sort-tile-least-likes'} onClick={() => handleSort(SortType.leastLikes)}>Least Likes</MenuItem>,
+                <MenuItem key={'sort-tile-most-dislikes'} onClick={() => handleSort(SortType.mostDislikes)}>Most Dislikes</MenuItem>,
+                <MenuItem key={'sort-tile-least-dislikes'} onClick={() => handleSort(SortType.leastDislikes)}>Least Dislikes</MenuItem>,
+                <MenuItem key={'sort-tile-most-views'} onClick={() => handleSort(SortType.mostViews)}>Most Views</MenuItem>,
+                <MenuItem key={'sort-tile-least-views'} onClick={() => handleSort(SortType.leastViews)}>Least Views</MenuItem>,
+                <MenuItem key={'sort-tile-most-comments'} onClick={() => handleSort(SortType.mostComments)}>Most Comments</MenuItem>,
+                <MenuItem key={'sort-tile-least-comments'} onClick={() => handleSort(SortType.leastComments)}>Least Comments</MenuItem>,
             ]
             break
         case SearchCategory.Users:
             menuItems = [
-                <MenuItem onClick={() => handleSort(SortType.mostFriends)}>Most Friends</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastFriends)}>Least Friends</MenuItem>
+                <MenuItem key={'sort-user-most-friends'} onClick={() => handleSort(SortType.mostFriends)}>Most Friends</MenuItem>,
+                <MenuItem key={'sort-user-least-friends'} onClick={() => handleSort(SortType.leastFriends)}>Least Friends</MenuItem>
             ]
             break
         case SearchCategory.Communities:
             menuItems = [
-                <MenuItem onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostMembers)}>Most Members</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastMembers)}>Least Members</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostTilemaps)}>Most Tilemaps</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastTilemaps)}>Least Tilemaps</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostTilesets)}>Most Tilesets</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastTilesets)}>Least Tilesets</MenuItem>,
+                <MenuItem key={'sort-community-titleaz'} onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
+                <MenuItem key={'sort-community-titleza'} onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
+                <MenuItem key={'sort-community-most-members'} onClick={() => handleSort(SortType.mostMembers)}>Most Members</MenuItem>,
+                <MenuItem key={'sort-community-least-members'} onClick={() => handleSort(SortType.leastMembers)}>Least Members</MenuItem>,
+                <MenuItem key={'sort-community-most-tilemaps'} onClick={() => handleSort(SortType.mostTilemaps)}>Most Tilemaps</MenuItem>,
+                <MenuItem key={'sort-community-least-tilemaps'} onClick={() => handleSort(SortType.leastTilemaps)}>Least Tilemaps</MenuItem>,
+                <MenuItem key={'sort-community-most-tilesets'} onClick={() => handleSort(SortType.mostTilesets)}>Most Tilesets</MenuItem>,
+                <MenuItem key={'sort-community-least-tilesets'} onClick={() => handleSort(SortType.leastTilesets)}>Least Tilesets</MenuItem>,
             ]
             break
         case SearchCategory.Contests:
             menuItems = [
-                <MenuItem onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.timeNewest)}>Time: Newest</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.timeEnding)}>Time: Ending Soonest</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostParts)}>Most Participates</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastParts)}>Least Participates</MenuItem>
+                <MenuItem key={'sort-contest-titleaz'} onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
+                <MenuItem key={'sort-contest-titleza'} onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
+                <MenuItem key={'sort-contest-time-new'} onClick={() => handleSort(SortType.timeNewest)}>Time: Newest</MenuItem>,
+                <MenuItem key={'sort-contest-time-end'} onClick={() => handleSort(SortType.timeEnding)}>Time: Ending Soonest</MenuItem>,
+                <MenuItem key={'sort-contest-most-parts'} onClick={() => handleSort(SortType.mostParts)}>Most Participates</MenuItem>,
+                <MenuItem key={'sort-contest-least-parts'} onClick={() => handleSort(SortType.leastParts)}>Least Participates</MenuItem>
             ]
             break
         case SearchCategory.Forums:
             menuItems = [
-                <MenuItem onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.publishDateNewest)}>Publish Date (Newest)</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.publishDateOldest)}>Publish Date (Oldest)</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostLikes)}>Most Likes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastLikes)}>Least Likes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostDislikes)}>Most Dislikes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastDislikes)}>Least Dislikes</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostViews)}>Most Views</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastViews)}>Least Views</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.mostComments)}>Most Comments</MenuItem>,
-                <MenuItem onClick={() => handleSort(SortType.leastComments)}>Least Comments</MenuItem>
+                <MenuItem key={'sort-forum-titleaz'} onClick={() => handleSort(SortType.titleaz)}>A-Z</MenuItem>,
+                <MenuItem key={'sort-forum-titleza'} onClick={() => handleSort(SortType.titleza)}>Z-A</MenuItem>,
+                <MenuItem key={'sort-forum-pub-date-new'} onClick={() => handleSort(SortType.publishDateNewest)}>Publish Date (Newest)</MenuItem>,
+                <MenuItem key={'sort-forum-pub-date-old'} onClick={() => handleSort(SortType.publishDateOldest)}>Publish Date (Oldest)</MenuItem>,
+                <MenuItem key={'sort-forum-most_likes'} onClick={() => handleSort(SortType.mostLikes)}>Most Likes</MenuItem>,
+                <MenuItem key={'sort-forum-least-likes'} onClick={() => handleSort(SortType.leastLikes)}>Least Likes</MenuItem>,
+                <MenuItem key={'sort-forum-most-dislikes'} onClick={() => handleSort(SortType.mostDislikes)}>Most Dislikes</MenuItem>,
+                <MenuItem key={'sort-forum-least-dislikes'} onClick={() => handleSort(SortType.leastDislikes)}>Least Dislikes</MenuItem>,
+                <MenuItem key={'sort-forum-most-views'} onClick={() => handleSort(SortType.mostViews)}>Most Views</MenuItem>,
+                <MenuItem key={'sort-forum-least-views'} onClick={() => handleSort(SortType.leastViews)}>Least Views</MenuItem>,
+                <MenuItem key={'sort-forum-most-comments'} onClick={() => handleSort(SortType.mostComments)}>Most Comments</MenuItem>,
+                <MenuItem key={'sort-forum-least-comments'} onClick={() => handleSort(SortType.leastComments)}>Least Comments</MenuItem>
             ]
             break
     }
     let sortMenu = (
         <Menu
+            key={'sort-memu'}
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}

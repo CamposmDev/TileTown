@@ -216,7 +216,7 @@ export default class ContestController {
         }
 
         let contestIndex = user.joinedContests.indexOf(contest.id);
-        if (contestIndex > -1) {
+        if (contestIndex === -1) {
             return res.status(400).json({ message: "User has already left or is not in this contest" });
         }
 

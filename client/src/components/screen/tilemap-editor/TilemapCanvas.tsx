@@ -96,21 +96,37 @@ const TilemapCanvas = () => {
         const tilesetTileHeight =
           edit.state.Tilesets[currentTilesetIndex].tileHeight;
         const tilesetWidth = edit.state.Tilesets[currentTilesetIndex].columns;
+        const tilesetHeight = edit.state.Tilesets[currentTilesetIndex].rows;
 
         const image: HTMLImageElement = new Image();
-        image.src = edit.state.Tilesets[currentTilesetIndex].image;
+        const host: string =
+          window.location.host === "localhost:3001"
+            ? "localhost:3000"
+            : window.location.host;
+        image.src =
+          "http://" +
+          host +
+          "/api/media/" +
+          edit.state.Tilesets[currentTilesetIndex].image;
 
         image.onload = () => {
+          const imageWidth = image.width;
+          const imageHeight = image.height;
+          const imageTileWidth =
+            imageWidth * (tilesetTileWidth / (tilesetTileWidth * tilesetWidth));
+          const imageTileHeight =
+            imageHeight *
+            (tilesetTileHeight / (tilesetTileHeight * tilesetHeight));
           ctx.globalAlpha = edit.state.Tilemap.layers[layerIndex].opacity;
           ctx.drawImage(
             image,
             ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
-              tilesetTileWidth,
+              imageTileWidth,
             Math.floor(
               (currentTileIndex - currentGlobalTileID) / tilesetWidth
-            ) * tilesetTileHeight,
-            tilesetTileWidth,
-            tilesetTileHeight,
+            ) * imageTileHeight,
+            imageTileWidth,
+            imageTileHeight,
             i,
             y,
             scaledTileWidth,

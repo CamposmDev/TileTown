@@ -26,7 +26,7 @@ const DeleteAccountButton = () => {
     const deleteAccount = () => {
         auth.deleteAccount()
     }
-    let user: User | null = auth.getUsr()
+    let user: User | null = auth.usr
     let btDisabled = true
     if (user !== null) {
         btDisabled = !((username.localeCompare(user.username) === 0) && (verifyText.localeCompare('delete my account') === 0))
