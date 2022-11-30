@@ -1,6 +1,7 @@
 import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
+import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
@@ -8,10 +9,20 @@ import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { calcTimeLeft, dateToStr, isExpired } from "../util/DateUtils"
 
+function toTitleCase(str: string) {
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
 const ContestViewerModal = () => {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
+    const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [user, setUser] = useState({
         userId: '',
@@ -33,7 +44,7 @@ const ContestViewerModal = () => {
                 }
             })
         }
-    }, [contest.state.currentContest])
+    }, [contest.state.currentContest, auth.usr])
 
     const join = () => {
         /** Call the join function from contest store */
@@ -63,7 +74,12 @@ const ContestViewerModal = () => {
      *  
      */
     const start = () => {
-        
+        if (c?.type === 'tilemap') {
+            throw new Error('TODO')
+            // modal.showUploadTilemapModal()
+        } else if (c?.type === 'tileset') {
+            modal.showUploadTilesetModal()
+        }
     }
 
     /** 
@@ -108,6 +124,13 @@ const ContestViewerModal = () => {
                     </Grid>
                 </Grid>
                 <Grid container item>
+                    <Grid item>
+                        <Typography><b>Theme:</b>&ensp;
+                            {toTitleCase(c.type)}
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Grid container item>
                     <Typography><b>Participates</b>&ensp;{c.participates.length}</Typography>
                 </Grid>
                 <Grid container item>
@@ -120,7 +143,7 @@ const ContestViewerModal = () => {
     let leaveButton = <Button onClick={leave}>Leave</Button>
     let startButton = <Button onClick={start}>Start</Button>
     let chooseWinnerButton = <Button onClick={chooseWinner}>Choose Winner</Button>
-    let theControl = <Typography>Come back later to decide the winner!</Typography>
+    let theControl = <Typography>Come back later when the contest is over to decide the winner!</Typography>
     let usr = auth.usr
     if (usr && c) {
         if (usr.id === c.owner) {

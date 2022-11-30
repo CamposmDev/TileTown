@@ -55,6 +55,9 @@ export default class ContestController {
         if (!req.body.contest.name) {
             return res.status(400).json({ message: "Contest must have a name field" });
         }
+        if (!req.body.contest.type) {
+            return res.status(400).json({ message: "Contest must have a type" })
+        }
 
         // Check user exists
         let user = await db.users.getUserById(req.userId);
@@ -233,5 +236,44 @@ export default class ContestController {
         }
 
         return res.status(200).json({ message: "User left a contest!", user: updatedUser, contest: updatedContest });
+    }
+
+    /**
+     * @remarks 
+     * Note that this route is specifically designed for getting a user's available contests. Available contests are contests where their end date is greater than the current date.
+     * Also, the available contest id must not be referenced in any of the user's social data (tilemap or tileset) which would depend on the theme of the contest 
+     * @param req
+     * @param res 
+     * @returns 
+     */
+    public async getContestNameById(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+        if (!req.params.type) {
+            return res.status(400).json({ message: "Missing type"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"})
+        }
+        let contest = await db.contests.getContestById(req.params.id)
+        if (!contest) return res.status(400).json({ message: `Contest with id ${req.params.id} not found` })
+        /** Check if the user is the owner of the contest */
+        if (contest.owner === req.userId) return res.status(400).json({message: `Contest ${contest.id} is not available to the user owner ${req.userId}`})
+        /** Only return the contest name if the user's social doesn't referenced it  */
+        const requiredType = req.params.type as string
+        /** Check if the params type matches the contest type */
+        if (requiredType !== contest.type) return res.status(400).json({message: `Contest ${contest.id} is not type: ${requiredType}`})
+        /** Check if the contest is end date is greater than the current date */
+        let currentDate = new Date()
+        if (currentDate.getTime() > contest.endDate.getTime()) return res.status(400).json({message: `Contest ${contest.id} ended, thus not available`})
+        /** Check if any {requiredType} social data where the owner is the user and contains the contests id  */
+        if (!(await db.contests.isAvailable(contest.id, requiredType, req.userId))) {
+            return res.status(400).json({message: `Contest ${contest.id} is not available for user ${req.userId} for submission`})
+        }
+        return res.status(200).json({ message: 'Found contest', name: contest.name })
     }
 }

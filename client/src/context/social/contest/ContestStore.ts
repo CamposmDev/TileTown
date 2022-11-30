@@ -59,13 +59,14 @@ export class ContestStore {
         })
     }
 
-    public async createContest(name: string, description: string, endDate: Date, snack?: SnackStore): Promise<void> {
+    public async createContest(name: string, description: string, endDate: Date, type: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.createContest({
             contest: {
                 name: name,
                 description: description,
                 isPublished: true,
-                endDate: endDate
+                endDate: endDate,
+                type: type
             }
         })
         res.then((res) => {

@@ -32,6 +32,14 @@ export default class AxiosContestApi {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name, sort: sort }});
     }
 
+    public async getTilemapContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/name/tilemap/${contestId}`)
+    }
+
+    public async getTilesetContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/name/tileset/${contestId}`)
+    }
+
     public async joinContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/join/${id}`)
     }

@@ -19,8 +19,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
     const [username, setUsername] = useState<string>('')
     const social = useContext(SocialContext)
     useEffect(() => {
-        async function aux() {
-            let tileset = await social.getTilesetById(props.tilesetId)
+        social.getTilesetById(props.tilesetId).then(tileset => {
             if (tileset) {
                 setTileset(tileset)
                 social.getUserById(tileset.owner).then(x => {
@@ -28,8 +27,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                 })
                 if (tileset.isPublished) social.getTilesetSocialByTilesetId(tileset.id).then(s => setTilesetSocial(s))
             }
-        }
-        aux()
+        })            
     }, [social])
     if (tileset) {
         let usr = auth.usr

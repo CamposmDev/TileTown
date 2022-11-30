@@ -15,4 +15,6 @@ ContestRouter.put("/leave/:id", Auth.verifyJWT, ContestController.leaveContest);
 
 ContestRouter.delete("/:id", Auth.verifyJWT, ContestController.deleteContestById);
 
+ContestRouter.get('/name/:type/:id', Auth.verifyJWT, ContestController.getContestNameById)
+
 export default ContestRouter;

@@ -46,12 +46,13 @@ const TilesetEditorScreen = () => {
   const edit = useContext(TilesetEditContext);
   const social = useContext(SocialContext);
   //set the color of the selected mode
-  const unselectedColor = "#FFFFFF";
-  const selectedColor = "#ADD8E6";
+  const unselectedColor = "";
+  // const selectedColor = "rgba(255,255,255,0.08)";
+  const selectedColor = "rgba(38, 162, 123, 0.08)"
   const currentEditControl = edit.state.currentEditControl;
-  let drawColor: Color = unselectedColor;
-  let eraseColor: Color = unselectedColor;
-  let fillColor: Color = unselectedColor;
+  let drawColor = unselectedColor;
+  let eraseColor = unselectedColor;
+  let fillColor = unselectedColor;
   switch (currentEditControl) {
     case TilesetEditControl.draw: {
       drawColor = selectedColor;

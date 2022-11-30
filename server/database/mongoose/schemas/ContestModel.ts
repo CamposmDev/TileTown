@@ -14,6 +14,7 @@ const ContestSchema = new Schema<ContestSchemaType>({
     participates: { type: [ObjectId], require: true, default: []},
     startDate: { type: Date, require: true, default: new Date(Date.now() + 1000*60*5)},
     endDate: { type: Date, require: true, default: new Date(Date.now() + 1000*60*60*24)},
+    type: { type: String, require: true, default: 'tilemap'},
     winner: { type: ObjectId, require: true, default: null},
     isPublished: { type: Boolean, require: true, default: false }
 })

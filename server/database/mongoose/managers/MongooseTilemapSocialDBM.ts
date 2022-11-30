@@ -35,7 +35,8 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
             collaboratorNames: partial.collaboratorNames ? partial.collaboratorNames : [],
             tags: partial.tags ? partial.tags : [],
             description: partial.description ? partial.description : "Description",
-            communities: partial.communities ? partial.communities : [],
+            community: partial.community ? partial.community : '',
+            contest: partial.contest ? partial.contest : '',
             likes: [],
             dislikes: [],
             views: 0,
@@ -115,7 +116,8 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
             collaboratorNames: social.collaboratorNames,
             tags: social.tags,
             description: social.description,
-            communities: social.communities.map((id) => id.toString()),
+            community: social.community,
+            contest: social.contest,
             likes: social.likes.map((id) => id.toString()),
             dislikes: social.dislikes.map((id) => id.toString()),
             views: social.views,
@@ -134,7 +136,8 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         social.collaboratorNames = partial.collaboratorNames ? partial.collaboratorNames : social.collaboratorNames;
         social.tags = partial.tags ? partial.tags : social.tags;
         social.description = partial.description ? partial.description : social.description;
-        social.communities = partial.communities ? partial.communities.map(id => new mongoose.Types.ObjectId(id)) : social.communities;
+        social.community = partial.community ? partial.community : social.community
+        social.contest = partial.contest ? partial.contest : social.contest
         social.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : social.likes;
         social.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : social.dislikes;
         social.views = partial.views ? partial.views : social.views;

@@ -23,7 +23,8 @@ export default function TilesetViewerModal() {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
-    const [commName, setCommName] = useState<string | undefined>(undefined)
+    const [commName, setCommName] = useState<string | null>(null)
+    const [contestName, setContestName] = useState<string | null>(null)
     const [comment, setComment] = useState<string>('')
     const open = Boolean(social.state.currentTSS)
 
@@ -33,9 +34,11 @@ export default function TilesetViewerModal() {
             social.getCommunityName(tss.community).then(name => {
                 if (name) setCommName(name)
             })
-            
-        } else {
-            setCommName(undefined)
+        }
+        if (tss && tss.contest) {
+            social.getTilesetContestName(tss.contest).then(name => {
+                if (name) setContestName(name)
+            })
         }
     }, [social.state.currentTSS, auth.usr])
 

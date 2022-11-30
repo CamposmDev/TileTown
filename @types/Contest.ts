@@ -4,7 +4,6 @@
  * @author Peter Walsh
  */
 export default interface Contest {
-
     /** The id of the Contest in the DBMS */
     id: string,
 
@@ -24,10 +23,13 @@ export default interface Contest {
     participates: string[]
 
     /** The starting date of the Contest */
-    startDate: Date,
+    startDate: Date
 
     /** The end date of the Contest */
-    endDate: Date,
+    endDate: Date
+
+    /** The type of of the Contest */
+    type: string
 
     /** A flag indicating whether the Contest has been published or not */
     isPublished: boolean
