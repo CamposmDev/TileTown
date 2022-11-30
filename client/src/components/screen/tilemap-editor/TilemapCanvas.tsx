@@ -98,7 +98,15 @@ const TilemapCanvas = () => {
         const tilesetWidth = edit.state.Tilesets[currentTilesetIndex].columns;
 
         const image: HTMLImageElement = new Image();
-        image.src = edit.state.Tilesets[currentTilesetIndex].image;
+        const host: string =
+          window.location.host === "localhost:3001"
+            ? "localhost:3000"
+            : window.location.host;
+        image.src =
+          "http://" +
+          host +
+          "/api/media/" +
+          edit.state.Tilesets[currentTilesetIndex].image;
 
         image.onload = () => {
           ctx.globalAlpha = edit.state.Tilemap.layers[layerIndex].opacity;

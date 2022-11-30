@@ -42,7 +42,7 @@ const TilesetSelector = () => {
         <Tooltip title="Next Tileset" arrow>
           <IconButton
             disabled={
-              edit.state.currentTilesetIndex === edit.state.Tilesets.length - 1
+              edit.state.currentTilesetIndex >= edit.state.Tilesets.length - 1
             }
             onClick={() => {
               edit.updateCurrentTileset(edit.state.currentTilesetIndex + 1);
