@@ -1,23 +1,14 @@
-import { Grid, snackbarClasses } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
-import { TilemapApi } from "src/api";
 import "./default.css";
-import { SnackContext } from "src/context/snack";
-import axios from "axios";
 
-const TilemapCanvas = () => {
+const BottomLayerCanvas = () => {
   //tilemap edit store context
   const edit = useContext(TilemapEditContext);
-  const snack = useContext(SnackContext);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-
-  // const [currentTileCount, setCurrentTileCount] = useState(0);
-  let currentTileCount = 0;
-  // const [render, setRender] = useState(edit.state.renderTilemapCanvas);
-  const render = edit.state.renderTilemapCanvas;
 
   const tileHeight: number = edit.state.Tilemap.tileHeight;
   const tileWidth: number = edit.state.Tilemap.tileWidth;
@@ -25,9 +16,16 @@ const TilemapCanvas = () => {
   const width: number = edit.state.Tilemap.width;
   const imageHeight: number = tileHeight * height;
   const imageWidth: number = tileWidth * width;
+  const currentLayerIndex: number = edit.state.currentLayerIndex;
+  const visibilityChange: number = edit.state.Tilemap.layers.reduce<number>(
+    (acc, layer): number => {
+      return acc + Number(layer.visible);
+    },
+    0
+  );
+  const currentSwapIndex: number = edit.state.currentSwapIndex;
 
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
-  const totalTileCount = height * width * edit.state.Tilemap.layers.length;
 
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
@@ -41,7 +39,6 @@ const TilemapCanvas = () => {
    */
   const drawLayer = (
     ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
     layerIndex: number,
     scaledTileWidth: number,
     scaledTileHeight: number
@@ -50,7 +47,6 @@ const TilemapCanvas = () => {
     for (let i = 0; i < height; i++) {
       drawRow(
         ctx,
-        canvas,
         layerIndex,
         currentDataIndex,
         scaledTileWidth,
@@ -73,19 +69,17 @@ const TilemapCanvas = () => {
    */
   const drawRow = (
     ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
     layerIndex: number,
     dataIndex: number,
     scaledTileWidth: number,
     scaledTileHeight: number,
     y: number
   ): void => {
-    for (let i = 0; i < canvasWidth - scaledTileWidth; i += scaledTileWidth) {
+    for (let i = 0; i < canvasWidth; i += scaledTileWidth) {
       const currentTileIndex =
         edit.state.Tilemap.layers[layerIndex].data[
           Math.round(i / scaledTileWidth + dataIndex)
         ];
-
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
@@ -113,7 +107,6 @@ const TilemapCanvas = () => {
           host +
           "/api/media/" +
           edit.state.Tilesets[currentTilesetIndex].image;
-        image.crossOrigin = "Anonymous";
 
         image.onload = () => {
           const imageWidth = image.width;
@@ -138,36 +131,7 @@ const TilemapCanvas = () => {
             scaledTileWidth,
             scaledTileHeight
           );
-          currentTileCount++;
-
-          if (currentTileCount >= totalTileCount) {
-            console.log("tilemap fully rendered");
-            canvas.toBlob((blob) => {
-              if (blob) {
-                const f = new FormData();
-                f.append("image", blob);
-                f.append("tilemap", JSON.stringify(edit.state.Tilemap));
-                TilemapApi.updateTilemapById(edit.state.Tilemap.id, f)
-                  .then((res) => {
-                    console.log(res.data.message);
-                    if (res.status === 201) {
-                      edit.renderTilemap(false);
-                      snack.showSuccessMessage(res.data.message);
-                    }
-                  })
-                  .catch((e) => {
-                    if (axios.isAxiosError(e) && e.response) {
-                      console.error(e);
-                      console.error(e.response.data.message);
-                      snack.showErrorMessage(e.response.data.message);
-                    }
-                  });
-              }
-            });
-          }
         };
-      } else {
-        currentTileCount++;
       }
     }
   };
@@ -180,13 +144,16 @@ const TilemapCanvas = () => {
    */
   const drawCanvas = (
     ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
     scaledTileWidth: number,
     scaledTileHeight: number
   ) => {
-    for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
-      if (edit.state.Tilemap.layers[i].visible)
-        drawLayer(ctx, canvas, i, scaledTileWidth, scaledTileHeight);
+    for (
+      let i = edit.state.Tilemap.layers.length - 1;
+      i > currentLayerIndex;
+      i--
+    ) {
+      if (i !== currentLayerIndex && edit.state.Tilemap.layers[i].visible)
+        drawLayer(ctx, i, scaledTileWidth, scaledTileHeight);
     }
   };
 
@@ -196,10 +163,8 @@ const TilemapCanvas = () => {
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d", {
         willReadFrequently: true,
       });
-      if (!render) return;
       if (ctx) {
-        console.log("render tilemap");
-        currentTileCount = 0;
+        console.log("render bottom layer tilemap");
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         const scaleY = canvasHeight / imageHeight;
@@ -207,10 +172,12 @@ const TilemapCanvas = () => {
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawCanvas(ctx, canvas, scaledTileWidth, scaledTileHeight);
+        if (currentLayerIndex !== -1)
+          drawCanvas(ctx, scaledTileWidth, scaledTileHeight);
+        // edit.preventTilemapRender();
       }
     }
-  }, [render]);
+  }, [currentLayerIndex, visibilityChange, currentSwapIndex]);
 
   let root = (
     <canvas className="tilemap-canvas--no-input" ref={canvasRef}>
@@ -224,4 +191,4 @@ const TilemapCanvas = () => {
   );
 };
 
-export default TilemapCanvas;
+export default BottomLayerCanvas;

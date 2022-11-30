@@ -36,6 +36,7 @@ import CreatePropertyModal from "./components/modals/CreatePropertyModal";
 import { UserContextProvider } from "./context/social/user";
 import AddCollaboratorModal from "./components/modals/AddCollaboratorModal";
 import AddTilesetModal from "./components/modals/AddTilesetModal";
+import UploadTilemapModal from "./components/modals/UploadTilemapModal";
 
 /**
  * Pixel Editors
@@ -60,16 +61,16 @@ const theme = createTheme({
     // mode: "light"
     mode: "dark",
     background: {
-      default: '#282828',
+      default: "#282828",
       // paper: '#181818'
     },
     primary: {
-      main: "#26a27b"
+      main: "#26a27b",
       // main: "#39ace7"
     },
     secondary: {
-      main: "#fafafa"
-    }
+      main: "#fafafa",
+    },
   },
 });
 
@@ -77,7 +78,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-      <CssBaseline/>
+        <CssBaseline />
         <AuthContextProvider key={"auth-context-provider"}>
           <SnackContextProvider key={"snack-context-provider"}>
             <ModalContextProvider key={"modal-context-provider"}>
@@ -86,8 +87,10 @@ const App = () => {
                   <CommunityContextProvider key={"community-context-provider"}>
                     <ContestContextProvider key={"contest-context-provider"}>
                       <ForumContextProvider key={"forum-context-provider"}>
-                        <ProfileContextProvider key={"profile-context-provider"}>
-                          <NavBar/>
+                        <ProfileContextProvider
+                          key={"profile-context-provider"}
+                        >
+                          <NavBar />
                           <Routes>
                             <Route path="/" element={<SplashScreen />} />
                             <Route path="/login" element={<LoginScreen />} />
@@ -111,38 +114,55 @@ const App = () => {
                             <Route
                               path="/search/tilemaps"
                               element={
-                                <SearchScreen key={'search-tilemaps'} cat={SearchCategory.Tilemaps} />
+                                <SearchScreen
+                                  key={"search-tilemaps"}
+                                  cat={SearchCategory.Tilemaps}
+                                />
                               }
                             />
                             <Route
                               path="/search/tilesets"
                               element={
-                                <SearchScreen key={'search-tilesets'} cat={SearchCategory.Tilesets} />
+                                <SearchScreen
+                                  key={"search-tilesets"}
+                                  cat={SearchCategory.Tilesets}
+                                />
                               }
                             />
                             <Route
                               path="/search/users"
                               element={
-                                <SearchScreen key={'search-users'} cat={SearchCategory.Users} />
+                                <SearchScreen
+                                  key={"search-users"}
+                                  cat={SearchCategory.Users}
+                                />
                               }
                             />
                             <Route
                               path="/search/communities"
                               element={
-                                <SearchScreen key={'search-communities'} cat={SearchCategory.Communities}
+                                <SearchScreen
+                                  key={"search-communities"}
+                                  cat={SearchCategory.Communities}
                                 />
                               }
                             />
                             <Route
                               path="/search/contests"
                               element={
-                                <SearchScreen key={'search-contests'} cat={SearchCategory.Contests} />
+                                <SearchScreen
+                                  key={"search-contests"}
+                                  cat={SearchCategory.Contests}
+                                />
                               }
                             />
                             <Route
                               path="/search/forums"
                               element={
-                                <SearchScreen key={'search-forums'} cat={SearchCategory.Forums} />
+                                <SearchScreen
+                                  key={"search-forums"}
+                                  cat={SearchCategory.Forums}
+                                />
                               }
                             />
                             <Route
@@ -150,12 +170,11 @@ const App = () => {
                               element={
                                 <TilesetEditContextProvider>
                                   <TilesetEditorScreen />
-                                  <UploadTilesetModal />
                                 </TilesetEditContextProvider>
                               }
                             />
                             <Route
-                              path="/create/tilemap"
+                              path="/create/tilemap/:id"
                               element={
                                 <TilemapEditContextProvider>
                                   <TilemapEditorScreen />
@@ -168,6 +187,7 @@ const App = () => {
                           </Routes>
                           <NotificationSnack />
                           <UploadTilesetModal />
+                          <UploadTilemapModal />
                           <CreateCommunityModal />
                           <CreateContestModal />
                           <DeleteCommunityModal />

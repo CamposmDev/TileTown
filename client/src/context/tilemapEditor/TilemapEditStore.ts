@@ -281,10 +281,10 @@ export class TilemapEditStore {
     });
   }
 
-  public async preventTilemapRender(): Promise<void> {
+  public async renderTilemap(render: boolean): Promise<void> {
     this.handleAction({
-      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER,
-      payload: {},
+      type: TilemapEditorActionType.RENDER_TILEMAP,
+      payload: { render },
     });
   }
 
@@ -394,6 +394,10 @@ export class TilemapEditStore {
         this.handleUpdateCurrentTile(payload.currentTileIndex);
         break;
       }
+      case TilemapEditorActionType.RENDER_TILEMAP: {
+        this.handleRenderTilemap(payload.render);
+        break;
+      }
       case TilemapEditorActionType.UPDATE_CURRENT_SELECTION: {
         this.handleUpdateSelection(payload.currentSelection);
         break;
@@ -408,6 +412,13 @@ export class TilemapEditStore {
         );
       }
     }
+  }
+  protected handleRenderTilemap(render: boolean) {
+    this.setEdit({
+      ...this.state,
+      renderTilemapCanvas: render,
+      isSaved: render ? render : this.state.isSaved,
+    });
   }
   protected handleAddTileset(tileset: Tileset) {
     const prevTileset =
@@ -591,6 +602,7 @@ export class TilemapEditStore {
       },
       currentLayerIndex,
       currentSwapIndex: -1,
+      isSaved: false,
     });
   }
   protected handleUpdateSwapIndex(currentSwapIndex: number) {
@@ -631,6 +643,7 @@ export class TilemapEditStore {
           return layer;
         }),
       },
+      isSaved: false,
     });
   }
   protected handleCreateNewLayer(name: string, data: number[]): void {

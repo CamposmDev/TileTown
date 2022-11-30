@@ -6,6 +6,7 @@ import {
   TilemapEditorModalType,
 } from "./TilemapEditTypes";
 import { TilemapEditStore } from "./TilemapEditStore";
+import { TilemapApi } from "src/api";
 
 /**
  * The edit context
@@ -49,9 +50,7 @@ const TilemapEditContext = createContext<TilemapEditStore>(
       modalType: TilemapEditorModalType.close,
       isSaved: false,
       renderTilemapCanvas: true,
-      renderTilemapGridCanvas: true,
       renderCurrentLayerCanvas: true,
-      renderTileSelectorCanvas: true,
     },
     () => {},
     () => {}
@@ -99,13 +98,20 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     currentSelection: [],
     modalType: TilemapEditorModalType.close,
     isSaved: false,
-    renderTilemapCanvas: true,
-    renderTilemapGridCanvas: true,
+    renderTilemapCanvas: false,
     renderCurrentLayerCanvas: true,
-    renderTileSelectorCanvas: true,
   });
 
   const nav = useNavigate();
+
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilemapApi.getTilemapById(id).then((res) => {
+      if (res.data.tilemap) setEdit({ ...edit, Tilemap: res.data.tilemap });
+    });
+    if (edit.Tilemap.id === "") return;
+  }, [edit.Tilemap.id]);
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
   const TilemapEdit = new TilemapEditStore(edit, setEdit, nav);

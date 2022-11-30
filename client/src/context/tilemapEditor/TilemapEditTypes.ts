@@ -257,9 +257,7 @@ export interface TilemapEditorState {
   modalType: TilemapEditorModalType;
   isSaved: boolean;
   renderTilemapCanvas: boolean;
-  renderTilemapGridCanvas: boolean;
   renderCurrentLayerCanvas: boolean;
-  renderTileSelectorCanvas: boolean;
 }
 
 /**
@@ -286,7 +284,7 @@ export enum TilemapEditorActionType {
   ADD_COLLABORATORS = "ADD_COLLABORATORS",
   REMOVE_COLLABORATOR = "REMOVE_COLLABORATOR",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
-  PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
+  RENDER_TILEMAP = "RENDER_TILEMAP",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
   RENDER_CURRENT_LAYER_CANVAS_RENDER = "RENDER_CURRENT_LAYER_CANVAS_RENDER",
   PREVENT_TILE_SELECTION_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
@@ -380,8 +378,8 @@ export type TilemapEditorAction =
       payload: { currentSelection: number[] };
     }
   | {
-      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER;
-      payload: {};
+      type: TilemapEditorActionType.RENDER_TILEMAP;
+      payload: { render: boolean };
     }
   | {
       type: TilemapEditorActionType.PREVENT_GRID_CANVAS_RENDER;

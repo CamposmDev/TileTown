@@ -108,6 +108,9 @@ const TilemapToolbar = () => {
                   disabled={edit.state.isSaved}
                   color="primary"
                   children={<Save />}
+                  onClick={() => {
+                    edit.renderTilemap(true);
+                  }}
                 />
               }
             />
