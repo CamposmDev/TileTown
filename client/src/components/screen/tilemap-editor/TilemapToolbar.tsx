@@ -109,6 +109,7 @@ const TilemapToolbar = () => {
                   color="primary"
                   children={<Save />}
                   onClick={() => {
+                    console.log("save button click");
                     edit.renderTilemap(true);
                   }}
                 />

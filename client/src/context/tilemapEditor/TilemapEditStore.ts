@@ -10,7 +10,7 @@ import {
   Layer,
   Property,
 } from "./TilemapEditTypes";
-import { TilesetApi } from "src/api";
+import { TilemapApi, TilesetApi } from "src/api";
 import axios from "axios";
 import { SnackStore } from "../snack/SnackStore";
 import { Tileset } from "../tilesetEditor/TilesetEditTypes";
@@ -92,6 +92,31 @@ export class TilemapEditStore {
         Tilemap,
       },
     });
+  }
+
+  public async saveTilemap(blob: Blob, snack?: SnackStore): Promise<void> {
+    const f = new FormData();
+    f.append("image", blob);
+    f.append("tilemap", JSON.stringify(this.state.Tilemap));
+    console.log("saveTilemap");
+    TilemapApi.updateTilemapById(this.state.Tilemap.id, f)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("200");
+          this.handleAction({
+            type: TilemapEditorActionType.SAVE_TILEMAP,
+            payload: {},
+          });
+          snack?.showSuccessMessage(res.data.message);
+        }
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e) && e.response) {
+          console.error(e);
+          console.error(e.response.data.message);
+          snack?.showErrorMessage(e.response.data.message);
+        }
+      });
   }
 
   public async addTileset(id: string, snack?: SnackStore): Promise<void> {
@@ -319,7 +344,7 @@ export class TilemapEditStore {
         break;
       }
       case TilemapEditorActionType.SAVE_TILEMAP: {
-        this.handleSaveTilemap(payload.Tilemap);
+        this.handleSaveTilemap();
         break;
       }
       case TilemapEditorActionType.ADD_TILESET: {
@@ -417,7 +442,6 @@ export class TilemapEditStore {
     this.setEdit({
       ...this.state,
       renderTilemapCanvas: render,
-      isSaved: render ? render : this.state.isSaved,
     });
   }
   protected handleAddTileset(tileset: Tileset) {
@@ -724,10 +748,12 @@ export class TilemapEditStore {
     });
   }
 
-  protected handleSaveTilemap(Tilemap: Tilemap): void {
+  protected handleSaveTilemap(): void {
+    console.log("handleSaveTilemap");
     this.setEdit({
       ...this._state,
       isSaved: true,
+      renderTilemapCanvas: false,
     });
   }
 

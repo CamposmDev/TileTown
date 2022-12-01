@@ -306,7 +306,7 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.SAVE_TILEMAP;
-      payload: { Tilemap: Tilemap };
+      payload: {};
     }
   | {
       type: TilemapEditorActionType.ADD_TILESET;
