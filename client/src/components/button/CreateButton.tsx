@@ -7,12 +7,12 @@ import { ProfileContext } from "src/context/profile";
 import { MENU_PAPER_PROPS } from "../util/Constants";
 
 const CreateButton = (props: MenuItemProps) => {
-  const auth = useContext(AuthContext)
-  const prof = useContext(ProfileContext)
+  const auth = useContext(AuthContext);
+  const prof = useContext(ProfileContext);
   const modal = useContext(ModalContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const nav = useNavigate()
+  const nav = useNavigate();
 
   const handleMenuOpen = (event: any) => setAnchorEl(event.currentTarget);
 
@@ -35,6 +35,11 @@ const CreateButton = (props: MenuItemProps) => {
     handleMenuClose();
   };
 
+  const showCreateTilemapModal = () => {
+    modal.showUploadTilemapModal();
+    handleMenuClose();
+  };
+
   const menu = (
     <Menu
       anchorEl={anchorEl}
@@ -44,14 +49,16 @@ const CreateButton = (props: MenuItemProps) => {
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
-      <MenuItem onClick={handleMenuClose} component={Link} to="/create/tilemap">
-        Tilemap
-      </MenuItem>
+      <MenuItem onClick={showCreateTilemapModal}>Tilemap</MenuItem>
       <MenuItem onClick={showCreateTilesetModal}>Tileset</MenuItem>
-      <MenuItem onClick={() => {
-        prof.viewUnpublishedTilesets(auth.usr?.id)
-        handleMenuClose()
-      }}>View Unpublished Tilesets</MenuItem>
+      <MenuItem
+        onClick={() => {
+          prof.viewUnpublishedTilesets(auth.usr?.id);
+          handleMenuClose();
+        }}
+      >
+        View Unpublished Tilesets
+      </MenuItem>
       <MenuItem onClick={showCreateCommunityModal}>Community</MenuItem>
       <MenuItem onClick={showCreateContestModal}>Contest</MenuItem>
     </Menu>

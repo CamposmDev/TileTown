@@ -6,6 +6,7 @@ import {
   TilemapEditorModalType,
 } from "./TilemapEditTypes";
 import { TilemapEditStore } from "./TilemapEditStore";
+import { TilemapApi, TilesetApi } from "src/api";
 
 /**
  * The edit context
@@ -49,9 +50,7 @@ const TilemapEditContext = createContext<TilemapEditStore>(
       modalType: TilemapEditorModalType.close,
       isSaved: false,
       renderTilemapCanvas: true,
-      renderTilemapGridCanvas: true,
       renderCurrentLayerCanvas: true,
-      renderTileSelectorCanvas: true,
     },
     () => {},
     () => {}
@@ -98,14 +97,35 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     currentTilesetIndex: 0,
     currentSelection: [],
     modalType: TilemapEditorModalType.close,
-    isSaved: false,
-    renderTilemapCanvas: true,
-    renderTilemapGridCanvas: true,
+    isSaved: true,
+    renderTilemapCanvas: false,
     renderCurrentLayerCanvas: true,
-    renderTileSelectorCanvas: true,
   });
 
   const nav = useNavigate();
+
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilemapApi.getTilemapById(id).then((res) => {
+      if (res.data.tilemap) {
+        setEdit({ ...edit, Tilemap: res.data.tilemap });
+      }
+    });
+    if (edit.Tilemap.id === "") return;
+    if (edit.Tilemap.tilesets.length > 0) {
+      edit.Tilemap.tilesets.forEach((tileset) => {
+        console.log("load tileset");
+        TilesetApi.getTilesetById(tileset).then((res) => {
+          setEdit({
+            ...edit,
+            Tilesets: [...edit.Tilesets, res.data.tileset],
+          });
+        });
+      });
+    }
+    if (edit.Tilemap.tilesets.length !== edit.Tilesets.length) return;
+  }, [edit.Tilemap.id]);
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
   const TilemapEdit = new TilemapEditStore(edit, setEdit, nav);

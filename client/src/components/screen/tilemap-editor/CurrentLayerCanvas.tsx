@@ -416,9 +416,7 @@ const CurrentLayerCanvas = () => {
       const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
       const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
       const startingIndex = currentTile.x + width * currentTile.y;
-      console.log(startingIndex);
       if (!currentSelection.includes(startingIndex)) return;
-      console.log("current index in current selection");
       const currentTileData = currentLayer[startingIndex];
       let selection = new Map<number, number>();
       let startingPoints: number[] = [];
@@ -430,7 +428,6 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
-        console.log("hello left");
         while (
           currentIndex % width >= 0 &&
           !selection.has(currentIndex) &&
@@ -465,7 +462,6 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
-        console.log("hello right");
         while (
           currentIndex % width < width &&
           !selection.has(currentIndex) &&
@@ -501,7 +497,6 @@ const CurrentLayerCanvas = () => {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
-      console.log([...selection.values()]);
       // edit.updateCurrentSelection([...selection.values()]);
       edit.updateCurrentLayerData(currentTileIndex, [...selection.values()]);
     }
@@ -584,8 +579,6 @@ const CurrentLayerCanvas = () => {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
-
-      console.log([...selection.values()]);
 
       edit.updateCurrentSelection([...selection.values()]);
     }

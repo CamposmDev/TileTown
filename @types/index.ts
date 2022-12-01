@@ -14,7 +14,7 @@ import Tilemap, {
 import TilemapSocial from "./TilemapSocial";
 import TilesetSocial from "./TilesetSocial";
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
-import { RGB, RGBA, HEX, Color } from "./Color";
+import { RGB, HEX, Color } from "./Color";
 import { SortBy } from "./Enums";
 import Comment from "./Comment";
 import { Type } from "./Type";
@@ -24,7 +24,11 @@ import TilesetEditorState, {
   TilesetEditorActionType,
   TilesetEditorAction,
 } from "./TilesetEditTypes";
-import { TilemapSocialQuery, TilemapSocialSortBy, TilemapSocialOrder  } from "./TilemapSocialQuery";
+import {
+  TilemapSocialQuery,
+  TilemapSocialSortBy,
+  TilemapSocialOrder,
+} from "./TilemapSocialQuery";
 
 export type {
   EditMode,
@@ -44,13 +48,14 @@ export type {
   SocialStatisticsPermissions,
   CollaboratorSettings,
   RGB,
-  RGBA,
   HEX,
   Color,
   Type,
   TilesetEditorState,
   TilesetEditorAction,
-  TilemapSocialQuery, TilemapSocialOrder, TilemapSocialSortBy
+  TilemapSocialQuery,
+  TilemapSocialOrder,
+  TilemapSocialSortBy,
 };
 
 export {

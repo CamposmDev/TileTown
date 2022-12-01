@@ -6,6 +6,7 @@ export interface ModalState {
   showDeleteCommunityModal: boolean;
   showDeleteContestModal: boolean;
   showUploadTilesetModal: boolean;
+  showUploadTilemapModal: boolean;
   showCreatePropertyModal: boolean;
   showAddCollaboratorModal: boolean;
   showAddTilesetModal: boolean;
@@ -54,6 +55,12 @@ export class ModalStore {
     });
   }
 
+  public showUploadTilemapModal() {
+    this.handleAction({
+      type: ModalActionType.showUploadTilemap,
+    });
+  }
+
   public showCreatePropertyModal() {
     this.handleAction({
       type: ModalActionType.showProperty,
@@ -79,6 +86,7 @@ export class ModalStore {
       showDeleteCommunityModal: false,
       showDeleteContestModal: false,
       showUploadTilesetModal: false,
+      showUploadTilemapModal: false,
       showCreatePropertyModal: false,
       showAddCollaboratorModal: false,
       showAddTilesetModal: false,
@@ -95,6 +103,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -107,6 +116,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -119,6 +129,7 @@ export class ModalStore {
           showDeleteCommunityModal: true,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -131,6 +142,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: true,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -143,6 +155,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: true,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -155,6 +168,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: true,
           showAddCollaboratorModal: false,
           showAddTilesetModal: false,
@@ -167,6 +181,7 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: true,
           showAddTilesetModal: false,
@@ -179,9 +194,23 @@ export class ModalStore {
           showDeleteCommunityModal: false,
           showDeleteContestModal: false,
           showUploadTilesetModal: false,
+          showUploadTilemapModal: false,
           showCreatePropertyModal: false,
           showAddCollaboratorModal: false,
           showAddTilesetModal: true,
+        });
+        break;
+      case ModalActionType.showUploadTilemap:
+        this._setModal({
+          showCreateCommunityModal: false,
+          showCreateContestModal: false,
+          showDeleteCommunityModal: false,
+          showDeleteContestModal: false,
+          showUploadTilesetModal: false,
+          showUploadTilemapModal: true,
+          showCreatePropertyModal: false,
+          showAddCollaboratorModal: false,
+          showAddTilesetModal: false,
         });
         break;
     }

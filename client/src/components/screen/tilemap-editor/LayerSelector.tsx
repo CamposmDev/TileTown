@@ -11,9 +11,11 @@ import {
 import { Add } from "@mui/icons-material";
 import LayerField from "./LayerField";
 import { Layer } from "src/context/tilemapEditor/TilemapEditTypes";
+import { SnackContext } from "src/context/snack";
 
 const LayerSelector = () => {
   const edit = useContext(TilemapEditContext);
+  const snack = useContext(SnackContext);
   const layers = edit.state.Tilemap.layers;
 
   const layerFields = layers.map((layer: Layer, index: number) => (
@@ -32,8 +34,15 @@ const LayerSelector = () => {
         <Tooltip title="Add Layer" arrow>
           <IconButton
             color="primary"
+            // disabled={edit.state.Tilesets.length < 1}
+            onMouseMove={() => {
+              if (edit.state.Tilesets.length < 1)
+                snack.showWarningMessage(
+                  "Please Add A Tileset Before Adding A Layer"
+                );
+            }}
             onClick={() => {
-              edit.createNewLayer();
+              if (edit.state.Tilesets.length >= 1) edit.createNewLayer();
             }}
           >
             <Add />
