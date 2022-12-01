@@ -2,7 +2,6 @@ import { Tilemap, Tileset, Layer, Property, Type } from "@types";
 
 export default class TilemapParser {
 
-
     /**
      * Parses our internal representation of a tilemap to a Tiled tilemap object that can be
      * loaded into Tiled. 
@@ -28,7 +27,7 @@ export default class TilemapParser {
             tileheight: tilemap.tileHeight,
             tilewidth: tilemap.tileWidth,
             type: "map",
-            width: tilemap.tileWidth,
+            width: tilemap.width,
 
             layers: tilemap.layers.map((layer, idx) => this.parseTiledLayer(idx + 1, layer)),
             tilesets: tilesets.map((tileset, idx) => this.parseTiledTileset(tilemap.globalTileIDs[idx], tileset)),
@@ -44,15 +43,14 @@ export default class TilemapParser {
             columns: tileset.columns,
             firstgid: gid,
             image: tileset.image,
-            imageheight: tileset.imageHeight,
-            imagewidth: tileset.imageWidth,
+            imageheight: tileset.rows * tileset.tileHeight,
+            imagewidth: tileset.columns * tileset.tileWidth,
             margin: tileset.margin,
             name: tileset.name,
             spacing: 0,
             tilecount: 10,
             tilewidth: tileset.tileWidth,
             tileheight: tileset.tileHeight,
-
         }
     }
 

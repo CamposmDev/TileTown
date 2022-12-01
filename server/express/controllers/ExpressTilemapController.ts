@@ -8,6 +8,9 @@ import * as fs from 'fs';
 import path from "path";
 import AdmZip from 'adm-zip';
 
+
+import { TilemapParser } from "../../parsers";
+
 export default class TilemapController {
 
     public async getTilemapById(req: Request, res: Response): Promise<Response> {
@@ -324,20 +327,26 @@ export default class TilemapController {
             // Make a new directory for the tilemap
             fs.mkdirSync(mapdir);
             // Copy the contents of the tilemap as a JSON file
-            fs.writeFileSync(tmfile, JSON.stringify(tilemap));
+            fs.writeFileSync(tmfile, JSON.stringify(TilemapParser.tiled(tilemap, tilesets)));
 
             // Copy the contents of all the image files to the new map directory
             for (let tileset of tilesets) {
                 fs.copyFileSync(path.join(imgdir, tileset.image), path.join(mapdir, tileset.image));
             }
 
+            // Create the zip object
             const zip = new AdmZip();
+            // Add the tilemap folder to the zip object
             zip.addLocalFolder(mapdir);
-            
+            // Convert the zip to a buffer and send as a zip file
             res.setHeader('Content-Type', 'application/zip').send(zip.toBuffer());
+
         } catch (e) {
-            console.log(e)
+            // If there's an error - print it and return status 500
+            console.log(e);
+            res.status(500).json({message: "Server Error. Error while trying to download a tilemap."});
         } finally {
+            // Regardless of what happened, cleanup the tilemap directory we tried to create
             fs.rmSync(mapdir, { recursive: true });
         }
 
