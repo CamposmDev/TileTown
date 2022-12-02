@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { is } from "typescript-is";
 import { db } from "../../database";
-import { Community, SortBy, Tileset, TilesetSocial } from "@types";
+import { Community, Contest, SortBy, Tileset, TilesetSocial } from "@types";
 
 export default class TilesetController {
   public async getTilesetSocialsByName(req: Request, res: Response): Promise<Response> {
@@ -390,6 +390,10 @@ export default class TilesetController {
     if (req.body.communityName) {
       community = await db.communities.getCommunityByName(req.body.communityName)
     }
+    let contest: Contest | null = null
+    if (req.body.contestName) {
+      contest = await db.contests.getContestByName(req.body.contestName)
+    }
 
     // Create the social data
     let social = await db.tilesetSocials.createTilesetSocial(
@@ -399,6 +403,7 @@ export default class TilesetController {
         owner: tileset.owner,
         description: req.body.description,
         community: community?.id,
+        contest: contest?.id,
         permissions: req.body.permissions,
         tags: req.body.tags,
         imageURL: tileset.image

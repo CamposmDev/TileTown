@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Contest } from "@types";
 import { ContestDBM } from "../../interface";
-import { ContestModel } from '../schemas';
+import { ContestModel, TilemapSocialModel, TilesetSocialModel } from '../schemas';
 import { ContestSchemaType } from '../types/index';
 
 /**
@@ -61,6 +61,10 @@ export default class MongooseContestDBM implements ContestDBM {
     }
 
     public async createContest(partial: Partial<Contest> & {owner: string, name: string}): Promise<Contest | null> {
+        let type = partial.type
+        if (type) {
+            if (type.localeCompare('tilemap') !== 0 && type.localeCompare('tileset') !== 0) return null
+        }
         if (!mongoose.Types.ObjectId.isValid(partial.owner)) { return null; }
         let contest = await ContestModel.create({...partial});
         let savedContest = await contest.save();
@@ -83,6 +87,29 @@ export default class MongooseContestDBM implements ContestDBM {
         return this.parseContest(contest);
     }
 
+    /**
+     * Checks if a contest is available by searching for one {type} of social document where the owner is {usrId} and contest is {contestId}
+     * @param contestId 
+     * @param type 'tilemap' | 'tileset' the type of contest
+     * @param usrId 
+     * @returns true if the the contest is available, otherwise false
+     */
+    public async isAvailable(contestId: string, type: string, usrId: string): Promise<boolean> {
+        switch (type) {
+            case 'tilemap':
+                let tilemap = await TilemapSocialModel.findOne({owner: usrId, contest: contestId})
+                /** If a tilemap exists, then the contest is not available */
+                if (tilemap) return false
+                break
+            case 'tileset':
+                let tileset = await TilesetSocialModel.findOne({owner: usrId, contest: contestId})
+                /** If a tileset exists, then the contest is not available */
+                if (tileset) return false
+                break
+        }
+        return true
+    }
+
     protected parseContest(contest: ContestSchemaType & { _id: mongoose.Types.ObjectId}): Contest { 
         return {
             id: contest._id.toString(),
@@ -92,6 +119,7 @@ export default class MongooseContestDBM implements ContestDBM {
             participates: contest.participates.map((id) => id.toString()),
             startDate: contest.startDate,
             endDate: contest.endDate,
+            type: contest.type,
             winner: contest.winner !== null ? contest.winner.toString() : "",
             isPublished: contest.isPublished
         };
@@ -103,6 +131,7 @@ export default class MongooseContestDBM implements ContestDBM {
         contest.participates = partial.participates ? partial.participates.map(id => new mongoose.Types.ObjectId(id)) : contest.participates;
         contest.startDate = partial.startDate ? partial.startDate : contest.startDate;
         contest.endDate = partial.endDate ? partial.endDate : contest.endDate;
+        contest.type = partial.type ? partial.type : contest.type;
         contest.winner = partial.winner ? new mongoose.Types.ObjectId(partial.winner) : contest.winner;
         contest.isPublished = partial.isPublished ? partial.isPublished : contest.isPublished;
     }

@@ -64,6 +64,7 @@ export default class AxiosTilesetApi {
     payload: {
       description: string;
       communityName: string;
+      contestName: string;
       permissions: string[];
       tags: string[];
     }

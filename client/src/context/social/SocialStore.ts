@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, SocialApi, TilesetApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, SocialApi, TilemapApi, TilesetApi, UserApi } from "src/api"
 import { Comment, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -149,6 +149,14 @@ export class SocialStore {
         // })
     }
 
+    public async getTilemapById(id: string): Promise<Tilemap | undefined> {
+        return TilemapApi.getTilemapById(id).then(res => {
+            if (res.status === 200) {
+                return res.data.tilemap
+            }
+        })
+    }
+
     public async getTilemapSocialById(id: string): Promise<TilemapSocial | undefined> {
         return SocialApi.getTilemapSocialById(id).then(res => {
             if (res.status === 200) {
@@ -280,6 +288,72 @@ export class SocialStore {
     /** Queries back-end to get a community name based on given community id */
     public async getCommunityName(communityId: string): Promise<string | undefined> {
         return CommunityApi.getCommunityName(communityId).then(res => {
+            if (res.status === 200) {
+                return res.data.name
+            }
+        })
+    }
+
+    public async hasContestSubmission(contestId: string): Promise<boolean> {
+        return ContestApi.hasSubmitted(contestId).then(res => {
+            if (res.status === 200) {
+                return res.data.submitted
+            }
+        })
+    }
+
+    /**
+     * Returns array of contest names where the theme of the contest is tilemap
+     * @param contestIds - array of contest ids
+     * @returns 
+     */
+    public async getTilemapContestNames(contestIds: string[]): Promise<string[]> {
+        let arr: string[] = []
+        contestIds.forEach(id => {
+            this.getTilemapContestName(id).then(name => {
+                if (name) {
+                    arr.push(name)
+                }
+            })
+        })
+        return arr
+    }
+
+    public async getContestNameById(contestId: string): Promise<string | null> {
+        return ContestApi.getContestNameById(contestId).then(res => {
+            if (res.status === 200) {
+                return res.data.name
+            }
+        })
+    }
+
+    /**
+     * Returns array of contest names where the theme of the contest is tileset
+     * @param contestIds - array of contest ids
+     * @returns 
+     */
+    public async getTilesetContestNames(contestIds: string[]): Promise<string[]> {
+        let arr: string[] = []
+        contestIds.forEach(id => {
+            this.getTilesetContestName(id).then(name => {
+                if (name) {
+                    arr.push(name)
+                }
+            })
+        })
+        return arr
+    }
+
+    public async getTilemapContestName(contestId: string): Promise<string | null> {
+        return ContestApi.getTilemapContestName(contestId).then(res => {
+            if (res.status === 200) {
+                return res.data.name
+            }
+        })
+    }
+
+    public async getTilesetContestName(contestId: string): Promise<string | undefined> {
+        return ContestApi.getTilesetContestName(contestId).then(res => {
             if (res.status === 200) {
                 return res.data.name
             }
@@ -443,10 +517,11 @@ export class SocialStore {
         })
     }
 
-    public async publishTileset(tilesetId: string, desc: string, commName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
+    public async publishTileset(tilesetId: string, desc: string, commName: string, contestName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
         TilesetApi.publishTilesetById(tilesetId, {
             description: desc,
             communityName: commName,
+            contestName: contestName,
             permissions: permissions,
             tags: tags
         }).then(res => {

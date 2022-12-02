@@ -21,5 +21,7 @@ export default interface Community {
 
     /** The visibility of the Community */
     visibility: string
-    
+
+   /** The number of members who are banned from the community */
+    banned: string[]
 }

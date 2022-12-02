@@ -19,8 +19,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
     const [username, setUsername] = useState<string>('')
     const social = useContext(SocialContext)
     useEffect(() => {
-        async function aux() {
-            let tileset = await social.getTilesetById(props.tilesetId)
+        social.getTilesetById(props.tilesetId).then(tileset => {
             if (tileset) {
                 setTileset(tileset)
                 social.getUserById(tileset.owner).then(x => {
@@ -28,8 +27,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                 })
                 if (tileset.isPublished) social.getTilesetSocialByTilesetId(tileset.id).then(s => setTilesetSocial(s))
             }
-        }
-        aux()
+        })            
     }, [social])
     if (tileset) {
         let usr = auth.usr
@@ -47,7 +45,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                     <Typography noWrap variant='caption'>{`By ${username}`}</Typography>
                 </Box>
             </Tooltip>
-        const content = <img id='tile-preview' src={imageURL}/>
+        const content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${tileset.image}`}/>
         if (prof.state.viewUnpublishedTilesets) {
             if (tileset.isPublished) {
                 return <div/>

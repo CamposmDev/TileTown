@@ -9,6 +9,16 @@ interface Props {
     c: Contest
 }
 
+function toTitleCase(str: string) {
+    if (!str) return ''
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
 const ContestCard = (props: Props) => {
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
@@ -52,6 +62,9 @@ const ContestCard = (props: Props) => {
                         <Stack direction='column'>
                             <Typography variant='caption'><b>Started:&ensp;</b>
                                 {dateToStr(new Date(props.c.startDate))}
+                            </Typography>
+                            <Typography variant='caption'><b>Theme:</b>&ensp;
+                                {toTitleCase(props.c.type)}
                             </Typography>
                             <Typography variant='caption'>
                                 <b>{props.c.participates.length}</b>&ensp;Participates

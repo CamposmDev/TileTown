@@ -23,7 +23,8 @@ export default function TilesetViewerModal() {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
-    const [commName, setCommName] = useState<string | undefined>(undefined)
+    const [commName, setCommName] = useState<string | null>(null)
+    const [contestName, setContestName] = useState<string | null>(null)
     const [comment, setComment] = useState<string>('')
     const open = Boolean(social.state.currentTSS)
 
@@ -33,11 +34,13 @@ export default function TilesetViewerModal() {
             social.getCommunityName(tss.community).then(name => {
                 if (name) setCommName(name)
             })
-            
-        } else {
-            setCommName(undefined)
         }
-    }, [social.state.currentTSS, auth.usr])
+        if (tss && tss.contest) {
+            social.getContestNameById(tss.contest).then(name => {
+                if (name) setContestName(name)
+            })
+        }
+    }, [social, auth])
 
     const like = () => {
         /** Call the like tileset social function from social */
@@ -137,6 +140,7 @@ export default function TilesetViewerModal() {
                                             minimal={true}
                                         />
                                         {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
+                                        {contestName ? <Typography variant='body2'>{`Contest Submission: ${contestName}`}</Typography>: <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
                                         <Typography variant='body2' flexWrap={"wrap"}>{tss.description}</Typography>
                                     </Grid>

@@ -6,6 +6,7 @@ import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import CommunityMembersModal from "../modals/CommunityMembersModal"
 import { User } from "@types"
+import { SnackContext } from "src/context/snack"
 
 function isMember(members: string[], usrId: string): boolean {
     return Boolean(members.indexOf(usrId) !== -1)
@@ -14,16 +15,21 @@ function isMember(members: string[], usrId: string): boolean {
 const CommunityProfileScreen = () => {
     const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
-
+    const snack = useContext(SnackContext)
     const join = () => {
         /** Call the join function from comm */
-        comm.joinCommunity()
+        comm.joinCommunity(snack).then(usr => {
+            auth.refreshUser(usr)
+        })
     }
 
     const leave = () => {
         /** Call the leave function from comm */
-        comm.leaveCommunity()
+        comm.leaveCommunity(snack).then(usr => {
+            auth.refreshUser(usr)
+        })
     }
+   
 
     let c = comm.currCommunity
     /** Size of the Carousel */
@@ -45,10 +51,10 @@ const CommunityProfileScreen = () => {
             }
         }
     }
-
-    const handleClick = () => [
-
-    ]
+    /** check if user is banned */
+    if (usr && c && isMember(c.banned, usr.id)) {
+        theButton = <div/>
+    }
 
     let header = (
         <Grid>
