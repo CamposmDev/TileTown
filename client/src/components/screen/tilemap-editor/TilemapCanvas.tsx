@@ -18,6 +18,7 @@ const TilemapCanvas = () => {
   let currentTileCount = 0;
   // const [render, setRender] = useState(edit.state.renderTilemapCanvas);
   const render = edit.state.renderTilemapCanvas;
+  console.log(render);
 
   const tileHeight: number = edit.state.Tilemap.tileHeight;
   const tileWidth: number = edit.state.Tilemap.tileWidth;
@@ -142,28 +143,15 @@ const TilemapCanvas = () => {
 
           if (currentTileCount >= totalTileCount) {
             console.log("tilemap fully rendered");
-            canvas.toBlob((blob) => {
-              if (blob) {
-                const f = new FormData();
-                f.append("image", blob);
-                f.append("tilemap", JSON.stringify(edit.state.Tilemap));
-                TilemapApi.updateTilemapById(edit.state.Tilemap.id, f)
-                  .then((res) => {
-                    console.log(res.data.message);
-                    if (res.status === 201) {
-                      edit.renderTilemap(false);
-                      snack.showSuccessMessage(res.data.message);
-                    }
-                  })
-                  .catch((e) => {
-                    if (axios.isAxiosError(e) && e.response) {
-                      console.error(e);
-                      console.error(e.response.data.message);
-                      snack.showErrorMessage(e.response.data.message);
-                    }
-                  });
-              }
-            });
+            console.log(edit.state.Tilemap);
+            if (!edit.state.isSaved)
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  console.log("hello?");
+                  edit.saveTilemap(blob, snack);
+                }
+              });
+            else edit.renderTilemap(false);
           }
         };
       } else {
@@ -196,7 +184,7 @@ const TilemapCanvas = () => {
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d", {
         willReadFrequently: true,
       });
-      if (!render) return;
+
       if (ctx) {
         console.log("render tilemap");
         currentTileCount = 0;
@@ -207,6 +195,7 @@ const TilemapCanvas = () => {
         const scaledTileHeight = tileHeight * scaleY;
         const scaledTileWidth = tileWidth * scaleX;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!render) return;
         drawCanvas(ctx, canvas, scaledTileWidth, scaledTileHeight);
       }
     }
