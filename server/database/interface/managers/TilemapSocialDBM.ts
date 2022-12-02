@@ -12,5 +12,5 @@ export default interface TilemapSocialDBM {
 
     getTilemapSocials(query: TilemapSocialQuery): Promise<TilemapSocial[]>
 
-    getSubmissionIds(contestId: string): Promise<string[]>
+    getSubmissionIds(contestId: string): Promise<TilemapSocial[]>
 }

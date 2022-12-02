@@ -10,6 +10,7 @@ interface Props {
 }
 
 function toTitleCase(str: string) {
+    if (!str) return ''
     return str.replace(
       /\w\S*/g,
       function(txt) {

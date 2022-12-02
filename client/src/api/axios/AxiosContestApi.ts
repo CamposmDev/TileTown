@@ -55,4 +55,12 @@ export default class AxiosContestApi {
     public async leaveContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/leave/${id}`)
     }
+
+    public async getTilesetSubmissions(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submissions/tileset/${contestId}`)
+    }
+
+    public async getTilemapSubmissions(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submissions/tilemap/${contestId}`)
+    }
 }

@@ -111,10 +111,10 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         return socials.map(social => this.parseSocial(social));
     }
 
-    async getSubmissionIds(contestId: string): Promise<string[]> {
+    async getSubmissionIds(contestId: string): Promise<TilesetSocial[]> {
         if (!mongoose.Types.ObjectId.isValid(contestId)) return [];
-        let socialIds = await TilesetSocialModel.find({contest: contestId}).select('_id')
-        return socialIds.map(x => x._id.toString())
+        let socials = await TilesetSocialModel.find({contest: contestId})
+        return socials.map(x => this.parseSocial(x))
     }
 
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
