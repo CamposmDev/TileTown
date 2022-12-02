@@ -61,7 +61,6 @@ const TilesetCanvas = () => {
       canvas.width = canvasWidth;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
       if (ctx) {
-        console.log('hi')
         const rectHeight = canvas.height;
         const rectWidth = canvas.width;
         contextRef.current = ctx;
