@@ -54,4 +54,10 @@ export default class AxiosCommunityApi {
     public async getCommunityName(communityId: string): Promise<AxiosResponse<GetCommunityNameRes>> {
         return AxiosApi.get(`/community/name/${communityId}`)
     }
-}
+    public async kickMember(userId: string, commId: string): Promise<AxiosResponse> {
+        return AxiosApi.put(`/community/${commId}/kick/${userId}`)
+    }
+    public async banMember(userId: string, commId: string): Promise<AxiosResponse> {
+        return AxiosApi.put(`/community/${commId}/ban/${userId}`)
+    }
+} 
