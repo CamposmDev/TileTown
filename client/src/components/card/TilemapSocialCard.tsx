@@ -7,7 +7,7 @@ import { Card, CardActionArea, ImageListItem, Tooltip, Typography } from "@mui/m
 import { Box } from "@mui/system"
 import SocialBox from "./SocialBox"
 
-export default function TilemapSocialCard(props: {tms: TilemapSocial}) {
+export default function TilemapSocialCard(props: {tms: TilemapSocial, size?: number}) {
     const social = useContext(SocialContext)
     const [username, setUsername] = useState<string>('')
     useEffect(() => {
@@ -27,7 +27,8 @@ export default function TilemapSocialCard(props: {tms: TilemapSocial}) {
         </Tooltip>
     )
     let socialBox = <SocialBox comments={props.tms.comments.length} likes={props.tms.dislikes.length} views={props.tms.views} />
-    const content = <img id='tile-preview' src={imageURL} alt={props.tms.id} />
+    let content = <img id='tile-preview' src={imageURL} alt={props.tms.id} />
+    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={props.tms.id} />
     return (
         <Card
             onClick={() => social.viewTilemapSocial(props.tms)}

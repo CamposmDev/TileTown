@@ -105,7 +105,7 @@ function TilesetEditContextProvider(props: Record<string, any>) {
     if (edit.tileset.id === "") return;
   }, [edit.tileset.id]);
 
-  // The navigation for the auth context???
+  // The navigation for the tilesetEditor context???
   const nav = useNavigate();
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer

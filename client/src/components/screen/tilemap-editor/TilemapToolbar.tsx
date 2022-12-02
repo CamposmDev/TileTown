@@ -38,13 +38,18 @@ import { TilemapEditContext } from "src/context/tilemapEditor";
 import DeleteTilemapButton from "src/components/button/DeleteTilemapButton";
 import PublishTilemapButton from "src/components/button/PublishTilemapButton";
 import ExitTilemapButton from "src/components/button/ExitTilemapButton";
+import { AuthContext } from "src/context/auth";
 
 const TilemapToolbar = () => {
   let timeLeft = "1:24";
   let tilesLeft = 5;
   let nextCollaboratorName = "PeteyLumpkins";
 
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   //set the color of the selected mode
   const unselectedColor = "#FFFFFF";
@@ -113,11 +118,10 @@ const TilemapToolbar = () => {
               arrow
               children={
                 <IconButton
-                  disabled={edit.state.isSaved}
+                  disabled={edit.state.isSaved || !edit.canEdit(id)}
                   color="primary"
                   children={<Save />}
                   onClick={() => {
-                    console.log("save button click");
                     edit.renderTilemap(true);
                   }}
                 />
@@ -135,12 +139,24 @@ const TilemapToolbar = () => {
             <Tooltip
               title="Undo"
               arrow
-              children={<IconButton color="primary" children={<Undo />} />}
+              children={
+                <IconButton
+                  disabled={!edit.canEdit(id)}
+                  color="primary"
+                  children={<Undo />}
+                />
+              }
             />
             <Tooltip
               title="Redo"
               arrow
-              children={<IconButton color="primary" children={<Redo />} />}
+              children={
+                <IconButton
+                  disabled={!edit.canEdit(id)}
+                  color="primary"
+                  children={<Redo />}
+                />
+              }
             />
             <Tooltip
               title="Draw"
@@ -148,6 +164,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: drawColor }}
                   onClick={() => setEditControl(TilemapEditControl.draw)}
                   children={<Edit />}
@@ -160,6 +177,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: eraseColor }}
                   onClick={() => setEditControl(TilemapEditControl.erase)}
                 >
@@ -173,6 +191,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: fillColor }}
                   onClick={() => setEditControl(TilemapEditControl.shapeFill)}
                   children={<Square />}
@@ -185,6 +204,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: bucketColor }}
                   onClick={() => setEditControl(TilemapEditControl.bucketFill)}
                   children={<FormatColorFill />}
@@ -197,6 +217,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: selectColor }}
                   onClick={() =>
                     edit.updateEditControl(TilemapEditControl.fillSelect)
@@ -211,6 +232,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: magicColor }}
                   onClick={() => setEditControl(TilemapEditControl.magicWand)}
                   children={<AutoFixHigh />}
@@ -223,6 +245,7 @@ const TilemapToolbar = () => {
               children={
                 <IconButton
                   color="primary"
+                  disabled={!edit.canEdit(id)}
                   sx={{ bgcolor: sameColor }}
                   onClick={() =>
                     setEditControl(TilemapEditControl.sameTileSelect)

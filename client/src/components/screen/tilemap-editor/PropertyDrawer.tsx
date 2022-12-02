@@ -19,10 +19,15 @@ import {
 import PropertySelector from "./PropertySelector";
 import TilemapPropertySelector from "./TilemapPropertySelector";
 import LayerPropertySelector from "./LayerPropertySelector";
+import { AuthContext } from "src/context/auth";
 
 const PropertyDrawer = () => {
   const modal = useContext(ModalContext);
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const currentLayerIndex = edit.state.currentLayerIndex;
 
@@ -47,6 +52,7 @@ const PropertyDrawer = () => {
         <Tooltip title="Add Property" arrow>
           <IconButton
             color="primary"
+            disabled={!edit.canEdit(id)}
             onClick={() => {
               modal.showCreatePropertyModal();
             }}

@@ -8,7 +8,7 @@ import { dateToPostedStr } from "../util/DateUtils";
 import SocialBox from "./SocialBox";
 import './default.css'
 
-export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
+export default function TilesetSocialCard(props: { tss: TilesetSocial, size?: number}) {
     const social = useContext(SocialContext)
     const [username, setUsername] = useState<string>('')
     useEffect(() => {
@@ -26,7 +26,8 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial}) {
         </Box>
     )
     let socialBox = <SocialBox comments={props.tss.comments.length} likes={props.tss.likes.length} views={props.tss.views} />
-    const content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${props.tss.imageURL}`}/>
+    let content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${props.tss.imageURL}`}/>
+    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={`Failed to get ${props.tss.imageURL}`}/>
     return (
         <Fade in={true} timeout={1000}>
             <Card

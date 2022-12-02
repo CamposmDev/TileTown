@@ -92,4 +92,6 @@ export default interface ContestDBM {
     deleteContestById(contestId: string): Promise<Contest | null>;
 
     isAvailable(contestId: string, type: string, usrId: string): Promise<boolean>;
+
+    getPopularTop10(): Promise<Contest[]>
 }

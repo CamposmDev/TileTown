@@ -17,7 +17,12 @@ export default class TilesetController {
     // if (!req.params.tags) {
     //   return res.status(400).json({ message: 'Missing tags'})
     // }
-    let query = JSON.parse(req.params.query)
+    let query = {name: '', sort: '', tags: []}
+    try {
+      let query = JSON.parse(req.params.query)
+    } catch (e) {
+      return res.status(400).json({ message: "Invalid query"})
+    }
     if (query.name == null) return res.status(400).json({ message: 'Query: Name is null or undefined!'})
     if (!query.sort) return res.status(400).json({ message: 'Query: Sort is missing!'})
     if (!query.tags) return res.status(400).json({ message: 'Query: Tags is missing!'})
@@ -708,5 +713,18 @@ public async unfavoriteTilesetById(req: Request, res: Response): Promise<Respons
         return res.status(500).json({ message: "Failed to remove tileset from user's favorited tilesets"});
     }
     return res.status(200).json({ message: "Unfavorited a tileset!", user: updatedUser });
-}
+  }
+
+  public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+    if (!req || !res) return res.status(400).json({ message: "Bad Request" })
+    let tilesets = await db.tilesetSocials.getPopularTop10()
+    return res.status(200).json({message: `Found ${tilesets.length} tilesets`, tilesets: tilesets})
+  }
+
+  public async getPopularCommunityTilesets(req: Request, res: Response): Promise<Response> {
+    if (!req || !res) return res.status(400).json({ message: "Bad Request" })
+    if (!req.params || !req.params.id) return res.status(400).json({message: "Missing community id"})
+    let tilesets = await db.tilesetSocials.getPopularCommunityTilesets(req.params.id)
+    return res.status(200).json({tilesets: tilesets})
+  }
 }

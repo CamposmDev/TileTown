@@ -193,6 +193,12 @@ export class ContestStore {
         })
     }
 
+    public async getPopularTop10(): Promise<Contest[]> {
+        return ContestApi.getPopularTop10().then(res => {
+            return res.data.contests
+        })
+    }
+
     protected handleAction(action: ContestAction) {
         switch (action.type) {
             case ContestActionType.getContests: {

@@ -48,7 +48,7 @@ const TilesetEditorScreen = () => {
   //set the color of the selected mode
   const unselectedColor = "";
   // const selectedColor = "rgba(255,255,255,0.08)";
-  const selectedColor = "rgba(38, 162, 123, 0.08)"
+  const selectedColor = "rgba(38, 162, 123, 0.08)";
   const currentEditControl = edit.state.currentEditControl;
   let drawColor = unselectedColor;
   let eraseColor = unselectedColor;
@@ -113,12 +113,30 @@ const TilesetEditorScreen = () => {
             <Tooltip
               title="Undo"
               arrow
-              children={<IconButton color="primary" children={<Undo />} />}
+              children={
+                <IconButton
+                  disabled={!edit.canUndo()}
+                  onClick={() => {
+                    edit.undo();
+                  }}
+                  color="primary"
+                  children={<Undo />}
+                />
+              }
             />
             <Tooltip
               title="Redo"
               arrow
-              children={<IconButton color="primary" children={<Redo />} />}
+              children={
+                <IconButton
+                  disabled={!edit.canRedo()}
+                  onClick={() => {
+                    edit.redo();
+                  }}
+                  color="primary"
+                  children={<Redo />}
+                />
+              }
             />
             <Tooltip
               title="Draw"

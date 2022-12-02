@@ -117,6 +117,42 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         return socials.map(x => this.parseSocial(x))
     }
 
+    async getPopularTop10(): Promise<TilesetSocial[]> {
+        const TOP_10 = 10
+        let tilesets = await TilesetSocialModel.find().sort({views: -1})
+        let socials = tilesets.map(x => {
+            let likePoints = x.likes.length
+            let dislikePoints = x.dislikes.length
+            let totalPoints = likePoints - dislikePoints
+            totalPoints += x.comments.length
+            totalPoints += x.views
+            return {tileset: this.parseSocial(x), points: totalPoints}
+        })
+        socials = socials.sort((a,b) => {
+            return a.points > b.points ? 1 : 0
+        })
+        let result = socials.map(x => x.tileset).slice(0,TOP_10)
+        return result
+    }
+
+    async getPopularCommunityTilesets(commId: string): Promise<TilesetSocial[]> {
+        const TOP_10 = 10
+        let tilesets = await TilesetSocialModel.find({community: commId}).sort({views: -1})
+        let socials = tilesets.map(x => {
+            let likePoints = x.likes.length
+            let dislikePoints = x.dislikes.length
+            let totalPoints = likePoints - dislikePoints
+            totalPoints += x.comments.length
+            totalPoints += x.views
+            return {tileset: this.parseSocial(x), points: totalPoints}
+        })
+        socials = socials.sort((a,b) => {
+            return a.points > b.points ? 1 : 0
+        })
+        let result = socials.map(x => x.tileset).slice(0,TOP_10)
+        return result
+    }
+
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
         return {
             id: social._id.toString(),

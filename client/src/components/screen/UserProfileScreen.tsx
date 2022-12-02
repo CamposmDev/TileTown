@@ -3,11 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SocialContext } from "src/context/social";
-import { SocialActionType } from "src/context/social/SocialAction";
-import { Community, Contest, Tileset, TilesetSocial, User } from "@types";
+import { Community, Contest, Tilemap, Tileset, TilesetSocial, User } from "@types";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
-import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
 import { CommunityContext } from "src/context/social/community";
 import TilesetCard from "../card/TilesetCard";
@@ -17,6 +15,7 @@ import { ContestContext } from "src/context/social/contest";
 import TilemapSocialCard from "../card/TilemapSocialCard";
 import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader";
 import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader";
+import TilemapCard from "../card/TilemapCard";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -65,7 +64,9 @@ const UserProfileScreen = () => {
     const contest = useContext(ContestContext)
     const comm = useContext(CommunityContext)
     const nav = useNavigate()
+    const [collabTilemaps, setCollabTilemaps] = useState<Tilemap[]>([])
     const [mainIdx, setMainIdx] = useState<number>(0)
+    const [tmIdx, setTMIdx] = useState<number>(0)
     const [favorIdx, setFavorIdx] = useState<number>(0)
     useEffect(() => {
         if (!id || !auth.isLoggedIn) {
@@ -73,6 +74,9 @@ const UserProfileScreen = () => {
         } else {
             social.getUserById(id).then(user => {
                 if (user) {
+                    social.getUserCollaboratedTilemaps(user.id).then(tilemaps => {
+                        setCollabTilemaps(tilemaps)
+                    })
                     let aux = () => {
                         setUser(user)
                         contest.getContestsById(user.joinedContests).then(arr => setContests(arr))
@@ -96,6 +100,7 @@ const UserProfileScreen = () => {
 
     const handleMainTabChange = (e: React.SyntheticEvent, newValue: number) => setMainIdx(newValue)
     const handleFavorTabChange = (e: React.SyntheticEvent, newValue: number) => setFavorIdx(newValue)
+    const handleTMTabChange = (e: React.SyntheticEvent, newValue: number) => setTMIdx(newValue)
 
     if (user) {
         let profileCard = (
@@ -128,16 +133,37 @@ const UserProfileScreen = () => {
         )
         let tilemapTP = (
             <TabPanel value={mainIdx} index={0}>
-                <Grid 
-                    container 
-                    spacing={1} 
-                >
-                    {user.tilemaps.map(x => 
-                        <Grid item key={x}>
-                            {/* <TilemapCard tilemapId={x}/> */}
-                        </Grid>
-                    )}   
-                </Grid>
+                <Toolbar sx={{bowShadow: 0}}>
+                    <Stack direction='row' spacing={2} alignItems='center'>
+                        <Tabs
+                            value={tmIdx}
+                            onChange={handleTMTabChange}
+                            allowScrollButtonsMobile
+                            textColor='primary'
+                            indicatorColor='primary'
+                        >
+                            <Tab label={`Owned`} {...a11yProps(0)}/>
+                            <Tab label={`Collaborations`} {...a11yProps(1)}/>
+                        </Tabs>
+                    </Stack>
+                </Toolbar>
+                <TabPanel value={tmIdx} index={0}>
+                    <Grid 
+                        container 
+                        spacing={1} 
+                    >
+                        {user.tilemaps.map(x => 
+                            <Grid item key={x}>
+                                <TilemapCard tilemapId={x}/>
+                            </Grid>
+                        )}   
+                    </Grid>
+                </TabPanel>
+                <TabPanel value={tmIdx} index={1}>
+                    <Grid container spacing={1}>
+                        {collabTilemaps.map(x => <Grid item><TilemapCard tilemapId={x.id}/></Grid>)}
+                    </Grid>
+                </TabPanel>
             </TabPanel>
         )
         let tilesetTP = (

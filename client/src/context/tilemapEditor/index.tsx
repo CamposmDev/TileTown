@@ -9,6 +9,7 @@ import { TilemapEditStore } from "./TilemapEditStore";
 import { TilemapApi, TilesetApi } from "src/api";
 import { AuthContext } from "../auth";
 import { SnackContext } from "../snack";
+import axios from "axios";
 
 /**
  * The edit context
@@ -139,14 +140,37 @@ function TilemapEditContextProvider(props: Record<string, any>) {
             else
               tilemap.collaboratorIndex =
                 tilemap.collaborators.indexOf(auth.usr.id) + 1;
+            const f = new FormData();
+
+            const host: string =
+              window.location.host === "localhost:3001"
+                ? "localhost:3000"
+                : window.location.host;
+
+            f.append("image", "http://" + host + "/api/media/" + tilemap.image);
+            f.append(
+              "tilemap",
+              JSON.stringify({ collaboratorIndex: tilemap.collaboratorIndex })
+            );
+            TilemapApi.updateTilemapById(tilemap.id, f)
+              .then((res) => {
+                if (res.status === 200) {
+                  snack.showSuccessMessage(
+                    "You Are Now The Current Collaborator"
+                  );
+                }
+              })
+              .catch((e) => {
+                if (axios.isAxiosError(e) && e.response) {
+                  snack.showErrorMessage(e.response.data.message);
+                }
+              });
           }
         } else {
-          console.log("no usr id");
           snack.showErrorMessage("You Are Not Authorized To Edit This Tilemap");
           nav("/home");
           return;
         }
-        console.log(tilemap.collaboratorIndex);
 
         setEdit({ ...edit, Tilemap: res.data.tilemap });
       }
@@ -162,7 +186,7 @@ function TilemapEditContextProvider(props: Record<string, any>) {
         });
       });
     }
-    if (edit.Tilemap.tilesets.length !== edit.Tilesets.length) return;
+    // if (edit.Tilemap.tilesets.length !== edit.Tilesets.length) return;
   }, [edit.Tilemap.id]);
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer

@@ -111,6 +111,93 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         return tilemaps.map(x => this.parseSocial(x))
     }
 
+    async getPopularTop10(): Promise<TilemapSocial[]> {
+        const TOP_10 = 10
+        let tilemaps = await TilemapSocialModel.find().sort({views: -1})
+        let socials = tilemaps.map(x => {
+            let likePoints = x.likes.length
+            let dislikePoints = x.dislikes.length
+            let totalPoints = likePoints - dislikePoints
+            totalPoints += x.comments.length
+            totalPoints += x.views
+            return {tilemap: this.parseSocial(x), points: totalPoints}
+        })
+        socials = socials.sort((a,b) => {
+            return a.points > b.points ? 1 : 0
+        })
+        let result = socials.map(x => x.tilemap).slice(0,TOP_10)
+        return result
+    }
+
+    async getPopularCommunityTilemaps(commId: string): Promise<TilemapSocial[]> {
+        const TOP_10 = 10
+        let tilemaps = await TilemapSocialModel.find({community: commId}).sort({views: -1})
+        let socials = tilemaps.map(x => {
+            let likePoints = x.likes.length
+            let dislikePoints = x.dislikes.length
+            let totalPoints = likePoints - dislikePoints
+            totalPoints += x.comments.length
+            totalPoints += x.views
+            return {tilemap: this.parseSocial(x), points: totalPoints}
+        })
+        socials = socials.sort((a,b) => {
+            return a.points > b.points ? 1 : 0
+        })
+        let result = socials.map(x => x.tilemap).slice(0,TOP_10)
+        return result
+    }
+
+    async getTilemapSocialsByName(name: string, sort: string, tags: string[]): Promise<TilemapSocial[]> {
+        let arr: (mongoose.Document<unknown, any, TilemapSocialSchemaType> & TilemapSocialSchemaType & {_id: mongoose.Types.ObjectId})[] = []
+        let filter: mongoose.FilterQuery<any> = {
+            name: new RegExp(`^${name}`, 'i')
+        }
+        if (tags.length > 0) {
+            filter = {
+                name: new RegExp(`^${name}`, 'i'),
+                tags: {$all: tags }
+            }
+        }
+        switch (sort) {
+            case 'publish_date_newest':
+                arr = await TilemapSocialModel.find(filter).sort({publishDate: -1})
+                break
+            case 'publish_date_oldest':
+                arr = await TilemapSocialModel.find(filter).sort({publishDate: 1})
+                break
+            case 'most_likes':
+                arr = await TilemapSocialModel.find(filter).sort({likes: -1})
+                break
+            case 'least_likes':
+                arr = await TilemapSocialModel.find(filter).sort({likes: 1})
+                break
+            case 'most_dislikes':
+                arr = await TilemapSocialModel.find(filter).sort({dislikes: -1})
+                break
+            case 'least_dislikes':
+                arr = await TilemapSocialModel.find(filter).sort({dislikes: 1})
+                break
+            case 'most_views':
+                arr = await TilemapSocialModel.find(filter).sort({views: -1})
+                break
+            case 'least_views':
+                arr = await TilemapSocialModel.find(filter).sort({views: 1})
+                break
+            case 'most_comments':
+                arr = await TilemapSocialModel.find(filter).sort({comments: -1})
+                break
+            case 'least_comments':
+                arr = await TilemapSocialModel.find(filter).sort({comments: 1})
+                break
+            default:
+                arr = await TilemapSocialModel.find(filter)
+        }
+        return arr.map(x => {
+            let tms = this.parseSocial(x)
+            return tms
+        })
+    }
+
     protected parseSocial(social: TilemapSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilemapSocial {
         return {
             id: social._id.toString(),

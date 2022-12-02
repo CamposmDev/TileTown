@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { db } from "../../database";
-import { SortBy, Tilemap } from "@types";
+import { SortBy, Tilemap, TilemapSocial } from "@types";
 import { is } from "typescript-is";
 
 // Need fs for creating the download file for Tilemaps
@@ -512,6 +512,32 @@ export default class TilemapController {
       .json({ message: "Unfavorited a tilemap!", user: updatedUser });
   }
 
+  public async getTilemapSocialsByName(req: Request, res: Response): Promise<Response> {
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: 'Bad Request' })
+    }
+    if (!req.params.query) {
+      return res.status(400).json({ message: 'Missing query' })
+    }
+    // if (!req.params.sort) {
+    //   return res.status(400).json({ message: 'Missing sort' })
+    // }
+    // if (!req.params.tags) {
+    //   return res.status(400).json({ message: 'Missing tags'})
+    // }
+    let query = {name: '', sort: '', tags: []}
+    try {
+      let query = JSON.parse(req.params.query)
+    } catch (e) {
+      return res.status(400).json({ message: "Invalid query"})
+    }
+    if (query.name == null) return res.status(400).json({ message: 'Query: Name is null or undefined!'})
+    if (!query.sort) return res.status(400).json({ message: 'Query: Sort is missing!'})
+    if (!query.tags) return res.status(400).json({ message: 'Query: Tags is missing!'})
+    let tilemapSocials: TilemapSocial[] = await db.tilemapSocials.getTilemapSocialsByName(query.name, query.sort, query.tags)
+    return res.status(200).json({ message: `Found ${tilemapSocials.length} tilemaps(s)`, tilemaps: tilemapSocials })
+  }
+
   public async getTilemapSocialById(
     req: Request,
     res: Response
@@ -757,5 +783,47 @@ export default class TilemapController {
     return res
       .status(200)
       .json({ message: "Tileset social updated!", social: updatedSocial });
+  }
+
+  public async getTilemapSocialByTilemapId(req: Request, res: Response): Promise<Response> {
+    // Check for bad request and missing parameters
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.userId) {
+      return res.status(400).json({ message: "Missing user id" });
+    }
+
+    let social = await db.tilemapSocials.getTilemapSocialByTilemapId(req.params.id)
+    if (social === null) {
+      return res.status(404).json({ message: `Tilemap social data with tilemap id ${req.params.id} not found`});
+    }
+    return res.status(200).json({ message: 'Got tilemap social data!', social: social })
+  }
+
+  public async getUserCollaboratedTilemaps(req: Request, res: Response): Promise<Response> {
+    // Check for bad request and missing parameters
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.userId) {
+      return res.status(400).json({ message: "Missing user id" });
+    }
+
+    let tilemaps = await db.tilemaps.getUserCollaboratedTilemaps(req.params.userId)
+    return res.status(200).json({message: `Found ${tilemaps.length} tilemaps`, tilemaps: tilemaps})
+  }
+
+  public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+    if (!req || !res) return res.status(400).json({ message: "Bad Request" })
+    let tilemaps = await db.tilemapSocials.getPopularTop10()
+    return res.status(200).json({message: `Found ${tilemaps.length} tilemaps`, tilemaps: tilemaps})
+  }
+  
+  public async getPopularCommunityTilemaps(req: Request, res: Response): Promise<Response> {
+    if (!req || !req) return res.status(400).json({message: "Bad Request"})
+    if (!req.params || !req.params.id) return res.status(400).json({message: "Missing community id"})
+    let tilemaps = await db.tilemapSocials.getPopularCommunityTilemaps(req.params.id)
+    return res.status(200).json({tilemaps: tilemaps})
   }
 }

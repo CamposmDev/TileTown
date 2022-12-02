@@ -15,10 +15,15 @@ import {
   EditMode,
 } from "src/context/tilemapEditor/TilemapEditTypes";
 import { FloodRounded } from "@mui/icons-material";
+import { AuthContext } from "src/context/auth";
 
 const CollaboratorSettingsSelector = () => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const collaboratorSettings = edit.state.Tilemap.collaboratorSettings;
 
@@ -32,6 +37,7 @@ const CollaboratorSettingsSelector = () => {
             control={<Radio />}
             label="Free Edit"
             checked={collaboratorSettings.editMode === "free"}
+            disabled={!edit.canEdit(id) || !edit.isOwner(id)}
             onChange={() => {
               edit.updateTilemap({
                 collaboratorSettings: {
@@ -48,6 +54,7 @@ const CollaboratorSettingsSelector = () => {
             control={<Radio />}
             label="Queue"
             checked={collaboratorSettings.editMode === "queue"}
+            disabled={!edit.canEdit(id) || !edit.isOwner(id)}
             onChange={() => {
               edit.updateTilemap({
                 collaboratorSettings: {
@@ -65,6 +72,7 @@ const CollaboratorSettingsSelector = () => {
         fullWidth
         size="small"
         value={collaboratorSettings.timeLimit}
+        disabled={!edit.canEdit(id) || !edit.isOwner(id)}
         onChange={(e) => {
           if (
             isNaN(Number(e.target.value)) ||
@@ -99,6 +107,7 @@ const CollaboratorSettingsSelector = () => {
         fullWidth
         size="small"
         value={collaboratorSettings.tileLimit}
+        disabled={!edit.canEdit(id) || !edit.isOwner(id)}
         onChange={(e) => {
           if (
             isNaN(Number(e.target.value)) ||

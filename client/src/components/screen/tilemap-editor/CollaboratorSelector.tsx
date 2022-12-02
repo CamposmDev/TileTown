@@ -12,11 +12,15 @@ import { TilemapEditContext } from "src/context/tilemapEditor";
 import { SnackContext } from "src/context/snack";
 import { ModalContext } from "src/context/modal";
 import CollaboratorField from "./CollaboratorField";
+import { AuthContext } from "src/context/auth";
 
 const CollaboratorSelector = () => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
-  const snack = useContext(SnackContext);
   const modal = useContext(ModalContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const collaborators = edit.state.Tilemap.collaborators;
   const collaboratorNames = edit.state.Tilemap.collaboratorNames;
@@ -29,6 +33,7 @@ const CollaboratorSelector = () => {
         </Typography>
         <Tooltip title="Add Collaborator" arrow>
           <IconButton
+            disabled={!edit.canEdit(id) || !edit.isOwner(id)}
             color="primary"
             onClick={() => {
               modal.showAddCollaboratorModal();

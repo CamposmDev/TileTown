@@ -360,4 +360,11 @@ export default class CommunityController {
         return res.status(200).json({ message: "User is banned from the community!", user: updatedUser, community: updatedCommunity});
     }
 
+    public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+        if (!req || !res) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        let comms = await db.communities.getPopularTop10()
+        return res.status(200).json({communities: comms})
+    }
 }
