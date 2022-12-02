@@ -527,7 +527,7 @@ export default class TilemapController {
     // }
     let query = {name: '', sort: '', tags: []}
     try {
-      let query = JSON.parse(req.params.query)
+      query = JSON.parse(req.params.query)
     } catch (e) {
       return res.status(400).json({ message: "Invalid query"})
     }
