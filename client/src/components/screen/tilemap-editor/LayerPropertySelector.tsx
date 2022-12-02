@@ -10,10 +10,15 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
+import { AuthContext } from "src/context/auth";
 
 const LayerPropertySelector = (props: { index: number }) => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const [opacity, setOpacity] = useState<string>(
     edit.state.Tilemap.layers[props.index].opacity.toString()
@@ -69,11 +74,13 @@ const LayerPropertySelector = (props: { index: number }) => {
           label="Layer Name"
           size="small"
           value={edit.state.Tilemap.layers[props.index].name}
+          disabled={!edit.canEdit(id)}
           onChange={handleUpdateName}
         />
         <TextField
           label="Opacity"
           value={opacity}
+          disabled={!edit.canEdit(id)}
           onChange={handleUpdateOpacity}
           fullWidth
           size="small"

@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { AuthContext } from "src/context/auth";
 
 interface FloatPropertyProps {
   name: string;
@@ -20,13 +21,18 @@ interface FloatPropertyProps {
 }
 
 const FloatPropertyField = (props: FloatPropertyProps) => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
   return (
     <Stack pl={1} pr={1} spacing={0.5} direction="row" alignItems="center">
       <TextField
         value={props.name}
         label="Float Name"
+        disabled={!edit.canEdit(id)}
         onChange={(e) => {
           edit.updateProperty(
             { name: e.target.value, ptype: props.type, value: props.value },
@@ -37,6 +43,7 @@ const FloatPropertyField = (props: FloatPropertyProps) => {
       <TextField
         value={props.value}
         label="Float Value"
+        disabled={!edit.canEdit(id)}
         onChange={(e) => {
           if (isNaN(Number(e.target.value))) {
             snack.showErrorMessage("Please Enter A Float Value like 1.5");
@@ -48,14 +55,14 @@ const FloatPropertyField = (props: FloatPropertyProps) => {
           );
         }}
       ></TextField>
-      <Tooltip
-        title="Delete Property"
-        onClick={() => {
-          edit.deleteProperty(props.index);
-        }}
-        arrow
-      >
-        <IconButton color="error">
+      <Tooltip title="Delete Property" arrow>
+        <IconButton
+          disabled={!edit.canEdit(id)}
+          onClick={() => {
+            edit.deleteProperty(props.index);
+          }}
+          color="error"
+        >
           <Delete />
         </IconButton>
       </Tooltip>
