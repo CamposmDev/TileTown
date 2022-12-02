@@ -10,6 +10,8 @@ router.post("/", Auth.verifyJWT, Upload.single('image'), TilemapController.creat
 router.post("/publish/:id", Auth.verifyJWT, TilemapController.publishTilemap);
 router.delete("/:id", Auth.verifyJWT, TilemapController.deleteTilemapById);
 
+router.get('/search/:query', TilemapController.getTilemapSocialsByName)
+
 router.get("/social/:id", TilemapController.getTilemapSocialById);
 
 router.get("/partials/:search/:sort", Auth.verifyJWT, TilemapController.getTilemapPartials);
@@ -29,5 +31,7 @@ router.get(`/social/tmid/:id`, TilemapController.getTilemapSocialByTilemapId)
 router.get(`/collaborations/:userId`, TilemapController.getUserCollaboratedTilemaps)
 
 router.get(`/popular/top10`, TilemapController.getPopularTop10)
+
+router.get(`/social/community/:id`, TilemapController.getPopularCommunityTilemaps)
 
 export default router;

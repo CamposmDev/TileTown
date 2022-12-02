@@ -1,4 +1,4 @@
-import { Community, User } from "@types"
+import { Community, TilemapSocial, TilesetSocial, User } from "@types"
 import axios from "axios"
 import { NavigateFunction } from "react-router"
 import { CommunityApi } from "src/api"
@@ -235,7 +235,16 @@ export class CommunityStore {
             return res.data.communities
         })
     }
-
+    public async getPopularCommunityTilemaps(commId: string): Promise<TilemapSocial[]> {
+        return CommunityApi.getPopularCommunityTilemaps(commId).then(res => {
+            return res.data.tilemaps
+        })
+    }
+    public async getPopularCommunityTilesets(commId: string): Promise<TilesetSocial[]> {
+        return CommunityApi.getPopularCommunityTilesets(commId).then(res => {
+            return res.data.tilesets
+        })
+    }
     protected handleAction(action: CommunityAction) {
         switch (action.type) {
             case CommunityActionType.createCommunity: {

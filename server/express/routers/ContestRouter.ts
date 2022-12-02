@@ -26,4 +26,6 @@ ContestRouter.get(`/submissions/tilemap/:id`, ContestController.getContestTilema
 
 ContestRouter.get(`/popular/top10`, ContestController.getPopularTop10)
 
+ContestRouter.put(`/winner/:id`, ContestController.selectWinner)
+
 export default ContestRouter;

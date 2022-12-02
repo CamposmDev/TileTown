@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { json, Request, Response } from 'express';
 import { db } from "../../database";
 import { Contest, TilemapSocial, TilesetSocial } from '@types';
 
@@ -347,5 +347,21 @@ export default class ContestController {
         }
         let contests = await db.contests.getPopularTop10()
         return res.status(200).json({contests: contests})
+    }
+
+    public async selectWinner(req: Request, res: Response): Promise<Response> {
+        if (!req || !res) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params || !req.params.id) return res.status(400).json({message: "Missing contest id"})
+        if (!req.body || !req.body.userId) return res.status(400).json({message: "Missing user id"})
+
+    let contest = await db.contests.getContestById(req.params.id)
+        if (!contest) return res.status(400).json({message: `Failed to find contest ${req.params.id}`})
+        let user = await db.users.getUserById(req.body.userId)
+        if (!user) return res.status(400).json({message: `Failed to select user ${req.body.userId} as winner`})
+        let updatedContest = await db.contests.updateContest(contest.id, {winner: user.id})
+        if (!updatedContest) return res.status(400).json({message: `Failed to update contest ${contest.id}`})
+        return res.status(200).json({message: 'Selected winner!', contest: updatedContest})
     }
 }

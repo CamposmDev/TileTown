@@ -28,4 +28,6 @@ router.put('/unfavorite/:id', Auth.verifyJWT, TilesetController.unfavoriteTilese
 router.get('/social/tsid/:id', TilesetController.getTilesetSocialByTilesetId)
 router.get(`/popular/top10`, TilesetController.getPopularTop10)
 
+router.get(`/social/community/:id`, TilesetController.getPopularCommunityTilesets)
+
 export default router;

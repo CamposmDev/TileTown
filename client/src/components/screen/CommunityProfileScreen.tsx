@@ -1,12 +1,15 @@
 import { Button, Grid, Toolbar, Typography } from "@mui/material"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import Carousel from "react-material-ui-carousel"
 import { AuthContext } from "src/context/auth"
 import { CommunityContext } from "src/context/social/community"
 import CommunitySettingsButton from "../button/CommunitySettingsButton"
 import CommunityMembersModal from "../modals/CommunityMembersModal"
-import { User } from "@types"
+import { TilemapSocial, TilesetSocial, User } from "@types"
 import { SnackContext } from "src/context/snack"
+import TilemapCard from "../card/TilemapCard"
+import TilemapSocialCard from "../card/TilemapSocialCard"
+import TilesetSocialCard from "../card/TilesetSocialCard"
 
 function isMember(members: string[], usrId: string): boolean {
     return Boolean(members.indexOf(usrId) !== -1)
@@ -16,6 +19,16 @@ const CommunityProfileScreen = () => {
     const auth = useContext(AuthContext)
     const comm = useContext(CommunityContext)
     const snack = useContext(SnackContext)
+    const [tilemaps, setTilemaps] = useState<TilemapSocial[]>([])
+    const [tilesets, setTilesets] = useState<TilesetSocial[]>([])
+    useEffect(() => {
+        let c = comm.currCommunity
+        if (c) {
+            comm.getPopularCommunityTilemaps(c.id).then(tilemaps => setTilemaps(tilemaps))
+            comm.getPopularCommunityTilesets(c.id).then(tilesets => setTilesets(tilesets))
+        }
+    }, [])
+
     const join = () => {
         /** Call the join function from comm */
         comm.joinCommunity(snack).then(usr => {
@@ -76,42 +89,15 @@ const CommunityProfileScreen = () => {
             {header}
             <Grid container mt={1} spacing={1} justifyContent='center'>
                 <Grid item>
-                    <Typography textAlign='center' variant='h6'>Popular Tilemaps</Typography>
-                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
-                        {/* {tilemaps.map((x,i) => 
-                        <Grid item>
-                            <TileItemCard key={i}
-                                author={x.author}
-                                comments={x.comments}
-                                likes={x.likes}
-                                preview={x.preview}
-                                publishDate={x.publishDate}
-                                tags={x.tags}
-                                tilemapName={x.tilemapName}
-                                views={x.views}
-                                width={RES_SIZE}
-                                height={RES_SIZE}
-                            />
-                        </Grid>)} */}
+                    <Typography textAlign='center' variant='h6'>{`Popular Tilemaps ${tilesets.length === 0 ? '(Not Available)' : ''}`}</Typography>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30, bgcolor: '#121212'}}>
+                        {tilemaps.map(x => <TilemapSocialCard key={x.id} tms={x} size={RES_SIZE} />)}
                     </Carousel>   
                 </Grid>
                 <Grid item>
-                    <Typography textAlign='center' variant='h6'>Popular Tilesets</Typography>
-                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30}}>
-                        {/* {tilesets.map((x,i) => 
-                        <Grid item>
-                            <TileItemCard key={i}
-                                author={x.author}
-                                comments={x.comments}
-                                likes={x.likes}
-                                preview={x.preview}
-                                publishDate={x.publishDate}
-                                tags={x.tags}
-                                tilemapName={x.tilemapName}
-                                views={x.views}
-                                width={RES_SIZE}
-                                height={RES_SIZE}
-                            /></Grid>)} */}
+                    <Typography textAlign='center' variant='h6'>{`Popular Tilesets ${tilesets.length === 0 ? '(Not Available)' : ''}`}</Typography>
+                    <Carousel sx={{width: RES_SIZE, height: RES_SIZE+30, bgcolor: '#121212'}}>
+                        {tilesets.map(x => <TilesetSocialCard key={x.id} tss={x} size={RES_SIZE}/>)}
                     </Carousel>   
                 </Grid>
             </Grid>            

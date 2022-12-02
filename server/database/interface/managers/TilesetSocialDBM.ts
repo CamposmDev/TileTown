@@ -16,4 +16,6 @@ export default interface TilesetSocialDBM {
     getSubmissionIds(contestId: string): Promise<TilesetSocial[]>
 
     getPopularTop10(): Promise<TilesetSocial[]>
+
+    getPopularCommunityTilesets(commId: string): Promise<TilesetSocial[]>
 }

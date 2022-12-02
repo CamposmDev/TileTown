@@ -64,4 +64,12 @@ export default class AxiosCommunityApi {
     public async getPopularTop10(): Promise<AxiosResponse> {
         return AxiosApi.get(`/community/popular/top10`)
     }
+
+    public async getPopularCommunityTilemaps(commId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tilemap/social/community/${commId}`)
+    }
+
+    public async getPopularCommunityTilesets(commId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tileset/social/community/${commId}`)
+    }
 } 
