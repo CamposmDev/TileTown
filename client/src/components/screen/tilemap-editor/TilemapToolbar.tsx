@@ -37,6 +37,7 @@ import { useContext, useEffect } from "react";
 import { TilemapEditContext } from "src/context/tilemapEditor";
 import DeleteTilemapButton from "src/components/button/DeleteTilemapButton";
 import PublishTilemapButton from "src/components/button/PublishTilemapButton";
+import ExitTilemapButton from "src/components/button/ExitTilemapButton";
 
 const TilemapToolbar = () => {
   let timeLeft = "1:24";
@@ -103,7 +104,17 @@ const TilemapToolbar = () => {
             <Tooltip
               title="Save"
               arrow
-              children={<IconButton color="primary" children={<Save />} />}
+              children={
+                <IconButton
+                  disabled={edit.state.isSaved}
+                  color="primary"
+                  children={<Save />}
+                  onClick={() => {
+                    console.log("save button click");
+                    edit.renderTilemap(true);
+                  }}
+                />
+              }
             />
             <Tooltip
               title="Download"
@@ -212,8 +223,18 @@ const TilemapToolbar = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
-              <DeleteTilemapButton id={edit.state.Tilemap.id} name={edit.state.Tilemap.name}/>
-              <PublishTilemapButton id={edit.state.Tilemap.id} name={edit.state.Tilemap.name}/>
+              <ExitTilemapButton
+                id={edit.state.Tilemap.id}
+                name={edit.state.Tilemap.name}
+              ></ExitTilemapButton>
+              <DeleteTilemapButton
+                id={edit.state.Tilemap.id}
+                name={edit.state.Tilemap.name}
+              />
+              <PublishTilemapButton
+                id={edit.state.Tilemap.id}
+                name={edit.state.Tilemap.name}
+              />
             </Stack>
           </Grid>
         </Grid>

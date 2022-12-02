@@ -257,9 +257,9 @@ export interface TilemapEditorState {
   modalType: TilemapEditorModalType;
   isSaved: boolean;
   renderTilemapCanvas: boolean;
-  renderTilemapGridCanvas: boolean;
   renderCurrentLayerCanvas: boolean;
-  renderTileSelectorCanvas: boolean;
+  tileCount: number;
+  timeLeft: number;
 }
 
 /**
@@ -270,6 +270,7 @@ export enum TilemapEditorActionType {
   UPDATE_TILEMAP = "UPDATE_TILEMAP",
   SAVE_TILEMAP = "SAVE_TILEMAP",
   ADD_TILESET = "ADD_TILESET",
+  EXIT_WITHOUT_SAVE = "EXIT_WITHOUT_SAVE",
   CHANGE_EDIT_CONTROL = "CHANGE_EDIT_CONTROL",
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
@@ -286,7 +287,7 @@ export enum TilemapEditorActionType {
   ADD_COLLABORATORS = "ADD_COLLABORATORS",
   REMOVE_COLLABORATOR = "REMOVE_COLLABORATOR",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
-  PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
+  RENDER_TILEMAP = "RENDER_TILEMAP",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
   RENDER_CURRENT_LAYER_CANVAS_RENDER = "RENDER_CURRENT_LAYER_CANVAS_RENDER",
   PREVENT_TILE_SELECTION_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
@@ -308,7 +309,11 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.SAVE_TILEMAP;
-      payload: { Tilemap: Tilemap };
+      payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.EXIT_WITHOUT_SAVE;
+      payload: { collaboratorIndex: number };
     }
   | {
       type: TilemapEditorActionType.ADD_TILESET;
@@ -380,8 +385,8 @@ export type TilemapEditorAction =
       payload: { currentSelection: number[] };
     }
   | {
-      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER;
-      payload: {};
+      type: TilemapEditorActionType.RENDER_TILEMAP;
+      payload: { render: boolean };
     }
   | {
       type: TilemapEditorActionType.PREVENT_GRID_CANVAS_RENDER;

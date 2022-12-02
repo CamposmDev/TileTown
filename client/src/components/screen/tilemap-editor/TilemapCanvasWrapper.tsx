@@ -12,6 +12,8 @@ import TilemapCanvas from "./TilemapCanvas";
 import CurrentLayerCanvas from "./CurrentLayerCanvas";
 import GridCanvas from "./GridCanvas";
 import CurrentSelectionCanvas from "./CurrentSelectionCanvas";
+import TopLayerCanvas from "./TopLayerCanvas";
+import BottomLayerCanvas from "./BottomLayerCanvas";
 
 const TilemapCanvasWrapper = () => {
   //tilemap edit store context
@@ -38,7 +40,9 @@ const TilemapCanvasWrapper = () => {
         p={1}
       >
         <TilemapCanvas></TilemapCanvas>
+        <BottomLayerCanvas></BottomLayerCanvas>
         <CurrentLayerCanvas></CurrentLayerCanvas>
+        <TopLayerCanvas></TopLayerCanvas>
         <CurrentSelectionCanvas></CurrentSelectionCanvas>
         <GridCanvas></GridCanvas>
       </Grid>

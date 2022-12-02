@@ -61,7 +61,7 @@ const GridCanvas = () => {
         drawGrid(ctx, canvasHeight, canvasWidth);
       }
     }
-  }, []);
+  }, [edit.state.Tilemap.width, edit.state.Tilemap.height]);
 
   let root = (
     <div>

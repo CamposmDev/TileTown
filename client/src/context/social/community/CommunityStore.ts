@@ -69,6 +69,43 @@ export class CommunityStore {
             return undefined
         })
     }
+    public async kickMember(userId: string, snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
+        return await CommunityApi.kickMember(userId, commId).then(res => {
+            if (res.status === 200) {
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
+    public async banMember(userId: string, snack?: SnackStore): Promise<User | undefined> {
+        let commId = this._comm.currentCommunity?.id
+        if (!commId) return undefined
+        return await CommunityApi.banMember(userId, commId).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: CommunityActionType.viewCommunity,
+                    payload: {
+                        currentCommunity: res.data.community
+                    }
+                })
+                return res.data.user
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+            return undefined
+        })
+    }
 
     public async createCommunity(name: string, description: string, vis: string, auth?: AuthStore, snack?: SnackStore): Promise<void> {
         let res = CommunityApi.createCommunity({

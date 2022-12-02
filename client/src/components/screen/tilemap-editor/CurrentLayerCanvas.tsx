@@ -102,6 +102,7 @@ const CurrentLayerCanvas = () => {
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
+
         for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
           if (currentGlobalTileIDs[j] < currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
@@ -109,24 +110,33 @@ const CurrentLayerCanvas = () => {
             break;
           }
         }
+
         const tilesetTileWidth =
           edit.state.Tilesets[currentTilesetIndex].tileWidth;
         const tilesetTileHeight =
           edit.state.Tilesets[currentTilesetIndex].tileHeight;
         const tilesetWidth = edit.state.Tilesets[currentTilesetIndex].columns;
+        const tilesetHeight = edit.state.Tilesets[currentTilesetIndex].rows;
 
         const image: HTMLImageElement = tilesetImages[currentTilesetIndex];
+        const imageWidth = image.width;
+        const imageHeight = image.height;
+        const imageTileWidth =
+          imageWidth * (tilesetTileWidth / (tilesetTileWidth * tilesetWidth));
+        const imageTileHeight =
+          imageHeight *
+          (tilesetTileHeight / (tilesetTileHeight * tilesetHeight));
 
         ctx.globalAlpha = opacity;
 
         ctx.drawImage(
           image,
           ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
-            tilesetTileWidth,
+            imageTileWidth,
           Math.floor((currentTileIndex - currentGlobalTileID) / tilesetWidth) *
-            tilesetTileHeight,
-          tilesetTileWidth,
-          tilesetTileHeight,
+            imageTileHeight,
+          imageTileWidth,
+          imageTileHeight,
           i,
           y,
           scaledTileWidth,
@@ -157,9 +167,15 @@ const CurrentLayerCanvas = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           return;
         }
+        const host: string =
+          window.location.host === "localhost:3001"
+            ? "localhost:3000"
+            : window.location.host;
+
         for (let i = 0; i < tilesetImages.length; i++) {
           tilesetImages[i] = new Image();
-          tilesetImages[i].src = edit.state.Tilesets[i].image;
+          tilesetImages[i].src =
+            "http://" + host + "/api/media/" + edit.state.Tilesets[i].image;
           tilesetImages[i].onload = function () {
             imagesLoaded++;
             if (imagesLoaded === tilesetImages.length) {
@@ -400,9 +416,7 @@ const CurrentLayerCanvas = () => {
       const currentCoords = screenToCanvasCoordinates(nativeEvent, canvas);
       const currentTile = calcCurrentTile(currentCoords.x, currentCoords.y);
       const startingIndex = currentTile.x + width * currentTile.y;
-      console.log(startingIndex);
       if (!currentSelection.includes(startingIndex)) return;
-      console.log("current index in current selection");
       const currentTileData = currentLayer[startingIndex];
       let selection = new Map<number, number>();
       let startingPoints: number[] = [];
@@ -414,7 +428,6 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
-        console.log("hello left");
         while (
           currentIndex % width >= 0 &&
           !selection.has(currentIndex) &&
@@ -449,7 +462,6 @@ const CurrentLayerCanvas = () => {
         currentTileData: number
       ): void => {
         if (currentLayer[currentIndex] !== currentTileData) return;
-        console.log("hello right");
         while (
           currentIndex % width < width &&
           !selection.has(currentIndex) &&
@@ -485,7 +497,6 @@ const CurrentLayerCanvas = () => {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
-      console.log([...selection.values()]);
       // edit.updateCurrentSelection([...selection.values()]);
       edit.updateCurrentLayerData(currentTileIndex, [...selection.values()]);
     }
@@ -568,8 +579,6 @@ const CurrentLayerCanvas = () => {
         scanLeft(startingPoints[i], currentTileData);
         scanRight(startingPoints[i] + 1, currentTileData);
       }
-
-      console.log([...selection.values()]);
 
       edit.updateCurrentSelection([...selection.values()]);
     }

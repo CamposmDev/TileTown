@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TilemapEditorState,
@@ -6,6 +6,9 @@ import {
   TilemapEditorModalType,
 } from "./TilemapEditTypes";
 import { TilemapEditStore } from "./TilemapEditStore";
+import { TilemapApi, TilesetApi } from "src/api";
+import { AuthContext } from "../auth";
+import { SnackContext } from "../snack";
 
 /**
  * The edit context
@@ -35,7 +38,7 @@ const TilemapEditContext = createContext<TilemapEditStore>(
         owner: "",
         properties: [],
         tilesets: [],
-        globalTileIDs: [0],
+        globalTileIDs: [],
         renderOrder: "right-down",
         isPublished: false,
       },
@@ -49,9 +52,9 @@ const TilemapEditContext = createContext<TilemapEditStore>(
       modalType: TilemapEditorModalType.close,
       isSaved: false,
       renderTilemapCanvas: true,
-      renderTilemapGridCanvas: true,
       renderCurrentLayerCanvas: true,
-      renderTileSelectorCanvas: true,
+      tileCount: 0,
+      timeLeft: 0,
     },
     () => {},
     () => {}
@@ -62,6 +65,9 @@ const TilemapEditContext = createContext<TilemapEditStore>(
  * The edit context provider.
  */
 function TilemapEditContextProvider(props: Record<string, any>) {
+  const auth = useContext(AuthContext);
+  const snack = useContext(SnackContext);
+
   // The state of the edit context
   const [edit, setEdit] = useState<TilemapEditorState>({
     Tilemap: {
@@ -86,46 +92,11 @@ function TilemapEditContextProvider(props: Record<string, any>) {
       owner: "",
       properties: [],
       tilesets: [],
-      globalTileIDs: [1, 21],
+      globalTileIDs: [],
       renderOrder: "right-down",
       isPublished: false,
     },
-    Tilesets: [
-      {
-        id: "",
-        columns: 4,
-        rows: 5,
-        createDate: new Date(),
-        lastSaveDate: new Date(),
-        image: "/mc_tileset.png",
-        imageHeight: 160,
-        imageWidth: 128,
-        tileHeight: 32,
-        tileWidth: 32,
-        margin: 0,
-        name: "MCTileset",
-        owner: "",
-        properties: [],
-        isPublished: true,
-      },
-      {
-        id: "",
-        columns: 8,
-        rows: 10,
-        createDate: new Date(),
-        lastSaveDate: new Date(),
-        image: "/mc_tileset.png",
-        imageHeight: 160,
-        imageWidth: 128,
-        tileHeight: 16,
-        tileWidth: 16,
-        margin: 0,
-        name: "MCTileset2",
-        owner: "",
-        properties: [],
-        isPublished: true,
-      },
-    ],
+    Tilesets: [],
     currentEditControl: TilemapEditControl.draw,
     currentLayerIndex: -1,
     currentSwapIndex: -1,
@@ -133,14 +104,66 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     currentTilesetIndex: 0,
     currentSelection: [],
     modalType: TilemapEditorModalType.close,
-    isSaved: false,
-    renderTilemapCanvas: true,
-    renderTilemapGridCanvas: true,
+    isSaved: true,
+    renderTilemapCanvas: false,
     renderCurrentLayerCanvas: true,
-    renderTileSelectorCanvas: true,
+    tileCount: 0,
+    timeLeft: 0,
   });
 
   const nav = useNavigate();
+
+  useEffect(() => {
+    const href = window.location.href;
+    const id = href.substring(href.lastIndexOf("/") + 1);
+    TilemapApi.getTilemapById(id).then((res) => {
+      if (res.data.tilemap) {
+        let tilemap = res.data.tilemap;
+
+        if (auth.usr?.id) {
+          console.log(tilemap.collaborators.includes(auth.usr.id));
+          if (
+            !(
+              auth.usr.id === tilemap.owner ||
+              tilemap.collaborators.includes(auth.usr.id)
+            )
+          ) {
+            snack.showErrorMessage(
+              "You Are Not Authorized To Edit This Tilemap"
+            );
+            nav("/home");
+            return;
+          }
+          if (tilemap.collaboratorIndex === -1) {
+            if (auth.usr.id === tilemap.owner) tilemap.collaboratorIndex = 0;
+            else
+              tilemap.collaboratorIndex =
+                tilemap.collaborators.indexOf(auth.usr.id) + 1;
+          }
+        } else {
+          console.log("no usr id");
+          snack.showErrorMessage("You Are Not Authorized To Edit This Tilemap");
+          nav("/home");
+          return;
+        }
+        console.log(tilemap.collaboratorIndex);
+
+        setEdit({ ...edit, Tilemap: res.data.tilemap });
+      }
+    });
+    if (edit.Tilemap.id === "") return;
+    if (edit.Tilemap.tilesets.length > 0) {
+      edit.Tilemap.tilesets.forEach((tileset) => {
+        TilesetApi.getTilesetById(tileset).then((res) => {
+          setEdit({
+            ...edit,
+            Tilesets: [...edit.Tilesets, res.data.tileset],
+          });
+        });
+      });
+    }
+    if (edit.Tilemap.tilesets.length !== edit.Tilesets.length) return;
+  }, [edit.Tilemap.id]);
 
   // A wrapper around our state - the wrapper has the dispatch functions and the reducer
   const TilemapEdit = new TilemapEditStore(edit, setEdit, nav);
