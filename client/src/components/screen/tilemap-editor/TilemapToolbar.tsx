@@ -37,6 +37,7 @@ import { useContext, useEffect } from "react";
 import { TilemapEditContext } from "src/context/tilemapEditor";
 import DeleteTilemapButton from "src/components/button/DeleteTilemapButton";
 import PublishTilemapButton from "src/components/button/PublishTilemapButton";
+import ExitTilemapButton from "src/components/button/ExitTilemapButton";
 
 const TilemapToolbar = () => {
   let timeLeft = "1:24";
@@ -222,6 +223,10 @@ const TilemapToolbar = () => {
           </Grid>
           <Grid item>
             <Stack direction={"row"} spacing={1}>
+              <ExitTilemapButton
+                id={edit.state.Tilemap.id}
+                name={edit.state.Tilemap.name}
+              ></ExitTilemapButton>
               <DeleteTilemapButton
                 id={edit.state.Tilemap.id}
                 name={edit.state.Tilemap.name}
