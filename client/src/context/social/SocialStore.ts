@@ -143,18 +143,17 @@ export class SocialStore {
     }
 
     public async getTilemapSocialsByName(query: string, sort: string, tags: string[], snack?: SnackStore): Promise<void> {
-        
-        // SocialApi.getTilemapSocialsByName(query, sort, tags).then(res => {
-        //     if (res.status === 200) {
-        //         snack?.showSuccessMessage(res.data.message)
-        //         this.handleAction({
-        //             type: SocialActionType.getTilemapsByName,
-        //             payload: {
-        //                 tilemaps: res.data.tilemaps
-        //             }
-        //         })
-        //     }
-        // })
+        SocialApi.getTilemapSocialsByName(query, sort, tags).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: SocialActionType.getTilemapsByName,
+                    payload: {
+                        tilemaps: res.data.tilemaps
+                    }
+                })
+            }
+        })
     }
 
     public async getTilemapById(id: string): Promise<Tilemap | undefined> {
@@ -450,8 +449,21 @@ export class SocialStore {
         })
     }
 
-    public async publishTilemap(tilemapId: string, desc: string, commName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
+    public async publishTilemap(tilemapId: string, desc: string, commName: string, contestName: string, permissions: [], tags: string[], snack?: SnackStore): Promise<void> {
         /** TODO */
+        TilemapApi.publishTilemapById(tilemapId, {
+            description: desc,
+            communityName: commName,
+            contestName: contestName,
+            permissions: permissions,
+            tags: tags
+        }).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+            }
+        }).catch(e => {
+            if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
+        })
     }
 
     public async deleteTilemapById(id: string, snack?: SnackStore): Promise<void> {
