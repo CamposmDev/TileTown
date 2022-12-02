@@ -111,6 +111,24 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         return tilemaps.map(x => this.parseSocial(x))
     }
 
+    async getPopularTop10(): Promise<TilemapSocial[]> {
+        const TOP_10 = 10
+        let tilemaps = await TilemapSocialModel.find().sort({views: -1})
+        let socials = tilemaps.map(x => {
+            let likePoints = x.likes.length
+            let dislikePoints = x.dislikes.length
+            let totalPoints = likePoints - dislikePoints
+            totalPoints += x.comments.length
+            totalPoints += x.views
+            return {tilemap: this.parseSocial(x), points: totalPoints}
+        })
+        socials = socials.sort((a,b) => {
+            return a.points > b.points ? 1 : 0
+        })
+        let result = socials.map(x => x.tilemap).slice(0,TOP_10)
+        return result
+    }
+
     protected parseSocial(social: TilemapSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilemapSocial {
         return {
             id: social._id.toString(),

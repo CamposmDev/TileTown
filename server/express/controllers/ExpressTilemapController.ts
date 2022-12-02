@@ -787,4 +787,10 @@ export default class TilemapController {
     let tilemaps = await db.tilemaps.getUserCollaboratedTilemaps(req.params.userId)
     return res.status(200).json({message: `Found ${tilemaps.length} tilemaps`, tilemaps: tilemaps})
   }
+
+  public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+    if (!req || !res) return res.status(400).json({ message: "Bad Request" })
+    let tilemaps = await db.tilemapSocials.getPopularTop10()
+    return res.status(200).json({message: `Found ${tilemaps.length} tilemaps`, tilemaps: tilemaps})
+  }
 }

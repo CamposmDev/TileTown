@@ -91,4 +91,11 @@ export default class AxiosSocialApi {
         return AxiosApi.put<UnFavoriteTilesetRes, AxiosResponse<UnFavoriteTilesetRes>>(`/tileset/unfavorite/${socialId}`);
     }
 
+    public async getPopularTop10TMS(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tilemap/popular/top10`)
+    }
+
+    public async getPopularTop10TSS(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tileset/popular/top10`)
+    }
 }

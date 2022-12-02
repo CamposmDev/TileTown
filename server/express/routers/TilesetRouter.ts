@@ -26,7 +26,6 @@ router.put('/favorite/:id', Auth.verifyJWT, TilesetController.favoriteTilesetByI
 router.put('/unfavorite/:id', Auth.verifyJWT, TilesetController.unfavoriteTilesetById);
 
 router.get('/social/tsid/:id', TilesetController.getTilesetSocialByTilesetId)
-
-
+router.get(`/popular/top10`, TilesetController.getPopularTop10)
 
 export default router;

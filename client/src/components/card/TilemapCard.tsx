@@ -2,18 +2,18 @@ import { Box, Card, CardActionArea, CircularProgress, Fade, ImageListItem, Linea
 import { AuthContext } from "src/context/auth";
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router";
-import { Tilemap, TilemapSocial } from "@types";
+import { Tilemap, TilemapSocial, TilesetSocial } from "@types";
 import { SocialContext } from "src/context/social";
 import TilemapSocialCard from "./TilemapSocialCard";
 import TilemapSocialCardLoader from "./TilemapSocialCardLoader";
-import { ScreenRotationAlt } from "@mui/icons-material";
 import AxiosApi from "src/api/axios/AxiosApi";
 
 export default function TilemapCard(props: {tilemapId: string}) {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const nav = useNavigate()
-    const [tilemap, setTilemap] = useState<Tilemap | null>(null)
+    const [tilemap, setTilemap] = useState<Tilemap | undefined>(undefined)
+    const [tms, setTMS] = useState<TilemapSocial | undefined>(undefined)
     const [username, setUsername] = useState<string>('')
     useEffect(() => {
         social.getTilemapById(props.tilemapId).then(tilemap => {
@@ -23,7 +23,7 @@ export default function TilemapCard(props: {tilemapId: string}) {
                     if (x) setUsername(x.username)
                 })
                 if (tilemap.isPublished) {
-                    // social.getTilemapSocial
+                    social.getTilemapSocialByTilemapId(tilemap.id).then(s => setTMS(s))
                 }
             }
         })
@@ -31,16 +31,11 @@ export default function TilemapCard(props: {tilemapId: string}) {
 
     if (!tilemap) return <LinearProgress/>
     if (tilemap.isPublished) {
-        // Display the social card instead
-        // return <TilemapSocialCard/>
+        if (tms) return <TilemapSocialCard tms={tms} />
     }
     
     const handleClick = () => {
-        if (tilemap.isPublished) {
-            // TODO
-        } else {
-            nav(`/create/tilemap/${tilemap.id}`)
-        }
+        nav(`/create/tilemap/${tilemap.id}`)
     }
 
     
