@@ -92,7 +92,7 @@ const UserProfileScreen = () => {
                 }
             })
         }
-    }, [id, auth])
+    }, [id, auth.usr])
 
     const handleMainTabChange = (e: React.SyntheticEvent, newValue: number) => setMainIdx(newValue)
     const handleFavorTabChange = (e: React.SyntheticEvent, newValue: number) => setFavorIdx(newValue)

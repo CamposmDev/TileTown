@@ -90,4 +90,6 @@ export default interface ContestDBM {
      * @return if successful, true; false otherwise.
      */
     deleteContestById(contestId: string): Promise<Contest | null>;
+
+    isAvailable(contestId: string, type: string, usrId: string): Promise<boolean>;
 }

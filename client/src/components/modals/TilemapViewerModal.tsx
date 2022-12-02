@@ -29,8 +29,8 @@ export default function TilemapViewerModal() {
 
     useEffect(() => {
         let tms = social.state.currentTMS
-        if (tms && tms.communities) {
-            social.getCommunityName(tms.communities[0]).then(name => {
+        if (tms && tms.community) {
+            social.getCommunityName(tms.community).then(name => {
                 if (name) setCommName(name)
             })
         } else {

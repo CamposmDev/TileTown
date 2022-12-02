@@ -30,8 +30,8 @@
 }
 
 #tile-large-preview {
-    width: 768px;
-    height: 768px;
+    width: 704px;
+    height: 704px;
     object-fit: cover;
     object-position: center;
 }

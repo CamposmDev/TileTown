@@ -84,6 +84,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tags: partial.tags ? partial.tags : [],
             description: partial.description ? partial.description : "Description",
             community: partial.community ? partial.community : '',
+            contest: partial.contest ? partial.contest : '',
             likes: [],
             dislikes: [],
             views: 0, 
@@ -110,6 +111,12 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         return socials.map(social => this.parseSocial(social));
     }
 
+    async getSubmissionIds(contestId: string): Promise<string[]> {
+        if (!mongoose.Types.ObjectId.isValid(contestId)) return [];
+        let socialIds = await TilesetSocialModel.find({contest: contestId}).select('_id')
+        return socialIds.map(x => x._id.toString())
+    }
+
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
         return {
             id: social._id.toString(),
@@ -119,6 +126,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tags: social.tags,
             description: social.description,
             community: social.community,
+            contest: social.contest,
             likes: social.likes.map(id => id.toString()),
             dislikes: social.dislikes.map(id => id.toString()),
             views: social.views,
@@ -135,6 +143,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         social.tags = partial.tags ? partial.tags : social.tags;
         social.description = partial.description ? partial.description : social.description;
         social.community = partial.community ? partial.community : social.community;
+        social.contest = partial.contest ? partial.contest : social.contest;
         social.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : social.likes;
         social.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : social.dislikes;
         social.views = partial.views ? partial.views : social.views;

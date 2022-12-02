@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import AxiosApi from "./AxiosApi";
 
 import { 
@@ -30,6 +30,22 @@ export default class AxiosContestApi {
 
     public async getContests(name: string | undefined, sort: string): Promise<AxiosResponse<GetContestsRes>> {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name, sort: sort }});
+    }
+
+    public async getTilemapContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submission/name/tilemap/${contestId}`)
+    }
+
+    public async getTilesetContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submission/name/tileset/${contestId}`)
+    }
+
+    public async hasSubmitted(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submitted/${contestId}`)
+    }
+
+    public async getContestNameById(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/name/${contestId}`)
     }
 
     public async joinContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {

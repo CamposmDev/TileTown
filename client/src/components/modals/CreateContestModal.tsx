@@ -1,42 +1,46 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { SLIDE_DOWN_TRANSITION } from '../util/Constants';
 import { ModalContext } from 'src/context/modal';
-import { SocialContext } from 'src/context/social';
 import { SnackContext } from 'src/context/snack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { ContestContext } from 'src/context/social/contest';
+import { AuthContext } from 'src/context/auth';
 
 const CreateContestModal = () => {
+    const auth = useContext(AuthContext)
     const modal = useContext(ModalContext)
     const cc = useContext(ContestContext)
     const snack = useContext(SnackContext)
 
     const handleClose = () => {
-        setContest({name: '', desc: '', endDate: new Date()})
+        setContest({name: '', desc: '', endDate: new Date(), type: 'tilemap'})
         modal.close()
     }
     const [contest, setContest] = useState({
         name: '',
         desc: '',
-        endDate: new Date()
+        endDate: new Date(),
+        type: 'tilemap'
+
     })
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContest({
             name: e.target.value,
             desc: contest.desc,
-            endDate: contest.endDate
+            endDate: contest.endDate,
+            type: contest.type
         })
     }
     const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContest({
             name: contest.name,
             desc: e.target.value,
-            endDate: contest.endDate
-
+            endDate: contest.endDate,
+            type: contest.type
         })
     }
     const handleDateChange = (e: Date | null) => {
@@ -44,13 +48,28 @@ const CreateContestModal = () => {
             setContest({
                 name: contest.name,
                 desc: contest.desc,
-                endDate: e
+                endDate: e,
+                type: contest.type
             })
         }
     }
     const handleCreate = () => {
-        cc.createContest(contest.name, contest.desc, contest.endDate, snack)
+        /** TODO  */
+        /** If the user creates a contest while they're in 
+         * their user profile screen, in their contest tab it won't update once the contest is created.
+         * The profile screen has to rerender itself.
+         */
+        cc.createContest(contest.name, contest.desc, contest.endDate, contest.type, snack)
         modal.close()
+    }
+
+    const handleTypeChange = (e: SelectChangeEvent) => {
+        setContest({
+            name: contest.name,
+            desc: contest.desc,
+            endDate: contest.endDate,
+            type: e.target.value as string
+        })
     }
 
     let btDisabled = true
@@ -84,6 +103,18 @@ const CreateContestModal = () => {
                     multiline
                     rows={7}
                 />
+                <FormControl fullWidth margin='dense'>
+                <InputLabel id="contest-type-input-label">Contest Type</InputLabel>
+                    <Select
+                        id="contest-type-select"
+                        value={contest.type}
+                        label="Contest Type"
+                        onChange={handleTypeChange}
+                    >
+                        <MenuItem value={'tilemap'}>Tilemap</MenuItem>
+                        <MenuItem value={'tileset'}>Tileset</MenuItem>
+                    </Select>
+                </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
                         label="Due Date & Time"

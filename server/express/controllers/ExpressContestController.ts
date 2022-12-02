@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { db } from "../../database";
 import { Contest } from '@types';
-
+import MongooseTilesetSocialDBM from 'database/mongoose/managers/MongooseTilesetSocialDBM';
 
 export default class ContestController {
 
@@ -54,6 +54,9 @@ export default class ContestController {
         }
         if (!req.body.contest.name) {
             return res.status(400).json({ message: "Contest must have a name field" });
+        }
+        if (!req.body.contest.type) {
+            return res.status(400).json({ message: "Contest must have a type" })
         }
 
         // Check user exists
@@ -168,10 +171,10 @@ export default class ContestController {
 
         let userIndex = contest.participates.indexOf(user.id);
         let contestIndex = user.joinedContests.indexOf(contest.id);
-        if (userIndex > -1) {
+        if (userIndex !== -1) {
             return res.status(400).json({ message: "User has already joined this contest" });
         }
-        if (contestIndex > -1) {
+        if (contestIndex !== -1) {
             return res.status(400).json({ message: "User has already joined this contest" });
         }
 
@@ -233,5 +236,111 @@ export default class ContestController {
         }
 
         return res.status(200).json({ message: "User left a contest!", user: updatedUser, contest: updatedContest });
+    }
+
+    /**
+     * Returns the name of the contest by its id
+     * No conditions need to be met
+     * @param req
+     * @param res 
+     */
+    public async getContestName(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+        let contest: Contest | null = await db.contests.getContestById(req.params.id)
+        if (!contest) return res.status(400).json({ message: `Contest with id ${req.params.id} not found` })
+        return res.status(200).json({ message: `Found contest name`, name: contest.name })
+    }
+
+    /**
+     * Returns a contest name if the user meets the following conditions in remarks
+     * @remarks 
+     * Note that this route is specifically designed for getting a user's available contests. Available contests are contests where their end date is greater than the current date.
+     * Also, the available contest id must not be referenced in any of the user's social data (tilemap or tileset) which would depend on the theme of the contest 
+     * @param req
+     * @param res 
+     * @returns 
+     */
+    public async getContestNameForSubmission(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+        if (!req.params.type) {
+            return res.status(400).json({ message: "Missing type"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"})
+        }
+        let contest = await db.contests.getContestById(req.params.id)
+        if (!contest) return res.status(400).json({ message: `Contest with id ${req.params.id} not found` })
+        /** Check if the user is the owner of the contest */
+        if (contest.owner === req.userId) return res.status(400).json({message: `Contest ${contest.id} is not available to the user owner ${req.userId}`})
+        /** Only return the contest name if the user's social doesn't referenced it  */
+        const requiredType = req.params.type as string
+        /** Check if the params type matches the contest type */
+        if (requiredType !== contest.type) return res.status(400).json({message: `Contest ${contest.id} is not type: ${requiredType}`})
+        /** Check if the contest is end date is greater than the current date */
+        let currentDate = new Date()
+        if (currentDate.getTime() > contest.endDate.getTime()) return res.status(400).json({message: `Contest ${contest.id} ended, thus not available`})
+        /** Check if any {requiredType} social data where the owner is the user and contains the contests id  */
+        if (!(await db.contests.isAvailable(contest.id, requiredType, req.userId))) {
+            return res.status(400).json({message: `Contest ${contest.id} is not available for user ${req.userId} for submission`})
+        }
+        return res.status(200).json({ message: 'Found contest', name: contest.name })
+    }
+
+    public async hasContestSubmission(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"})
+        }
+        let contest: Contest | null = await db.contests.getContestById(req.params.id)
+        if (!contest) return res.status(400).json({ message: `Contest with id ${req.params.id} not found`})
+        let x = await db.contests.isAvailable(req.params.id, 'tileset', req.userId)
+        let y = await db.contests.isAvailable(req.params.id, 'tilemap', req.userId)
+        return res.status(200).json({submitted: !(x && y)})
+    }
+
+    /**
+     * Acquire the tileset or tilemap social data for a given contest id and its type
+     * @author Michael Campos
+     * @returns 
+     */
+    public async getContestTilesetSubmissionIds(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+
+        let socialIds = db.tilesetSocials.getSubmissionIds(req.params.id)
+        
+        return res.status(200).json({socialIds: socialIds})
+    }
+
+    public async getContestTilemapSubmissionIds(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.id) {
+            return res.status(400).json({ message: "Missing contest id"});
+        }
+
+        let socialIds = db.tilemapSocials.getSubmissionIds(req.params.id)
+        
+        return res.status(200).json({socialIds: socialIds})
     }
 }

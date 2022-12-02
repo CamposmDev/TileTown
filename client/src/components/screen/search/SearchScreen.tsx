@@ -89,7 +89,7 @@ const SearchScreen = (props: Props) => {
             content = 
             <Grid {...displayProps}>
                     {contest.state.contests.map(x => 
-                        <Grid item key={x.id} xs={3}>
+                        <Grid item key={x.id} xs={4}>
                             <ContestCard c={x}/>
                         </Grid>
                     )}
