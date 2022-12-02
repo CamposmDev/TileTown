@@ -1,6 +1,6 @@
 import { Community, User } from "@types";
 
-export default interface JoinCommunityRes {
+export default interface LeaveCommunityRes {
     community: Community;
     user: User
 }
