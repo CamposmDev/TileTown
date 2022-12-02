@@ -24,6 +24,7 @@ const CommunityProfileScreen = () => {
         /** Call the leave function from comm */
         comm.leaveCommunity()
     }
+   
 
     let c = comm.currCommunity
     /** Size of the Carousel */
@@ -45,10 +46,10 @@ const CommunityProfileScreen = () => {
             }
         }
     }
-
-    const handleClick = () => [
-
-    ]
+    /** check if user is banned */
+    if (usr && c && isMember(c.banned, usr.id)) {
+        theButton = <div/>
+    }
 
     let header = (
         <Grid>
