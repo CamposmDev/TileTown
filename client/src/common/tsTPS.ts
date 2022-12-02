@@ -25,14 +25,14 @@ export class tsTPS_Transaction {
 }
 
 /**
- * jsTPS
+ * tsTPS
  *
  * This class serves as the Transaction Processing System. Note that it manages
- * a stack of jsTPS_Transaction objects, each of which know how to do or undo
+ * a stack of tsTPS_Transaction objects, each of which know how to do or undo
  * state changes for the given application. Note that this TPS is not platform
  * specific as it is programmed in raw JavaScript.
  */
-export default class tsTPS {
+export class tsTPS {
   private transactions: tsTPS_Transaction[];
   private numTransactions: number;
   private mostRecentTransaction: number;
@@ -137,7 +137,7 @@ export default class tsTPS {
    *
    * @param {tsTPS_Transaction} transaction Transaction to add to the stack and do.
    */
-  addTransaction(transaction: tsTPS_Transaction): void {
+  public addTransaction(transaction: tsTPS_Transaction): void {
     // ARE WE BRANCHING?
     if (
       this.mostRecentTransaction < 0 ||

@@ -17,11 +17,13 @@ import { useContext } from "react";
 import { SnackStore } from "../snack/SnackStore";
 import { ModalStore } from "../modal/ModalStore";
 import { useNavigate } from "react-router";
-import tsTPS from "src/common/tsTPS";
-import {
-  EditTilesetImage_Transaction,
-  EditTilesetProperty_Transaction,
-} from "src/common/transactions";
+import { tsTPS } from "src/common/tsTPS";
+import EditTilesetImage_Transaction from "src/common/transactions/EditTilesetImage_Transaction";
+import EditTilesetProperty_Transaction from "src/common/transactions/EditTilesetProperty_Transaction";
+// import {
+//   EditTilesetImage_Transaction,
+//   EditTilesetProperty_Transaction,
+// } from "src/common/transactions";
 
 /**
  * A wrapper class that wraps around our "edit" state. Basically this class is the store. It contains
@@ -122,6 +124,33 @@ export class TilesetEditStore {
           snack?.showErrorMessage(e.response.data.message);
         }
       });
+  }
+
+  public undo(): void {
+    this.tsTPS.undoTransaction();
+  }
+
+  public redo(): void {
+    this.tsTPS.doTransaction();
+  }
+
+  public canUndo(): boolean {
+    return this.tsTPS.hasTransactionToUndo();
+  }
+
+  public canRedo(): boolean {
+    return this.tsTPS.hasTransactionToRedo();
+  }
+
+  public addEditImageTransaction(imageData: string, image: Blob): void {
+    console.log("hello");
+    const newEditImageTransaction = new EditTilesetImage_Transaction(
+      this,
+      { image: this.state.image, imageData: this.state.imageData },
+      { image, imageData }
+    );
+    this.tsTPS.addTransaction(newEditImageTransaction);
+    console.log(this.tsTPS.toString());
   }
 
   public async saveImage(imageData: string, blob: Blob): Promise<void> {

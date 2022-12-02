@@ -1,5 +1,5 @@
 import { TilesetEditStore } from "src/context/tilesetEditor/TilesetEditStore";
-import tsTPS, { tsTPS_Transaction } from "../tsTPS";
+import { tsTPS, tsTPS_Transaction } from "../tsTPS";
 /**
  * EditTilesetImage_Transaction
  * 

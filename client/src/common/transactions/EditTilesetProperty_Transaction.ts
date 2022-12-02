@@ -1,6 +1,6 @@
 import { TilesetEditStore } from "src/context/tilesetEditor/TilesetEditStore";
 import { Tileset } from "src/context/tilesetEditor/TilesetEditTypes";
-import tsTPS, { tsTPS_Transaction } from "../tsTPS";
+import { tsTPS, tsTPS_Transaction } from "../tsTPS";
 /**
  * EditTilesetProperty_Transaction
  * 
