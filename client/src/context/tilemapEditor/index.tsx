@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TilemapEditorState,
@@ -7,6 +7,8 @@ import {
 } from "./TilemapEditTypes";
 import { TilemapEditStore } from "./TilemapEditStore";
 import { TilemapApi, TilesetApi } from "src/api";
+import { AuthContext } from "../auth";
+import { SnackContext } from "../snack";
 
 /**
  * The edit context
@@ -51,6 +53,8 @@ const TilemapEditContext = createContext<TilemapEditStore>(
       isSaved: false,
       renderTilemapCanvas: true,
       renderCurrentLayerCanvas: true,
+      tileCount: 0,
+      timeLeft: 0,
     },
     () => {},
     () => {}
@@ -61,6 +65,9 @@ const TilemapEditContext = createContext<TilemapEditStore>(
  * The edit context provider.
  */
 function TilemapEditContextProvider(props: Record<string, any>) {
+  const auth = useContext(AuthContext);
+  const snack = useContext(SnackContext);
+
   // The state of the edit context
   const [edit, setEdit] = useState<TilemapEditorState>({
     Tilemap: {
@@ -100,6 +107,8 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     isSaved: true,
     renderTilemapCanvas: false,
     renderCurrentLayerCanvas: true,
+    tileCount: 0,
+    timeLeft: 0,
   });
 
   const nav = useNavigate();
@@ -109,13 +118,42 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     const id = href.substring(href.lastIndexOf("/") + 1);
     TilemapApi.getTilemapById(id).then((res) => {
       if (res.data.tilemap) {
+        let tilemap = res.data.tilemap;
+
+        if (auth.usr?.id) {
+          console.log(tilemap.collaborators.includes(auth.usr.id));
+          if (
+            !(
+              auth.usr.id === tilemap.owner ||
+              tilemap.collaborators.includes(auth.usr.id)
+            )
+          ) {
+            snack.showErrorMessage(
+              "You Are Not Authorized To Edit This Tilemap"
+            );
+            nav("/home");
+            return;
+          }
+          if (tilemap.collaboratorIndex === -1) {
+            if (auth.usr.id === tilemap.owner) tilemap.collaboratorIndex = 0;
+            else
+              tilemap.collaboratorIndex =
+                tilemap.collaborators.indexOf(auth.usr.id) + 1;
+          }
+        } else {
+          console.log("no usr id");
+          snack.showErrorMessage("You Are Not Authorized To Edit This Tilemap");
+          nav("/home");
+          return;
+        }
+        console.log(tilemap.collaboratorIndex);
+
         setEdit({ ...edit, Tilemap: res.data.tilemap });
       }
     });
     if (edit.Tilemap.id === "") return;
     if (edit.Tilemap.tilesets.length > 0) {
       edit.Tilemap.tilesets.forEach((tileset) => {
-        console.log("load tileset");
         TilesetApi.getTilesetById(tileset).then((res) => {
           setEdit({
             ...edit,

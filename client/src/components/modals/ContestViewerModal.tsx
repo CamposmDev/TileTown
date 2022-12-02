@@ -1,17 +1,89 @@
-import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
+import { AppBar, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Toolbar, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
+import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
+import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader"
+import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { calcTimeLeft, dateToStr, isExpired } from "../util/DateUtils"
 
-const ContestViewerModal = () => {
+function toTitleCase(str: string) {
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+      }
+    );
+  }
+
+function ContestSubmissionViewerModal(props: 
+    {
+        open: boolean
+        owner: {
+            userId: string,
+            firstName: string,
+            lastName: string,
+            username: string
+        }
+    }) {
+    const auth = useContext(AuthContext)
+    const contest = useContext(ContestContext)
+    const [socialIds, setSocialIds] = useState<string[]>([])
+    let c = contest.state.currentContest
+    useEffect(() => {
+        if (c) {
+            if (c.type === 'tilemap') {
+                contest.getTilemapSubmissions().then(arr => {
+                    setSocialIds(arr)
+                })
+            } else if (c.type === 'tileset') {
+                contest.getTilesetSubmissions().then(arr => {
+                    setSocialIds(arr)
+                })
+            }
+        }
+    }, [contest.state.currentContest, auth.usr])
+    if (!c) return <div/>
+    console.log(socialIds)
+    let content: JSX.Element | JSX.Element[] = <div/>
+    switch (c.type) {
+        case 'tilemap':
+            content = socialIds.map(id =>
+                <Grid item key={id}>
+                    <TilemapSocialCardLoader tmsId={id}/>
+                </Grid>
+            )
+            break
+        case 'tileset':
+            content = socialIds.map(id => <Grid item key={id}>
+                <TilesetSocialCardLoader tssId={id}/>
+            </Grid>)
+            break
+    }
+    return (
+        <Dialog open={props.open} fullScreen TransitionComponent={SLIDE_DOWN_TRANSITION} onClose={() => contest.clear()}>
+            <AppBar position="relative">
+                <Toolbar>
+                    <Typography flexGrow={1}>{c.name}</Typography>
+                    <Button color='inherit' onClick={() => contest.clear()}>Close</Button>
+                </Toolbar>
+            </AppBar>
+            <Grid container>
+                {content}
+            </Grid>
+        </Dialog>
+    )
+}
+
+export default function ContestViewerModal() {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
+    const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [user, setUser] = useState({
         userId: '',
@@ -19,6 +91,7 @@ const ContestViewerModal = () => {
         lastName: '',
         username: ''
     })
+    const [submitted, setSubmitted] = useState<boolean>(false)
     let c = contest.state.currentContest
     useEffect(() => {
         if (c) {
@@ -32,8 +105,13 @@ const ContestViewerModal = () => {
                     })
                 }
             })
+            if (auth.usr?.id !== c.owner) {
+                social.hasContestSubmission(c.id).then(submitted => {
+                    setSubmitted(submitted)
+                })
+            }
         }
-    }, [contest.state.currentContest])
+    }, [contest.state.currentContest, auth.usr])
 
     const join = () => {
         /** Call the join function from contest store */
@@ -63,7 +141,12 @@ const ContestViewerModal = () => {
      *  
      */
     const start = () => {
-        
+        if (c?.type === 'tilemap') {
+            throw new Error('TODO')
+            // modal.showUploadTilemapModal()
+        } else if (c?.type === 'tileset') {
+            modal.showUploadTilesetModal()
+        }
     }
 
     /** 
@@ -80,7 +163,20 @@ const ContestViewerModal = () => {
     if (c) {
         const startDate = new Date(c.startDate)
         const endDate = new Date(c.endDate)
-        const timeLeft = calcTimeLeft(endDate)
+        const timeLeft: string = calcTimeLeft(endDate)
+        const isOver: boolean = isExpired(endDate)
+        /** If the contest is over, show submissions as a full screen */
+        if (isOver) {
+            return <ContestSubmissionViewerModal
+                open={open}
+                owner={{
+                    userId: user.userId,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    username: user.username
+                }}
+            />
+        }
         content = (
             <Grid container spacing={1}>
                 <Grid container item>
@@ -108,6 +204,13 @@ const ContestViewerModal = () => {
                     </Grid>
                 </Grid>
                 <Grid container item>
+                    <Grid item>
+                        <Typography><b>Theme:</b>&ensp;
+                            {toTitleCase(c.type)}
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Grid container item>
                     <Typography><b>Participates</b>&ensp;{c.participates.length}</Typography>
                 </Grid>
                 <Grid container item>
@@ -120,22 +223,31 @@ const ContestViewerModal = () => {
     let leaveButton = <Button onClick={leave}>Leave</Button>
     let startButton = <Button onClick={start}>Start</Button>
     let chooseWinnerButton = <Button onClick={chooseWinner}>Choose Winner</Button>
-    let theControl = <Typography>Come back later to decide the winner!</Typography>
+    let firstControl = <Typography>Come back later when the contest is over to decide the winner!</Typography>
+    let secondControl = <div/>
     let usr = auth.usr
     if (usr && c) {
         if (usr.id === c.owner) {
             let endDate = new Date(c.endDate)
             if (isExpired(endDate)) {
-                theControl = chooseWinnerButton
+                firstControl = chooseWinnerButton
             }
         } else {
             if (c.participates.indexOf(usr.id) === -1) {
-                theControl = joinButton
+                // The user is not a member of the contest
+                firstControl = joinButton
             } else {
-                theControl = leaveButton
+                if (submitted) {
+                    firstControl = <Typography>You've submitted your work! Come back later to see the results!</Typography>
+                } else {
+                    firstControl = leaveButton
+                }
             }
         }
     }
+
+    secondControl = firstControl === leaveButton ? startButton : <div/>
+    if (submitted) secondControl = <div/>
     
     return (
         <Dialog 
@@ -148,11 +260,9 @@ const ContestViewerModal = () => {
                 {content}
             </DialogContent>
             <DialogActions>
-                {theControl}
-                {(theControl === leaveButton) ? startButton : <div/>}
+                {firstControl}
+                {secondControl}
             </DialogActions>
         </Dialog>
     )
 }
-
-export default ContestViewerModal

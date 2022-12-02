@@ -11,14 +11,13 @@ import MemberCard from '../card/MemberCard';
 const CommunityMembersModal = () => {
     const comm = useContext(CommunityContext)
     const [isOpen, setIsOpen] = useState(false)
-    const cc = useContext(CommunityContext)
     const handleClose = () => setIsOpen(false);
     let c = comm.currCommunity
     let members: JSX.Element | JSX.Element[] = <div/>
     if (c) {
         members = c.members.map(x =>
-            <Grid item key={x} xs={12}>
-                <MemberCard usrId={x} />
+            <Grid item key={x} xs={12} mt={1}>
+                <MemberCard usrId={x} key={x}/>
             </Grid>
         )
     }
@@ -31,7 +30,7 @@ const CommunityMembersModal = () => {
             <DialogContent>
             <Box>
                 <Typography variant="h6">Community Members</Typography>
-                <Grid container sx={{height: '500px', overflow: 'auto', mt: 1}} spacing={1}>
+                <Grid spacing={1}>
                     {members}
                 </Grid>        
             </Box>

@@ -12,6 +12,7 @@ export default interface ContestSchemaType {
     participates: ObjectId[],
     startDate: Date,
     endDate: Date,
+    type: string,
     winner: ObjectId,
     isPublished: boolean
 }

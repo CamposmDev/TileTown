@@ -1,7 +1,6 @@
 import { Community, User } from "@types";
 
-export default interface JoinCommunityRes {
-    message: string;
+export default interface KickCommunityRes {
     community: Community;
     user: User
 }

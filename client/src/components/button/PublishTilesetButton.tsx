@@ -15,8 +15,10 @@ export default function PublishTilesetButton(props: { id: string, name: string }
     const snack = useContext(SnackContext)
     const [open, setOpen] = useState(false)
     const [desc, setDesc] = useState('')
-    const [options, setOptions] = useState<string[]>([])
+    const [commOptions, setCommOptions] = useState<string[]>([])
     const [commOption, setCommOption] = useState('')
+    const [contestOptions, setContestOptions] = useState<string[]>([])
+    const [contestOption, setContestOption] = useState('')
     const [tag, setTag] = useState<string>('')
     const [tags, setTags] = useState<string[]>([])
 
@@ -24,7 +26,10 @@ export default function PublishTilesetButton(props: { id: string, name: string }
         let usr = auth.usr
         if (usr) {
             social.getCommunityNames(usr.joinedCommunities).then(arr => {
-                setOptions(arr)
+                setCommOptions(arr)
+            })
+            social.getTilesetContestNames(usr.joinedContests).then(arr => {
+                setContestOptions(arr)
             })
         }
     }, [])
@@ -85,13 +90,12 @@ export default function PublishTilesetButton(props: { id: string, name: string }
     }
 
     const publish = () => {
-        social.publishTileset(props.id, desc, commOption, [], tags, snack)
+        social.publishTileset(props.id, desc, commOption, contestOption, [], tags, snack)
         prof.viewPublishedTilesets(auth.usr?.id)
         handleClose()
     }
 
     let dis = !(Boolean(desc))
-
     const modal = (
         <Dialog open={open} onClose={handleClose} TransitionComponent={SLIDE_DOWN_TRANSITION}>
             <DialogTitle>Publish</DialogTitle>
@@ -117,14 +121,28 @@ export default function PublishTilesetButton(props: { id: string, name: string }
                         <Grid item xs={12}>
                             <Autocomplete
                                 fullWidth
-                                options={options}
-                                onChange={(e,v) => { if (v) setCommOption(v) }}
+                                options={commOptions}
+                                onChange={(e,v) => v ? setCommOption(v) : setCommOption('')}
                                 renderInput={(params) => 
                                     <TextField 
                                         {...params} 
                                         margin='dense' 
                                         label='Optional: Community' 
                                         value={commOption}
+                                />}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Autocomplete
+                                fullWidth
+                                options={contestOptions}
+                                onChange={(e,v) => {v ? setContestOption(v) : setContestOption('')}}
+                                renderInput={(params) =>
+                                    <TextField
+                                        {...params}
+                                        margin='dense'
+                                        label='Optional: Contest'
+                                        value={contestOption}    
                                 />}
                             />
                         </Grid>

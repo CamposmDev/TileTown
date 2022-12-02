@@ -3,6 +3,7 @@ import { Community } from "@types";
 import CommunityDBM from "../../interface/managers/CommunityDBM";
 import { CommunityModel } from "../schemas"
 import { CommunitySchemaType } from "../types";
+import AdmZip from 'adm-zip';
 
 
 /**
@@ -99,7 +100,8 @@ export default class MongooseCommunityDBM implements CommunityDBM {
             name: community.name,
             description: community.description,
             members: community.members.map(id => id.toString()),
-            visibility: community.visibility
+            visibility: community.visibility,
+            banned: community.banned.map(x => x.toString())
         }
     }
     
@@ -109,5 +111,6 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         community.description = partial.description ? partial.description : community.description;
         community.members = partial.members ? partial.members.map(id => new mongoose.Types.ObjectId(id)) : community.members;
         community.visibility = partial.visibility ? partial.visibility : community.visibility;
+        community.banned = partial.banned ? partial.banned.map(id => new mongoose.Types.ObjectId(id)) : community.banned;
     }
 }

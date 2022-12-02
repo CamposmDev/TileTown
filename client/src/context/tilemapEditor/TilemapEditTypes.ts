@@ -258,6 +258,8 @@ export interface TilemapEditorState {
   isSaved: boolean;
   renderTilemapCanvas: boolean;
   renderCurrentLayerCanvas: boolean;
+  tileCount: number;
+  timeLeft: number;
 }
 
 /**
@@ -268,6 +270,7 @@ export enum TilemapEditorActionType {
   UPDATE_TILEMAP = "UPDATE_TILEMAP",
   SAVE_TILEMAP = "SAVE_TILEMAP",
   ADD_TILESET = "ADD_TILESET",
+  EXIT_WITHOUT_SAVE = "EXIT_WITHOUT_SAVE",
   CHANGE_EDIT_CONTROL = "CHANGE_EDIT_CONTROL",
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
@@ -307,6 +310,10 @@ export type TilemapEditorAction =
   | {
       type: TilemapEditorActionType.SAVE_TILEMAP;
       payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.EXIT_WITHOUT_SAVE;
+      payload: { collaboratorIndex: number };
     }
   | {
       type: TilemapEditorActionType.ADD_TILESET;

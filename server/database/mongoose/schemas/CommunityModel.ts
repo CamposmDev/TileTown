@@ -11,7 +11,8 @@ const CommunitySchema = new Schema<CommunitySchemaType>({
     name: { type: String, require: true},
     visibility: { type: String, require: true, default: "public"},
     description: { type: String, require: true, default: "Community description here!"},
-    members: { type: [ObjectId], require: true, default: []}
+    members: { type: [ObjectId], require: true, default: []},
+    banned: { type: [ObjectId], require: true, default: []}
 });
 
 const CommunityModel = mongoose.model("CommunityModel", CommunitySchema);

@@ -1,7 +1,7 @@
 import SocialStatisticsPermissions from "./SocialStatisticsPermissions";
 
 export default interface TilemapSocialStatistics {
-    id: string;
+  id: string;
   tileMap: string;
   name: string;
   owner: string;
@@ -10,7 +10,8 @@ export default interface TilemapSocialStatistics {
   collaboratorNames: string[];
   tags: string[];
   description: string;
-  communities: string[];
+  community: string;
+  contest: string;
   likes: string[];
   dislikes: string[];
   views: number;

@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import AxiosApi from "./AxiosApi";
 
 import { 
@@ -32,11 +32,35 @@ export default class AxiosContestApi {
         return AxiosApi.get<GetContestsRes, AxiosResponse<GetContestsRes>>(`/contest`, { params: { name: name, sort: sort }});
     }
 
+    public async getTilemapContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submission/name/tilemap/${contestId}`)
+    }
+
+    public async getTilesetContestName(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submission/name/tileset/${contestId}`)
+    }
+
+    public async hasSubmitted(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submitted/${contestId}`)
+    }
+
+    public async getContestNameById(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/name/${contestId}`)
+    }
+
     public async joinContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/join/${id}`)
     }
 
     public async leaveContest(id: string): Promise<AxiosResponse<{message: string, user: User, contest: Contest}>> {
         return AxiosApi.put(`/contest/leave/${id}`)
+    }
+
+    public async getTilesetSubmissions(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submissions/tileset/${contestId}`)
+    }
+
+    public async getTilemapSubmissions(contestId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/submissions/tilemap/${contestId}`)
     }
 }

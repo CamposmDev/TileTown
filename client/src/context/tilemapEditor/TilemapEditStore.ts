@@ -98,11 +98,10 @@ export class TilemapEditStore {
     const f = new FormData();
     f.append("image", blob);
     f.append("tilemap", JSON.stringify(this.state.Tilemap));
-    console.log("saveTilemap");
     TilemapApi.updateTilemapById(this.state.Tilemap.id, f)
       .then((res) => {
+        console.log(res.status);
         if (res.status === 200) {
-          console.log("200");
           this.handleAction({
             type: TilemapEditorActionType.SAVE_TILEMAP,
             payload: {},
@@ -112,11 +111,63 @@ export class TilemapEditStore {
       })
       .catch((e) => {
         if (axios.isAxiosError(e) && e.response) {
-          console.error(e);
-          console.error(e.response.data.message);
           snack?.showErrorMessage(e.response.data.message);
         }
       });
+  }
+
+  public async exitWithoutSaving(snack?: SnackStore): Promise<void> {
+    let collaboratorIndex = this.state.Tilemap.collaboratorIndex;
+    const editMode = this.state.Tilemap.collaboratorSettings.editMode;
+    if (editMode === "free") collaboratorIndex = -1;
+    else {
+      collaboratorIndex =
+        collaboratorIndex === this.state.Tilemap.collaborators.length
+          ? 0
+          : collaboratorIndex + 1;
+    }
+    const f = new FormData();
+
+    const host: string =
+      window.location.host === "localhost:3001"
+        ? "localhost:3000"
+        : window.location.host;
+
+    f.append(
+      "image",
+      "http://" + host + "/api/media/" + this.state.Tilemap.image
+    );
+    f.append(
+      "tilemap",
+      JSON.stringify({ collaboratorIndex: collaboratorIndex })
+    );
+    TilemapApi.updateTilemapById(this.state.Tilemap.id, f)
+      .then((res) => {
+        console.log(res.status);
+        if (res.status === 200) {
+          this.handleAction({
+            type: TilemapEditorActionType.SAVE_TILEMAP,
+            payload: {},
+          });
+          snack?.showSuccessMessage(res.data.message);
+          this.nav("/home");
+        }
+      })
+      .catch((e) => {
+        if (axios.isAxiosError(e) && e.response) {
+          snack?.showErrorMessage(e.response.data.message);
+        }
+      });
+  }
+
+  public canEdit(id: string): boolean {
+    if (id === this.state.Tilemap.owner)
+      return this.state.Tilemap.collaboratorIndex === 0;
+    else
+      return (
+        this.state.Tilemap.collaboratorIndex ===
+        this.state.Tilemap.collaborators.indexOf(id) + 1
+      );
   }
 
   public async addTileset(id: string, snack?: SnackStore): Promise<void> {
@@ -493,6 +544,7 @@ export class TilemapEditStore {
     const usernames = collaborators.map((collaborator) => {
       return collaborator.username;
     });
+    console.log([...this.state.Tilemap.collaborators, ...ids]);
     this.setEdit({
       ...this.state,
       Tilemap: {
