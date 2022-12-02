@@ -25,4 +25,7 @@ router.put("/view/:id", TilemapController.viewTilemapById);
 
 router.get("/download/tiled/:id", TilemapController.downloadTiledTilemap);
 
+router.get(`/social/tmid/:id`, TilemapController.getTilemapSocialByTilemapId)
+router.get(`/collaborations/:userId`, TilemapController.getUserCollaboratedTilemaps)
+
 export default router;

@@ -301,4 +301,5 @@ export default interface TilemapDBM {
   //  */
   // removeTileset(tilemapId: string, index: number): Promise<[string] | string>;
 
+  getUserCollaboratedTilemaps(userId: string): Promise<Tilemap[]>
 }
