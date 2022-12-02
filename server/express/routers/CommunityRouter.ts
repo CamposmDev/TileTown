@@ -16,4 +16,8 @@ CommunityRouter.put('/leave/:id', Auth.verifyJWT, CommunityController.leaveCommu
 
 CommunityRouter.get('/name/:id', Auth.verifyJWT, CommunityController.getCommunityNameById)
 
+CommunityRouter.put('/:commId/kick/:userId', Auth.verifyJWT, CommunityController.kickMember)
+CommunityRouter.put('/:commId/ban/:userId', Auth.verifyJWT, CommunityController.banMember)
+
+
 export default CommunityRouter;
