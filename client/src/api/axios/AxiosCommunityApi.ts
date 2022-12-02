@@ -60,4 +60,8 @@ export default class AxiosCommunityApi {
     public async banMember(userId: string, commId: string): Promise<AxiosResponse> {
         return AxiosApi.put(`/community/${commId}/ban/${userId}`)
     }
+
+    public async getPopularTop10(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/community/popular/top10`)
+    }
 } 

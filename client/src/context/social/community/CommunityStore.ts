@@ -230,6 +230,12 @@ export class CommunityStore {
         })
     }
 
+    public async getPopularTop10(): Promise<Community[]> {
+        return CommunityApi.getPopularTop10().then(res => {
+            return res.data.communities
+        })
+    }
+
     protected handleAction(action: CommunityAction) {
         switch (action.type) {
             case CommunityActionType.createCommunity: {

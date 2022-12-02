@@ -63,4 +63,8 @@ export default class AxiosContestApi {
     public async getTilemapSubmissions(contestId: string): Promise<AxiosResponse> {
         return AxiosApi.get(`/contest/submissions/tilemap/${contestId}`)
     }
+
+    public async getPopularTop10(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/contest/popular/top10`)
+    }
 }

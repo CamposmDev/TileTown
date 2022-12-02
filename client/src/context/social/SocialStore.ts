@@ -559,6 +559,19 @@ export class SocialStore {
         })
     }
 
+    public async getPopularTop10TMS(): Promise<TilemapSocial[]> {
+        return SocialApi.getPopularTop10TMS().then(res => {
+            return res.data.tilemaps
+        })
+    }
+
+    public async getPopularTop10TSS(): Promise<TilesetSocial[]> {
+        return SocialApi.getPopularTop10TSS().then(res => {
+            return res.data.tilesets
+        })
+    }
+
+
     public async clear(): Promise<void> {
         this.handleAction({
             type: SocialActionType.clear

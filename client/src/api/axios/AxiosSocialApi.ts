@@ -82,7 +82,7 @@ export default class AxiosSocialApi {
     public async favoriteTilesetSocial(socialId: string): Promise<AxiosResponse<FavoriteTilesetRes>> {
         return AxiosApi.put<FavoriteTilesetRes, AxiosResponse<FavoriteTilesetRes>>(`/tileset/favorite/${socialId}`);
     }
-
+    
     public async unfavoriteTilemapSocial(socialId: string): Promise<AxiosResponse<UnFavoriteTilemapRes>> {
         return AxiosApi.put<UnFavoriteTilemapRes, AxiosResponse<UnFavoriteTilemapRes>>(`/tilemap/unfavorite/${socialId}`);
     }

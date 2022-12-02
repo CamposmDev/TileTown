@@ -31,11 +31,10 @@ const CommunityCard = (props: Props) => {
                             }/>
                             <Card/>
                         </Stack>
-                    <Stack direction='column'>
+                    <Stack direction='row' spacing={1}>
                         <Typography variant='caption'><b>{props.comm.members.length}</b>&ensp;Tilemaps</Typography>
                         <Typography variant='caption'><b>{props.comm.members.length}</b>&ensp;Tilesets</Typography>
                     </Stack>
-                    
                 </CardContent>
             </CardActionArea>
         </Card>
