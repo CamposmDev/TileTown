@@ -1,10 +1,12 @@
-import { AppBar, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, ownerDocument, Toolbar, Typography } from "@mui/material"
+import { AppBar, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Toolbar, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
 import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
+import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader"
+import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader"
 import UserProfileBox from "../UserProfileBox"
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants"
 import { calcTimeLeft, dateToStr, isExpired } from "../util/DateUtils"
@@ -18,7 +20,66 @@ function toTitleCase(str: string) {
     );
   }
 
-const ContestViewerModal = () => {
+function ContestSubmissionViewerModal(props: 
+    {
+        open: boolean
+        owner: {
+            userId: string,
+            firstName: string,
+            lastName: string,
+            username: string
+        }
+    }) {
+    const auth = useContext(AuthContext)
+    const contest = useContext(ContestContext)
+    const [socialIds, setSocialIds] = useState<string[]>([])
+    let c = contest.state.currentContest
+    useEffect(() => {
+        if (c) {
+            if (c.type === 'tilemap') {
+                contest.getTilemapSubmissions().then(arr => {
+                    setSocialIds(arr)
+                })
+            } else if (c.type === 'tileset') {
+                contest.getTilesetSubmissions().then(arr => {
+                    setSocialIds(arr)
+                })
+            }
+        }
+    }, [contest.state.currentContest, auth.usr])
+    if (!c) return <div/>
+    console.log(socialIds)
+    let content: JSX.Element | JSX.Element[] = <div/>
+    switch (c.type) {
+        case 'tilemap':
+            content = socialIds.map(id =>
+                <Grid item key={id}>
+                    <TilemapSocialCardLoader tmsId={id}/>
+                </Grid>
+            )
+            break
+        case 'tileset':
+            content = socialIds.map(id => <Grid item key={id}>
+                <TilesetSocialCardLoader tssId={id}/>
+            </Grid>)
+            break
+    }
+    return (
+        <Dialog open={props.open} fullScreen TransitionComponent={SLIDE_DOWN_TRANSITION} onClose={() => contest.clear()}>
+            <AppBar position="relative">
+                <Toolbar>
+                    <Typography flexGrow={1}>{c.name}</Typography>
+                    <Button color='inherit' onClick={() => contest.clear()}>Close</Button>
+                </Toolbar>
+            </AppBar>
+            <Grid container>
+                {content}
+            </Grid>
+        </Dialog>
+    )
+}
+
+export default function ContestViewerModal() {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
@@ -106,20 +167,15 @@ const ContestViewerModal = () => {
         const isOver: boolean = isExpired(endDate)
         /** If the contest is over, show submissions as a full screen */
         if (isOver) {
-            
-            return (
-                <Dialog open={open} fullScreen TransitionComponent={SLIDE_DOWN_TRANSITION} onClose={() => contest.clear()}>
-                    <AppBar>
-                        <Toolbar>
-                            <Typography flexGrow={1}>{c.name}</Typography>
-                            <Button color='inherit' onClick={() => contest.clear()}>Close</Button>
-                        </Toolbar>
-                    </AppBar>
-                    <Grid container>
-                        
-                    </Grid>
-                </Dialog>
-            )
+            return <ContestSubmissionViewerModal
+                open={open}
+                owner={{
+                    userId: user.userId,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    username: user.username
+                }}
+            />
         }
         content = (
             <Grid container spacing={1}>
@@ -210,5 +266,3 @@ const ContestViewerModal = () => {
         </Dialog>
     )
 }
-
-export default ContestViewerModal

@@ -59,6 +59,26 @@ export class ContestStore {
         })
     }
 
+    public async getTilesetSubmissions(): Promise<string[]> {
+        let c = this.state.currentContest
+        if (!c) return []
+        return ContestApi.getTilesetSubmissions(c.id).then(res => {
+            if (res.status === 200) {
+                return res.data.socialIds
+            }
+        })
+    }
+
+    public async getTilemapSubmissions(): Promise<string[]> {
+        let c = this.state.currentContest
+        if (!c) return []
+        return ContestApi.getTilemapSubmissions(c.id).then(res => {
+            if (res.status === 200) {
+                return res.data.socialIds
+            }
+        })
+    }
+
     public async createContest(name: string, description: string, endDate: Date, type: string, snack?: SnackStore): Promise<void> {
         let res = ContestApi.createContest({
             contest: {

@@ -35,6 +35,7 @@ export class CommunityStore {
         if (!commId) return undefined
         return CommunityApi.joinCommunity(commId, {}).then(res => {
             if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
                 this.handleAction({
                     type: CommunityActionType.viewCommunity,
                     payload: {
@@ -54,6 +55,7 @@ export class CommunityStore {
         if (!commId) return undefined
         return CommunityApi.leaveCommunity(commId, {}).then(res => {
             if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
                 this.handleAction({
                     type: CommunityActionType.viewCommunity,
                     payload: {

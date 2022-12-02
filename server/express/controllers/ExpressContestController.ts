@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from "../../database";
-import { Contest } from '@types';
-import MongooseTilesetSocialDBM from 'database/mongoose/managers/MongooseTilesetSocialDBM';
+import { Contest, TilemapSocial, TilesetSocial } from '@types';
 
 export default class ContestController {
 
@@ -326,9 +325,8 @@ export default class ContestController {
             return res.status(400).json({ message: "Missing contest id"});
         }
 
-        let socialIds = db.tilesetSocials.getSubmissionIds(req.params.id)
-        
-        return res.status(200).json({socialIds: socialIds})
+        let tilesets: TilesetSocial[] = await db.tilesetSocials.getSubmissionIds(req.params.id)
+        return res.status(200).json({socialIds: tilesets.map(x => x.id)})
     }
 
     public async getContestTilemapSubmissionIds(req: Request, res: Response): Promise<Response> {
@@ -339,8 +337,7 @@ export default class ContestController {
             return res.status(400).json({ message: "Missing contest id"});
         }
 
-        let socialIds = db.tilemapSocials.getSubmissionIds(req.params.id)
-        
-        return res.status(200).json({socialIds: socialIds})
+        let tilemaps: TilemapSocial[] = await db.tilemapSocials.getSubmissionIds(req.params.id)
+        return res.status(200).json({socialIds: tilemaps.map(x => x.id)})
     }
 }
