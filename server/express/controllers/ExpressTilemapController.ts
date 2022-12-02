@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { db } from "../../database";
-import { SortBy, Tilemap, TilemapSocial } from "@types";
+import { Community, Contest, SortBy, Tilemap, TilemapSocial } from "@types";
 import { is } from "typescript-is";
 
 // Need fs for creating the download file for Tilemaps
@@ -291,8 +291,17 @@ export default class TilemapController {
     if (!req.params.id) {
       return res.status(400).json({ message: "Missing tileset id" });
     }
-    if (!req.body.social) {
-      return res.status(400).json({ message: "Missing social in body" });
+    if (!req.body) {
+      return res.status(400).json({ message: "Missing body" });
+    }
+    if (!req.body.description) {
+      return res.status(400).json({ message: "Missing description" })
+    }
+    if (!req.body.permissions) {
+      return res.status(400).json({ message: "Missing permissions" })
+    }
+    if (!req.body.tags) {
+      return res.status(400).json({ message: "Missing tags" })
     }
 
     // Check tilemap exists
@@ -333,12 +342,25 @@ export default class TilemapController {
       });
     }
 
+    let community: Community | null = null
+    if (req.body.communityName) {
+      community = await db.communities.getCommunityByName(req.body.communityName)
+    }
+    let contest: Contest | null = null
+    if (req.body.contestName) {
+      contest = await db.contests.getContestByName(req.body.contestName)
+    }
+
     // Create the social data
     let social = await db.tilemapSocials.createTilemapSocial(tilemap.id, {
       ...req.body.social,
       name: tilemap.name,
       owner: user.id,
       ownerName: user.username,
+      description: req.body.description,
+      tags: req.body.tags,
+      community: community?.id,
+      contest: contest?.id,
     });
     if (social === null) {
       return res.status(500).json({
@@ -790,8 +812,8 @@ export default class TilemapController {
     if (!req || !res || !req.params) {
       return res.status(400).json({ message: "Bad Request" });
     }
-    if (!req.params.userId) {
-      return res.status(400).json({ message: "Missing user id" });
+    if (!req.params.id) {
+      return res.status(400).json({ message: "Missing tilemap id" });
     }
 
     let social = await db.tilemapSocials.getTilemapSocialByTilemapId(req.params.id)

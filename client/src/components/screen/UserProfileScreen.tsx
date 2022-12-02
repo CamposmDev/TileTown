@@ -151,6 +151,7 @@ const UserProfileScreen = () => {
                     <Grid 
                         container 
                         spacing={1} 
+                        p={1}
                     >
                         {user.tilemaps.map(x => 
                             <Grid item key={x}>
@@ -160,7 +161,7 @@ const UserProfileScreen = () => {
                     </Grid>
                 </TabPanel>
                 <TabPanel value={tmIdx} index={1}>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1} p={1}>
                         {collabTilemaps.map(x => <Grid item><TilemapCard tilemapId={x.id}/></Grid>)}
                     </Grid>
                 </TabPanel>
@@ -171,6 +172,7 @@ const UserProfileScreen = () => {
                 <Grid 
                     container 
                     spacing={1}
+                    p={1}
                 >
                     {user.tilesets.map(x =>
                         <Grid item key={x}>
@@ -186,6 +188,7 @@ const UserProfileScreen = () => {
             <TabPanel value={mainIdx} index={2}>
                 <Grid container 
                     spacing={1}
+                    p={1}
                 >
                     {comms.map(x => 
                         <Grid item key={x.id} xs={3}>
@@ -200,6 +203,7 @@ const UserProfileScreen = () => {
             <TabPanel value={mainIdx} index={3}>
                 <Grid container 
                     spacing={1}
+                    p={1}
                 >
                     {contests.map(x => 
                         <Grid item key={x.id} xs={3}>
@@ -224,12 +228,12 @@ const UserProfileScreen = () => {
                             <Tab label={`Tilemaps (${user.favoriteTileMaps.length})`} {...a11yProps(0)}/>
                             <Tab label={`Tilesets (${user.favoriteTileSets.length})`} {...a11yProps(1)}/>
                         </Tabs>
-                        <TextField label='Filter by name' size='small'/>
+                        {/* <TextField label='Filter by name' size='small'/> */}
                     </Stack>
                     
                 </Toolbar>
                 <TabPanel value={favorIdx} index={0}>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1} p={1}>
                         {user.favoriteTileMaps.map(x => {
                             return (
                                 <Grid item key={x}>
@@ -240,7 +244,7 @@ const UserProfileScreen = () => {
                     </Grid>
                 </TabPanel>
                 <TabPanel value={favorIdx} index={1}>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1} p={1}>
                         {user.favoriteTileSets.map(x => 
                             <Grid item key={x}>
                                 <TilesetSocialCardLoader tssId={x}/>

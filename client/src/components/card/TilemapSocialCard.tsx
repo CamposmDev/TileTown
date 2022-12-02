@@ -26,7 +26,7 @@ export default function TilemapSocialCard(props: {tms: TilemapSocial, size?: num
             </Box>
         </Tooltip>
     )
-    let socialBox = <SocialBox comments={props.tms.comments.length} likes={props.tms.dislikes.length} views={props.tms.views} />
+    let socialBox = <SocialBox comments={props.tms.comments.length} likes={props.tms.likes.length} views={props.tms.views} />
     let content = <img id='tile-preview' src={imageURL} alt={props.tms.id} />
     if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={props.tms.id} />
     return (

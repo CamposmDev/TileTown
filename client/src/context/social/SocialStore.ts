@@ -596,15 +596,13 @@ export class SocialStore {
                 let payload = action.payload
                 if (!payload.oldTMS) return
                 let i = this._social.tilemaps.indexOf(payload.oldTMS)
-                if (i !== -1) {
-                    this._social.tilemaps.splice(i, 1, payload.newTMS)
-                    this._setSocial({
-                        currentTMS: action.payload.newTMS,
-                        currentTSS: this._social.currentTSS,
-                        tilemaps: this._social.tilemaps,
-                        tilesets: this._social.tilesets
-                    })
-                }
+                if (i !== -1) this._social.tilemaps.splice(i, 1, payload.newTMS)
+                this._setSocial({
+                    currentTMS: action.payload.newTMS,
+                    currentTSS: this._social.currentTSS,
+                    tilemaps: this._social.tilemaps,
+                    tilesets: this._social.tilesets
+                })
                 break
             }
             case SocialActionType.setCurrentTSS: {
