@@ -6,7 +6,8 @@ import { is } from "typescript-is";
 // Need fs for creating the download file for Tilemaps
 import * as fs from "fs";
 import path from "path";
-import AdmZip from "adm-zip";
+import AdmZip from "adm-zip";import sharp from 'sharp';
+
 
 import { TilemapParser } from "../../parsers";
 
@@ -392,13 +393,12 @@ export default class TilemapController {
         JSON.stringify(TilemapParser.tiled(tilemap, tilesets))
       );
 
-      // Copy the contents of all the image files to the new map directory
-      for (let tileset of tilesets) {
-        fs.copyFileSync(
-          path.join(imgdir, tileset.image),
-          path.join(mapdir, tileset.image)
-        );
-      }
+            // Copy the contents of all the image files to the new map directory
+            for (let tileset of tilesets) {
+                let info = await sharp(path.join(imgdir, tileset.image)).resize(tileset.tileWidth*tileset.columns, tileset.tileHeight*tileset.rows).toFile(path.join(mapdir, tileset.image));
+                console.log("Image info");
+                console.log(info);
+            }
 
       // Create the zip object
       const zip = new AdmZip();
