@@ -93,6 +93,12 @@ export default class MongooseCommunityDBM implements CommunityDBM {
         return this.parseCommunity(community);
     }
 
+    public async getPopularTop10(): Promise<Community[]> {
+        const TOP_10 = 10
+        let comms = await CommunityModel.find({visibility: 'public'}).sort({members: -1}).limit(TOP_10)
+        return comms.map(x => this.parseCommunity(x))
+    }
+
     protected parseCommunity(community: CommunitySchemaType & { _id: mongoose.Types.ObjectId}): Community {
         return {
             id: community._id.toString(),

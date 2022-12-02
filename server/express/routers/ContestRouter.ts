@@ -24,4 +24,6 @@ ContestRouter.get(`/submitted/:id`, Auth.verifyJWT, ContestController.hasContest
 ContestRouter.get(`/submissions/tileset/:id`, ContestController.getContestTilesetSubmissionIds)
 ContestRouter.get(`/submissions/tilemap/:id`, ContestController.getContestTilemapSubmissionIds)
 
+ContestRouter.get(`/popular/top10`, ContestController.getPopularTop10)
+
 export default ContestRouter;

@@ -708,5 +708,11 @@ public async unfavoriteTilesetById(req: Request, res: Response): Promise<Respons
         return res.status(500).json({ message: "Failed to remove tileset from user's favorited tilesets"});
     }
     return res.status(200).json({ message: "Unfavorited a tileset!", user: updatedUser });
-}
+  }
+
+  public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+    if (!req || !res) return res.status(400).json({ message: "Bad Request" })
+    let tilesets = await db.tilesetSocials.getPopularTop10()
+    return res.status(200).json({message: `Found ${tilesets.length} tilesets`, tilesets: tilesets})
+  }
 }

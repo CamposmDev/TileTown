@@ -110,6 +110,13 @@ export default class MongooseContestDBM implements ContestDBM {
         return true
     }
 
+    public async getPopularTop10(): Promise<Contest[]> {
+        const TOP_10 = 10
+        let currentDate = new Date()
+        let contests = await ContestModel.find({isPublished: true, endDate: {$gt: currentDate}}).sort({participates: -1}).limit(TOP_10)
+        return contests.map(x => this.parseContest(x))
+    }
+
     protected parseContest(contest: ContestSchemaType & { _id: mongoose.Types.ObjectId}): Contest { 
         return {
             id: contest._id.toString(),
