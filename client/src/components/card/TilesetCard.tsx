@@ -45,7 +45,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                     <Typography noWrap variant='caption'>{`By ${username}`}</Typography>
                 </Box>
             </Tooltip>
-        const content = <img id='tile-preview' src={imageURL}/>
+        const content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${tileset.image}`}/>
         if (prof.state.viewUnpublishedTilesets) {
             if (tileset.isPublished) {
                 return <div/>

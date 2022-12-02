@@ -13,4 +13,5 @@ export default interface TilesetSocialDBM {
 
     updateTilesetSocial(tilesetId: string, partial: Partial<TilesetSocial>): Promise<TilesetSocial | null>;
 
+    getSubmissionIds(contestId: string): Promise<string[]>
 }

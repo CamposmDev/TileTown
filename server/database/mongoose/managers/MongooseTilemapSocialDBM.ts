@@ -105,6 +105,12 @@ export default class MongooseTilemapSocialDBM implements TilemapSocialDBM {
         return socials.map(s => this.parseSocial(s));
     }
 
+    async getSubmissionIds(contestId: string): Promise<string[]> {
+        if (!mongoose.Types.ObjectId.isValid(contestId)) return [];
+        let socialIds = await TilemapSocialModel.find({contest: contestId}).select('_id')
+        return socialIds.map(x => x._id.toString())
+    }
+
     protected parseSocial(social: TilemapSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilemapSocial {
         return {
             id: social._id.toString(),

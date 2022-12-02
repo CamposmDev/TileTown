@@ -286,6 +286,14 @@ export class SocialStore {
         })
     }
 
+    public async hasContestSubmission(contestId: string): Promise<boolean> {
+        return ContestApi.hasSubmitted(contestId).then(res => {
+            if (res.status === 200) {
+                return res.data.submitted
+            }
+        })
+    }
+
     /**
      * Returns array of contest names where the theme of the contest is tilemap
      * @param contestIds - array of contest ids
@@ -301,6 +309,14 @@ export class SocialStore {
             })
         })
         return arr
+    }
+
+    public async getContestNameById(contestId: string): Promise<string | null> {
+        return ContestApi.getContestNameById(contestId).then(res => {
+            if (res.status === 200) {
+                return res.data.name
+            }
+        })
     }
 
     /**

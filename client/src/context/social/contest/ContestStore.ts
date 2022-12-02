@@ -124,7 +124,7 @@ export class ContestStore {
             if (res.status === 200 && res.data.contests) {
                 let contests = res.data.contests
                 contests.forEach(x => {
-                    if (userId && contestName && x.name.localeCompare(contestName) === 0) {
+                    if (userId && contestName && (x.name.localeCompare(contestName) === 0)) {
                         let contestId = x.id
                         if (x.owner.localeCompare(userId) === 0) {
                             this.deleteContestById(contestId, snack)

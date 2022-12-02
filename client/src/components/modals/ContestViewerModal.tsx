@@ -1,4 +1,4 @@
-import { Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
+import { AppBar, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Grid, ownerDocument, Toolbar, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "src/context/auth"
 import { ModalContext } from "src/context/modal"
@@ -13,7 +13,7 @@ function toTitleCase(str: string) {
     return str.replace(
       /\w\S*/g,
       function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
       }
     );
   }
@@ -30,6 +30,7 @@ const ContestViewerModal = () => {
         lastName: '',
         username: ''
     })
+    const [submitted, setSubmitted] = useState<boolean>(false)
     let c = contest.state.currentContest
     useEffect(() => {
         if (c) {
@@ -43,6 +44,11 @@ const ContestViewerModal = () => {
                     })
                 }
             })
+            if (auth.usr?.id !== c.owner) {
+                social.hasContestSubmission(c.id).then(submitted => {
+                    setSubmitted(submitted)
+                })
+            }
         }
     }, [contest.state.currentContest, auth.usr])
 
@@ -96,7 +102,25 @@ const ContestViewerModal = () => {
     if (c) {
         const startDate = new Date(c.startDate)
         const endDate = new Date(c.endDate)
-        const timeLeft = calcTimeLeft(endDate)
+        const timeLeft: string = calcTimeLeft(endDate)
+        const isOver: boolean = isExpired(endDate)
+        /** If the contest is over, show submissions as a full screen */
+        if (isOver) {
+            
+            return (
+                <Dialog open={open} fullScreen TransitionComponent={SLIDE_DOWN_TRANSITION} onClose={() => contest.clear()}>
+                    <AppBar>
+                        <Toolbar>
+                            <Typography flexGrow={1}>{c.name}</Typography>
+                            <Button color='inherit' onClick={() => contest.clear()}>Close</Button>
+                        </Toolbar>
+                    </AppBar>
+                    <Grid container>
+                        
+                    </Grid>
+                </Dialog>
+            )
+        }
         content = (
             <Grid container spacing={1}>
                 <Grid container item>
@@ -143,22 +167,31 @@ const ContestViewerModal = () => {
     let leaveButton = <Button onClick={leave}>Leave</Button>
     let startButton = <Button onClick={start}>Start</Button>
     let chooseWinnerButton = <Button onClick={chooseWinner}>Choose Winner</Button>
-    let theControl = <Typography>Come back later when the contest is over to decide the winner!</Typography>
+    let firstControl = <Typography>Come back later when the contest is over to decide the winner!</Typography>
+    let secondControl = <div/>
     let usr = auth.usr
     if (usr && c) {
         if (usr.id === c.owner) {
             let endDate = new Date(c.endDate)
             if (isExpired(endDate)) {
-                theControl = chooseWinnerButton
+                firstControl = chooseWinnerButton
             }
         } else {
             if (c.participates.indexOf(usr.id) === -1) {
-                theControl = joinButton
+                // The user is not a member of the contest
+                firstControl = joinButton
             } else {
-                theControl = leaveButton
+                if (submitted) {
+                    firstControl = <Typography>You've submitted your work! Come back later to see the results!</Typography>
+                } else {
+                    firstControl = leaveButton
+                }
             }
         }
     }
+
+    secondControl = firstControl === leaveButton ? startButton : <div/>
+    if (submitted) secondControl = <div/>
     
     return (
         <Dialog 
@@ -171,8 +204,8 @@ const ContestViewerModal = () => {
                 {content}
             </DialogContent>
             <DialogActions>
-                {theControl}
-                {(theControl === leaveButton) ? startButton : <div/>}
+                {firstControl}
+                {secondControl}
             </DialogActions>
         </Dialog>
     )

@@ -36,11 +36,11 @@ export default function TilesetViewerModal() {
             })
         }
         if (tss && tss.contest) {
-            social.getTilesetContestName(tss.contest).then(name => {
+            social.getContestNameById(tss.contest).then(name => {
                 if (name) setContestName(name)
             })
         }
-    }, [social.state.currentTSS, auth.usr])
+    }, [social, auth])
 
     const like = () => {
         /** Call the like tileset social function from social */
@@ -140,6 +140,7 @@ export default function TilesetViewerModal() {
                                             minimal={true}
                                         />
                                         {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
+                                        {contestName ? <Typography variant='body2'>{`Contest Submission: ${contestName}`}</Typography>: <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
                                         <Typography variant='body2' flexWrap={"wrap"}>{tss.description}</Typography>
                                     </Grid>
