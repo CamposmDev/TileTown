@@ -75,10 +75,6 @@ export default function TilesetViewerModal() {
         /** Andrew help me */
     }
 
-    const clone = () => {
-        /** Andrew help me */
-    }
-
     const handlekeyUp = (e: React.KeyboardEvent) => {
         if (e.code === 'Enter') {
             /** Calls the comment function in social
@@ -140,7 +136,7 @@ export default function TilesetViewerModal() {
                                             minimal={true}
                                         />
                                         {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
-                                        {contestName ? <Typography variant='body2'>{`Contest Submission: ${contestName}`}</Typography>: <Box/>}
+                                        {contestName ? <Typography variant='body2'>{`Contest: ${contestName}`}</Typography>: <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
                                         <Typography variant='body2' flexWrap={"wrap"}>{tss.description}</Typography>
                                     </Grid>
@@ -158,12 +154,9 @@ export default function TilesetViewerModal() {
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.dislikes.length)}
-                                            <Tooltip title={'Download'}>
+                                            {/* <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={'Clone'}>
-                                                <IconButton onClick={clone}><CopyAll/></IconButton>
-                                            </Tooltip>
+                                            </Tooltip> */}
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>

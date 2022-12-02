@@ -23,7 +23,8 @@ export default function TilemapViewerModal() {
     const auth = useContext(AuthContext)
     const social = useContext(SocialContext)
     const snack = useContext(SnackContext)
-    const [commName, setCommName] = useState<string | undefined>(undefined)
+    const [commName, setCommName] = useState<string | null>(null)
+    const [contestName, setContestName] = useState<string | null>(null)
     const [comment, setComment] = useState<string>('')
     const open = Boolean(social.state.currentTMS)
 
@@ -33,29 +34,30 @@ export default function TilemapViewerModal() {
             social.getCommunityName(tms.community).then(name => {
                 if (name) setCommName(name)
             })
-        } else {
-            setCommName(undefined)
         }
-    }, [social.state.currentTMS, auth.usr])
+        if (tms && tms.contest) {
+            social.getContestNameById(tms.contest).then(name => {
+                if (name) setContestName(name)
+            })
+        }
+    }, [social, auth])
 
     const like = () => {
         /** Call the like tilemap social function from social */
+        social.likeTMS()
     }
 
     const dislike = () => {
         /** Call the dislike tilemap social function from social */
+        social.dislikeTMS()
     }
 
     const download = () => {
         /** Andrew help me */
     }
 
-    const clone = () => {
-        /** Andrew help me */
-    }
-
     const favorite = () => {
-        /** Hanldes favorite or unfavoriting tilemap */
+        /** Handles favorite or unfavoriting tilemap */
         let usr = auth.usr
         if (!tms || !usr) return
         if (containsTMS(usr.favoriteTileMaps, tms.id)) {
@@ -79,6 +81,7 @@ export default function TilemapViewerModal() {
              * Then clear the comment state
              */
             // Call function here
+            social.commentTMS(comment, snack)
             setComment('')
         }
     }
@@ -92,7 +95,7 @@ export default function TilemapViewerModal() {
     let tms = social.state.currentTMS
     if (tms) {
         let starSX = {}
-        if (usr && containsTMS(usr.favoriteTileSets, tms.id)) {
+        if (usr && containsTMS(usr.favoriteTileMaps, tms.id)) {
             starSX = {color: 'gold'}
         }
         let header = (
@@ -134,6 +137,7 @@ export default function TilemapViewerModal() {
                                             minimal={true}
                                         />
                                         {commName ? <Typography variant='body2'>{`Community: ${commName}`}</Typography> : <Box/>}
+                                        {contestName ? <Typography variant='body2'>{`Contest: ${contestName}`}</Typography>: <Box/>}
                                         <Typography variant='body2'>{`Published: ${date}`}</Typography>
                                         <Typography variant='body2' flexWrap={"wrap"}>{tms.description}</Typography>
                                     </Grid>
@@ -151,12 +155,9 @@ export default function TilemapViewerModal() {
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tms.dislikes.length)}
-                                            <Tooltip title={'Download'}>
+                                            {/* <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={'Clone'}>
-                                                <IconButton onClick={clone}><CopyAll/></IconButton>
-                                            </Tooltip>
+                                            </Tooltip> */}
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>

@@ -9,7 +9,6 @@ import { TilemapSocial, TilesetSocial, Community, Contest } from "@types"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
 import { CommunityContext } from "src/context/social/community"
-import TilesetCard from "../card/TilesetCard"
 import TilesetSocialCard from "../card/TilesetSocialCard"
 import TilemapSocialCard from "../card/TilemapSocialCard"
 
@@ -31,7 +30,7 @@ const HomeScreen = () => {
         contest.getPopularTop10().then(contests => setContests(contests))
         community.getPopularTop10().then(communities => setComms(communities))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [social])
     const SIZE = 500
     return (
         <Grid container spacing={1} p={1} justifyContent='space-evenly'>
