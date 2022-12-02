@@ -758,4 +758,33 @@ export default class TilemapController {
       .status(200)
       .json({ message: "Tileset social updated!", social: updatedSocial });
   }
+
+  public async getTilemapSocialByTilemapId(req: Request, res: Response): Promise<Response> {
+    // Check for bad request and missing parameters
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.userId) {
+      return res.status(400).json({ message: "Missing user id" });
+    }
+
+    let social = await db.tilemapSocials.getTilemapSocialByTilemapId(req.params.id)
+    if (social === null) {
+      return res.status(404).json({ message: `Tilemap social data with tilemap id ${req.params.id} not found`});
+    }
+    return res.status(200).json({ message: 'Got tilemap social data!', social: social })
+  }
+
+  public async getUserCollaboratedTilemaps(req: Request, res: Response): Promise<Response> {
+    // Check for bad request and missing parameters
+    if (!req || !res || !req.params) {
+      return res.status(400).json({ message: "Bad Request" });
+    }
+    if (!req.params.userId) {
+      return res.status(400).json({ message: "Missing user id" });
+    }
+
+    let tilemaps = await db.tilemaps.getUserCollaboratedTilemaps(req.params.userId)
+    return res.status(200).json({message: `Found ${tilemaps.length} tilemaps`, tilemaps: tilemaps})
+  }
 }

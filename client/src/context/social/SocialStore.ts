@@ -31,6 +31,14 @@ export class SocialStore {
         return this._social
     }
 
+    public async getUserCollaboratedTilemaps(userId: string) {
+        return TilemapApi.getUserCollaboratedTilemaps(userId).then(res => {
+            if (res.status === 200) {
+                return res.data.tilemaps
+            }
+        })
+    }
+
     public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
         let res = UserApi.addFriend(userId)
         res.then((res) => {
@@ -153,6 +161,14 @@ export class SocialStore {
         return TilemapApi.getTilemapById(id).then(res => {
             if (res.status === 200) {
                 return res.data.tilemap
+            }
+        })
+    }
+
+    public async getTilemapSocialByTilemapId(tilemapId: string): Promise<TilemapSocial | undefined> {
+        return SocialApi.getTilemapSocialByTilemapId(tilemapId).then(res => {
+            if (res.status === 200) {
+                return res.data.social
             }
         })
     }
