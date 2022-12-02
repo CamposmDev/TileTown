@@ -1,18 +1,23 @@
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-const parseDateToStr = (date: Date): string => {
+export const dateToStr = (date: Date): string => {
     let month = months[date.getUTCMonth()]
     let day = date.getUTCDate()
     let year = date.getUTCFullYear()
     return month + ' ' + day + ' ' + year
 }
 
-const calcTimeLeft = (startDate: Date, endDate: Date): string => {
+export const isExpired = (date: Date): boolean => {
+    let endTime = date.getTime()
+    let currentTime = new Date().getTime()
+    return (endTime - currentTime) <= 0
+}
+
+export const calcTimeLeft = (endDate: Date): string => {
     /** Retrieve the times of start and end date in unix time */
-    let startTime = startDate.getTime()
     let endTime = endDate.getTime()
     /** Compute the time left in unix time (milliseconds) */
-    let timeLeft = endTime - startTime
+    let timeLeft = endTime - new Date().getTime()
     /** Compute the seconds left  from ms left*/
     let secLeft = Math.floor(timeLeft / 1000)
     if (secLeft <= 59) {
@@ -50,7 +55,7 @@ const calcTimeLeft = (startDate: Date, endDate: Date): string => {
     return yrLeft + ' Years Left'
 }
 
-const parseDateToPostedStr = (date: Date | undefined): string => {
+export const dateToPostedStr = (date: Date | undefined): string => {
     if (!date) return 'Failed to Parse Date'
     let currentDate = new Date()
     let timeInterval = currentDate.getTime() - date.getTime()
@@ -90,4 +95,11 @@ const parseDateToPostedStr = (date: Date | undefined): string => {
     return yrLeft + ' Years Ago'
 }
 
-export { parseDateToStr, calcTimeLeft, parseDateToPostedStr }
+/**
+ * Returns the date as a pretty string: Month XX, Year (X Time Ago)
+ * @param d 
+ * @returns 
+ */
+export const dateToPrettyString = (d: Date): string => {
+    return `${dateToStr(d)} (${dateToPostedStr(d)})`
+}

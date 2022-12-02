@@ -8,6 +8,7 @@ export default interface TilesetSocialStatistics {
     tags: string[];
     description: string;
     community: string;
+    contest: string;
     likes: string[];
     dislikes: string[];
     views: number;

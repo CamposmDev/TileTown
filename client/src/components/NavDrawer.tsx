@@ -9,20 +9,19 @@ import { AuthContext } from 'src/context/auth'
 export default function NavDrawer() {
   const auth = useContext(AuthContext)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const navigate = useNavigate()
 
-  const handleMenuClose = () => {
+  const handleClose = () => {
     setIsDrawerOpen(false)
   }
 
   const initMenuItem = (text: string, path: string) => {
     return (
-      <MenuItem onClick={handleMenuClose} component={Link} to={path}>{text}</MenuItem>
+      <MenuItem onClick={handleClose} component={Link} to={path}>{text}</MenuItem>
     )
   }
 
   let initFriendCards = () => {
-    let user = auth.getUsr()
+    let user = auth.usr
     if (user && user.friends) {
       return user.friends.map((x,i) => {
         return <Grid item key={x} mb={1}>

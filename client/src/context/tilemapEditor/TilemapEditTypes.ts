@@ -1,4 +1,4 @@
-import { ConstructionOutlined } from "@mui/icons-material";
+import { ConstructionOutlined, Opacity } from "@mui/icons-material";
 import { Tileset } from "../tilesetEditor/TilesetEditTypes";
 
 /**String of type of property**/
@@ -44,7 +44,7 @@ export interface Layer {
   /** A flag indicating whether this TileMapLayer should be visible or not */
   properties: Property[];
 
-  /** A flag indicating whether this TileSet has been published or not */
+  /** A flag indicating whether this Layer should be displayed or not*/
   visible: boolean;
 
   /** Horizontal layer offset in tiles. Always 0.*/
@@ -250,34 +250,44 @@ export interface TilemapEditorState {
   Tilesets: Tileset[];
   currentEditControl: TilemapEditControl;
   currentLayerIndex: number;
+  currentSwapIndex: number;
   currentTilesetIndex: number;
   currentTileIndex: number;
   currentSelection: number[]; //array of indices of tiles selected for editing
   modalType: TilemapEditorModalType;
   isSaved: boolean;
   renderTilemapCanvas: boolean;
-  renderTilemapGridCanvas: boolean;
   renderCurrentLayerCanvas: boolean;
-  renderTileSelectorCanvas: boolean;
+  tileCount: number;
+  timeLeft: number;
 }
 
 /**
  * The types of actions/events the Tilemap edit store needs to handle.
  */
 export enum TilemapEditorActionType {
-  CHANGE_TILEMAP_NAME = "CHANGE_TILEMAP_NAME",
   CREATE_NEW_TILEMAP = "CREATE_NEW_TILEMAP",
   UPDATE_TILEMAP = "UPDATE_TILEMAP",
   SAVE_TILEMAP = "SAVE_TILEMAP",
+  ADD_TILESET = "ADD_TILESET",
+  EXIT_WITHOUT_SAVE = "EXIT_WITHOUT_SAVE",
   CHANGE_EDIT_CONTROL = "CHANGE_EDIT_CONTROL",
-  OPEN_MODAL = "OPEN_MODAL",
-  CLOSE_MODAL = "CLOSE_MODAL",
   UPDATE_CURRENT_TILE = "UPDATE_CURRENT_TILE",
   UPDATE_CURRENT_TILESET = "UPDATE_CURRENT_TILESET",
   UPDATE_CURRENT_LAYER = "UPDATE_CURRENT_LAYER",
+  UPDATE_LAYER_INFO = "UPDATE_LAYER_INFO",
   UPDATE_CURRENT_LAYER_DATA = "UPDATE_CURRENT_LAYER_DATA",
+  UPDATE_SWAP_INDEX = "UPDATE_SWAP_INDEX",
+  SWAP_LAYERS = "SWAP_LAYERS",
+  CREATE_NEW_LAYER = "CREATE_NEW_LAYER",
+  DELETE_LAYER = "DELETE_LAYER",
+  CREATE_PROPERTY = "CREATE_PROPERTY",
+  UPDATE_PROPERTY = "UPDATE_PROPERTY",
+  DELETE_PROPERTY = "DELETE_PROPERTY",
+  ADD_COLLABORATORS = "ADD_COLLABORATORS",
+  REMOVE_COLLABORATOR = "REMOVE_COLLABORATOR",
   UPDATE_CURRENT_SELECTION = "UPDATE_CURRENT_SELECTION",
-  PREVENT_TILEMAP_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
+  RENDER_TILEMAP = "RENDER_TILEMAP",
   PREVENT_GRID_CANVAS_RENDER = "PREVENT_GRID_CANVAS_RENDER",
   RENDER_CURRENT_LAYER_CANVAS_RENDER = "RENDER_CURRENT_LAYER_CANVAS_RENDER",
   PREVENT_TILE_SELECTION_CANVAS_RENDER = "PREVENT_TILEMAP_CANVAS_RENDER",
@@ -299,15 +309,15 @@ export type TilemapEditorAction =
     }
   | {
       type: TilemapEditorActionType.SAVE_TILEMAP;
-      payload: { Tilemap: Tilemap };
-    }
-  | {
-      type: TilemapEditorActionType.OPEN_MODAL;
-      payload: { modal: TilemapEditorModalType };
-    }
-  | {
-      type: TilemapEditorActionType.CLOSE_MODAL;
       payload: {};
+    }
+  | {
+      type: TilemapEditorActionType.EXIT_WITHOUT_SAVE;
+      payload: { collaboratorIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.ADD_TILESET;
+      payload: { tileset: Tileset };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILE;
@@ -318,20 +328,65 @@ export type TilemapEditorAction =
       payload: { currentLayerIndex: number };
     }
   | {
+      type: TilemapEditorActionType.UPDATE_LAYER_INFO;
+      payload: {
+        name: string;
+        visibility: boolean;
+        opacity: number;
+        index: number;
+      };
+    }
+  | {
+      type: TilemapEditorActionType.CREATE_NEW_LAYER;
+      payload: { name: string; data: number[] };
+    }
+  | {
+      type: TilemapEditorActionType.DELETE_LAYER;
+      payload: { index: number; currentLayerIndex: number };
+    }
+  | {
       type: TilemapEditorActionType.UPDATE_CURRENT_LAYER_DATA;
       payload: { currentTileIndex: number; updateData: number[] };
+    }
+  | {
+      type: TilemapEditorActionType.UPDATE_SWAP_INDEX;
+      payload: { swapIndex: number };
+    }
+  | {
+      type: TilemapEditorActionType.SWAP_LAYERS;
+      payload: { swapIndex: number; currentLayerIndex: number };
     }
   | {
       type: TilemapEditorActionType.UPDATE_CURRENT_TILESET;
       payload: { currentTilesetIndex: number };
     }
   | {
+      type: TilemapEditorActionType.CREATE_PROPERTY;
+      payload: { property: Property };
+    }
+  | {
+      type: TilemapEditorActionType.UPDATE_PROPERTY;
+      payload: { property: Property; index: number };
+    }
+  | {
+      type: TilemapEditorActionType.DELETE_PROPERTY;
+      payload: { index: number };
+    }
+  | {
+      type: TilemapEditorActionType.ADD_COLLABORATORS;
+      payload: { collaborators: { id: string; username: string }[] };
+    }
+  | {
+      type: TilemapEditorActionType.REMOVE_COLLABORATOR;
+      payload: { id: string; username: string };
+    }
+  | {
       type: TilemapEditorActionType.UPDATE_CURRENT_SELECTION;
       payload: { currentSelection: number[] };
     }
   | {
-      type: TilemapEditorActionType.PREVENT_TILEMAP_CANVAS_RENDER;
-      payload: {};
+      type: TilemapEditorActionType.RENDER_TILEMAP;
+      payload: { render: boolean };
     }
   | {
       type: TilemapEditorActionType.PREVENT_GRID_CANVAS_RENDER;

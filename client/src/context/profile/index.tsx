@@ -19,15 +19,15 @@ class StateStore {
         return this._state
     }
 
-    public viewUnpublishedTilesets(): void {
-        this.nav('/profile')
+    public viewUnpublishedTilesets(userId: string | undefined): void {
+        this.nav(`/profile/${userId}`)
         this._setState({
             viewUnpublishedTilesets: true
         })
     }
 
-    public viewPublishedTilesets(): void {
-        this.nav('/profile')
+    public viewPublishedTilesets(userId: string | undefined): void {
+        this.nav(`/profile/${userId}`)
         this._setState({
             viewUnpublishedTilesets: false
         })

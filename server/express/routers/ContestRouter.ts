@@ -15,4 +15,13 @@ ContestRouter.put("/leave/:id", Auth.verifyJWT, ContestController.leaveContest);
 
 ContestRouter.delete("/:id", Auth.verifyJWT, ContestController.deleteContestById);
 
+ContestRouter.get('/submission/name/:type/:id', Auth.verifyJWT, ContestController.getContestNameForSubmission)
+
+ContestRouter.get('/name/:id', Auth.verifyJWT, ContestController.getContestName)
+
+ContestRouter.get(`/submitted/:id`, Auth.verifyJWT, ContestController.hasContestSubmission)
+
+ContestRouter.get(`/submissions/tileset/:id`, ContestController.getContestTilesetSubmissionIds)
+ContestRouter.get(`/submissions/tilemap/:id`, ContestController.getContestTilemapSubmissionIds)
+
 export default ContestRouter;

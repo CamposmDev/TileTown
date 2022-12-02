@@ -13,7 +13,8 @@ export default class CommunityController {
         }
 
         let name = req.query.name ? req.query.name.toString() : "";
-        let communities = await db.communities.getCommunities(name);
+        let sort = req.query.sort ? req.query.sort.toString() : "none";
+        let communities = await db.communities.getCommunities(name, sort);
         if (communities.length === 0) {
             return res.status(404).json({ message: `No communities found with name "${name}"`});
         }
@@ -262,4 +263,101 @@ export default class CommunityController {
         if (!community) return res.status(400).json({ message: `Community with id ${req.params.id} not found` })
         return res.status(200).json({ message: 'Found community', name: community.name })
     }
+
+    public async kickMember(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.commId) {
+            return res.status(400).json({ message: "Missing community id"});
+        }
+        if (!req.params.userId) {
+            return res.status(400).json({ message: "Missing user id to kick"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        /** Get the user we want to kick out of the community */
+        let user = await db.users.getUserById(req.params.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.params.userId} not found`});
+        }
+        let community = await db.communities.getCommunityById(req.params.commId);
+        if (community === null) {
+            return res.status(404).json({message: `Community with id ${req.params.commId} not found`});
+        }
+        if (community.owner !== req.userId) {
+            return res.status(400).json({message: `User ${req.userId} is not the owner of community ${community.id}`})
+        }
+
+        let userIndex = community.members.indexOf(user.id);
+        let commIndex = user.joinedCommunities.indexOf(community.id);
+        if (userIndex !== -1) {
+            community.members.splice(userIndex, 1);
+        }
+        if (commIndex !== -1) {
+            user.joinedCommunities.splice(commIndex, 1);
+        }
+
+        let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
+        if (updatedUser === null) {
+            return res.status(500).json({message: `Error leaving community ${community.id} to user ${user.id}`});
+        }
+        let updatedCommunity = await db.communities.updateCommunity(community.id, {members: community.members});
+        if (updatedCommunity === null) {
+            return res.status(500).json({message: `Error kicking user ${user.id} to community ${community.id}`})
+        }
+
+        return res.status(200).json({ message: "User is kicked out of the community!", user: updatedUser, community: updatedCommunity});
+    }
+    public async banMember(req: Request, res: Response): Promise<Response> {
+        if (!req || !res || !req.params) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        if (!req.params.commId) {
+            return res.status(400).json({ message: "Missing community id"});
+        }
+        if (!req.params.userId) {
+            return res.status(400).json({ message: "Missing user id to ban"});
+        }
+        if (!req.userId) {
+            return res.status(400).json({ message: "Missing user id"});
+        }
+
+        /** Get the user we want to ban of the community */
+        let user = await db.users.getUserById(req.params.userId);
+        if (user === null) {
+            return res.status(404).json({message: `User with id ${req.params.userId} not found`});
+        }
+        let community = await db.communities.getCommunityById(req.params.commId);
+        if (community === null) {
+            return res.status(404).json({message: `Community with id ${req.params.commId} not found`});
+        }
+        if (community.owner !== req.userId) {
+            return res.status(400).json({message: `User ${req.userId} is not the owner of community ${community.id}`})
+        }
+
+        let userIndex = community.members.indexOf(user.id);
+        let commIndex = user.joinedCommunities.indexOf(community.id);
+        if (userIndex !== -1) {
+            community.members.splice(userIndex, 1);
+            community.banned.push(user.id)
+        }
+        if (commIndex !== -1) {
+            user.joinedCommunities.splice(commIndex, 1);
+        }
+
+        let updatedUser = await db.users.updateUser(user.id, {joinedCommunities: user.joinedCommunities});
+        if (updatedUser === null) {
+            return res.status(500).json({message: `Error leaving community ${community.id} to user ${user.id}`});
+        }
+        let updatedCommunity = await db.communities.updateCommunity(community.id, {members: community.members, banned: community.banned});
+        if (updatedCommunity === null) {
+            return res.status(500).json({message: `Error baning user ${user.id} to community ${community.id}`})
+        }
+
+        return res.status(200).json({ message: "User is banned from the community!", user: updatedUser, community: updatedCommunity});
+    }
+
 }

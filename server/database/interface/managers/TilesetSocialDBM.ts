@@ -1,6 +1,7 @@
 import { TilesetSocial } from "@types";
 
 export default interface TilesetSocialDBM {
+    getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<TilesetSocial[]>
 
     getTilesetSocialsByUserId(userId: string): Promise<TilesetSocial[]>;
 
@@ -12,4 +13,5 @@ export default interface TilesetSocialDBM {
 
     updateTilesetSocial(tilesetId: string, partial: Partial<TilesetSocial>): Promise<TilesetSocial | null>;
 
+    getSubmissionIds(contestId: string): Promise<TilesetSocial[]>
 }

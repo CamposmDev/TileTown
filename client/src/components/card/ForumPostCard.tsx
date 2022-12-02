@@ -1,7 +1,7 @@
-import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box } from "@mui/material"
+import { Card, CardActionArea, CardContent, Grid, Stack, Typography, Box, Fade } from "@mui/material"
 import { Comment, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material"
 import { formatToSocialStr } from '../util/NumberUtils'
-import { parseDateToPostedStr } from '../util/DateUtils' 
+import { dateToPostedStr } from '../util/DateUtils' 
 import { useContext, useEffect, useState } from "react"
 import ForumPost from "../../../../@types/ForumPost"
 import { ForumContext } from "src/context/social/forum"
@@ -28,6 +28,7 @@ const ForumPostCard = (props: Props) => {
         forum.viewForumPost(props.forumPost, snack)
     }
     return (
+        <Fade in={true} timeout={1000}>
         <Card sx={{boxShadow: 3}}>
             <CardActionArea onClick={handleClick}>
                 <CardContent>
@@ -37,7 +38,7 @@ const ForumPostCard = (props: Props) => {
                             <Typography noWrap>{props.forumPost.body}</Typography>
                             <Stack alignItems='center' direction='row'>
                                     <Typography><b>By</b>:&ensp;{username},&ensp;</Typography>
-                                    <Typography>{parseDateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
+                                    <Typography>{dateToPostedStr(new Date(props.forumPost.publishDate))}</Typography>
                             </Stack>
                         </Grid>
                         <Grid container item>
@@ -48,7 +49,7 @@ const ForumPostCard = (props: Props) => {
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.views)}</Typography>
                                     </Stack>
                                 </Grid>
-                                <Grid item >
+                                <Grid item>
                                     <Stack direction='row'>
                                         <Comment/>
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.comments.length)}</Typography>
@@ -62,7 +63,7 @@ const ForumPostCard = (props: Props) => {
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.likes.length)}</Typography>
                                     </Stack> 
                                 </Grid>
-                                <Grid item >
+                                <Grid item>
                                     <Stack alignItems='center' direction='row'>
                                         <ThumbDown/>
                                         <Typography pl={1}>{formatToSocialStr(props.forumPost.dislikes.length)}</Typography>
@@ -74,6 +75,7 @@ const ForumPostCard = (props: Props) => {
                 </CardContent>
             </CardActionArea>  
         </Card>
+        </Fade>
     )
 }
 

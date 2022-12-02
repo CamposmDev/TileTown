@@ -47,11 +47,17 @@ export default class AxiosCommunityApi {
         return AxiosApi.get(`/community/${id}`)
     }
 
-    public async getCommunities(name: string | undefined): Promise<AxiosResponse<GetCommunitiesRes>> {
-        return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name }});
+    public async getCommunities(name: string | undefined, sort: string): Promise<AxiosResponse<GetCommunitiesRes>> {
+        return AxiosApi.get<GetCommunitiesRes, AxiosResponse<GetCommunitiesRes>>(`/community`, { params: { name: name, sort: sort }});
     }
 
     public async getCommunityName(communityId: string): Promise<AxiosResponse<GetCommunityNameRes>> {
         return AxiosApi.get(`/community/name/${communityId}`)
     }
-}
+    public async kickMember(userId: string, commId: string): Promise<AxiosResponse> {
+        return AxiosApi.put(`/community/${commId}/kick/${userId}`)
+    }
+    public async banMember(userId: string, commId: string): Promise<AxiosResponse> {
+        return AxiosApi.put(`/community/${commId}/ban/${userId}`)
+    }
+} 

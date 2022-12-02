@@ -11,4 +11,5 @@ export default interface CommunitySchemaType {
     description: string,
     members: ObjectId[],
     visibility: string
+    banned: ObjectId[]
 }

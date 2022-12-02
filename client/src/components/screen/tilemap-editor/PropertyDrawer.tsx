@@ -1,4 +1,7 @@
 import { Add } from "@mui/icons-material";
+import { ModalContext } from "src/context/modal";
+import { TilemapEditContext } from "src/context/tilemapEditor";
+import { useContext } from "react";
 import {
   Button,
   Divider,
@@ -13,8 +16,23 @@ import {
   Typography,
   Checkbox,
 } from "@mui/material";
+import PropertySelector from "./PropertySelector";
+import TilemapPropertySelector from "./TilemapPropertySelector";
+import LayerPropertySelector from "./LayerPropertySelector";
 
 const PropertyDrawer = () => {
+  const modal = useContext(ModalContext);
+  const edit = useContext(TilemapEditContext);
+
+  const currentLayerIndex = edit.state.currentLayerIndex;
+
+  const layerProperties =
+    currentLayerIndex !== -1 ? (
+      <LayerPropertySelector index={currentLayerIndex}></LayerPropertySelector>
+    ) : (
+      <div></div>
+    );
+
   return (
     <Drawer
       open={true}
@@ -22,70 +40,24 @@ const PropertyDrawer = () => {
       variant="permanent"
       PaperProps={{ sx: { mt: 15 } }}
     >
-      <Typography pl={1}>Properties</Typography>
-      <Divider />
-      <Stack p={1} spacing={2}>
-        <TextField
-          label="Tilemap Name"
-          size="small"
-          // InputProps={{ style: { fontSize: 13 } }}
-          // InputLabelProps={{ style: { fontSize: 13 } }}
-        />
-        <TextField
-          label="Tile Width"
-          fullWidth
-          size="small"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">tiles</InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          label="Tile Height"
-          fullWidth
-          size="small"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">tiles</InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
+      <TilemapPropertySelector></TilemapPropertySelector>
+      {layerProperties}
       <Stack pl={1} pr={1} direction="row" alignItems="center">
         <Typography flexGrow={1}>Custom Properties</Typography>
         <Tooltip title="Add Property" arrow>
-          <IconButton color="primary">
+          <IconButton
+            color="primary"
+            onClick={() => {
+              modal.showCreatePropertyModal();
+            }}
+          >
             <Add />
           </IconButton>
         </Tooltip>
       </Stack>
       <Divider />
       <Stack p={1}>
-        <List>
-          <Stack spacing={2} direction="column">
-            <Stack
-              pl={1}
-              pr={1}
-              spacing={0.5}
-              direction="row"
-              alignItems="center"
-            >
-              <Typography flexGrow={1}>Collidable</Typography>
-              <Checkbox defaultChecked={true} />
-            </Stack>
-            <Stack
-              pl={1}
-              pr={1}
-              spacing={0.5}
-              direction="row"
-              alignItems="center"
-            >
-              <Typography flexGrow={1}>Damage</Typography>
-              <TextField />
-            </Stack>
-          </Stack>
-        </List>
+        <PropertySelector></PropertySelector>
       </Stack>
     </Drawer>
   );

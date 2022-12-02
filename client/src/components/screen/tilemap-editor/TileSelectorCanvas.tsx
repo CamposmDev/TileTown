@@ -21,15 +21,37 @@ const TileSelectorCanvas = () => {
   const gridContextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const currentTilesetIndex = edit.state.currentTilesetIndex;
-  const tileHeight = edit.state.Tilesets[currentTilesetIndex].tileHeight;
-  const tileWidth = edit.state.Tilesets[currentTilesetIndex].tileWidth;
-  const rows = edit.state.Tilesets[currentTilesetIndex].rows;
-  const columns = edit.state.Tilesets[currentTilesetIndex].columns;
-  const image = edit.state.Tilesets[currentTilesetIndex].image;
+  const tileHeight =
+    edit.state.Tilesets.length > 0
+      ? edit.state.Tilesets[currentTilesetIndex].tileHeight
+      : 0;
+  const tileWidth =
+    edit.state.Tilesets.length > 0
+      ? edit.state.Tilesets[currentTilesetIndex].tileWidth
+      : 0;
+  const rows =
+    edit.state.Tilesets.length > 0
+      ? edit.state.Tilesets[currentTilesetIndex].rows
+      : 0;
+  const columns =
+    edit.state.Tilesets.length > 0
+      ? edit.state.Tilesets[currentTilesetIndex].columns
+      : 0;
+  const host: string =
+    window.location.host === "localhost:3001"
+      ? "localhost:3000"
+      : window.location.host;
+  const image =
+    edit.state.Tilesets.length > 0
+      ? "http://" +
+        host +
+        "/api/media/" +
+        edit.state.Tilesets[currentTilesetIndex].image
+      : "";
+
   const currentGlobalTileID =
     edit.state.Tilemap.globalTileIDs[currentTilesetIndex];
   const currentTileIndex = edit.state.currentTileIndex;
-  const render = edit.state.renderTileSelectorCanvas;
 
   const imageHeight: number = tileHeight * rows;
   const imageWidth: number = tileWidth * columns;
@@ -111,12 +133,12 @@ const TileSelectorCanvas = () => {
         willReadFrequently: true,
       });
 
-      if (ctx) {
+      if (ctx && edit.state.Tilesets.length > 0) {
         gridContextRef.current = ctx;
         drawImage(ctx, canvasImage, image, canvasWidth, canvasHeight);
       }
     }
-  }, [currentTileIndex, currentTilesetIndex]);
+  }, [currentTileIndex, currentTilesetIndex, edit.state.Tilesets.length]);
 
   const selectCurrentTile = ({ nativeEvent }: any): void => {
     if (gridCanvasRef.current && gridContextRef.current) {

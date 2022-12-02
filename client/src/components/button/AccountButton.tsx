@@ -9,14 +9,16 @@ import { User } from '@types'
 import { SnackContext } from "src/context/snack";
 import { ModalContext } from "src/context/modal";
 import { ProfileContext } from "src/context/profile";
+import { SocialContext } from "src/context/social";
 
 const AccountButton = () => {
     const prof = useContext(ProfileContext)
     const auth = useContext(AuthContext)
+    const social = useContext(SocialContext)
     const modal = useContext(ModalContext)
     const snack = useContext(SnackContext)
     const [anchorEl, setAnchorEl] = useState(null)
-    const navigate = useNavigate()
+    const nav = useNavigate()
     const open = Boolean(anchorEl)
 
     const handleMenuOpen = (event: any) => setAnchorEl(event.currentTarget)
@@ -27,6 +29,7 @@ const AccountButton = () => {
 
     const handleLogout = () => {
         auth.logoutUser(snack)
+        social.clear()
         handleMenuClose()
     }
 
@@ -45,12 +48,11 @@ const AccountButton = () => {
         handleMenuClose()
     }
 
-
-
+    let usr: User | null = auth.usr
     let loggedInItems = (
         <Box>
             <MenuItem disabled={auth.isGuest()} onClick={() => {
-                prof.viewPublishedTilesets()
+                prof.viewPublishedTilesets(usr?.id)
                 handleMenuClose()
             }}>
                 <ListItemIcon><Person/></ListItemIcon>
@@ -112,14 +114,11 @@ const AccountButton = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            {auth.isLoggedIn() ? loggedInItems : loggedOutItems}
+            {auth.isLoggedIn ? loggedInItems : loggedOutItems}
         </Menu>
     )
 
-    let usr: User | null = auth.getUsr()
-
-
-    const profile = auth.isLoggedIn() && usr ? (
+    const profile = auth.isLoggedIn && usr ? (
         <Avatar {...stringAvatar(usr.firstName, usr.lastName)}/>
     ) : (
         <Avatar sx={{bgcolor: 'primary.main'}}/>

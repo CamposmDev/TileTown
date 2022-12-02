@@ -11,6 +11,7 @@ export default interface TilesetSocialSchemaType {
     tags: string[],
     description: string,
     community: string,
+    contest: string,
     likes: ObjectId[],
     dislikes: ObjectId[],
     views: number,

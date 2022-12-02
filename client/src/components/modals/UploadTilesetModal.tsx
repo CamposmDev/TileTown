@@ -21,10 +21,6 @@ import { TilesetEditContext } from "src/context/tilesetEditor";
 import { TilesetApi } from "../../api";
 import { Tileset } from "@types";
 
-type imageForm = {
-  image: File;
-};
-
 const UploadTilesetModal = () => {
   const modal = useContext(ModalContext);
   const snack = useContext(SnackContext);
@@ -252,6 +248,7 @@ const UploadTilesetModal = () => {
           </Grid>
         </Grid>
       </DialogContent>
+
       <DialogActions></DialogActions>
     </Dialog>
   );

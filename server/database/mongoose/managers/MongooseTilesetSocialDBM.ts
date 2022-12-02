@@ -1,10 +1,60 @@
 import mongoose from "mongoose";
-import { Tileset, TilesetSocial } from "@types";
+import { SortBy, Tileset, TilesetSocial } from "@types";
 import TilesetSocialDBM from "../../interface/managers/TilesetSocialDBM";
 import { TilesetSocialModel } from "../schemas/TilesetSocialModel";
 import TilesetSocialSchemaType from "../types/TilesetSocialSchemaType";
 
 export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
+    async getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<TilesetSocial[]> {
+        let arr: (mongoose.Document<unknown, any, TilesetSocialSchemaType> & TilesetSocialSchemaType & { _id: mongoose.Types.ObjectId })[] = []
+        let filter: mongoose.FilterQuery<any> = {
+            name: new RegExp(`^${name}`, 'i')
+        }
+        if (tags.length > 0) {
+            filter = {
+                name: new RegExp(`^${name}`, 'i'),
+                tags: {$all: tags }
+            }
+        }
+        switch (sort) {
+            case 'publish_date_newest':
+                arr = await TilesetSocialModel.find(filter).sort({publishDate: -1})
+                break
+            case 'publish_date_oldest':
+                arr = await TilesetSocialModel.find(filter).sort({publishDate: 1})
+                break
+            case 'most_likes':
+                arr = await TilesetSocialModel.find(filter).sort({likes: -1})
+                break
+            case 'least_likes':
+                arr = await TilesetSocialModel.find(filter).sort({likes: 1})
+                break
+            case 'most_dislikes':
+                arr = await TilesetSocialModel.find(filter).sort({dislikes: -1})
+                break
+            case 'least_dislikes':
+                arr = await TilesetSocialModel.find(filter).sort({dislikes: 1})
+                break
+            case 'most_views':
+                arr = await TilesetSocialModel.find(filter).sort({views: -1})
+                break
+            case 'least_views':
+                arr = await TilesetSocialModel.find(filter).sort({views: 1})
+                break
+            case 'most_comments':
+                arr = await TilesetSocialModel.find(filter).sort({comments: -1})
+                break
+            case 'least_comments':
+                arr = await TilesetSocialModel.find(filter).sort({comments: 1})
+                break
+            default:
+                arr = await TilesetSocialModel.find(filter)
+        }
+        return arr.map(x => {
+            let tss = this.parseSocial(x)
+            return tss
+        })
+    }
 
     async getTilesetSocialById(socialId: string): Promise<TilesetSocial | null> {
         if (!mongoose.Types.ObjectId.isValid(socialId)) {
@@ -34,6 +84,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tags: partial.tags ? partial.tags : [],
             description: partial.description ? partial.description : "Description",
             community: partial.community ? partial.community : '',
+            contest: partial.contest ? partial.contest : '',
             likes: [],
             dislikes: [],
             views: 0, 
@@ -60,6 +111,12 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         return socials.map(social => this.parseSocial(social));
     }
 
+    async getSubmissionIds(contestId: string): Promise<TilesetSocial[]> {
+        if (!mongoose.Types.ObjectId.isValid(contestId)) return [];
+        let socials = await TilesetSocialModel.find({contest: contestId})
+        return socials.map(x => this.parseSocial(x))
+    }
+
     protected parseSocial(social: TilesetSocialSchemaType & {_id: mongoose.Types.ObjectId}): TilesetSocial {
         return {
             id: social._id.toString(),
@@ -69,6 +126,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
             tags: social.tags,
             description: social.description,
             community: social.community,
+            contest: social.contest,
             likes: social.likes.map(id => id.toString()),
             dislikes: social.dislikes.map(id => id.toString()),
             views: social.views,
@@ -85,6 +143,7 @@ export default class MongooseTilesetSocialDBM implements TilesetSocialDBM {
         social.tags = partial.tags ? partial.tags : social.tags;
         social.description = partial.description ? partial.description : social.description;
         social.community = partial.community ? partial.community : social.community;
+        social.contest = partial.contest ? partial.contest : social.contest;
         social.likes = partial.likes ? partial.likes.map(id => new mongoose.Types.ObjectId(id)) : social.likes;
         social.dislikes = partial.dislikes ? partial.dislikes.map(id => new mongoose.Types.ObjectId(id)) : social.dislikes;
         social.views = partial.views ? partial.views : social.views;

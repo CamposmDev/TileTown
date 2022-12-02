@@ -198,7 +198,7 @@ const TilesetEditorDrawer = () => {
       setPenColor(edit.state.penColor);
       setPenColorError(true);
       snack.showErrorMessage(
-        "Please Enter a Color In The Format `#000000` Or `rgb(00, 00, 00)`"
+        "Please Enter a Color In The Format `#000000` Or `rgb(000, 000, 000)`"
       );
       return;
     }

@@ -23,12 +23,12 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
       timeLimit: { type: Number, required: true, default: 0 },
       tileLimit: { type: Number, required: true, default: 0 },
     },
-    required: true, 
-    default: { editMode: "free", timeLimit: 0, tileLimit: 0 }
+    required: true,
+    default: { editMode: "free", timeLimit: 0, tileLimit: 0 },
   },
   collaboratorIndex: { type: Number, required: true, default: -1 },
   image: { type: String, required: true, default: "~" },
-  height: { type: Number, required: true , default: 12 },
+  height: { type: Number, required: true, default: 12 },
   width: { type: Number, required: true, default: 12 },
   layers: {
     type: [
@@ -53,8 +53,8 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
         y: { type: Number, required: true },
       },
     ],
-    required: true, 
-    default: []
+    required: true,
+    default: [],
   },
   tileHeight: { type: Number, required: true, default: -1 },
   tileWidth: { type: Number, required: true, default: -1 },
@@ -64,7 +64,7 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
   name: { type: String, required: true },
   owner: { type: String, required: true },
   tilesets: { type: [ObjectId], required: true, default: [] },
-  globalTileIDs: { type: [Number], required: true, default: [1] },
+  globalTileIDs: { type: [Number], required: true, default: [] },
   properties: {
     type: [
       {
@@ -74,14 +74,14 @@ const TilemapSchema = new Schema<TilemapSchemaType>({
       },
     ],
     required: false,
-    default: []
+    default: [],
   },
   renderOrder: { type: String, required: true, default: "right-down" },
   isPublished: { type: Boolean, required: true, default: false },
   createdAt: { type: Date, required: true, default: new Date(Date.now()) },
-  updatedAt: { type: Date, required: true, default: new Date(Date.now()) }
+  updatedAt: { type: Date, required: true, default: new Date(Date.now()) },
 });
 
 const TilemapModel = mongoose.model("Tilemap", TilemapSchema);
 
-export { TilemapModel }
+export { TilemapModel };

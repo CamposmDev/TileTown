@@ -10,7 +10,7 @@ import { SocialStore } from '../social/SocialStore';
 import { 
     AuthActionType, AuthAction, RegisterUser, LoginUser, 
     LogoutUser, ChangeUsername, ChangePassword, ChangeEmail,
-    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend, DeleteCommunity, AddCommunity
+    GetLoggedIn, LoginAsGuest, AddFriend, RemoveFriend, DeleteCommunity, AddCommunity, RefreshUser
 } from "./AuthAction"; 
 
 /**
@@ -39,7 +39,7 @@ export class AuthStore {
     public get auth(): AuthState { return this._auth; }
     public get setAuth(): (auth: AuthState) => void { return this._setAuth; }
 
-    public isLoggedIn(): boolean {
+    public get isLoggedIn(): boolean {
         return this._auth.loggedIn
     }
 
@@ -47,8 +47,43 @@ export class AuthStore {
         return (this._auth.usr === null) && (this._auth.loggedIn)
     }
 
-    public getUsr(): User | null {
+    public get usr(): User | null {
         return this._auth.usr
+    }
+
+    /**
+     * Fetches the user's data or is given user data to update the store
+     * 
+     * @remarks
+     * The purpose of the function is to keep the usr field up to date with any changes in the back-end for that usr.
+     * The should should be called if anything related to the usr's field is changed (i.e. favoriting tilesets)
+     * 
+     * @param user - used to update the usr field in the store
+     * @returns Nothing
+     */
+    public async refreshUser(user?: User): Promise<void> {
+        if (user) {
+            this.handleAction({
+                type: AuthActionType.refreshUser,
+                payload: {
+                    user: user
+                }
+            })
+            return
+        }
+        let usr = this.auth.usr
+        if (usr) {
+            UserApi.getUserById(usr.id).then(res => {
+                if (res.status === 200) {
+                    this.handleAction({
+                        type: AuthActionType.refreshUser,
+                        payload: {
+                            user: res.data.user
+                        }
+                    })
+                }
+            })
+        }
     }
 
     public addFriend(userId: string) {
@@ -333,6 +368,10 @@ export class AuthStore {
                 this.handleLoginAsGuest(action)
                 break;
             }
+            case AuthActionType.refreshUser: {
+                this.handleRefreshUser(action)
+                break;
+            }
             case AuthActionType.changePassword: {
                 this.handleChangePassword(action);
                 break;
@@ -395,6 +434,12 @@ export class AuthStore {
         this.setAuth({
             usr: null,
             loggedIn: true
+        })
+    }
+    protected handleRefreshUser(action: RefreshUser): void {
+        this.setAuth({
+            usr: action.payload.user,
+            loggedIn: this.auth.loggedIn
         })
     }
     protected handleChangePassword(action: ChangePassword): void {

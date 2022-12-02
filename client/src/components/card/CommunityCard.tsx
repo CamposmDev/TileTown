@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material"
+import { Card, CardActionArea, CardContent, Fade, Stack, Typography } from "@mui/material"
 import { Community } from "@types"
 import { formatToSocialStr } from '../util/NumberUtils'
 import { useContext } from "react"
@@ -11,6 +11,7 @@ interface Props {
 const CommunityCard = (props: Props) => {
     const comm = useContext(CommunityContext)
     return (
+        <Fade in={true} timeout={1000}>
         <Card onClick={() => {
             comm.viewCommunity(props.comm)
         }} sx={{boxShadow: 3}}>
@@ -23,7 +24,7 @@ const CommunityCard = (props: Props) => {
                                 borderRadius: 3,
                                 paddingInline: 1,
                                 boxShadow: 1,
-                                bgcolor: 'secondary.main',
+                                bgcolor: 'primary.main',
                                 color: 'white'
                             }} children={
                                 <Typography variant='caption'>{formatToSocialStr(props.comm.members.length, 'Members')}</Typography>
@@ -38,6 +39,7 @@ const CommunityCard = (props: Props) => {
                 </CardContent>
             </CardActionArea>
         </Card>
+        </Fade>
     )
 }
 

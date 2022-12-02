@@ -9,8 +9,48 @@ import { ForumSchemaType } from "../types";
  */
 export default class MongooseForumDBM implements ForumDBM {
 
-    async searchForumPost(title: string): Promise<ForumPost[]> {
-        let forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")});
+    async searchForumPost(title: string, sort: string): Promise<ForumPost[]> {
+        let forums: (mongoose.Document<unknown, any, ForumSchemaType> & ForumSchemaType & {_id: mongoose.Types.ObjectId})[] = []
+        switch (sort) {
+            case 'a-z':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({title: 1});
+                break
+            case 'z-a':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({title: -1})
+                break
+            case 'publish_date_newest':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({publishDate: -1});
+                break
+            case 'publish_date_oldest':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({publishDate: 1});
+                break
+            case 'most_likes':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({likes: -1});
+                break
+            case 'least_likes':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({likes: 1});
+                break
+            case 'most_dislikes':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({dislikes: -1});
+                break
+            case 'least_dislikes':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({dislikes: 1});
+                break
+            case 'most_views':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({views: -1});
+                break
+            case 'least_views':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({views: 1});
+                break
+            case 'most_comments':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({comments: -1});
+                break
+            case 'least_comments':
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")}).sort({comments: 1});
+                break
+            default:
+                forums = await ForumPostModel.find({title: new RegExp(`^${title}`, "i")})
+        }
         return forums.map(f => this.parseForumPost(f));
     }
 
