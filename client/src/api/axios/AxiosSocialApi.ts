@@ -12,6 +12,16 @@ import {
 } from "@responses/social"
 
 export default class AxiosSocialApi {
+    /** TODO */
+    public async getTilemapSocialsByName(name: string, sort: string, tags: string[]): Promise<AxiosResponse> {
+        let params = {
+            name: name,
+            sort: sort,
+            tags: tags
+        }
+        return AxiosApi.get(`/tilemap/search/${JSON.stringify(params)}`)
+    }
+
     public async getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<AxiosResponse> {
         let params = {
             name: name,
@@ -27,6 +37,10 @@ export default class AxiosSocialApi {
 
     public async getTilesetSocialById(socialId: string): Promise<AxiosResponse<GetTilesetRes>> {
         return AxiosApi.get<GetTilesetRes, AxiosResponse<GetTilesetRes>>(`/tileset/social/${socialId}`);
+    }
+
+    public async getTilemapSocialByTilemapId(tilemapId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tilemap/social/tmid/${tilemapId}`)
     }
 
     public async dislikeTilemapById(socialId: string): Promise<AxiosResponse<DislikeTilemapRes>> {

@@ -144,6 +144,11 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     return this.parseTilemap(tilemap);
   }
 
+  async getUserCollaboratedTilemaps(userId: string): Promise<Tilemap[]> {
+    let tilemaps = await TilemapModel.find({collaborators: {$all: [userId]}})
+    return tilemaps.map(x => this.parseTilemap(x))
+  }
+
   protected parseTilemap(
     tilemap: TilemapSchemaType & { _id: mongoose.Types.ObjectId }
   ): Tilemap {
