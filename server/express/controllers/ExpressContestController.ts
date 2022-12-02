@@ -340,4 +340,12 @@ export default class ContestController {
         let tilemaps: TilemapSocial[] = await db.tilemapSocials.getSubmissionIds(req.params.id)
         return res.status(200).json({socialIds: tilemaps.map(x => x.id)})
     }
+
+    public async getPopularTop10(req: Request, res: Response): Promise<Response> {
+        if (!req || !res) {
+            return res.status(400).json({ message: "Bad Request" })
+        }
+        let contests = await db.contests.getPopularTop10()
+        return res.status(200).json({contests: contests})
+    }
 }
