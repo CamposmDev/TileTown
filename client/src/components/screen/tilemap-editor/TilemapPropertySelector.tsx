@@ -9,10 +9,15 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
+import { AuthContext } from "src/context/auth";
 
 const TilemapPropertySelector = () => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const handleUpdateName = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,11 +62,13 @@ const TilemapPropertySelector = () => {
           label="Tilemap Name"
           size="small"
           value={edit.state.Tilemap.name}
+          disabled={!edit.canEdit(id)}
           onChange={handleUpdateName}
         />
         <TextField
           label="Tile Width"
           value={edit.state.Tilemap.tileWidth}
+          disabled={!edit.canEdit(id)}
           onChange={handleUpdateTileWidth}
           fullWidth
           size="small"
@@ -72,6 +79,7 @@ const TilemapPropertySelector = () => {
         <TextField
           label="Tile Height"
           value={edit.state.Tilemap.tileHeight}
+          disabled={!edit.canEdit(id)}
           onChange={handleUpdateTileHeight}
           fullWidth
           size="small"

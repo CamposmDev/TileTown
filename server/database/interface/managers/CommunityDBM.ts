@@ -128,4 +128,6 @@ export default interface CommunityDBM {
      * @return if successful, the id of the deleted community; null otherwise
      */
      deleteCommunityById(communityId: string): Promise<Community | null>;
+
+     getPopularTop10(): Promise<Community[]>
 }

@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { AuthContext } from "src/context/auth";
 
 interface ColorPropertyProps {
   name: string;
@@ -24,14 +25,19 @@ interface ColorPropertyProps {
 }
 
 const ColorPropertyField = (props: ColorPropertyProps) => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   return (
     <Stack pl={1} pr={1} spacing={0.5} direction="row" alignItems="center">
       <TextField
         value={props.name}
         label="Color Name"
+        disabled={!edit.canEdit(id)}
         onChange={(e) => {
           edit.updateProperty(
             { name: e.target.value, ptype: props.type, value: props.value },
@@ -42,6 +48,7 @@ const ColorPropertyField = (props: ColorPropertyProps) => {
       <TextField
         value={props.value}
         label="Color Value"
+        disabled={!edit.canEdit(id)}
         onChange={(e) => {
           if (!isColor(e.target.value)) {
             snack.showErrorMessage(
@@ -57,6 +64,7 @@ const ColorPropertyField = (props: ColorPropertyProps) => {
       ></TextField>
       <Tooltip title="Delete Property" arrow>
         <IconButton
+          disabled={!edit.canEdit(id)}
           color="error"
           onClick={() => {
             edit.deleteProperty(props.index);

@@ -12,6 +12,16 @@ import {
 } from "@responses/social"
 
 export default class AxiosSocialApi {
+    /** TODO */
+    public async getTilemapSocialsByName(name: string, sort: string, tags: string[]): Promise<AxiosResponse> {
+        let params = {
+            name: name,
+            sort: sort,
+            tags: tags
+        }
+        return AxiosApi.get(`/tilemap/search/${JSON.stringify(params)}`)
+    }
+
     public async getTilesetSocialsByName(name: string, sort: string, tags: string[]): Promise<AxiosResponse> {
         let params = {
             name: name,
@@ -27,6 +37,10 @@ export default class AxiosSocialApi {
 
     public async getTilesetSocialById(socialId: string): Promise<AxiosResponse<GetTilesetRes>> {
         return AxiosApi.get<GetTilesetRes, AxiosResponse<GetTilesetRes>>(`/tileset/social/${socialId}`);
+    }
+
+    public async getTilemapSocialByTilemapId(tilemapId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tilemap/social/tmid/${tilemapId}`)
     }
 
     public async dislikeTilemapById(socialId: string): Promise<AxiosResponse<DislikeTilemapRes>> {
@@ -68,7 +82,7 @@ export default class AxiosSocialApi {
     public async favoriteTilesetSocial(socialId: string): Promise<AxiosResponse<FavoriteTilesetRes>> {
         return AxiosApi.put<FavoriteTilesetRes, AxiosResponse<FavoriteTilesetRes>>(`/tileset/favorite/${socialId}`);
     }
-
+    
     public async unfavoriteTilemapSocial(socialId: string): Promise<AxiosResponse<UnFavoriteTilemapRes>> {
         return AxiosApi.put<UnFavoriteTilemapRes, AxiosResponse<UnFavoriteTilemapRes>>(`/tilemap/unfavorite/${socialId}`);
     }
@@ -77,4 +91,11 @@ export default class AxiosSocialApi {
         return AxiosApi.put<UnFavoriteTilesetRes, AxiosResponse<UnFavoriteTilesetRes>>(`/tileset/unfavorite/${socialId}`);
     }
 
+    public async getPopularTop10TMS(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tilemap/popular/top10`)
+    }
+
+    public async getPopularTop10TSS(): Promise<AxiosResponse> {
+        return AxiosApi.get(`/tileset/popular/top10`)
+    }
 }

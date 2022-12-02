@@ -26,4 +26,7 @@ export default class AxiosTilemapApi {
         return AxiosApi.post<PublishTilemapRes, AxiosResponse<PublishTilemapRes>>(`/tilemap/publish/${id}`, payload);
     }
     
+    public async getUserCollaboratedTilemaps(userId: string) {
+        return AxiosApi.get(`/tilemap/collaborations/${userId}`)
+    }
 }

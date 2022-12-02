@@ -9,6 +9,7 @@ import {
   SwapCalls,
 } from "@mui/icons-material";
 import { Color } from "src/context/tilemapEditor/TilemapEditTypes";
+import { AuthContext } from "src/context/auth";
 
 interface LayerProps {
   name: string;
@@ -17,7 +18,11 @@ interface LayerProps {
 }
 
 const LayerField = (props: LayerProps) => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   useEffect(() => {}, [props.name, props.visible, props.index]);
 
@@ -74,33 +79,47 @@ const LayerField = (props: LayerProps) => {
         defaultValue={props.name}
         value={props.name}
         size="small"
+        disabled={!edit.canEdit(id)}
         onBlur={updateLayerName}
         onChange={updateLayerName}
       />
       <Tooltip title="Select/Unselect Layer" arrow>
         <Checkbox
+          disabled={!edit.canEdit(id)}
           checked={edit.state.currentLayerIndex === props.index}
           onChange={toggleSelectLayer}
         ></Checkbox>
       </Tooltip>
       <Tooltip title="Hide/Show Layer" arrow>
-        <IconButton onClick={toggleLayerVisibility}>
+        <IconButton
+          disabled={!edit.canEdit(id)}
+          onClick={toggleLayerVisibility}
+        >
           {visibilityIcon}
         </IconButton>
       </Tooltip>
       <Tooltip title="Duplicate Layer" arrow>
-        <IconButton color="primary" onClick={duplicateLayer}>
+        <IconButton
+          disabled={!edit.canEdit(id)}
+          color="primary"
+          onClick={duplicateLayer}
+        >
           <Layers />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete Layer" arrow>
-        <IconButton color="error" onClick={deleteLayer}>
+        <IconButton
+          disabled={!edit.canEdit(id)}
+          color="error"
+          onClick={deleteLayer}
+        >
           <Delete />
         </IconButton>
       </Tooltip>
       <Tooltip title="Swap Layer" arrow>
         <IconButton
           color="primary"
+          disabled={!edit.canEdit(id)}
           onClick={handleSwap}
           sx={{ bgcolor: swapColor }}
         >

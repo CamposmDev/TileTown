@@ -19,5 +19,7 @@ CommunityRouter.get('/name/:id', Auth.verifyJWT, CommunityController.getCommunit
 CommunityRouter.put('/:commId/kick/:userId', Auth.verifyJWT, CommunityController.kickMember)
 CommunityRouter.put('/:commId/ban/:userId', Auth.verifyJWT, CommunityController.banMember)
 
+CommunityRouter.get(`/popular/top10`, CommunityController.getPopularTop10)
+
 
 export default CommunityRouter;

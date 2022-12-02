@@ -25,6 +25,8 @@
 #tile-preview {
     width: 300px;
     height: 300px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: cover;
     object-position: center;
 }
@@ -32,6 +34,8 @@
 #tile-large-preview {
     width: 704px;
     height: 704px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: cover;
     object-position: center;
 }

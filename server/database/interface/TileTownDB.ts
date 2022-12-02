@@ -60,5 +60,4 @@ export default interface TileTownDB {
     get tilesetSocials(): TilesetSocialDBM;
 
     get tilemapSocials(): TilemapSocialDBM;
-    
 }

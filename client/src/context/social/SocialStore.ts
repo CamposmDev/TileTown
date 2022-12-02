@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, ContestApi, SocialApi, TilesetApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, SocialApi, TilemapApi, TilesetApi, UserApi } from "src/api"
 import { Comment, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -29,6 +29,14 @@ export class SocialStore {
 
     public get state(): SocialState {
         return this._social
+    }
+
+    public async getUserCollaboratedTilemaps(userId: string) {
+        return TilemapApi.getUserCollaboratedTilemaps(userId).then(res => {
+            if (res.status === 200) {
+                return res.data.tilemaps
+            }
+        })
     }
 
     public async addFriend(userId: string, auth: AuthStore, snack?: SnackStore): Promise<void> {
@@ -147,6 +155,22 @@ export class SocialStore {
         //         })
         //     }
         // })
+    }
+
+    public async getTilemapById(id: string): Promise<Tilemap | undefined> {
+        return TilemapApi.getTilemapById(id).then(res => {
+            if (res.status === 200) {
+                return res.data.tilemap
+            }
+        })
+    }
+
+    public async getTilemapSocialByTilemapId(tilemapId: string): Promise<TilemapSocial | undefined> {
+        return SocialApi.getTilemapSocialByTilemapId(tilemapId).then(res => {
+            if (res.status === 200) {
+                return res.data.social
+            }
+        })
     }
 
     public async getTilemapSocialById(id: string): Promise<TilemapSocial | undefined> {
@@ -534,6 +558,19 @@ export class SocialStore {
             if (axios.isAxiosError(e) && e.response) snack?.showErrorMessage(e.response.data.message)
         })
     }
+
+    public async getPopularTop10TMS(): Promise<TilemapSocial[]> {
+        return SocialApi.getPopularTop10TMS().then(res => {
+            return res.data.tilemaps
+        })
+    }
+
+    public async getPopularTop10TSS(): Promise<TilesetSocial[]> {
+        return SocialApi.getPopularTop10TSS().then(res => {
+            return res.data.tilesets
+        })
+    }
+
 
     public async clear(): Promise<void> {
         this.handleAction({
