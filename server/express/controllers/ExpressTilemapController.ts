@@ -8,6 +8,8 @@ import * as fs from "fs";
 import path from "path";
 import AdmZip from "adm-zip";
 
+import { TilemapParser } from "../../parsers";
+
 export default class TilemapController {
   public async getTilemapById(req: Request, res: Response): Promise<Response> {
     //check to see if a request body was sent
@@ -126,11 +128,9 @@ export default class TilemapController {
       req.body.tilemap.name
     );
     if (existingTilemap !== null) {
-      return res
-        .status(400)
-        .json({
-          message: `Tilemap with name '${req.body.tilemap.name}' already exists`,
-        });
+      return res.status(400).json({
+        message: `Tilemap with name '${req.body.tilemap.name}' already exists`,
+      });
     }
 
     // Try to create the new tilemap in the DBMS
@@ -152,7 +152,7 @@ export default class TilemapController {
     if (updatedUser === null) {
       return res
         .status(500)
-        .json({ messsage: "Error adding tilemap to users tilemaps" });
+        .json({ message: "Error adding tilemap to users tilemaps" });
     }
 
     return res
@@ -185,12 +185,9 @@ export default class TilemapController {
     // Delete the tilemap - if something goes wrong - error
     let deletedTilemap = await db.tilemaps.deleteTilemapById(req.params.id);
     if (deletedTilemap === null) {
-      return res
-        .status(500)
-        .json({
-          message:
-            "Server Error. Something went wrong while deleting a tilemap",
-        });
+      return res.status(500).json({
+        message: "Server Error. Something went wrong while deleting a tilemap",
+      });
     }
 
     // Return the tilemap that was deleted
@@ -320,11 +317,9 @@ export default class TilemapController {
 
     // Check if tilemap has already been published
     if (tilemap.isPublished) {
-      return res
-        .status(400)
-        .json({
-          message: `Tilemap with id ${tilemap.id} has already been published!`,
-        });
+      return res.status(400).json({
+        message: `Tilemap with id ${tilemap.id} has already been published!`,
+      });
     }
 
     // Check if social data already exists for this tilemap
@@ -332,11 +327,9 @@ export default class TilemapController {
       tilemap.id
     );
     if (existingSocial !== null) {
-      return res
-        .status(400)
-        .json({
-          message: `Tilemap with id ${tilemap.id} has already been published!`,
-        });
+      return res.status(400).json({
+        message: `Tilemap with id ${tilemap.id} has already been published!`,
+      });
     }
 
     // Create the social data
@@ -347,11 +340,9 @@ export default class TilemapController {
       ownerName: user.username,
     });
     if (social === null) {
-      return res
-        .status(500)
-        .json({
-          message: `Server Error. Error publishing tilemap with id ${tilemap.id}`,
-        });
+      return res.status(500).json({
+        message: `Server Error. Error publishing tilemap with id ${tilemap.id}`,
+      });
     }
 
     // Update the actual tilemap
@@ -359,11 +350,9 @@ export default class TilemapController {
       isPublished: true,
     });
     if (updatedTilemap === null) {
-      return res
-        .status(500)
-        .json({
-          message: `Server Error. Error while trying to update tilemap`,
-        });
+      return res.status(500).json({
+        message: `Server Error. Error while trying to update tilemap`,
+      });
     }
 
     return res
@@ -398,7 +387,10 @@ export default class TilemapController {
       // Make a new directory for the tilemap
       fs.mkdirSync(mapdir);
       // Copy the contents of the tilemap as a JSON file
-      fs.writeFileSync(tmfile, JSON.stringify(tilemap));
+      fs.writeFileSync(
+        tmfile,
+        JSON.stringify(TilemapParser.tiled(tilemap, tilesets))
+      );
 
       // Copy the contents of all the image files to the new map directory
       for (let tileset of tilesets) {
@@ -408,13 +400,20 @@ export default class TilemapController {
         );
       }
 
+      // Create the zip object
       const zip = new AdmZip();
+      // Add the tilemap folder to the zip object
       zip.addLocalFolder(mapdir);
-
+      // Convert the zip to a buffer and send as a zip file
       res.setHeader("Content-Type", "application/zip").send(zip.toBuffer());
     } catch (e) {
+      // If there's an error - print it and return status 500
       console.log(e);
+      res.status(500).json({
+        message: "Server Error. Error while trying to download a tilemap.",
+      });
     } finally {
+      // Regardless of what happened, cleanup the tilemap directory we tried to create
       fs.rmSync(mapdir, { recursive: true });
     }
   }
@@ -446,11 +445,9 @@ export default class TilemapController {
 
     let tilemapIndex = user.favoriteTileMaps.indexOf(social.id);
     if (tilemapIndex > -1) {
-      return res
-        .status(400)
-        .json({
-          message: `User ${user.id} has already favorited tilemap ${social.id}`,
-        });
+      return res.status(400).json({
+        message: `User ${user.id} has already favorited tilemap ${social.id}`,
+      });
     }
 
     user.favoriteTileMaps.push(social.id);
@@ -495,11 +492,9 @@ export default class TilemapController {
 
     let tilemapIndex = user.favoriteTileMaps.indexOf(social.id);
     if (tilemapIndex === -1) {
-      return res
-        .status(400)
-        .json({
-          message: `User ${user.id} has already unfavorited tilemap ${social.id}`,
-        });
+      return res.status(400).json({
+        message: `User ${user.id} has already unfavorited tilemap ${social.id}`,
+      });
     }
 
     user.favoriteTileMaps.splice(tilemapIndex, 1);
@@ -508,11 +503,9 @@ export default class TilemapController {
       favoriteTileMaps: user.favoriteTileMaps,
     });
     if (updatedUser === null) {
-      return res
-        .status(500)
-        .json({
-          message: "Failed to remove tilemap from user's favorited tilemaps",
-        });
+      return res.status(500).json({
+        message: "Failed to remove tilemap from user's favorited tilemaps",
+      });
     }
     return res
       .status(200)
@@ -533,11 +526,9 @@ export default class TilemapController {
 
     let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
     if (social === null) {
-      return res
-        .status(404)
-        .json({
-          message: `Tilemap socials for tilemap social with id ${req.params.id} not found`,
-        });
+      return res.status(404).json({
+        message: `Tilemap socials for tilemap social with id ${req.params.id} not found`,
+      });
     }
 
     return res
@@ -588,11 +579,9 @@ export default class TilemapController {
       dislikes: social.dislikes,
     });
     if (updatedSocial === null) {
-      return res
-        .status(500)
-        .json({
-          message: "Server Error. Error while updating tilemap social data",
-        });
+      return res.status(500).json({
+        message: "Server Error. Error while updating tilemap social data",
+      });
     }
 
     // Return the updated tilemap social date
@@ -628,11 +617,9 @@ export default class TilemapController {
     // Check social data exists
     let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
     if (social === null) {
-      return res
-        .status(404)
-        .json({
-          message: `Tileset social data with id ${req.params.id} not found`,
-        });
+      return res.status(404).json({
+        message: `Tileset social data with id ${req.params.id} not found`,
+      });
     }
 
     // Dislike the tilemap - unlike the tileset if need be
@@ -657,11 +644,9 @@ export default class TilemapController {
       }
     );
     if (updatedSocial === null) {
-      return res
-        .status(500)
-        .json({
-          message: `Server Error. Error updating tileset social data with id ${req.params.id}`,
-        });
+      return res.status(500).json({
+        message: `Server Error. Error updating tileset social data with id ${req.params.id}`,
+      });
     }
 
     // Return updated social statistics
@@ -702,11 +687,9 @@ export default class TilemapController {
     // Check the social data exists
     let social = await db.tilemapSocials.getTilemapSocialById(req.params.id);
     if (social === null) {
-      return res
-        .status(404)
-        .json({
-          message: `Tileset social data with id ${req.params.id} not found`,
-        });
+      return res.status(404).json({
+        message: `Tileset social data with id ${req.params.id} not found`,
+      });
     }
 
     // Create the comment
@@ -765,11 +748,9 @@ export default class TilemapController {
       social
     );
     if (updatedSocial === null) {
-      return res
-        .status(500)
-        .json({
-          message: `Server Error. Error updating server with id ${req.params.id}`,
-        });
+      return res.status(500).json({
+        message: `Server Error. Error updating server with id ${req.params.id}`,
+      });
     }
 
     // Return the updated social data

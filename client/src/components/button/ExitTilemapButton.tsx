@@ -42,7 +42,6 @@ const ExitTilemapButton = (props: { id: string; name: string }) => {
         <DialogContentText>{`Would you like to save ${props.name} before exiting`}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={saveAndExit}>Save and Exit</Button>
         <Button color="error" onClick={exit}>
           Exit Without Saving
         </Button>

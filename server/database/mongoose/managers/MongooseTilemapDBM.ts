@@ -181,6 +181,9 @@ export default class MongooseTilemapDBM implements TilemapDBM {
     tilemap.backgroundColor = partial.backgroundColor
       ? partial.backgroundColor
       : tilemap.backgroundColor;
+    tilemap.collaborators = partial.collaborators
+      ? partial.collaborators.map((id) => new mongoose.Types.ObjectId(id))
+      : tilemap.collaborators;
     tilemap.collaboratorNames = partial.collaboratorNames
       ? partial.collaboratorNames
       : tilemap.collaboratorNames;

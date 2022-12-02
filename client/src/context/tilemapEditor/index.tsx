@@ -119,7 +119,9 @@ function TilemapEditContextProvider(props: Record<string, any>) {
     TilemapApi.getTilemapById(id).then((res) => {
       if (res.data.tilemap) {
         let tilemap = res.data.tilemap;
+
         if (auth.usr?.id) {
+          console.log(tilemap.collaborators.includes(auth.usr.id));
           if (
             !(
               auth.usr.id === tilemap.owner ||
@@ -139,6 +141,7 @@ function TilemapEditContextProvider(props: Record<string, any>) {
                 tilemap.collaborators.indexOf(auth.usr.id) + 1;
           }
         } else {
+          console.log("no usr id");
           snack.showErrorMessage("You Are Not Authorized To Edit This Tilemap");
           nav("/home");
           return;

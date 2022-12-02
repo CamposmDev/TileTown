@@ -544,6 +544,7 @@ export class TilemapEditStore {
     const usernames = collaborators.map((collaborator) => {
       return collaborator.username;
     });
+    console.log([...this.state.Tilemap.collaborators, ...ids]);
     this.setEdit({
       ...this.state,
       Tilemap: {
