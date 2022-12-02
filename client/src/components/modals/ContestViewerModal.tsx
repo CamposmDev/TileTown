@@ -176,8 +176,8 @@ export default function ContestViewerModal() {
      */
     const start = () => {
         if (c?.type === 'tilemap') {
-            throw new Error('TODO')
-            // modal.showUploadTilemapModal()
+            
+            modal.showUploadTilemapModal()
         } else if (c?.type === 'tileset') {
             modal.showUploadTilesetModal()
         }

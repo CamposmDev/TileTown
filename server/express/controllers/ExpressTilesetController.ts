@@ -340,7 +340,7 @@ export default class TilesetController {
       return res.status(400).json({ message: 'Bad Request' })
     }
     if (!req.params.id) {
-      return res.status(400).json({ message: 'Bad Request' })
+      return res.status(400).json({ message: 'Missing tileset id' })
     }
     let social = await db.tilesetSocials.getTilesetSocialByTilesetId(req.params.id)
     if (social === null) {

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 import { Tilemap, TilemapSocial, TilesetSocial } from "@types";
 import { SocialContext } from "src/context/social";
 import TilemapSocialCard from "./TilemapSocialCard";
-import TilemapSocialCardLoader from "./TilemapSocialCardLoader";
 import AxiosApi from "src/api/axios/AxiosApi";
 
 export default function TilemapCard(props: {tilemapId: string}) {
@@ -19,19 +18,26 @@ export default function TilemapCard(props: {tilemapId: string}) {
         social.getTilemapById(props.tilemapId).then(tilemap => {
             if (tilemap) {
                 setTilemap(tilemap)
-                social.getUserById(tilemap.owner).then(x => {
-                    if (x) setUsername(x.username)
-                })
                 if (tilemap.isPublished) {
                     social.getTilemapSocialByTilemapId(tilemap.id).then(s => setTMS(s))
                 }
+                social.getUserById(tilemap.owner).then(x => {
+                    if (x) setUsername(x.username)
+                })
             }
         })
     }, [social, props.tilemapId])
 
     if (!tilemap) return <LinearProgress/>
-    if (tilemap.isPublished) {
-        if (tms) return <TilemapSocialCard tms={tms} />
+    let usr = auth.usr
+    /** If I'm not the owner of the tilemap and it's not published, then don't show it */
+    if (usr) {
+        if ((usr.id.localeCompare(tilemap.owner) !== 0 && !tilemap.isPublished) && tilemap.collaborators.indexOf(usr.id) === -1) {
+            return <div/>
+        }
+    }
+    if (tms) {
+        return <TilemapSocialCard tms={tms} />
     }
     
     const handleClick = () => {
