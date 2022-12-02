@@ -3,11 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
 import { SocialContext } from "src/context/social";
-import { SocialActionType } from "src/context/social/SocialAction";
 import { Community, Contest, Tileset, TilesetSocial, User } from "@types";
 import CommunityCard from "../card/CommunityCard";
 import ContestCard from "../card/ContestCard";
-import TileItemCard from "../card/TileItemCard";
 import UserProfileBox from "../UserProfileBox";
 import { CommunityContext } from "src/context/social/community";
 import TilesetCard from "../card/TilesetCard";
@@ -17,6 +15,7 @@ import { ContestContext } from "src/context/social/contest";
 import TilemapSocialCard from "../card/TilemapSocialCard";
 import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader";
 import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader";
+import TilemapCard from "../card/TilemapCard";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -134,7 +133,7 @@ const UserProfileScreen = () => {
                 >
                     {user.tilemaps.map(x => 
                         <Grid item key={x}>
-                            {/* <TilemapCard tilemapId={x}/> */}
+                            <TilemapCard tilemapId={x}/>
                         </Grid>
                     )}   
                 </Grid>

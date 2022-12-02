@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CommentApi, CommunityApi, ContestApi, SocialApi, TilesetApi, UserApi } from "src/api"
+import { CommentApi, CommunityApi, ContestApi, SocialApi, TilemapApi, TilesetApi, UserApi } from "src/api"
 import { Comment, Tilemap, TilemapSocial, Tileset, TilesetSocial, User } from "@types"
 import { SnackStore } from "../snack/SnackStore"
 import { SocialAction, SocialActionType } from "./SocialAction"
@@ -147,6 +147,14 @@ export class SocialStore {
         //         })
         //     }
         // })
+    }
+
+    public async getTilemapById(id: string): Promise<Tilemap | undefined> {
+        return TilemapApi.getTilemapById(id).then(res => {
+            if (res.status === 200) {
+                return res.data.tilemap
+            }
+        })
     }
 
     public async getTilemapSocialById(id: string): Promise<TilemapSocial | undefined> {
