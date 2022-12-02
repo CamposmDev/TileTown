@@ -99,7 +99,7 @@ const TilemapToolbar = () => {
   const handleDownload = () => {
     const link = document.createElement("a");
     link.download = edit.state.Tilemap.name;
-    link.href = `${window.location.protocol}//${window.location.hostname}:3000/api/tilemap/download/tiled/${edit.state.Tilemap.id}`
+    link.href = `${window.location.protocol}//${window.location.hostname}/api/tilemap/download/tiled/${edit.state.Tilemap.id}`
     link.click();
   }
 
