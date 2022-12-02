@@ -91,6 +91,13 @@ const TilemapToolbar = () => {
       break;
   }
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.download = edit.state.Tilemap.name;
+    link.href = `${window.location.protocol}//${window.location.hostname}:3000/api/tilemap/download/tiled/${edit.state.Tilemap.id}`
+    link.click();
+  }
+
   const setEditControl = (editControl: TilemapEditControl) => {
     edit.updateEditControl(editControl);
   };
@@ -119,7 +126,11 @@ const TilemapToolbar = () => {
             <Tooltip
               title="Download"
               arrow
-              children={<IconButton color="primary" children={<Download />} />}
+              children={<IconButton 
+                onClick={ () => { handleDownload(); }}
+                color="primary" 
+                children={<Download />} />
+            }
             />
             <Tooltip
               title="Undo"
