@@ -13,11 +13,18 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { SLIDE_DOWN_TRANSITION } from "../util/Constants";
 import { SnackContext } from "src/context/snack";
+import { editableInputTypes } from "@testing-library/user-event/dist/utils";
+import { AuthContext } from "src/context/auth";
 
 const ExitTilemapButton = (props: { id: string; name: string }) => {
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
   const nav = useNavigate();
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     if (!isSaved) setOpen(true);
@@ -25,7 +32,11 @@ const ExitTilemapButton = (props: { id: string; name: string }) => {
   };
   const handleClose = () => setOpen(false);
   const exit = () => {
-    edit.exitWithoutSaving(snack);
+    if (edit.canEdit(id)) {
+      edit.exitWithoutSaving(snack);
+      return;
+    }
+    nav("/home");
   };
   const saveAndExit = () => {};
 

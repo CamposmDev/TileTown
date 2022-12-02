@@ -160,14 +160,20 @@ export class TilemapEditStore {
       });
   }
 
-  public canEdit(id: string): boolean {
-    if (id === this.state.Tilemap.owner)
-      return this.state.Tilemap.collaboratorIndex === 0;
-    else
-      return (
-        this.state.Tilemap.collaboratorIndex ===
-        this.state.Tilemap.collaborators.indexOf(id) + 1
-      );
+  public canEdit(id: string | undefined): boolean {
+    if (id) {
+      if (id === this.state.Tilemap.owner)
+        return this.state.Tilemap.collaboratorIndex === 0;
+      else
+        return (
+          this.state.Tilemap.collaboratorIndex ===
+          this.state.Tilemap.collaborators.indexOf(id) + 1
+        );
+    } else return false;
+  }
+
+  public isOwner(id: string | undefined): boolean {
+    return id === this.state.Tilemap.owner;
   }
 
   public async addTileset(id: string, snack?: SnackStore): Promise<void> {
