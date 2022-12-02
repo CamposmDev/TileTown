@@ -7,6 +7,7 @@ import { is } from "typescript-is";
 import * as fs from 'fs';
 import path from "path";
 import AdmZip from 'adm-zip';
+import sharp from 'sharp';
 
 
 import { TilemapParser } from "../../parsers";
@@ -331,7 +332,9 @@ export default class TilemapController {
 
             // Copy the contents of all the image files to the new map directory
             for (let tileset of tilesets) {
-                fs.copyFileSync(path.join(imgdir, tileset.image), path.join(mapdir, tileset.image));
+                let info = await sharp(path.join(imgdir, tileset.image)).resize(tileset.tileWidth*tileset.columns, tileset.tileHeight*tileset.rows).toFile(path.join(mapdir, tileset.image));
+                console.log("Image info");
+                console.log(info);
             }
 
             // Create the zip object

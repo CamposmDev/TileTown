@@ -546,7 +546,7 @@ export default class UserController {
 
         let socials = await db.tilesetSocials.getTilesetSocialsByUserId(req.params.id);
         if (socials.length === 0) {
-            return res.status(404).json({ message: "User has no unpublished tilesets"});
+            return res.status(404).json({ message: "User has no published tilesets"});
         }
 
         return res.status(200).json({ message: "Found users published tilesets!", socials: socials});
