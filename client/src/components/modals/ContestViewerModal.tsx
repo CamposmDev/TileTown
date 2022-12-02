@@ -5,6 +5,7 @@ import { ModalContext } from "src/context/modal"
 import { SnackContext } from "src/context/snack"
 import { SocialContext } from "src/context/social"
 import { ContestContext } from "src/context/social/contest"
+import User from "../../../../@types/User"
 import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader"
 import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader"
 import UserProfileBox from "../UserProfileBox"
@@ -32,10 +33,19 @@ function ContestSubmissionViewerModal(props:
     }) {
     const auth = useContext(AuthContext)
     const contest = useContext(ContestContext)
+    const snack = useContext(SnackContext)
+    const social = useContext(SocialContext)
     const [socialIds, setSocialIds] = useState<string[]>([])
+    const [winner, setWinner] = useState<User>()
     let c = contest.state.currentContest
+    let loggedUsr = auth.usr
     useEffect(() => {
         if (c) {
+            if (c.winner) {
+                social.getUserById(c.winner).then(usr => {
+                    if (usr) setWinner(usr)
+                })
+            }
             if (c.type === 'tilemap') {
                 contest.getTilemapSubmissions().then(arr => {
                     setSocialIds(arr)
@@ -48,31 +58,55 @@ function ContestSubmissionViewerModal(props:
         }
     }, [contest.state.currentContest, auth.usr])
     if (!c) return <div/>
-    console.log(socialIds)
+    
+    const selectWinner = async (socialId: string) => {
+        if (!c) return
+        switch (c.type) {
+            case 'tilemap':
+                let tms = await social.getTilemapSocialById(socialId)
+                if (tms) {
+                    contest.selectWinner(c.id, tms.owner, snack)
+                }
+                break
+            case 'tileset':
+                let tss = await social.getTilesetSocialById(socialId)
+                if (tss) {
+                    contest.selectWinner(c.id, tss.owner, snack)
+                }
+                break
+        }
+    }
+
     let content: JSX.Element | JSX.Element[] = <div/>
     switch (c.type) {
         case 'tilemap':
             content = socialIds.map(id =>
                 <Grid item key={id}>
+                    {(loggedUsr && loggedUsr.id === c?.owner) ? <Button fullWidth onClick={() => selectWinner(id)}>Set as Winner</Button> : <div/>}
                     <TilemapSocialCardLoader tmsId={id}/>
-                </Grid>
-            )
+            </Grid>)
             break
         case 'tileset':
             content = socialIds.map(id => <Grid item key={id}>
+                {(loggedUsr && loggedUsr.id === c?.owner) ? <Button fullWidth onClick={() => selectWinner(id)}>Set as Winner</Button> : <div/>}
                 <TilesetSocialCardLoader tssId={id}/>
             </Grid>)
             break
     }
+
+    let winnerStr = winner ? `(${winner.username} is the winner!)` : ''
+
     return (
         <Dialog open={props.open} fullScreen TransitionComponent={SLIDE_DOWN_TRANSITION} onClose={() => contest.clear()}>
             <AppBar position="relative">
                 <Toolbar>
-                    <Typography flexGrow={1}>{c.name}</Typography>
+                    <Typography mr={1}>{c.name}</Typography>
+                    <Typography flexGrow={1}>{winnerStr}</Typography>
                     <Button color='inherit' onClick={() => contest.clear()}>Close</Button>
                 </Toolbar>
             </AppBar>
-            <Grid container>
+            <Grid container p={1}>
+                {socialIds.length === 0 ? <Typography>{`No one submitted for your contest :( Better luck next time!`}</Typography> : <div/>}
                 {content}
             </Grid>
         </Dialog>

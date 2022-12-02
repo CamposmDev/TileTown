@@ -38,6 +38,8 @@ export default function PublishTilemapButton(props: {
   const [desc, setDesc] = useState("");
   const [options, setOptions] = useState<string[]>([]);
   const [commOption, setCommOption] = useState("");
+  const [contestOptions, setContestOptions] = useState<string[]>([])
+  const [contestOption, setContestOption] = useState('')
   const [tag, setTag] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
 
@@ -47,6 +49,9 @@ export default function PublishTilemapButton(props: {
       social.getCommunityNames(usr.joinedCommunities).then((arr) => {
         setOptions(arr);
       });
+      social.getTilemapContestNames(usr.joinedContests).then(arr => {
+        setContestOptions(arr)
+      })
     }
   }, []);
 
@@ -115,7 +120,7 @@ export default function PublishTilemapButton(props: {
   };
 
   const publish = () => {
-    social.publishTilemap(props.id, desc, commOption, [], tags, snack);
+    social.publishTilemap(props.id, desc, commOption, contestOption, [], tags, snack);
     prof.viewPublishedTilesets(auth.usr?.id);
     handleClose();
   };
@@ -168,6 +173,20 @@ export default function PublishTilemapButton(props: {
                 />
               )}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <Autocomplete
+                  fullWidth
+                  options={contestOptions}
+                  onChange={(e,v) => {v ? setContestOption(v) : setContestOption('')}}
+                  renderInput={(params) =>
+                      <TextField
+                          {...params}
+                          margin='dense'
+                          label='Optional: Contest'
+                          value={contestOption}    
+                  />}
+              />
           </Grid>
           <Grid item xs={12}>
             <TextField

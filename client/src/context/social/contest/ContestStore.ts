@@ -199,6 +199,20 @@ export class ContestStore {
         })
     }
 
+    public async selectWinner(contestId: string, userId: string, snack?: SnackStore): Promise<void> {
+        return ContestApi.selectWinner(contestId, {userId: userId}).then(res => {
+            if (res.status === 200) {
+                snack?.showSuccessMessage(res.data.message)
+                this.handleAction({
+                    type: ContestActionType.viewContest,
+                    payload: {
+                        currentContest: res.data.contest
+                    }
+                })
+            }
+        })
+    }
+
     protected handleAction(action: ContestAction) {
         switch (action.type) {
             case ContestActionType.getContests: {
