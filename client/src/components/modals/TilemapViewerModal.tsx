@@ -53,7 +53,11 @@ export default function TilemapViewerModal() {
     }
 
     const download = () => {
-        /** Andrew help me */
+        const link = document.createElement('a')
+        if (!tms) return
+        link.download = tms?.name
+        link.href = `${window.location.protocol}//${window.location.hostname}:3000/api/tilemap/download/tiled/${tms.tileMap}`;
+        link.click()
     }
 
     const favorite = () => {
@@ -155,9 +159,9 @@ export default function TilemapViewerModal() {
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tms.dislikes.length)}
-                                            {/* <Tooltip title={'Download'}>
+                                            <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
-                                            </Tooltip> */}
+                                            </Tooltip>
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>

@@ -72,7 +72,11 @@ export default function TilesetViewerModal() {
     }
 
     const download = () => {
-        /** Andrew help me */
+        if (!tss) return
+        const link = document.createElement("a");
+        link.download = tss.name
+        link.href = tss.imageURL
+        link.click();
     }
 
     const handlekeyUp = (e: React.KeyboardEvent) => {
@@ -154,9 +158,9 @@ export default function TilesetViewerModal() {
                                                 <IconButton onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.dislikes.length)}
-                                            {/* <Tooltip title={'Download'}>
+                                            <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
-                                            </Tooltip> */}
+                                            </Tooltip>
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>
