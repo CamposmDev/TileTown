@@ -73,9 +73,11 @@ export default function TilesetViewerModal() {
 
     const download = () => {
         if (!tss) return
+        const url = `${window.location.protocol}//${window.location.hostname}:3000/api/media/${tss.imageURL}`
         const link = document.createElement("a");
+        link.target = '_blank'
         link.download = tss.name
-        link.href = tss.imageURL
+        link.href = url
         link.click();
     }
 

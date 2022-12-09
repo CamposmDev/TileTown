@@ -1,7 +1,7 @@
 import { useState, createContext } from "react"
 import { useNavigate } from "react-router";
 import TilemapViewerModal from "../../components/modals/TilemapViewerModal";
-import TilesetViewerModal from "../../components/modals/TilesetViewerModal";
+import TilesetViewerModal from "../../components/modals/TIlesetViewerModal";
 import { SocialState, SocialStore } from "./SocialStore";
 
 const SocialContext = createContext<SocialStore>(new SocialStore(

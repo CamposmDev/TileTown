@@ -55,7 +55,7 @@ export default function TilemapViewerModal() {
     const download = () => {
         const link = document.createElement('a')
         if (!tms) return
-        link.download = tms?.name
+        link.download = tms.name
         link.href = `${window.location.protocol}//${window.location.hostname}:3000/api/tilemap/download/tiled/${tms.tileMap}`;
         link.click()
     }
