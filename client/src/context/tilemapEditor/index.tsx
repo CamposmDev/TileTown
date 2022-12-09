@@ -10,6 +10,7 @@ import { TilemapApi, TilesetApi } from "src/api";
 import { AuthContext } from "../auth";
 import { SnackContext } from "../snack";
 import axios from "axios";
+import { Tileset } from "../tilesetEditor/TilesetEditTypes";
 
 /**
  * The edit context
@@ -122,7 +123,6 @@ function TilemapEditContextProvider(props: Record<string, any>) {
         let tilemap = res.data.tilemap;
 
         if (auth.usr?.id) {
-          console.log(tilemap.collaborators.includes(auth.usr.id));
           if (
             !(
               auth.usr.id === tilemap.owner ||
@@ -171,21 +171,39 @@ function TilemapEditContextProvider(props: Record<string, any>) {
           nav("/home");
           return;
         }
-
-        setEdit({ ...edit, Tilemap: res.data.tilemap });
+        if (tilemap.tilesets.length > 0) {
+          let tilesetCount = 0;
+          let tilesets = edit.Tilesets;
+          if (tilesets.length < tilemap.tilesets.length)
+            tilemap.tilesets.forEach((tileset) => {
+              TilesetApi.getTilesetById(tileset).then((res) => {
+                console.log(res.data.tileset.id);
+                tilesets.push(res.data.tileset);
+                tilesetCount++;
+                if (tilesetCount === tilemap.tilesets.length) {
+                  console.log("all tilesets loaded in");
+                  setEdit({
+                    ...edit,
+                    Tilemap: tilemap,
+                    Tilesets: tilesets,
+                    renderTilemapCanvas: false,
+                    isSaved: true,
+                  });
+                }
+              });
+            });
+        } else {
+          setEdit({
+            ...edit,
+            Tilemap: tilemap,
+            renderTilemapCanvas: false,
+            isSaved: true,
+          });
+        }
       }
     });
     if (edit.Tilemap.id === "") return;
-    if (edit.Tilemap.tilesets.length > 0) {
-      edit.Tilemap.tilesets.forEach((tileset) => {
-        TilesetApi.getTilesetById(tileset).then((res) => {
-          setEdit({
-            ...edit,
-            Tilesets: [...edit.Tilesets, res.data.tileset],
-          });
-        });
-      });
-    }
+
     // if (edit.Tilemap.tilesets.length !== edit.Tilesets.length) return;
   }, [edit.Tilemap.id]);
 

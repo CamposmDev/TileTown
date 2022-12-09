@@ -72,8 +72,8 @@ const TilesetCanvas = () => {
             console.log("use effect");
             if (blob !== null) {
               console.log("not null");
-              // edit.saveImage(canvas.toDataURL("image/png"), blob);
-              edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
+              edit.saveImage(canvas.toDataURL("image/png"), blob);
+              // edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
             }
           });
         };
@@ -169,14 +169,13 @@ const TilesetCanvas = () => {
         context.closePath();
       }
       setIsDrawing(false);
-      edit.updateCurrentTile({ x: null, y: null });
 
       canvas.toBlob((blob) => {
         console.log("finish drawing");
         if (blob !== null) {
           console.log("fd-not-null");
-          // edit.saveImage(canvas.toDataURL("image/png"), blob);
-          edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
+          edit.saveImage(canvas.toDataURL("image/png"), blob);
+          // edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
         }
       });
     }
@@ -194,7 +193,6 @@ const TilesetCanvas = () => {
         if (withinCurrentTile(canvasCoords.x, canvasCoords.y, currentTile)) {
           context.lineTo(canvasCoords.x, canvasCoords.y);
           context.stroke();
-          // updateImage(canvas, canvasImage);
           return;
         }
         setIsDrawing(false);
@@ -380,8 +378,8 @@ const TilesetCanvas = () => {
       console.log("flood-fill");
       if (blob !== null) {
         console.log("flood-fill-not-null");
-        // edit.saveImage(canvas.toDataURL("image/png"), blob);
-        edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
+        edit.saveImage(canvas.toDataURL("image/png"), blob);
+        // edit.addEditImageTransaction(canvas.toDataURL("image/png"), blob);
       }
     });
   };

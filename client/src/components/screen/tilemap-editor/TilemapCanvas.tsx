@@ -14,11 +14,8 @@ const TilemapCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  // const [currentTileCount, setCurrentTileCount] = useState(0);
   let currentTileCount = 0;
-  // const [render, setRender] = useState(edit.state.renderTilemapCanvas);
   const render = edit.state.renderTilemapCanvas;
-  console.log(render);
 
   const tileHeight: number = edit.state.Tilemap.tileHeight;
   const tileWidth: number = edit.state.Tilemap.tileWidth;
@@ -29,6 +26,7 @@ const TilemapCanvas = () => {
 
   const currentGlobalTileIDs = edit.state.Tilemap.globalTileIDs;
   const totalTileCount = height * width * edit.state.Tilemap.layers.length;
+  console.log(totalTileCount);
 
   const canvasHeight: number = 800;
   const canvasWidth: number = 800;
@@ -81,7 +79,7 @@ const TilemapCanvas = () => {
     scaledTileHeight: number,
     y: number
   ): void => {
-    for (let i = 0; i < canvasWidth - scaledTileWidth; i += scaledTileWidth) {
+    for (let i = 0; i <= canvasWidth; i += scaledTileWidth) {
       const currentTileIndex =
         edit.state.Tilemap.layers[layerIndex].data[
           Math.round(i / scaledTileWidth + dataIndex)
@@ -91,7 +89,7 @@ const TilemapCanvas = () => {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
         for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
-          if (currentGlobalTileIDs[j] < currentTileIndex) {
+          if (currentGlobalTileIDs[j] <= currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
             currentTilesetIndex = j;
             break;
@@ -117,6 +115,7 @@ const TilemapCanvas = () => {
         image.crossOrigin = "Anonymous";
 
         image.onload = () => {
+          console.log("onload");
           const imageWidth = image.width;
           const imageHeight = image.height;
           const imageTileWidth =
@@ -141,21 +140,30 @@ const TilemapCanvas = () => {
           );
           currentTileCount++;
 
-          if (currentTileCount >= totalTileCount) {
-            console.log("tilemap fully rendered");
-            console.log(edit.state.Tilemap);
+          if (currentTileCount === totalTileCount) {
             if (!edit.state.isSaved)
               canvas.toBlob((blob) => {
+                console.log("toBlob");
                 if (blob) {
-                  console.log("hello?");
                   edit.saveTilemap(blob, snack);
                 }
               });
-            else edit.renderTilemap(false);
+          } else {
+            edit.renderTilemap(false);
           }
         };
       } else {
         currentTileCount++;
+        if (currentTileCount === totalTileCount) {
+          console.log("tilemap fully rendered");
+          if (!edit.state.isSaved)
+            canvas.toBlob((blob) => {
+              if (blob) {
+                console.log("hello?");
+                edit.saveTilemap(blob, snack);
+              }
+            });
+        }
       }
     }
   };
@@ -172,6 +180,7 @@ const TilemapCanvas = () => {
     scaledTileWidth: number,
     scaledTileHeight: number
   ) => {
+    console.log("drawCanvas");
     for (let i = edit.state.Tilemap.layers.length - 1; i >= 0; i--) {
       if (edit.state.Tilemap.layers[i].visible)
         drawLayer(ctx, canvas, i, scaledTileWidth, scaledTileHeight);

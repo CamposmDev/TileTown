@@ -84,7 +84,7 @@ const BottomLayerCanvas = () => {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
         for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
-          if (currentGlobalTileIDs[j] < currentTileIndex) {
+          if (currentGlobalTileIDs[j] <= currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
             currentTilesetIndex = j;
             break;
