@@ -143,14 +143,12 @@ export class TilesetEditStore {
   }
 
   public addEditImageTransaction(imageData: string, image: Blob): void {
-    console.log("hello");
     const newEditImageTransaction = new EditTilesetImage_Transaction(
       this,
       { image: this.state.image, imageData: this.state.imageData },
       { image, imageData }
     );
     this.tsTPS.addTransaction(newEditImageTransaction);
-    console.log(this.tsTPS.toString());
   }
 
   public async saveImage(imageData: string, blob: Blob): Promise<void> {
@@ -332,7 +330,7 @@ export class TilesetEditStore {
       isSaved: false,
       firstRender: this._state.firstRender,
       zoom: this._state.zoom,
-      currentTile: this._state.currentTile,
+      currentTile: { x: null, y: null },
     });
   }
   protected handleUpdateCurrentTile(payload: {
