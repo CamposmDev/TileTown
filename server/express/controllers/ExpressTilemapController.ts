@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { json, Request, Response } from "express";
 import { db } from "../../database";
 import { Community, Contest, SortBy, Tilemap, TilemapSocial } from "@types";
 import { is } from "typescript-is";
@@ -294,15 +294,15 @@ export default class TilemapController {
     if (!req.body) {
       return res.status(400).json({ message: "Missing body" });
     }
-    if (!req.body.description) {
-      return res.status(400).json({ message: "Missing description" })
+
+    try {
+        req.body.description = JSON.parse(req.body.description);
+        req.body.permissions = JSON.parse(req.body.permissions);
+        req.body.tags = JSON.parse(req.body.tags);
+    } catch (e) {
+        return res.status(400).json({ message: "Error parsing json..."})
     }
-    if (!req.body.permissions) {
-      return res.status(400).json({ message: "Missing permissions" })
-    }
-    if (!req.body.tags) {
-      return res.status(400).json({ message: "Missing tags" })
-    }
+    
 
     // Check tilemap exists
     let tilemap = await db.tilemaps.getTilemapById(req.params.id);
@@ -310,6 +310,11 @@ export default class TilemapController {
       return res
         .status(404)
         .json({ message: `Tilemap with id ${req.params.id} not found` });
+    }
+    // Update the tilemaps image url.
+    let updated = await db.tilemaps.updateTilemapById(tilemap.id, {image: req.file?.filename});
+    if (updated === null) {
+        return res.status(500).json({ message: "Error updating tilemap with new image filename"});
     }
 
     // Check the user/owner exists
@@ -343,10 +348,22 @@ export default class TilemapController {
     }
 
     let community: Community | null = null
+    try {
+        req.body.communityName = JSON.parse(req.body.community);
+    } catch (e) {
+        req.body.communityName = null;
+    }
     if (req.body.communityName) {
       community = await db.communities.getCommunityByName(req.body.communityName)
     }
+
     let contest: Contest | null = null
+    try {
+        req.body.contestName = JSON.parse(req.body.contestName);
+    } catch (e) {
+        req.body.contestName = null;
+    }
+
     if (req.body.contestName) {
       contest = await db.contests.getContestByName(req.body.contestName)
     }
@@ -361,6 +378,7 @@ export default class TilemapController {
       tags: req.body.tags,
       community: community?.id,
       contest: contest?.id,
+      imageURL: tilemap.image
     });
     if (social === null) {
       return res.status(500).json({

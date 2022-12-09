@@ -7,7 +7,7 @@ const router: Router = Router();
 router.get("/:id", Auth.verifyJWT, TilemapController.getTilemapById);
 router.put("/:id", Auth.verifyJWT, Upload.single('image'), TilemapController.updateTilemapById);
 router.post("/", Auth.verifyJWT, Upload.single('image'), TilemapController.createTilemap);
-router.post("/publish/:id", Auth.verifyJWT, TilemapController.publishTilemap);
+router.post("/publish/:id", Auth.verifyJWT, Upload.single('image'), TilemapController.publishTilemap);
 router.delete("/:id", Auth.verifyJWT, TilemapController.deleteTilemapById);
 
 router.get('/search/:query', TilemapController.getTilemapSocialsByName)

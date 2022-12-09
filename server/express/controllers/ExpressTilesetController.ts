@@ -363,14 +363,14 @@ export default class TilesetController {
     if (!req.body) {
       return res.status(400).json({ message: "Missing body" });
     }
-    if (!req.body.description) {
-      return res.status(400).json({ message: "Missing description" })
-    }
-    if (!req.body.permissions) {
-      return res.status(400).json({ message: "Missing permissions" })
-    }
-    if (!req.body.tags) {
-      return res.status(400).json({ message: "Missing tags" })
+
+
+    try {
+        req.body.description = JSON.parse(req.body.description);
+        req.body.permissions = JSON.parse(req.body.permissions);
+        req.body.tags = JSON.parse(req.body.tags);
+    } catch (e) {
+        return res.status(500).json({ message: "Error parsing JSON..."});
     }
 
     // Check tileset exists
@@ -379,6 +379,11 @@ export default class TilesetController {
       return res
         .status(404)
         .json({ message: `Tileset with id ${req.params.id} not found` });
+    }
+
+    let updated = await db.tilesets.updateTilesetById(tileset.id, {image: req.file?.filename});
+    if (updated === null) {
+        return res.status(500).json({ message: "Error updating tileset image"});
     }
 
     // Check if social data already exists for this tileset
@@ -392,12 +397,23 @@ export default class TilesetController {
     }
 
     let community: Community | null = null
-    if (req.body.communityName) {
-      community = await db.communities.getCommunityByName(req.body.communityName)
+    try {
+        req.body.communityName = JSON.parse(req.body.communityName);
+    } catch (e) {
+        req.body.communityName = null
     }
+    if (req.body.communityName) {
+      community = await db.communities.getCommunityByName(req.body.communityName);
+    }
+
     let contest: Contest | null = null
+    try {
+        req.body.contestName = JSON.parse(req.body.contestName);
+    } catch (e) {
+        req.body.contestName = null;
+    }
     if (req.body.contestName) {
-      contest = await db.contests.getContestByName(req.body.contestName)
+      contest = await db.contests.getContestByName(req.body.contestName);
     }
 
     // Create the social data
@@ -411,7 +427,7 @@ export default class TilesetController {
         contest: contest?.id,
         permissions: req.body.permissions,
         tags: req.body.tags,
-        imageURL: tileset.image
+        imageURL: updated.image
       }
     );
     if (social === null) {

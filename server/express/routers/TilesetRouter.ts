@@ -7,7 +7,7 @@ const router: Router = Router();
 // Tileset - basic CRUD routes and publish
 router.get("/:id", Auth.verifyJWT, TilesetController.getTilesetById);
 router.post("/", Auth.verifyJWT, Upload.single('image'), TilesetMW.createTileset(), TilesetController.createTileset);
-router.post("/publish/:id", Auth.verifyJWT, TilesetController.publishTileset);
+router.post("/publish/:id", Auth.verifyJWT, Upload.single('image'), TilesetController.publishTileset);
 router.put("/:id", Auth.verifyJWT, Upload.single('image'), TilesetController.updateTilesetById);
 router.delete("/:id", Auth.verifyJWT, TilesetController.deleteTilesetById);
 
