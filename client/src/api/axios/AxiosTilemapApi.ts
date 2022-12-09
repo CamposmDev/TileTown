@@ -22,8 +22,20 @@ export default class AxiosTilemapApi {
         return AxiosApi.delete<DeleteTilemapRes, AxiosResponse<DeleteTilemapRes>>(`/tilemaptileset/${id}`);
     }
     
-    public async publishTilemapById(id: string, payload: PublishTilemapReq): Promise<AxiosResponse<PublishTilemapRes>> {
-        return AxiosApi.post<PublishTilemapRes, AxiosResponse<PublishTilemapRes>>(`/tilemap/publish/${id}`, payload);
+    /**
+     * The FormData takes the old fields from the original payload with the image.
+     * 
+     *  {
+     *       image: the image file,
+     *       description: the descrpiton,
+     *       permissions: the permissions (not exactly sure how this works),
+     *       tags: the array of tags?
+     *       communityName: the name of the community
+     *       contestName: the name of the contest
+     *  }
+     */
+    public async publishTilemapById(id: string, formData: FormData): Promise<AxiosResponse<PublishTilemapRes>> {
+        return AxiosApi.post<PublishTilemapRes, AxiosResponse<PublishTilemapRes>>(`/tilemap/publish/${id}`, formData);
     }
     
     public async getUserCollaboratedTilemaps(userId: string) {

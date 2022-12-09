@@ -59,19 +59,25 @@ export default class AxiosTilesetApi {
     >(`/tileset/${id}`, payload);
   }
 
+/** 
+  * Fields for the FormData stuff.
+  * 
+  * {
+  *       image: the image file,
+  *       description: the descrpiton,
+  *       permissions: the permissions (not exactly sure how this works),
+  *       tags: the array of tags?
+  *       communityName: the name of the community
+  *       contestName: the name of the contest
+  * }
+  */  
   public async publishTilesetById(
     id: string,
-    payload: {
-      description: string;
-      communityName: string;
-      contestName: string;
-      permissions: string[];
-      tags: string[];
-    }
+    formData: FormData
   ): Promise<AxiosResponse<PublishTilesetRes>> {
     return AxiosApi.post<PublishTilesetRes, AxiosResponse<PublishTilesetRes>>(
       `/tileset/publish/${id}`,
-      payload
+      formData
     );
   }
 
