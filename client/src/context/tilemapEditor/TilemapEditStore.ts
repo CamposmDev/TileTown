@@ -95,7 +95,6 @@ export class TilemapEditStore {
   }
 
   public async saveTilemap(blob: Blob, snack?: SnackStore): Promise<void> {
-    console.log("saveTilemap");
     const f = new FormData();
     f.append("image", blob);
     f.append("tilemap", JSON.stringify(this.state.Tilemap));
@@ -809,11 +808,10 @@ export class TilemapEditStore {
   }
 
   protected handleSaveTilemap(): void {
-    console.log("handleSaveTilemap");
     this.setEdit({
       ...this._state,
       isSaved: true,
-      renderCurrentLayerCanvas: false,
+      renderTilemapCanvas: false,
     });
   }
 

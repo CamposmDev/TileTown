@@ -141,16 +141,15 @@ const TilemapCanvas = () => {
           currentTileCount++;
 
           if (currentTileCount === totalTileCount) {
-            console.log("tilemap fully rendered");
-            console.log(edit.state.Tilemap);
             if (!edit.state.isSaved)
               canvas.toBlob((blob) => {
                 console.log("toBlob");
                 if (blob) {
-                  console.log("hello?");
                   edit.saveTilemap(blob, snack);
                 }
               });
+          } else {
+            edit.renderTilemap(false);
           }
         };
       } else {
