@@ -29,7 +29,7 @@ export default class TilemapParser {
             type: "map",
             width: tilemap.width,
 
-            layers: tilemap.layers.map((layer, idx) => this.parseTiledLayer(idx + 1, layer)),
+            layers: tilemap.layers.map((layer, idx) => this.parseTiledLayer(idx + 1, layer)).reverse(),
             tilesets: tilesets.map((tileset, idx) => this.parseTiledTileset(tilemap.globalTileIDs[idx], tileset)),
 
             tiledversion: "1.8",
