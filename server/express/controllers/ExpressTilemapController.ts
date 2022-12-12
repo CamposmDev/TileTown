@@ -361,6 +361,7 @@ export default class TilemapController {
       tags: req.body.tags,
       community: community?.id,
       contest: contest?.id,
+      imageURL: tilemap.image
     });
     if (social === null) {
       return res.status(500).json({

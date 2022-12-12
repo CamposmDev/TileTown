@@ -20,7 +20,7 @@ const ForumPostCard = (props: Props) => {
     const [username, setUsername] = useState('')
     useEffect(() => {
         let userId = props.forumPost.author
-        let aux = async () => await social.getUserById(userId).then(u => { if (u) setUsername(u.username) })
+        let aux = async () => await social.getUserUsernameById(userId).then(u => { if (u) setUsername(u) })
         aux()
     }, [])
     

@@ -11,7 +11,7 @@ ForumRouter.post('/', Auth.verifyJWT, ForumController.createForumPost);
 ForumRouter.put('/:id', Auth.verifyJWT, ForumController.updateForumPostById);
 ForumRouter.delete('/:id', Auth.verifyJWT, ForumController.deleteForumPostById);
 
-ForumRouter.put('/view/:id', Auth.verifyJWT, ForumController.viewForumPost);
+ForumRouter.put('/view/:id', ForumController.viewForumPost);
 ForumRouter.put('/like/:id', Auth.verifyJWT, ForumController.likeForumPostById);
 ForumRouter.put('/dislike/:id', Auth.verifyJWT, ForumController.dislikeForumPostById);
 ForumRouter.post('/comment/:id', Auth.verifyJWT, ForumController.commentForumPostById);

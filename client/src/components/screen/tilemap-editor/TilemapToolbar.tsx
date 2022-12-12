@@ -39,12 +39,9 @@ import DeleteTilemapButton from "src/components/button/DeleteTilemapButton";
 import PublishTilemapButton from "src/components/button/PublishTilemapButton";
 import ExitTilemapButton from "src/components/button/ExitTilemapButton";
 import { AuthContext } from "src/context/auth";
+import CollaboratorDisplay from "./CollaboratorDisplay";
 
 const TilemapToolbar = () => {
-  let timeLeft = "1:24";
-  let tilesLeft = 5;
-  let nextCollaboratorName = "PeteyLumpkins";
-
   const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
 
@@ -101,7 +98,7 @@ const TilemapToolbar = () => {
     link.download = edit.state.Tilemap.name;
     link.href = `${window.location.protocol}//${window.location.hostname}/api/tilemap/download/tiled/${edit.state.Tilemap.id}`
     link.click();
-  }
+  };
 
   const setEditControl = (editControl: TilemapEditControl) => {
     edit.updateEditControl(editControl);
@@ -130,11 +127,15 @@ const TilemapToolbar = () => {
             <Tooltip
               title="Download"
               arrow
-              children={<IconButton 
-                onClick={ () => { handleDownload(); }}
-                color="primary" 
-                children={<Download />} />
-            }
+              children={
+                <IconButton
+                  onClick={() => {
+                    handleDownload();
+                  }}
+                  color="primary"
+                  children={<Download />}
+                />
+              }
             />
             <Tooltip
               title="Undo"
@@ -273,15 +274,7 @@ const TilemapToolbar = () => {
           </Grid>
         </Grid>
       </Toolbar>
-      <Toolbar sx={{ boxShadow: 1 }} variant="dense">
-        <Grid container direction="column" alignContent="center">
-          <Stack direction="row" spacing={4}>
-            <Typography>Time Left:&ensp;{timeLeft}</Typography>
-            <Typography>Tiles Left:&ensp;{tilesLeft}</Typography>
-            <Typography>Next:&ensp;{nextCollaboratorName}</Typography>
-          </Stack>
-        </Grid>
-      </Toolbar>
+      <CollaboratorDisplay></CollaboratorDisplay>
     </Grid>
   );
 };

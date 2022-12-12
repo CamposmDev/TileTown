@@ -72,7 +72,7 @@ const CommunitySettingsButton = () => {
     let moderators: JSX.Element | JSX.Element[] = <Typography>None</Typography>
     if (c) {
         moderators = c.members.map(x =>
-            <Grid item xs={12} key={x}>
+            <Grid item xs={12} mt={1} key={x}>
                 <MemberCard usrId={x} />
             </Grid>
         )
@@ -86,8 +86,8 @@ const CommunitySettingsButton = () => {
                     <TextField value={desc} onChange={handleDescChange} label='Description' margin='dense'/>
                     {visSelector}
                 </Stack>
-                <Typography>Moderators</Typography> 
-                <Grid container sx={{height: '300px', overflow: 'auto'}}>
+                <Typography>Members</Typography> 
+                <Grid sx={{height: '300px', overflow: 'auto'}}>
                     {moderators}
                 </Grid>
             </DialogContent>

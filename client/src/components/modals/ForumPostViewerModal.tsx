@@ -31,7 +31,7 @@ export default function ForumPostViewerModal() {
         let userId: string | undefined = forum.getCurrentForumPost()?.author
         let aux = async () => {
             if (userId) {
-                await social.getUserById(userId).then(u => {
+                await social.getUserCredentialsById(userId).then(u => {
                     if (u) setUser({firstName: u.firstName, lastName: u.lastName, username: u.username})
                 })
             }
@@ -61,6 +61,19 @@ export default function ForumPostViewerModal() {
             forum.comment(comment, snack)
             setComment('')
         }
+    }
+
+    let commentField = <div/>
+    if (!auth.isGuest()) {
+        commentField = <TextField 
+            sx={{mb: 1}}
+            autoFocus
+            fullWidth
+            value={comment}
+            label='Comment' 
+            onChange={(e) => setComment(e.target.value)} 
+            onKeyUp={handleKeyUp}
+        />
     }
 
     let disableLike = false
@@ -138,24 +151,17 @@ export default function ForumPostViewerModal() {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <Grid container p={1}>
-                    <Grid item xs={6} pr={1}>
+                <Grid container p={1} spacing={1}>
+                    <Grid item xs={6}>
                         <Card sx={{boxShadow: 3}}>
                             {content}
                         </Card>
                     </Grid>
-                    <Grid container item xs={6} pl={1}>
-                    <Grid container>
-                            <TextField 
-                                autoFocus
-                                fullWidth
-                                value={comment}
-                                label='Comment' 
-                                onChange={(e) => setComment(e.target.value)} 
-                                onKeyUp={handleKeyUp}
-                            />
-                        </Grid>
+                    <Grid container item xs={6}>
                         <Grid container>
+                            {commentField}
+                        </Grid>
+                        <Grid container spacing={1}>
                             {forumPost?.comments.slice().reverse().map(x =>
                                 <Grid item xs={12} key={x}>
                                     <CommentCard commentId={x} />

@@ -165,7 +165,13 @@ export class AuthStore {
                 })
                 if (snack) snack.showSuccessMessage(res.data.message)
             }
-        });
+        }).catch(e => {
+            if (axios.isAxiosError(e)) {
+                if (e.response?.status === 401) { // Unauthroized: JWT Token most likely expired
+                    this.nav('/')
+                }
+            }
+        })
     }
 
     public async getLoggedIn(): Promise<void> { 

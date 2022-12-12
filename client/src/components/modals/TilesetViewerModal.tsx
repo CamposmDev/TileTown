@@ -72,7 +72,13 @@ export default function TilesetViewerModal() {
     }
 
     const download = () => {
-        /** Andrew help me */
+        if (!tss) return
+        const url = `${window.location.protocol}//${window.location.hostname}:3000/api/media/${tss.imageURL}`
+        const link = document.createElement("a");
+        link.target = '_blank'
+        link.download = tss.name
+        link.href = url
+        link.click();
     }
 
     const handlekeyUp = (e: React.KeyboardEvent) => {
@@ -90,6 +96,20 @@ export default function TilesetViewerModal() {
         social.clear()
     }
 
+    let commentField = <div/>
+    if (!auth.isGuest()) {
+        commentField = <TextField
+            disabled={auth.isGuest()}
+            sx={{mb: 1}}
+            autoFocus
+            fullWidth
+            value={comment}
+            label='Comment'
+            onChange={(e) => setComment(e.target.value)}
+            onKeyUp={handlekeyUp}
+        />
+    }
+
     let tss = social.state.currentTSS
     let usr = auth.usr
     if (tss) {
@@ -105,7 +125,7 @@ export default function TilesetViewerModal() {
                             <Typography variant="h6">{tss.name}</Typography>
                         </Grid>
                         <Grid item>
-                            <IconButton onClick={favorite}><Star sx={starSX} /></IconButton>
+                            <IconButton disabled={auth.isGuest()} onClick={favorite}><Star sx={starSX} /></IconButton>
                         </Grid>
                         <Grid item>
                             <Button color='inherit' onClick={handleClose}>Close</Button>
@@ -127,7 +147,7 @@ export default function TilesetViewerModal() {
                 </Grid>
                 <Grid item flexGrow={1} xs>
                     <Grid item xs={12}>
-                        <Card sx={{boxShadow: 3}}>
+                        <Card sx={{boxShadow: 3, mb: 1}}>
                             <CardContent>
                                 <Grid item>
                                     <Grid item>
@@ -147,16 +167,16 @@ export default function TilesetViewerModal() {
                                             </Tooltip>
                                             {formatToSocialStr(tss.views)}
                                             <Tooltip title={'Like'}>
-                                                <IconButton onClick={like}><ThumbUp/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.likes.length)}
                                             <Tooltip title={'Dislike'}>
-                                                <IconButton onClick={dislike}><ThumbDown/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.dislikes.length)}
-                                            {/* <Tooltip title={'Download'}>
+                                            <Tooltip title={'Download'}>
                                                 <IconButton onClick={download}><Download/></IconButton>
-                                            </Tooltip> */}
+                                            </Tooltip>
                                         </Box>
                                     </Grid>
                                     <Grid item container spacing={1}>
@@ -165,19 +185,11 @@ export default function TilesetViewerModal() {
                                 </Grid>
                             </CardContent>
                         </Card>
-                        <TextField
-                            autoFocus
-                            fullWidth
-                            margin='dense'
-                            value={comment}
-                            label='Comment'
-                            onChange={(e) => setComment(e.target.value)}
-                            onKeyUp={handlekeyUp}
-                        />
+                        {commentField}
                     </Grid>
                     <Grid item>
                         {tss.comments.slice().reverse().map(x => 
-                            <Grid item xs={12} key={x}>
+                            <Grid item xs={12} key={x} mb={1}>
                                 <CommentCard commentId={x} />
                             </Grid>
                         )} 

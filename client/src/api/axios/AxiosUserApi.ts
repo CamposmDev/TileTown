@@ -62,6 +62,14 @@ export default class AxiosUserApi  {
     async getUsersPublishedTilesets(userId: string): Promise<AxiosResponse<GetPublishedTilesetsRes>> {
         return AxiosApi.get<GetPublishedTilesetsRes, AxiosResponse<GetPublishedTilesetsRes>>(`/user/tileset/published/${userId}`);
     }
+
+    async getUserUsernameById(userId: string): Promise<AxiosResponse> {
+        return AxiosApi.get(`/user/username/${userId}`)
+    }
+
+    async getUserCredentialsById(userId: string): Promise<AxiosResponse<{username: string, firstName: string, lastName: string}>> {
+        return AxiosApi.get<{username: string, firstName: string, lastName: string}, AxiosResponse>(`/user/credentials/${userId}`)
+    }
 }
 
 

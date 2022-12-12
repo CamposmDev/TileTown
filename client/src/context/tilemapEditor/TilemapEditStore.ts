@@ -161,15 +161,16 @@ export class TilemapEditStore {
   }
 
   public canEdit(id: string | undefined): boolean {
-    if (id) {
-      if (id === this.state.Tilemap.owner)
-        return this.state.Tilemap.collaboratorIndex === 0;
-      else
-        return (
-          this.state.Tilemap.collaboratorIndex ===
-          this.state.Tilemap.collaborators.indexOf(id) + 1
-        );
-    } else return false;
+    // if (id) {
+    //   if (id === this.state.Tilemap.owner)
+    //     return this.state.Tilemap.collaboratorIndex === 0;
+    //   else
+    //     return (
+    //       this.state.Tilemap.collaboratorIndex ===
+    //       this.state.Tilemap.collaborators.indexOf(id) + 1
+    //     );
+    // } else return false;
+    return true;
   }
 
   public isOwner(id: string | undefined): boolean {
@@ -773,20 +774,20 @@ export class TilemapEditStore {
   }
   protected handleRenderCurrentLayerCanvas(willRender: boolean): void {
     this.setEdit({
-      ...this._state,
+      ...this.state,
       renderCurrentLayerCanvas: willRender,
     });
   }
 
   protected handleUpdateSelection(currentSelection: number[]): void {
     this.setEdit({
-      ...this._state,
+      ...this.state,
       currentSelection,
     });
   }
   protected handleUpdateCurrentTile(currentTileIndex: number): void {
     this.setEdit({
-      ...this._state,
+      ...this.state,
       currentTileIndex,
     });
   }
@@ -807,7 +808,6 @@ export class TilemapEditStore {
   }
 
   protected handleSaveTilemap(): void {
-    console.log("handleSaveTilemap");
     this.setEdit({
       ...this._state,
       isSaved: true,

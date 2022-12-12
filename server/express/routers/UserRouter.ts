@@ -29,4 +29,7 @@ UserRouter.put('/friend/remove/:id', Auth.verifyJWT, UserController.removeFriend
 
 UserRouter.delete('/', Auth.verifyJWT, UserController.deleteUserById);
 
+UserRouter.get('/username/:id', UserController.getUsernameById)
+UserRouter.get('/credentials/:id', UserController.getUserCredentialsById)
+
 export default UserRouter;

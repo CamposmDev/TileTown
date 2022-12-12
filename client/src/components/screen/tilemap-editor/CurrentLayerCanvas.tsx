@@ -1,5 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState, useContext } from "react";
+import { AuthContext } from "src/context/auth";
 import { SnackContext } from "src/context/snack";
 import { TilemapEditControl } from "src/context/tilemapEditor/TilemapEditTypes";
 import { TilemapEditContext } from "../../../context/tilemapEditor";
@@ -7,8 +8,12 @@ import "./default.css";
 
 const CurrentLayerCanvas = () => {
   //Tilemap edit store context
+  const auth = useContext(AuthContext);
   const edit = useContext(TilemapEditContext);
   const snack = useContext(SnackContext);
+
+  const user = auth ? auth.usr : undefined;
+  const id = user ? user.id : undefined;
 
   const [mouseDown, setMouseDown] = useState(false);
   const [startingTile, setStartingTile] = useState<{
@@ -98,13 +103,15 @@ const CurrentLayerCanvas = () => {
         edit.state.Tilemap.layers[layerIndex].data[
           Math.round(i / scaledTileWidth + dataIndex)
         ];
+      if (Math.round(i / scaledTileWidth + dataIndex) === 0)
+        console.log(currentTileIndex);
 
       if (currentTileIndex > 0) {
         let currentGlobalTileID: number = 0;
         let currentTilesetIndex: number = 0;
 
         for (let j = currentGlobalTileIDs.length - 1; j >= 0; j--) {
-          if (currentGlobalTileIDs[j] < currentTileIndex) {
+          if (currentGlobalTileIDs[j] <= currentTileIndex) {
             currentGlobalTileID = currentGlobalTileIDs[j];
             currentTilesetIndex = j;
             break;
@@ -128,6 +135,21 @@ const CurrentLayerCanvas = () => {
           (tilesetTileHeight / (tilesetTileHeight * tilesetHeight));
 
         ctx.globalAlpha = opacity;
+
+        if (Math.round(i / scaledTileWidth + dataIndex) === 0) {
+          console.log(currentGlobalTileID);
+          console.log(currentTileIndex - currentGlobalTileID);
+          console.log((currentTileIndex - currentGlobalTileID) % tilesetWidth);
+          console.log({
+            x:
+              ((currentTileIndex - currentGlobalTileID) % tilesetWidth) *
+              imageTileWidth,
+            y:
+              Math.floor(
+                (currentTileIndex - currentGlobalTileID) / tilesetWidth
+              ) * imageTileHeight,
+          });
+        }
 
         ctx.drawImage(
           image,
@@ -194,7 +216,7 @@ const CurrentLayerCanvas = () => {
   }, [render, currentLayerIndex, visible, opacity]);
 
   const onMouseDown = ({ nativeEvent }: any): void => {
-    if (!visible) {
+    if (!visible || !edit.canEdit(id)) {
       return;
     }
     switch (currentEditControl) {
@@ -231,6 +253,12 @@ const CurrentLayerCanvas = () => {
     }
   };
   const onMouseMove = ({ nativeEvent }: any): void => {
+    if (!edit.canEdit(id)) {
+      snack.showWarningMessage(
+        "Another Collaborator Is Currently Editing The Tilemap"
+      );
+      return;
+    }
     if (!visible) {
       if (currentLayerIndex === -1) {
         snack.showWarningMessage("Please Create And/Or Select A Layer To Edit");
@@ -239,6 +267,7 @@ const CurrentLayerCanvas = () => {
       snack.showWarningMessage("Please Make Current Layer Visible To Edit");
       return;
     }
+
     switch (currentEditControl) {
       case TilemapEditControl.draw: {
         highlightTile({ nativeEvent });
@@ -270,7 +299,7 @@ const CurrentLayerCanvas = () => {
     }
   };
   const onMouseUp = ({ nativeEvent }: any): void => {
-    if (!visible) {
+    if (!visible || !edit.canEdit(id)) {
       return;
     }
     switch (currentEditControl) {
@@ -303,7 +332,7 @@ const CurrentLayerCanvas = () => {
   };
 
   const onMouseOut = ({ nativeEvent }: any): void => {
-    if (!visible) {
+    if (!visible || !edit.canEdit(id)) {
       return;
     }
     switch (currentEditControl) {

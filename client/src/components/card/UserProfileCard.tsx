@@ -32,10 +32,10 @@ const UserProfileCard = (props: Props) => {
     const open = Boolean(anchorEl)
 
     useEffect(() => {
-        social.getUserById(props.userId).then(u => {
+        social.getUserCredentialsById(props.userId).then(u => {
             if (u) {
                 setState({
-                    userId: u.id,
+                    userId: props.userId,
                     firstName: u.firstName,
                     lastName: u.lastName,
                     username: u.username

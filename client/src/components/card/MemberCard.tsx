@@ -25,7 +25,7 @@ export default function MemberCard(props: {usrId: string}) {
         lastName: ''
     })
     useEffect(() => {
-        social.getUserById(props.usrId).then(usr => {
+        social.getUserCredentialsById(props.usrId).then(usr => {
             if (usr) {
                 setState({
                     id: usr.id,

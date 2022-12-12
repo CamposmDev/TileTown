@@ -36,19 +36,19 @@ const HomeScreen = () => {
         <Grid container spacing={1} p={1} justifyContent='space-evenly'>
             <Grid item xs={6}>
                 <Carousel>
-                    {contests.map(x => <ContestCard c={x} />)}
+                    {contests.map(x => <ContestCard key={x.id} c={x} />)}
                 </Carousel>
             </Grid>
             <Grid item xs={6}>
                 <Carousel>
-                    {comms.map(x => <CommunityCard comm={x} />)}
+                    {comms.map(x => <CommunityCard key={x.id} comm={x} />)}
                 </Carousel>
             </Grid>
             <Grid item xs={6}>
                 <Typography>{`Popular Tilemaps ${tilemaps.length === 0 ? '(Not Available)' : ''}`}</Typography>
                 <Carousel sx={{height: SIZE, bgcolor: '#121212'}}>
                     {tilemaps.map(x => 
-                        <TilemapSocialCard
+                        <TilemapSocialCard key={x.id}
                             tms={x} size={SIZE}
                         />
                     )}
@@ -58,7 +58,7 @@ const HomeScreen = () => {
                 <Typography>{`Popular Tilesets ${tilesets.length === 0 ? '(Not Available)' : ''}`}</Typography>
                 <Carousel sx={{height: SIZE, bgcolor: '#121212'}}>
                     {tilesets.map(x =>
-                        <TilesetSocialCard
+                        <TilesetSocialCard key={x.id}
                             tss={x} size={SIZE}
                         />
                     )}
