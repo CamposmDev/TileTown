@@ -4,7 +4,7 @@ import { Auth } from "../middleware";
 
 const CommunityRouter: Router = Router();
 
-CommunityRouter.get('/', Auth.verifyJWT, CommunityController.getCommunities);
+CommunityRouter.get('/', CommunityController.getCommunities);
 CommunityRouter.get('/:id', Auth.verifyJWT, CommunityController.getCommunityById);
 
 CommunityRouter.post('/', Auth.verifyJWT, CommunityController.createCommunity);

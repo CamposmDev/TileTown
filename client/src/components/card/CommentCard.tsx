@@ -52,7 +52,7 @@ const CommentCard = (props: Props) => {
         </Grid>
 
     return (
-        <Card sx={{mt: 1, boxShadow: 3}}>
+        <Card sx={{boxShadow: 3}}>
             <CardContent>
                 {content}
             </CardContent>

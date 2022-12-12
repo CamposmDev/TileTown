@@ -95,6 +95,20 @@ export default function TilemapViewerModal() {
         social.clear()
     }
 
+    let commentField = <div/>
+    if (!auth.isGuest()) {
+        commentField = <TextField
+            disabled={auth.isGuest()}
+            sx={{mb: 1}}
+            autoFocus
+            fullWidth
+            value={comment}
+            label='Comment'
+            onChange={(e) => setComment(e.target.value)}
+            onKeyUp={handlekeyUp}
+        />
+    }
+
     let usr = auth.usr
     let tms = social.state.currentTMS
     if (tms) {
@@ -110,7 +124,7 @@ export default function TilemapViewerModal() {
                             <Typography variant="h6">{tms.name}</Typography>
                         </Grid>
                         <Grid item>
-                            <IconButton onClick={favorite}><Star sx={starSX} /></IconButton>
+                            <IconButton disabled={auth.isGuest()} onClick={favorite}><Star sx={starSX} /></IconButton>
                         </Grid>
                         <Grid item>
                             <Button color='inherit' onClick={handleClose}>Close</Button>
@@ -132,7 +146,7 @@ export default function TilemapViewerModal() {
                 </Grid>
                 <Grid item flexGrow={1} xs>
                     <Grid item xs={12}>
-                        <Card sx={{boxShadow: 3}}>
+                        <Card sx={{boxShadow: 3, mb: 1}}>
                             <CardContent>
                                 <Grid item>
                                     <Grid item>
@@ -170,19 +184,11 @@ export default function TilemapViewerModal() {
                                 </Grid>
                             </CardContent>
                         </Card>
-                        <TextField
-                            autoFocus
-                            fullWidth
-                            margin='dense'
-                            value={comment}
-                            label='Comment'
-                            onChange={(e) => setComment(e.target.value)}
-                            onKeyUp={handlekeyUp}
-                        />
+                        {commentField}
                     </Grid>
                     <Grid item>
                         {tms.comments.slice().map(x => 
-                            <Grid item xs={12} key={x}>
+                            <Grid item xs={12} key={x} mb={1}>
                                 <CommentCard commentId={x} />
                             </Grid>
                         )} 

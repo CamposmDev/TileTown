@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Fade, Grid, LinearProgress, scopedCssBaselineClasses, Skeleton, Stack, Tab, TabProps, Tabs, TextField, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Button, Fade, Grid, LinearProgress, scopedCssBaselineClasses, Skeleton, snackbarClasses, Stack, Tab, TabProps, Tabs, TextField, Toolbar, Typography } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "src/context/auth";
@@ -16,6 +16,7 @@ import TilemapSocialCard from "../card/TilemapSocialCard";
 import TilemapSocialCardLoader from "../card/TilemapSocialCardLoader";
 import TilesetSocialCardLoader from "../card/TilesetSocialCardLoader";
 import TilemapCard from "../card/TilemapCard";
+import { SnackContext } from "src/context/snack";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -63,12 +64,17 @@ const UserProfileScreen = () => {
     const social = useContext(SocialContext)
     const contest = useContext(ContestContext)
     const comm = useContext(CommunityContext)
+    const snack = useContext(SnackContext)
     const nav = useNavigate()
     const [collabTilemaps, setCollabTilemaps] = useState<Tilemap[]>([])
     const [mainIdx, setMainIdx] = useState<number>(0)
     const [tmIdx, setTMIdx] = useState<number>(0)
     const [favorIdx, setFavorIdx] = useState<number>(0)
     useEffect(() => {
+        if (auth.isGuest()) {
+            nav('/home')
+            snack.showErrorMessage('Create an account to view users!')
+        }
         if (!id || !auth.isLoggedIn) {
             nav('/')
         } else {

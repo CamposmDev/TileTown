@@ -129,7 +129,7 @@ export default function ContestViewerModal() {
     let c = contest.state.currentContest
     useEffect(() => {
         if (c) {
-            social.getUserById(c.owner).then(u => {
+            social.getUserCredentialsById(c.owner).then(u => {
                 if (u) {
                     setUser({
                         userId: u.id,
@@ -181,15 +181,6 @@ export default function ContestViewerModal() {
         } else if (c?.type === 'tileset') {
             modal.showUploadTilesetModal()
         }
-    }
-
-    /** 
-     * Only the owner of the contest can do this
-     * When the owner clicks the choose winner button, the owner will be promoted to enter the username of the winner
-     * Press 'Enter' and the back-end will validate if the entered username is indeed part of this contest
-     */
-    const chooseWinner = () => {
-        
     }
 
     const open = Boolean(contest.state.currentContest)
@@ -256,16 +247,12 @@ export default function ContestViewerModal() {
     let joinButton = <Button onClick={join}>Join</Button>
     let leaveButton = <Button onClick={leave}>Leave</Button>
     let startButton = <Button onClick={start}>Start</Button>
-    let chooseWinnerButton = <Button onClick={chooseWinner}>Choose Winner</Button>
     let firstControl = <Typography>Come back later when the contest is over to decide the winner!</Typography>
     let secondControl = <div/>
     let usr = auth.usr
     if (usr && c) {
         if (usr.id === c.owner) {
             let endDate = new Date(c.endDate)
-            if (isExpired(endDate)) {
-                firstControl = chooseWinnerButton
-            }
         } else {
             if (c.participates.indexOf(usr.id) === -1) {
                 // The user is not a member of the contest

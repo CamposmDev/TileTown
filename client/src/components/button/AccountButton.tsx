@@ -62,14 +62,14 @@ const AccountButton = () => {
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleShowCommunityDeleteModal}>
+            {/* <MenuItem onClick={handleShowCommunityDeleteModal}>
                 <ListItemIcon><GroupRemove/></ListItemIcon>
                 <ListItemText>Delete Community</ListItemText>
             </MenuItem>
             <MenuItem onClick={handleShowContestDeleteModal}>
                 <ListItemIcon><EmojiEvents/></ListItemIcon>
                 <ListItemText>Delete Contest</ListItemText>
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={handleLogout}>
                 <ListItemIcon><Logout/></ListItemIcon>
                 <ListItemText>Logout</ListItemText>
