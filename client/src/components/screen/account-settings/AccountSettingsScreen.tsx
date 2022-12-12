@@ -40,8 +40,8 @@ const AccountSettingsScreen = () => {
                     style={{fontSize: '32pt', width: SIZE, height: SIZE}}
                 />
                 <Stack mt={1} mb={1} spacing={1} direction='row'>
-                    <Button variant='outlined' onClick={handleUpload} >Upload</Button>
-                    <Button variant='outlined' onClick={removePicture}>Remove</Button>
+                    {/* <Button variant='outlined' onClick={handleUpload}>Upload</Button>
+                    <Button variant='outlined' onClick={removePicture}>Remove</Button> */}
                 </Stack>
                 <Grid>
                     <EditUserPropertyForm
