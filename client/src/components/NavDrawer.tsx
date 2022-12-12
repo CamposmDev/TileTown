@@ -35,7 +35,7 @@ export default function NavDrawer() {
   }
 
   const DRAWER_WIDTH = '256px'
-  let friends = initFriendCards()
+  let friendCards = initFriendCards()
   let drawer = (
     <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
         <Box p={2} width={DRAWER_WIDTH} role='presentation' textAlign='start'>
@@ -78,22 +78,8 @@ export default function NavDrawer() {
             <Typography>Friends</Typography>
             <AddFriendModal/>
           </Grid>
-          <Grid 
-            sx={{
-              overflow: 'auto',
-              height: '300px'
-            }}
-            // container
-            // spacing={1}
-          >
-            {friends}
-            {/* <Grid item>
-              <UserProfileCard
-                firstName='Andrew'
-                lastName='Ojeda'
-                username='H8TER$HADE$'
-              />
-            </Grid> */}
+          <Grid sx={{ overflow: 'auto', height: '300px' }}>
+            {friendCards}
           </Grid>
         </Box>
       </Drawer>

@@ -26,7 +26,7 @@ const AddFriendModal = () => {
     }
     return (
         <div>
-            <IconButton onClick={() => setOpen(true)}><Add/></IconButton>
+            <IconButton disabled={auth.isGuest()} onClick={() => setOpen(true)}><Add/></IconButton>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Add Friend</DialogTitle>
                 <DialogContent>

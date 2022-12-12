@@ -216,7 +216,7 @@ export default class UserController {
       .status(200)
       .cookie("token", token, {
         httpOnly: true,
-        expires: new Date(Date.now() + 60 * 60 * 1000),
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 8),
       })
       .json({ message: "User successfully logged in!", user: user });
   }
@@ -686,7 +686,7 @@ export default class UserController {
 
     let user = await db.users.getUserById(req.params.id);
     if (user === null) {
-      return res.status(404).json({ message: `User with id ${req.params.id}` });
+      return res.status(404).json({ message: `User with id ${req.params.id} does not exist` });
     }
 
     let socials = await db.tilesetSocials.getTilesetSocialsByUserId(
@@ -701,5 +701,33 @@ export default class UserController {
     return res
       .status(200)
       .json({ message: "Found users published tilesets!", socials: socials });
+  }
+
+  public async getUsernameById(req: Request, res: Response): Promise<Response> {
+    if (!req || !req.params) {
+      return res.status(400).json({ message: "Bad Request" })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({ message: "Missing user id" })
+    }
+    let user = await db.users.getUserById(req.params.id)
+    if (user === null) {
+      return res.status(404).json({ message: `User with id ${req.params.id} does not exist`})
+    }
+    return res.status(200).json({username: user.username})
+  }
+
+  public async getUserCredentialsById(req: Request, res: Response): Promise<Response> {
+    if (!req || !req.params) {
+      return res.status(400).json({ message: "Bad Request" })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({ message: "Missing user id" })
+    }
+    let user = await db.users.getUserById(req.params.id)
+    if (user === null) {
+      return res.status(404).json({ message: `User with id ${req.params.id} does not exist`})
+    }
+    return res.status(200).json({username: user.username, firstName: user.firstName, lastName: user.lastName})
   }
 }

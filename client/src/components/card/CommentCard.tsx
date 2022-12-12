@@ -19,17 +19,20 @@ const CommentCard = (props: Props) => {
         body: ''
     })
     useEffect(() => {
-        social.getCommentById(props.commentId).then(data => {
-            let comment = data.comment
-            let user = data.user
-            if (comment && user) {
-                setState({
-                    createdAt: new Date(comment.createdAt),
-                    username: user.username,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    body: comment.body
+        social.getCommentById(props.commentId).then(comment => {
+            if (comment) {
+                social.getUserCredentialsById(comment.author).then(u => {
+                    if (u) {
+                        setState({
+                            createdAt: new Date(comment.createdAt),
+                            username: u.username,
+                            firstName: u.firstName,
+                            lastName: u.lastName,
+                            body: comment.body
+                        })
+                    }
                 })
+                
             }
         })
     }, [])

@@ -12,8 +12,8 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial, size?: nu
     const social = useContext(SocialContext)
     const [username, setUsername] = useState<string>('')
     useEffect(() => {
-        social.getUserById(props.tss.owner).then(x => {
-            if (x) setUsername(x.username)
+        social.getUserUsernameById(props.tss.owner).then(x => {
+            if (x) setUsername(x)
         })
     }, [social])
     const imageURL = AxiosApi.getUri() + `/media/${props.tss.imageURL}`
@@ -27,7 +27,7 @@ export default function TilesetSocialCard(props: { tss: TilesetSocial, size?: nu
     )
     let socialBox = <SocialBox comments={props.tss.comments.length} likes={props.tss.likes.length} views={props.tss.views} />
     let content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${props.tss.imageURL}`}/>
-    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={`Failed to get ${props.tss.imageURL}`}/>
+    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={`Failed to get image ${props.tss.imageURL}`}/>
     return (
         <Fade in={true} timeout={1000}>
             <Card

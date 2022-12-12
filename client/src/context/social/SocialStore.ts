@@ -31,6 +31,22 @@ export class SocialStore {
         return this._social
     }
 
+    public async getUserUsernameById(userId: string): Promise<string | undefined> {
+        return UserApi.getUserUsernameById(userId).then(res => {
+            if (res.status === 200) {
+                return res.data.username
+            }
+        })
+    }
+
+    public async getUserCredentialsById(userId: string): Promise<any | undefined> {
+        return UserApi.getUserCredentialsById(userId).then(res => {
+            if (res.status === 200) {
+                return res.data
+            }
+        })
+    }
+
     public async getUserCollaboratedTilemaps(userId: string) {
         return TilemapApi.getUserCollaboratedTilemaps(userId).then(res => {
             if (res.status === 200) {
@@ -267,24 +283,13 @@ export class SocialStore {
         })
     }
 
-    public async getCommentById(commentId: string): Promise<{comment: Comment | undefined, user: User | undefined}> {
+    public async getCommentById(commentId: string): Promise<Comment | undefined> {
         let comment: Comment | undefined = await CommentApi.getCommentById(commentId).then(res => {
             if (res.status === 200) {
                 return res.data.comment
             }
         })
-        let user: User | undefined
-        if (comment) {
-            user = await UserApi.getUserById(comment.author).then(res => {
-                if (res.status === 200) {
-                    return res.data.user
-                }
-            })
-        }
-        return {
-            comment: comment,
-            user: user
-        }
+        return comment
     }
 
     /** Queries back-end to get an array of community names based on given array of community ids */

@@ -11,8 +11,8 @@ export default function TilemapSocialCard(props: {tms: TilemapSocial, size?: num
     const social = useContext(SocialContext)
     const [username, setUsername] = useState<string>('')
     useEffect(() => {
-        social.getUserById(props.tms.owner).then(x => {
-            if (x) setUsername(x.username)
+        social.getUserUsernameById(props.tms.owner).then(x => {
+            if (x) setUsername(x)
         })
     }, [social])
     const imageURL = AxiosApi.getUri() + `/media/${props.tms.imageURL}`
@@ -27,8 +27,8 @@ export default function TilemapSocialCard(props: {tms: TilemapSocial, size?: num
         </Tooltip>
     )
     let socialBox = <SocialBox comments={props.tms.comments.length} likes={props.tms.likes.length} views={props.tms.views} />
-    let content = <img id='tile-preview' src={imageURL} alt={props.tms.id} />
-    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={props.tms.id} />
+    let content = <img id='tile-preview' src={imageURL} alt={`Failed to get image ${props.tms.imageURL}`} />
+    if (props.size) content = <img style={{height: props.size}} src={imageURL} alt={`Failed to get image ${props.tms.imageURL}`} />
     return (
         <Card
             onClick={() => social.viewTilemapSocial(props.tms)}

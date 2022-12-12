@@ -31,7 +31,7 @@ export default function ForumPostViewerModal() {
         let userId: string | undefined = forum.getCurrentForumPost()?.author
         let aux = async () => {
             if (userId) {
-                await social.getUserById(userId).then(u => {
+                await social.getUserCredentialsById(userId).then(u => {
                     if (u) setUser({firstName: u.firstName, lastName: u.lastName, username: u.username})
                 })
             }
@@ -147,6 +147,7 @@ export default function ForumPostViewerModal() {
                     <Grid container item xs={6} pl={1}>
                     <Grid container>
                             <TextField 
+                                disabled={auth.isGuest()}
                                 autoFocus
                                 fullWidth
                                 value={comment}

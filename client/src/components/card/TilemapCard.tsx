@@ -21,8 +21,8 @@ export default function TilemapCard(props: {tilemapId: string}) {
                 if (tilemap.isPublished) {
                     social.getTilemapSocialByTilemapId(tilemap.id).then(s => setTMS(s))
                 }
-                social.getUserById(tilemap.owner).then(x => {
-                    if (x) setUsername(x.username)
+                social.getUserUsernameById(tilemap.owner).then(x => {
+                    if (x) setUsername(x)
                 })
             }
         })
@@ -55,7 +55,7 @@ export default function TilemapCard(props: {tilemapId: string}) {
     )
 
     const imageURL = AxiosApi.getUri() + `/media/${tilemap.image}`
-    const content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${tilemap.image}`}/>
+    const content = <img id='tile-preview' src={imageURL} alt={`Failed to get image ${tilemap.image}`}/>
 
     return (
         <Fade in={true} timeout={1000}>

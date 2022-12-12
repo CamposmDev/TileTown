@@ -152,11 +152,11 @@ export default function TilemapViewerModal() {
                                             </Tooltip>
                                             {formatToSocialStr(tms.views)}
                                             <Tooltip title={'Like'}>
-                                                <IconButton onClick={like}><ThumbUp/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tms.likes.length)}
                                             <Tooltip title={'Dislike'}>
-                                                <IconButton onClick={dislike}><ThumbDown/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tms.dislikes.length)}
                                             <Tooltip title={'Download'}>

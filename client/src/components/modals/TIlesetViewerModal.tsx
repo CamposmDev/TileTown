@@ -153,11 +153,11 @@ export default function TilesetViewerModal() {
                                             </Tooltip>
                                             {formatToSocialStr(tss.views)}
                                             <Tooltip title={'Like'}>
-                                                <IconButton onClick={like}><ThumbUp/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={like}><ThumbUp/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.likes.length)}
                                             <Tooltip title={'Dislike'}>
-                                                <IconButton onClick={dislike}><ThumbDown/></IconButton>
+                                                <IconButton disabled={auth.isGuest()} onClick={dislike}><ThumbDown/></IconButton>
                                             </Tooltip>
                                             {formatToSocialStr(tss.dislikes.length)}
                                             <Tooltip title={'Download'}>

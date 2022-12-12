@@ -22,8 +22,8 @@ export default function TilesetCard(props: {tilesetId: string}) {
         social.getTilesetById(props.tilesetId).then(tileset => {
             if (tileset) {
                 setTileset(tileset)
-                social.getUserById(tileset.owner).then(x => {
-                    if (x) setUsername(x.username)
+                social.getUserUsernameById(tileset.owner).then(x => {
+                    if (x) setUsername(x)
                 })
                 if (tileset.isPublished) social.getTilesetSocialByTilesetId(tileset.id).then(s => setTilesetSocial(s))
             }
@@ -45,7 +45,7 @@ export default function TilesetCard(props: {tilesetId: string}) {
                     <Typography noWrap variant='caption'>{`By ${username}`}</Typography>
                 </Box>
             </Tooltip>
-        const content = <img id='tile-preview' src={imageURL} alt={`Failed to get ${tileset.image}`}/>
+        const content = <img id='tile-preview' src={imageURL} alt={`Failed to get image ${tileset.image}`}/>
         if (prof.state.viewUnpublishedTilesets) {
             if (tileset.isPublished) {
                 return <div/>
